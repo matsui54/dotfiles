@@ -1,11 +1,14 @@
 let s:dein_dir = expand('~/.cache/dein')
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim' 
 let s:toml_dir = expand('~/.config/nvim')
 
-if &runtimepath !~ '/dein.vim'
-  if !isdirectory(s:dein_dir)
-    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
-  endif
-	execute 'set runtimepath+=' . expand('~/.cache/dein/repos/github.com/Shougo/dein.vim')
+if !isdirectory(s:dein_dir)
+	execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+endif
+execute 'set runtimepath+=' . s:dein_repo_dir
+
+if !has("python3")
+	execute '!pip3 install --user pynvim'
 endif
 
 " dein settings 
