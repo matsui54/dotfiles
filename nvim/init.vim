@@ -1,12 +1,16 @@
-" Required:
-set runtimepath+=/home/haruki/.cache/dein/repos/github.com/Shougo/dein.vim
+let s:dein_dir = expand('~/.cache/dein')
+let s:toml_dir = expand('~/.config/nvim')
 
-let s:dein_dir = expand('/home/haruki/.cache/dein')
-let s:toml_dir = expand('/home/haruki/.config/nvim')
+if &runtimepath !~ '/dein.vim'
+  if !isdirectory(s:dein_dir)
+    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
+  endif
+	execute 'set runtimepath+=' . expand('~/.cache/dein/repos/github.com/Shougo/dein.vim')
+endif
 
 " dein settings 
-if dein#load_state('/home/haruki/.cache/dein')
-  call dein#begin('/home/haruki/.cache/dein')
+if dein#load_state(s:dein_dir)
+  call dein#begin(s:dein_dir)
 
 
   "Load TOML
