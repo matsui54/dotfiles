@@ -53,10 +53,10 @@ colorscheme molokai
 set background=dark
 
 inoremap <silent> jj <ESC>
-nnoremap <silent> <Up> :wincmd k<CR>
-nnoremap <silent> <Down> :wincmd j<CR>
-nnoremap <silent> <Right> :wincmd l<CR>
-nnoremap <silent> <Left> :wincmd h<CR>
+nnoremap <silent> <Up> :wincmd +<CR>
+nnoremap <silent> <Down> :wincmd -<CR>
+nnoremap <silent> <Right> :wincmd ><CR>
+nnoremap <silent> <Left> :wincmd <<CR>
 
 
 augroup vimrc 
