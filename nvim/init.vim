@@ -48,16 +48,8 @@ set clipboard=unnamedplus
 set splitright
 set showmatch
 
-
-colorscheme molokai
+colorscheme PaperColor
 set background=dark
-
-inoremap <silent> jj <ESC>
-nnoremap <silent> <Up> :wincmd +<CR>
-nnoremap <silent> <Down> :wincmd -<CR>
-nnoremap <silent> <Right> :wincmd ><CR>
-nnoremap <silent> <Left> :wincmd <<CR>
-
 
 augroup vimrc 
     autocmd!
@@ -65,3 +57,6 @@ augroup vimrc
     autocmd User LanguageClientStarted setlocal signcolumn=yes
     autocmd User LanguageClientStopped setlocal signcolumn=auto
 augroup END
+
+source ~/nvim/plugins/keymappings.vim
+

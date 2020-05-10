@@ -4,24 +4,22 @@ repo = 'Shougo/neoinclude.vim'
 [[plugins]]
 repo = 'thinca/vim-quickrun'
 hook_add = '''
-    " keymapping
-    nnoremap <F5> :wa <bar> :wincmd t <bar> :QuickRun <stdin.txt <CR>
-    let g:quickrun_config = {}
-    let g:quickrun_config['cpp'] = {
-	\  'command': 'clang++',
-    \  'cmdopt' : '-std=c++17 -Wall',
-    \  'hook/time/enable' : 1
-    \}
+	source ~/nvim/plugins/quickrun.vim
 '''
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
 hook_add = '''
-let g:deoplete#enable_at_startup = 1
+	source ~/nvim/plugins/deoplete.vim
 '''
 
 [[plugins]]
-repo = 'ervandew/supertab'
+repo = 'Shougo/neosnippet.vim'
+depends = ['neosnippet-snippets']
+hook_add = '''
+	source ~/nvim/plugins/neosnippet.vim
+'''
 
 [[plugins]]
 repo = 'tpope/vim-surround'
+

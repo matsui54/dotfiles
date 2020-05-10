@@ -16,8 +16,8 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+HISTSIZE=5000
+HISTFILESIZE=10000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -116,17 +116,35 @@ if ! shopt -oq posix; then
   fi
 fi
 
-#Additional Settings_______________________________________________
+#Additional Settings-----------------------------------------------
 function atcoder() {
 	cd ~/Programming
 	if [ -f stdin.txt ]; then
 		rm stdin.txt
 	fi
+#if [ -f stdout.txt ]; then
+#rm stdout.txt
+#fi
 	touch stdin.txt
-	nvim $1 -o stdin.txt -c "11 wincmd +"
+#touch stdout.txt
+	#nvim $1 -o stdin.txt stdout.txt -c ":wincmd H"
+	nvim $1 -O stdin.txt 
 }
 
 function vimsettings() {
 	cd ~/.config/nvim
 	nvim -O ~/.config/nvim/*.toml
 }
+
+
+#powerlineSettings------------------------------------------------
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:~/.local/bin
+export HISTTIMEFORMAT='%F %T '
+
+function _update_ps1() {
+    PS1=$(powerline-shell $?)
+}
+
+if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
+    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+fi
