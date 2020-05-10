@@ -1,6 +1,6 @@
 inoremap <silent> jj <ESC>
 
-nnoremap <expr><F5> (&filetype='python') ? ":!python3 %" : ":wa <bar> :wincmd t <bar> :QuickRun <stdin.txt <CR>"
+nnoremap <expr><F5> (&filetype=='python') ? ":!python3 %" : ":wa <bar> :wincmd t <bar> :QuickRun <stdin.txt <CR>"
 nnoremap <silent> <Up> :wincmd +<CR>
 nnoremap <silent> <Down> :wincmd -<CR>
 nnoremap <silent> <Right> :wincmd ><CR>
