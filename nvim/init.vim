@@ -6,6 +6,7 @@ if !isdirectory(s:dein_dir)
 	execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
 endif
 execute 'set runtimepath+=' . s:dein_repo_dir
+set runtimepath+=~/OxfDictionary.nvim
 
 if !has("python3")
 	execute '!pip3 install --user pynvim'
@@ -39,6 +40,9 @@ endif
 call map(dein#check_clean(), "delete(v:val, 'rf')")
 call dein#recache_runtimepath()
 
+let g:OxfDictionary#app_id='3fc46c58'
+let g:OxfDictionary#app_key='c4603e15e4eb3f7219bd477823507ad6'
+
 set number
 set title
 set tabstop=2
@@ -49,7 +53,8 @@ set splitright
 set showmatch
 
 colorscheme PaperColor
-set background=dark
+highlight Normal ctermbg=none
+highlight LineNr ctermbg=none
 
 augroup vimrc 
     autocmd!
