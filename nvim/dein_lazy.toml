@@ -20,6 +20,4 @@ hook_add = '''
 	source ~/nvim/plugins/neosnippet.vim
 '''
 
-[[plugins]]
-repo = 'tpope/vim-surround'
 

@@ -33,3 +33,5 @@ repo = 'Yggdroot/indentLine'
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
 
+[[plugins]]
+repo = 'tpope/vim-surround'
