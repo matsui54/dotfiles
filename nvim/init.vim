@@ -14,27 +14,27 @@ endif
 
 " dein settings 
 if dein#load_state(s:dein_dir)
-  call dein#begin(s:dein_dir)
+	call dein#begin(s:dein_dir)
 
 
-  "Load TOML
-  let s:toml = s:toml_dir . '/dein.toml'
-  let s:lazy_toml = s:toml_dir . '/dein_lazy.toml'
+	"Load TOML
+	let s:toml = s:toml_dir . '/dein.toml'
+	let s:lazy_toml = s:toml_dir . '/dein_lazy.toml'
 
-  call dein#load_toml(s:toml, {'lazy': 0})
-  call dein#load_toml(s:lazy_toml, {'lazy': 1})
+	call dein#load_toml(s:toml, {'lazy': 0})
+	call dein#load_toml(s:lazy_toml, {'lazy': 1})
 
 
-  "finalize
-  call dein#end()
-  call dein#save_state()
+	"finalize
+	call dein#end()
+	call dein#save_state()
 endif
 
 filetype plugin indent on
 syntax enable
 
 if dein#check_install()
-  call dein#install()
+	call dein#install()
 endif
 
 call map(dein#check_clean(), "delete(v:val, 'rf')")
@@ -57,11 +57,17 @@ highlight Normal ctermbg=none
 highlight LineNr ctermbg=none
 
 augroup vimrc 
-    autocmd!
-		autocmd VimEnter * NoMatchParen
-    autocmd User LanguageClientStarted setlocal signcolumn=yes
-    autocmd User LanguageClientStopped setlocal signcolumn=auto
+	autocmd!
+	autocmd VimEnter * NoMatchParen
 augroup END
 
 source ~/nvim/plugins/keymappings.vim
 
+if has("unix")
+	augroup im_change
+		autocmd InsertEnter * :call system('fcitx-remote -c')
+		autocmd InsertLeave * :call system('fcitx-remote -o')
+		autocmd VimEnter * :call system('fcitx-remote -o')
+		autocmd VimLeave * :call system('fcitx-remote -c')
+	augroup END
+endif

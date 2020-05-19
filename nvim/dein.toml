@@ -4,13 +4,30 @@ repo = 'Shougo/dein.vim'
 [[plugins]]
 repo = 'sheerun/vim-polyglot'
 
+#[[plugins]]
+#repo = 'autozimu/LanguageClient-neovim'
+#rev = 'next'
+#build = 'bash install.sh'
+#hook_add = '''
+	#source ~/nvim/plugins/languageclient.vim
+#'''
+
+#[[plugins]]
+#repo = 'neovim/nvim-lsp'
+#hook_add = '''
+#lua require'nvim_lsp'.clangd.setup{}
+#'''
+
 [[plugins]]
-repo = 'autozimu/LanguageClient-neovim'
-rev = 'next'
-build = 'bash install.sh'
+repo = 'dense-analysis/ale'
 hook_add = '''
-	source ~/nvim/plugins/languageclient.vim
+let g:ale_linters = {'cpp': ['clangd']}
+let g:ale_fixers = {'cpp':['clang-format']}
 '''
+
+[[plugins]]
+repo = 'tbodt/deoplete-tabnine'
+build = './install.sh'
 
 [[plugins]]
 repo = 'tomasr/molokai'
