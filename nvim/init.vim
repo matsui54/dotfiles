@@ -56,12 +56,12 @@ colorscheme PaperColor
 highlight Normal ctermbg=none
 highlight LineNr ctermbg=none
 
+source ~/.config/nvim/plugins/keymappings.vim
+
 augroup vimrc 
 	autocmd!
 	autocmd VimEnter * NoMatchParen
 augroup END
-
-source ~/nvim/plugins/keymappings.vim
 
 if has("unix")
 	augroup im_change
@@ -71,3 +71,46 @@ if has("unix")
 		autocmd VimLeave * :call system('fcitx-remote -c')
 	augroup END
 endif
+
+function MyTabLine()
+	let s = ''
+	" the number of tabs
+	let cnttab = tabpagenr('$')
+
+	for i in range(cnttab)
+		" tab number of current tab
+		let currentnr = tabpagenr()
+		if i + 1 == currentnr
+			let s .= '%#TabLineSel#'
+		else
+			let s .= '%#TabLine#'
+		endif
+
+		" if the tab is not current, add '|'.
+		if i + 1 != cnttab && i + 1 != currentnr && i +2 != currentnr
+			let s .= ' %{MyTabLabel(' . (i + 1) . ')} |'
+		else
+			let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+		endif
+	endfor
+
+	" 最後のタブページの後は TabLineFill で埋め、タブページ番号をリセッ
+	" トする
+	let s .= '%#TabLineFill#%T'
+
+	"Show current directory
+	if cnttab > 1
+		let s .= '%=%#TabLine#%{fnamemodify(getcwd(), ":~/")}'
+	endif
+
+	return s
+endfunction
+
+function MyTabLabel(n)
+	let buflist = tabpagebuflist(a:n)
+	let winnr = tabpagewinnr(a:n)
+	"return pathshorten(fnamemodify(bufname(buflist[winnr - 1]), ":~"))
+	return pathshorten(bufname(buflist[winnr - 1]))
+endfunction
+
+set tabline=%!MyTabLine()

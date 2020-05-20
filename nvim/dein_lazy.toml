@@ -4,20 +4,20 @@ repo = 'Shougo/neoinclude.vim'
 [[plugins]]
 repo = 'thinca/vim-quickrun'
 hook_add = '''
-	source ~/nvim/plugins/quickrun.vim
+	source ~/.config/nvim/plugins/quickrun.vim
 '''
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
 hook_add = '''
-	source ~/nvim/plugins/deoplete.vim
+	source ~/.config/nvim/plugins/deoplete.vim
 '''
 
 [[plugins]]
 repo = 'Shougo/neosnippet.vim'
 depends = ['neosnippet-snippets']
 hook_add = '''
-	source ~/nvim/plugins/neosnippet.vim
+	source ~/.config/nvim/plugins/neosnippet.vim
 '''
 
 [[plugins]]
@@ -28,3 +28,5 @@ let g:calendar_google_task = 1
 source ~/.cache/calendar.vim/credentials.vim
 '''
 
+[[plugins]]
+repo = 'yonchu/accelerated-smooth-scroll'

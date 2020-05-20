@@ -11,3 +11,4 @@ nnoremap <silent> <C-k> gt
 nnoremap <expr>d (&modifiable) ? "d" : "\<C-d>"
 nnoremap <expr>u (&modifiable) ? "u" : "\<C-u>"
 
+cnoremap <silent><C-Space> :call system('fcitx-remote -c')<CR>:

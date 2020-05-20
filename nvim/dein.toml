@@ -9,7 +9,7 @@ repo = 'sheerun/vim-polyglot'
 #rev = 'next'
 #build = 'bash install.sh'
 #hook_add = '''
-	#source ~/nvim/plugins/languageclient.vim
+	#source ~/.config/nvim/plugins/languageclient.vim
 #'''
 
 #[[plugins]]
@@ -21,8 +21,7 @@ repo = 'sheerun/vim-polyglot'
 [[plugins]]
 repo = 'dense-analysis/ale'
 hook_add = '''
-let g:ale_linters = {'cpp': ['clangd']}
-let g:ale_fixers = {'cpp':['clang-format']}
+source ~/.config/nvim/plugins/ale.vim
 '''
 
 [[plugins]]
@@ -38,7 +37,7 @@ repo = 'NLKNguyen/papercolor-theme'
 [[plugins]]
 repo = 'vim-airline/vim-airline'
 hook_add = '''
-	source ~/nvim/plugins/airline.vim
+	source ~/.config/nvim/plugins/airline.vim
 '''
 
 [[plugins]]
