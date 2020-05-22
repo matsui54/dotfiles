@@ -51,3 +51,6 @@ repo = 'Shougo/neosnippet-snippets'
 
 [[plugins]]
 repo = 'tpope/vim-surround'
+
+[[plugins]]
+repo = 'yonchu/accelerated-smooth-scroll'

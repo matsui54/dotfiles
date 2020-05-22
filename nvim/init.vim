@@ -69,6 +69,7 @@ if has("unix")
 		autocmd InsertLeave * :call system('fcitx-remote -o')
 		autocmd VimEnter * :call system('fcitx-remote -o')
 		autocmd VimLeave * :call system('fcitx-remote -c')
+		autocmd CmdlineLeave * :call system('fcitx-remote -o')
 	augroup END
 endif
 

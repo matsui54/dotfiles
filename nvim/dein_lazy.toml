@@ -28,5 +28,3 @@ let g:calendar_google_task = 1
 source ~/.cache/calendar.vim/credentials.vim
 '''
 
-[[plugins]]
-repo = 'yonchu/accelerated-smooth-scroll'
