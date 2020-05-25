@@ -8,7 +8,7 @@ endif
 execute 'set runtimepath+=' . s:dein_repo_dir
 set runtimepath+=~/OxfDictionary.nvim
 
-if !has("python3")
+if !has('python3')
 	execute '!pip3 install --user pynvim'
 endif
 
@@ -45,6 +45,7 @@ let g:OxfDictionary#app_key='c4603e15e4eb3f7219bd477823507ad6'
 
 set number
 set title
+set expandtab
 set tabstop=2
 set shiftwidth=2
 set smartindent
@@ -63,7 +64,7 @@ augroup vimrc
 	autocmd VimEnter * NoMatchParen
 augroup END
 
-if has("unix")
+if has('unix')
 	augroup im_change
 		autocmd InsertEnter * :call system('fcitx-remote -c')
 		autocmd InsertLeave * :call system('fcitx-remote -o')

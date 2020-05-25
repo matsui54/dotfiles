@@ -1,6 +1,7 @@
 let g:ale_linters = {
 			\'cpp': ['clangd'],
-			\'python': ['pyls']
+			\'python': ['pyls'],
+			\'vim': ['vint']
 			\}
 let g:ale_fixers = {
 			\'cpp':['clang-format'],
