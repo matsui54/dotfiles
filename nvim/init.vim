@@ -3,38 +3,38 @@ let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 let s:toml_dir = expand('~/.config/nvim')
 
 if !isdirectory(s:dein_dir)
-	execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+  execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
 endif
 execute 'set runtimepath+=' . s:dein_repo_dir
 set runtimepath+=~/OxfDictionary.nvim
 
 if !has('python3')
-	execute '!pip3 install --user pynvim'
+  execute '!pip3 install --user pynvim'
 endif
 
 " dein settings 
 if dein#load_state(s:dein_dir)
-	call dein#begin(s:dein_dir)
+  call dein#begin(s:dein_dir)
 
 
-	"Load TOML
-	let s:toml = s:toml_dir . '/dein.toml'
-	let s:lazy_toml = s:toml_dir . '/dein_lazy.toml'
+  "Load TOML
+  let s:toml = s:toml_dir . '/dein.toml'
+  let s:lazy_toml = s:toml_dir . '/dein_lazy.toml'
 
-	call dein#load_toml(s:toml, {'lazy': 0})
-	call dein#load_toml(s:lazy_toml, {'lazy': 1})
+  call dein#load_toml(s:toml, {'lazy': 0})
+  call dein#load_toml(s:lazy_toml, {'lazy': 1})
 
 
-	"finalize
-	call dein#end()
-	call dein#save_state()
+  "finalize
+  call dein#end()
+  call dein#save_state()
 endif
 
 filetype plugin indent on
 syntax enable
 
 if dein#check_install()
-	call dein#install()
+  call dein#install()
 endif
 
 call map(dein#check_clean(), "delete(v:val, 'rf')")
@@ -60,59 +60,70 @@ highlight LineNr ctermbg=none
 source ~/.config/nvim/plugins/keymappings.vim
 
 augroup vimrc 
-	autocmd!
-	autocmd VimEnter * NoMatchParen
+  autocmd!
+  autocmd VimEnter * NoMatchParen
 augroup END
 
 if has('unix')
-	augroup im_change
-		autocmd InsertEnter * :call system('fcitx-remote -c')
-		autocmd InsertLeave * :call system('fcitx-remote -o')
-		autocmd VimEnter * :call system('fcitx-remote -o')
-		autocmd VimLeave * :call system('fcitx-remote -c')
-		autocmd CmdlineLeave * :call system('fcitx-remote -o')
-	augroup END
+  augroup im_change
+    autocmd InsertEnter * :call system('fcitx-remote -c')
+    autocmd InsertLeave * :call system('fcitx-remote -o')
+    autocmd VimEnter * :call system('fcitx-remote -o')
+    autocmd VimLeave * :call system('fcitx-remote -c')
+    autocmd CmdlineLeave * :call system('fcitx-remote -o')
+  augroup END
 endif
 
 function MyTabLine()
-	let s = ''
-	" the number of tabs
-	let cnttab = tabpagenr('$')
+  let s = ''
+  " the number of tabs
+  let cnttab = tabpagenr('$')
 
-	for i in range(cnttab)
-		" tab number of current tab
-		let currentnr = tabpagenr()
-		if i + 1 == currentnr
-			let s .= '%#TabLineSel#'
-		else
-			let s .= '%#TabLine#'
-		endif
+  for i in range(cnttab)
+    " tab number of current tab
+    let currentnr = tabpagenr()
+    highlight MyTabHi cterm=underline, ctermbg=none
+    if i + 1 == currentnr
+      let s .= '%#airline_c#'
+    else
+      let s .= '%#MyTabHi#'
+    endif
 
-		" if the tab is not current, add '|'.
-		if i + 1 != cnttab && i + 1 != currentnr && i +2 != currentnr
-			let s .= ' %{MyTabLabel(' . (i + 1) . ')} |'
-		else
-			let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
-		endif
-	endfor
+    if i == currentnr
+      let s .= ' '
+    endif
 
-	" 最後のタブページの後は TabLineFill で埋め、タブページ番号をリセッ
-	" トする
-	let s .= '%#TabLineFill#%T'
+    " shows the number of tabes
+    let bufno = len(tabpagebuflist(i + 1))
+    if bufno > 1
+      let s .= ' ' . bufno
+    endif
 
-	"Show current directory
-	if cnttab > 1
-		let s .= '%=%#TabLine#%{fnamemodify(getcwd(), ":~/")}'
-	endif
+    let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
 
-	return s
+    " if the tab is not current, add '|'.
+    if i + 1 != cnttab && i + 1 != currentnr && i +2 != currentnr
+      let s .= '|'
+    elseif i + 2 == currentnr
+      let s .= ' '
+    endif
+  endfor
+
+  let s .= '%#MyTabHi#%T'
+
+  "Show current directory
+  if cnttab > 1
+    let s .= '%=%#Cursor#%{fnamemodify(getcwd(), ":~/")}'
+  endif
+
+  return s
 endfunction
 
 function MyTabLabel(n)
-	let buflist = tabpagebuflist(a:n)
-	let winnr = tabpagewinnr(a:n)
-	"return pathshorten(fnamemodify(bufname(buflist[winnr - 1]), ":~"))
-	return pathshorten(bufname(buflist[winnr - 1]))
+  let buflist = tabpagebuflist(a:n)
+  let winnr = tabpagewinnr(a:n)
+  "don't show directory name
+  return substitute(bufname(buflist[winnr - 1]), '.\+\/', '', '')
 endfunction
 
 set tabline=%!MyTabLine()
