@@ -1,3 +1,4 @@
+" dein settings--------------------------------------------
 let s:dein_dir = expand('~/.cache/dein')
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim' 
 let s:toml_dir = expand('~/.config/nvim')
@@ -7,10 +8,6 @@ if !isdirectory(s:dein_dir)
 endif
 execute 'set runtimepath+=' . s:dein_repo_dir
 set runtimepath+=~/OxfDictionary.nvim
-
-if !has('python3')
-  execute '!pip3 install --user pynvim'
-endif
 
 " dein settings 
 if dein#load_state(s:dein_dir)
@@ -39,6 +36,8 @@ endif
 
 call map(dein#check_clean(), "delete(v:val, 'rf')")
 call dein#recache_runtimepath()
+" end dein settings---------------------------------------
+
 
 let g:OxfDictionary#app_id='3fc46c58'
 let g:OxfDictionary#app_key='c4603e15e4eb3f7219bd477823507ad6'
@@ -47,7 +46,7 @@ set number
 set title
 set expandtab
 set tabstop=2
-set shiftwidth=2
+set shiftwidth=0
 set smartindent
 set clipboard=unnamedplus
 set splitright
@@ -56,12 +55,13 @@ set showmatch
 colorscheme PaperColor
 highlight Normal ctermbg=none
 highlight LineNr ctermbg=none
+highlight clear MatchParen
+highlight MatchParen cterm=underline
 
 source ~/.config/nvim/plugins/keymappings.vim
 
 augroup vimrc 
   autocmd!
-  autocmd VimEnter * NoMatchParen
 augroup END
 
 if has('unix')
@@ -74,6 +74,18 @@ if has('unix')
   augroup END
 endif
 
+
+" netrw settings------------------------------------------
+let g:netrw_preview=1
+
+function! Netrw_map_space(islocal) abort
+  return 'normal! <Space>'
+endfunction
+
+let g:Netrw_UserMaps = [['<Space>', 'Netrw_map_space']]
+
+
+" tabline settings----------------------------------------
 function MyTabLine()
   let s = ''
   " the number of tabs
@@ -82,24 +94,23 @@ function MyTabLine()
   for i in range(cnttab)
     " tab number of current tab
     let currentnr = tabpagenr()
+
     highlight MyTabHi cterm=underline, ctermbg=none
-    if i + 1 == currentnr
-      let s .= '%#airline_c#'
-    else
-      let s .= '%#MyTabHi#'
-    endif
+    let hi = (i + 1 == currentnr) ? '%#airline_c#' : '%#MyTabHi#'
 
-    if i == currentnr
-      let s .= ' '
-    endif
+    let space1 = (i == currentnr) ? '  ' : ' '
 
-    " shows the number of tabes
-    let bufno = len(tabpagebuflist(i + 1))
-    if bufno > 1
-      let s .= ' ' . bufno
+    let bufnrs = tabpagebuflist(i+1)
+    " shows the number of windows
+    let bufno = len(bufnrs)
+    if bufno < 2
+      let bufno = ''
     endif
+    " if the buffer is changed, show '+'
+    let mod = len(filter(copy(bufnrs), 'getbufvar(v:val, "&modified")')) ? '+' : ''
+    let space2 = (bufno . mod) ==# '' ? '' : ' '
 
-    let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+    let s .= hi . space1 . bufno . mod . space2 . '%{MyTabLabel(' . (i + 1) . ')} '
 
     " if the tab is not current, add '|'.
     if i + 1 != cnttab && i + 1 != currentnr && i +2 != currentnr
@@ -123,7 +134,11 @@ function MyTabLabel(n)
   let buflist = tabpagebuflist(a:n)
   let winnr = tabpagewinnr(a:n)
   "don't show directory name
-  return substitute(bufname(buflist[winnr - 1]), '.\+\/', '', '')
+  let res = substitute(bufname(buflist[winnr - 1]), '.\+\/', '', '')
+  if res ==# ''
+    let res = '[]'
+  endif
+  return res
 endfunction
 
 set tabline=%!MyTabLine()

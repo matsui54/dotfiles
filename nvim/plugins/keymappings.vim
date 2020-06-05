@@ -12,5 +12,7 @@ nnoremap <silent> <C-j> gT
 nnoremap <silent> <C-k> gt
 nnoremap <expr>d (&modifiable) ? "d" : "\<C-d>"
 nnoremap <expr>u (&modifiable) ? "u" : "\<C-u>"
+nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 
 cnoremap <silent><C-Space> :call system('fcitx-remote -c')<CR>:
+cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'

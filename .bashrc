@@ -136,11 +136,14 @@ function vimsettings() {
 	nvim -O ~/.config/nvim/*.toml
 }
 
+if [ -f $HOME/.xkb/keymap/mykbd ]; then
+  xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mykbd $DISPLAY 2> /dev/null
+fi
 
-#powerlineSettings------------------------------------------------
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:~/.local/bin
+export PATH+=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:~/.local/bin
 export HISTTIMEFORMAT='%F %T '
 
+#powerlineSettings------------------------------------------------
 function _update_ps1() {
     PS1=$(powerline-shell $?)
 }
@@ -148,3 +151,4 @@ function _update_ps1() {
 if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
     PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
 fi
+
