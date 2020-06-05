@@ -9,7 +9,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
-hook_add = '''
+hook_source = '''
 	source ~/.config/nvim/plugins/deoplete.vim
 '''
 
