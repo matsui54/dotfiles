@@ -40,3 +40,5 @@ let g:OxfDictionary#app_key='c4603e15e4eb3f7219bd477823507ad6'
 [[plugins]]
 repo = 'Shougo/denite.nvim'
 
+[[plugins]]
+repo = 'Shougo/defx.nvim'
