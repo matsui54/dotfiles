@@ -1,5 +1,5 @@
-
 autocmd FileType defx call s:defx_my_settings()
+
 function! s:defx_my_settings() abort
   " Define mappings
   nnoremap <silent><buffer><expr> <CR>
@@ -16,6 +16,8 @@ function! s:defx_my_settings() abort
         \ defx#do_action('open', 'vsplit')
   nnoremap <silent><buffer><expr> P
         \ defx#do_action('open', 'pedit')
+  nnoremap <silent><buffer><expr> t
+        \ defx#do_action('open', 'tabe')
   nnoremap <silent><buffer><expr> o
         \ defx#do_action('open_tree', 'toggle')
   nnoremap <silent><buffer><expr> K
@@ -30,7 +32,7 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> S
         \ defx#do_action('toggle_sort', 'time')
   nnoremap <silent><buffer><expr> d
-        \ defx#do_action('remove')
+        \ defx#do_action('remove_trash')
   nnoremap <silent><buffer><expr> r
         \ defx#do_action('rename')
   nnoremap <silent><buffer><expr> !
@@ -54,7 +56,7 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> *
         \ defx#do_action('toggle_select_all')
   nnoremap <silent><buffer><expr> j
-        \ line('.') == line('$') ? 'gg' : 'j'
+        \ line('.') == line('$') ? 'tab' : 'j'
   nnoremap <silent><buffer><expr> k
         \ line('.') == 1 ? 'G' : 'k'
   nnoremap <silent><buffer><expr> <C-l>

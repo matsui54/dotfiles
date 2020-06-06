@@ -55,5 +55,5 @@ call defx#custom#column('icon', {
 '''
 hook_add = '''
   source ~/.config/nvim/plugins/defx.vim
-  nnoremap <silent><C-f> :<C-u>Defx -split=floating<CR>
+  nnoremap <silent><C-f> :<C-u>Defx -split=tab<CR>
 '''
