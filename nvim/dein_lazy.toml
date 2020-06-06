@@ -9,8 +9,10 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
-hook_source = '''
-	source ~/.config/nvim/plugins/deoplete.vim
+hook_add = '''
+  let g:deoplete#enable_at_startup = 1
+  autocmd InsertLeave * silent! pclose!
+  inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
 '''
 
 [[plugins]]
@@ -27,4 +29,7 @@ let g:calendar_google_calendar = 1
 let g:calendar_google_task = 1
 source ~/.cache/calendar.vim/credentials.vim
 '''
+
+[[plugins]]
+repo = 'Shougo/denite.nvim'
 
