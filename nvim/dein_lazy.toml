@@ -42,3 +42,18 @@ repo = 'Shougo/denite.nvim'
 
 [[plugins]]
 repo = 'Shougo/defx.nvim'
+hook_add = '''
+  source ~/.config/nvim/plugins/defx.vim
+  nnoremap <silent> <C-f> :<C-u>Defx -split=floating<CR>
+'''
+hook_source = '''
+  call defx#custom#column('mark', {
+          \ 'readonly_icon': '✗',
+          \ 'selected_icon': '✓',
+          \ })
+  call defx#custom#column('icon', {
+          \ 'directory_icon': '▸',
+          \ 'opened_icon': '▾',
+          \ 'root_icon': ' ',
+          \ })
+'''
