@@ -31,5 +31,12 @@ source ~/.cache/calendar.vim/credentials.vim
 '''
 
 [[plugins]]
+repo = 'Matsui54/OxfDictionary.nvim'
+hook_add = '''
+let g:OxfDictionary#app_id='3fc46c58'
+let g:OxfDictionary#app_key='c4603e15e4eb3f7219bd477823507ad6'
+'''
+
+[[plugins]]
 repo = 'Shougo/denite.nvim'
 
