@@ -49,6 +49,7 @@ set smartindent
 set clipboard=unnamedplus
 set splitright
 set showmatch
+set showtabline=2
 
 colorscheme PaperColor
 highlight Normal ctermbg=none
@@ -121,9 +122,7 @@ function MyTabLine()
   let s .= '%#MyTabHi#%T'
 
   "Show current directory
-  if cnttab > 1
-    let s .= '%=%#Cursor#%{fnamemodify(getcwd(), ":~/")}'
-  endif
+  let s .= '%=%#Cursor#%{fnamemodify(getcwd(), ":~/")}'
 
   return s
 endfunction
