@@ -12,3 +12,6 @@ nnoremap <Leader>f :ALEFix <CR>
 nnoremap <Leader>gd :ALEGoToDefinition <CR>
 nnoremap <Leader>h :ALEHover <CR>
 nnoremap <Leader>rn :ALERename <CR>
+nnoremap <expr><C-]> (count(['cpp', 'python'], &filetype)) ?
+      \":ALEGoToDefinition<CR>"
+      \: "<C-]>"
