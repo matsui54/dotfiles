@@ -38,7 +38,9 @@ call map(dein#check_clean(), "delete(v:val, 'rf')")
 call dein#recache_runtimepath()
 " end dein settings---------------------------------------
 
-
+let g:OxfDictionary#app_id='3fc46c58'
+let g:OxfDictionary#app_key='c4603e15e4eb3f7219bd477823507ad6'
+set runtimepath+=/home/haruki/work/OxfDictionary.nvim
 
 set number
 set title

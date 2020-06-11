@@ -1,5 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =6
+let g:netrw_dirhistcnt =7
+let g:netrw_dirhist_7='/home/haruki'
 let g:netrw_dirhist_6='/home/haruki/dotfiles/nvim'
 let g:netrw_dirhist_5='/home/haruki/dotfiles/nvim/plugins'
 let g:netrw_dirhist_4='/home/haruki/dotfiles/nvim'
@@ -9,4 +10,3 @@ let g:netrw_dirhist_1='/home/haruki/work'
 let g:netrw_dirhist_0='/home/haruki/work/GoogleDrive.nvim'
 let g:netrw_dirhist_9='/home/haruki/work'
 let g:netrw_dirhist_8='/home/haruki/work/typing'
-let g:netrw_dirhist_7='/home/haruki/work'

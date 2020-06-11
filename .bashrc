@@ -117,19 +117,7 @@ if ! shopt -oq posix; then
 fi
 
 #Additional Settings-----------------------------------------------
-function atcoder() {
-	cd ~/Programming
-	if [ -f stdin.txt ]; then
-		rm stdin.txt
-	fi
-#if [ -f stdout.txt ]; then
-#rm stdout.txt
-#fi
-	touch stdin.txt
-#touch stdout.txt
-	#nvim $1 -o stdin.txt stdout.txt -c ":wincmd H"
-	nvim $1 -O stdin.txt 
-}
+alias lll='ll | less'
 
 function vimsettings() {
 	cd ~/.config/nvim
