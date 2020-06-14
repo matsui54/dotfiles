@@ -32,6 +32,9 @@ repo = 'sheerun/vim-polyglot'
 repo = 'neoclide/coc.nvim'
 merged = 0
 rev = 'release'
+hook_add = '''
+  source ~/.config/nvim/plugins/coc.vim
+'''
 
 [[plugins]]
 repo = 'tomasr/molokai'
