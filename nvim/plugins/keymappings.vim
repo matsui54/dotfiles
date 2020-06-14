@@ -12,10 +12,11 @@ nnoremap <expr><silent> <Right> (win_screenpos(win_getid())[1] < 3) ?
 nnoremap <expr><silent> <Left> (win_screenpos(win_getid())[1] < 3) ?
       \":wincmd <<CR>" : ":wincmd ><CR>"
 nnoremap <Space> :
-nnoremap <silent> <C-j> gT
-nnoremap <silent> <C-k> gt
+nnoremap <C-j> gT
+nnoremap <C-k> gt
 nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 nnoremap G Gzz7<C-y>
+nnoremap <Leader>cd :lcd %:h<CR>
 
 cnoremap <silent><C-Space> :call system('fcitx-remote -c')<CR>:
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'

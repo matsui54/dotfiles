@@ -52,14 +52,35 @@ set clipboard=unnamedplus
 set splitright
 set showmatch
 set showtabline=2
+set termguicolors
+set smartcase
+set completeopt-=preview
 
 colorscheme PaperColor
-highlight Normal ctermbg=none
-highlight LineNr ctermbg=none
 highlight clear MatchParen
-highlight MatchParen cterm=underline
+highlight MatchParen cterm=underline, gui=underline
 
 source ~/.config/nvim/plugins/keymappings.vim
+
+if has('nvim')
+  command! Fterminal :call Floating_terminal()
+endif
+
+function! Floating_terminal() abort
+  call nvim_open_win(
+        \ nvim_create_buf(v:false, v:true), 1,
+        \ {'relative':'win',
+        \ 'width':100,
+        \ 'height':28,
+        \ 'col':20,
+        \ 'row':3}
+        \ )
+  terminal
+  hi MyFWin ctermbg=0, guibg=#000000 " cterm:Black, gui:DarkBlue
+  call nvim_win_set_option(0, 'winhl', 'Normal:MyFWin')
+  setlocal nonumber
+  setlocal winblend=15
+endfunction
 
 augroup vimrc 
   autocmd!
@@ -96,7 +117,7 @@ function MyTabLine()
     " tab number of current tab
     let currentnr = tabpagenr()
 
-    highlight MyTabHi cterm=underline, ctermbg=none
+    highlight MyTabHi cterm=underline, gui=underline
     let hi = (i + 1 == currentnr) ? '%#airline_c#' : '%#MyTabHi#'
 
     let space1 = (i == currentnr) ? '  ' : ' '
