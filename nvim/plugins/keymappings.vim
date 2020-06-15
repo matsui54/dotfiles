@@ -18,5 +18,5 @@ nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 nnoremap G Gzz7<C-y>
 nnoremap <Leader>cd :lcd %:h<CR>
 
-cnoremap <silent><C-Space> :call system('fcitx-remote -c')<CR>:
+cnoremap <silent><expr><C-Space> system('fcitx-remote -c')
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
