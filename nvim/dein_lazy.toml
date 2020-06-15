@@ -68,7 +68,11 @@ call defx#custom#column('icon', {
       \ 'opened_icon': '▾',
       \ 'root_icon': ' ',
       \ })
-nnoremap <silent><C-f> :<C-u>Defx <CR>
+nnoremap <silent><C-f> :<C-u>Defx -split=vertical<CR>
+call defx#custom#option('_', {
+      \ 'winwidth': 40,
+      \ 'direction': 'topleft',
+      \ })
 '''
 hook_add = '''
 source ~/.config/nvim/plugins/defx.vim

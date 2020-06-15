@@ -146,7 +146,9 @@ function MyTabLine()
   let s .= '%#MyTabHi#%T'
 
   "Show current directory
-  let s .= '%=%#Cursor#%{fnamemodify(getcwd(), ":~/")}'
+  let s .= '%=%#MyTabHi#'
+  let s .= strftime('%H:%M')
+  let s .= ' %#Cursor#%{fnamemodify(getcwd(), ":~/")}'
 
   return s
 endfunction
