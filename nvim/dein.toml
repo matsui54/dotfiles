@@ -18,15 +18,23 @@ repo = 'sheerun/vim-polyglot'
 #lua require'nvim_lsp'.clangd.setup{}
 #'''
 
-[[plugins]]
-repo = 'dense-analysis/ale'
-hook_add = '''
-source ~/.config/nvim/plugins/ale.vim
-'''
+# [[plugins]]
+# repo = 'dense-analysis/ale'
+# hook_add = '''
+# source ~/.config/nvim/plugins/ale.vim
+# '''
+
+# [[plugins]]
+# repo = 'tbodt/deoplete-tabnine'
+# build = './install.sh'
 
 [[plugins]]
-repo = 'tbodt/deoplete-tabnine'
-build = './install.sh'
+repo = 'neoclide/coc.nvim'
+merged = 0
+rev = 'release'
+hook_add = '''
+  source ~/.config/nvim/plugins/coc.vim
+'''
 
 [[plugins]]
 repo = 'tomasr/molokai'
@@ -49,8 +57,8 @@ hook_add = '''
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 '''
 
-[[plugins]]
-repo = 'Shougo/neosnippet-snippets'
+# [[plugins]]
+# repo = 'Shougo/neosnippet-snippets'
 
 [[plugins]]
 repo = 'tpope/vim-surround'
