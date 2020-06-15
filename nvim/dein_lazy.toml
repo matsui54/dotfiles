@@ -13,12 +13,12 @@ hook_add = '''
 #   source ~/.config/nvim/plugins/deoplete.vim
 # '''
 
-[[plugins]]
-repo = 'Shougo/neco-vim'
-on_ft = 'vim'
+# [[plugins]]
+# repo = 'Shougo/neco-vim'
+# on_ft = 'vim'
 
-[[plugins]]
-repo = 'neoclide/coc-neco'
+# [[plugins]]
+# repo = 'neoclide/coc-neco'
 
 # [[plugins]]
 # repo = 'ncm2/float-preview.nvim'
