@@ -54,6 +54,7 @@ set showmatch
 set showtabline=2
 set termguicolors
 set smartcase
+set ignorecase
 set completeopt-=preview
 
 colorscheme PaperColor
