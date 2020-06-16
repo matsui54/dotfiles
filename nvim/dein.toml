@@ -43,6 +43,12 @@ repo = 'tomasr/molokai'
 repo = 'NLKNguyen/papercolor-theme'
 
 [[plugins]]
+repo = 'cocopon/iceberg.vim'
+
+[[plugins]]
+repo = 'w0ng/vim-hybrid'
+
+[[plugins]]
 repo = 'vim-airline/vim-airline'
 hook_add = '''
 	source ~/.config/nvim/plugins/airline.vim
