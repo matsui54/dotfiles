@@ -57,7 +57,7 @@ set smartcase
 set ignorecase
 set completeopt-=preview
 
-colorscheme PaperColor
+colorscheme hybrid
 highlight clear MatchParen
 highlight MatchParen cterm=underline, gui=underline
 

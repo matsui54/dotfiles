@@ -49,6 +49,12 @@ repo = 'cocopon/iceberg.vim'
 repo = 'w0ng/vim-hybrid'
 
 [[plugins]]
+repo = 'altercation/vim-colors-solarized'
+
+[[plugins]]
+repo = 'octol/vim-cpp-enhanced-highlight'
+
+[[plugins]]
 repo = 'vim-airline/vim-airline'
 hook_add = '''
 	source ~/.config/nvim/plugins/airline.vim
