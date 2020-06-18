@@ -4,30 +4,6 @@ repo = 'Shougo/dein.vim'
 [[plugins]]
 repo = 'sheerun/vim-polyglot'
 
-#[[plugins]]
-#repo = 'autozimu/LanguageClient-neovim'
-#rev = 'next'
-#build = 'bash install.sh'
-#hook_add = '''
-	#source ~/.config/nvim/plugins/languageclient.vim
-#'''
-
-#[[plugins]]
-#repo = 'neovim/nvim-lsp'
-#hook_add = '''
-#lua require'nvim_lsp'.clangd.setup{}
-#'''
-
-# [[plugins]]
-# repo = 'dense-analysis/ale'
-# hook_add = '''
-# source ~/.config/nvim/plugins/ale.vim
-# '''
-
-# [[plugins]]
-# repo = 'tbodt/deoplete-tabnine'
-# build = './install.sh'
-
 [[plugins]]
 repo = 'neoclide/coc.nvim'
 merged = 0
@@ -69,9 +45,6 @@ hook_add = '''
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 '''
 
-# [[plugins]]
-# repo = 'Shougo/neosnippet-snippets'
-
 [[plugins]]
 repo = 'tpope/vim-surround'
 
@@ -86,3 +59,31 @@ set helplang=ja
 
 [[plugins]]
 repo = 'tpope/vim-commentary'
+
+#[[plugins]]
+#repo = 'autozimu/LanguageClient-neovim'
+#rev = 'next'
+#build = 'bash install.sh'
+#hook_add = '''
+	#source ~/.config/nvim/plugins/languageclient.vim
+#'''
+
+#[[plugins]]
+#repo = 'neovim/nvim-lsp'
+#hook_add = '''
+#lua require'nvim_lsp'.clangd.setup{}
+#'''
+
+# [[plugins]]
+# repo = 'dense-analysis/ale'
+# hook_add = '''
+# source ~/.config/nvim/plugins/ale.vim
+# '''
+
+# [[plugins]]
+# repo = 'tbodt/deoplete-tabnine'
+# build = './install.sh'
+
+# [[plugins]]
+# repo = 'Shougo/neosnippet-snippets'
+

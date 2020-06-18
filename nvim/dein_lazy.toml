@@ -4,6 +4,39 @@ hook_add = '''
 	source ~/.config/nvim/plugins/quickrun.vim
 '''
 
+[[plugins]]
+repo = 'itchyny/calendar.vim'
+# hook_add = '''
+# let g:calendar_google_calendar = 1
+# let g:calendar_google_task = 1
+# source ~/.cache/calendar.vim/credentials.vim
+# '''
+
+[[plugins]]
+repo = 'Shougo/denite.nvim'
+
+[[plugins]]
+repo = 'Shougo/defx.nvim'
+hook_source = '''
+call defx#custom#column('mark', {
+      \ 'readonly_icon': '✗',
+      \ 'selected_icon': '✓',
+      \ })
+call defx#custom#column('icon', {
+      \ 'directory_icon': '▸',
+      \ 'opened_icon': '▾',
+      \ 'root_icon': ' ',
+      \ })
+nnoremap <silent><C-f> :<C-u>Defx -split=vertical<CR>
+call defx#custom#option('_', {
+      \ 'winwidth': 40,
+      \ 'direction': 'topleft',
+      \ })
+'''
+hook_add = '''
+source ~/.config/nvim/plugins/defx.vim
+'''
+
 # [[plugins]]
 # repo = 'Shougo/neoinclude.vim'
 
@@ -45,35 +78,3 @@ hook_add = '''
 # 	source ~/.config/nvim/plugins/neosnippet.vim
 # '''
 
-[[plugins]]
-repo = 'itchyny/calendar.vim'
-# hook_add = '''
-# let g:calendar_google_calendar = 1
-# let g:calendar_google_task = 1
-# source ~/.cache/calendar.vim/credentials.vim
-# '''
-
-[[plugins]]
-repo = 'Shougo/denite.nvim'
-
-[[plugins]]
-repo = 'Shougo/defx.nvim'
-hook_source = '''
-call defx#custom#column('mark', {
-      \ 'readonly_icon': '✗',
-      \ 'selected_icon': '✓',
-      \ })
-call defx#custom#column('icon', {
-      \ 'directory_icon': '▸',
-      \ 'opened_icon': '▾',
-      \ 'root_icon': ' ',
-      \ })
-nnoremap <silent><C-f> :<C-u>Defx -split=vertical<CR>
-call defx#custom#option('_', {
-      \ 'winwidth': 40,
-      \ 'direction': 'topleft',
-      \ })
-'''
-hook_add = '''
-source ~/.config/nvim/plugins/defx.vim
-'''
