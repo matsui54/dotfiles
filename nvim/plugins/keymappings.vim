@@ -1,4 +1,5 @@
 inoremap <silent> jj <ESC>
+inoremap {<Enter> {}<Left><CR><ESC><S-o>
 
 nnoremap <expr><F5> (&filetype=='vim') ? ":w <bar> :source %<CR>" 
 			\: (&filetype=='python') ? ":wa <bar> :!python3 %" 
