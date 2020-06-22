@@ -1,22 +1,24 @@
 # Use emacs keybindings even if our EDITOR is set to vi
 bindkey -e
 
+# Use vim keys in tab complete menu:
+bindkey -M menuselect 'h' backward-char
+bindkey -M menuselect 'k' up-line-or-history
+bindkey -M menuselect 'l' forward-char
+bindkey -M menuselect 'j' down-line-or-history
+
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=5000
 SAVEHIST=10000
 HISTFILE=~/.zsh_history
 
 # enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
+alias ls='ls --color=auto'
+#alias dir='dir --color=auto'
+#alias vdir='vdir --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 
 # ls aliases
 alias ll='ls -alF'
@@ -36,6 +38,7 @@ setopt histignorealldups sharehistory
 setopt hist_reduce_blanks
 # Ignore add history if space
 setopt hist_ignore_space
+setopt menu_complete
 
 # Use modern completion system
 autoload -Uz compinit
@@ -45,7 +48,7 @@ zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=1
+zstyle ':completion:*' menu select interactive
 eval "$(dircolors -b)"
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
