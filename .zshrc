@@ -1,12 +1,3 @@
-# Use emacs keybindings even if our EDITOR is set to vi
-bindkey -e
-
-# Use vim keys in tab complete menu:
-bindkey -M menuselect 'h' backward-char
-bindkey -M menuselect 'k' up-line-or-history
-bindkey -M menuselect 'l' forward-char
-bindkey -M menuselect 'j' down-line-or-history
-
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=5000
 SAVEHIST=10000
@@ -26,12 +17,14 @@ alias la='ls -A'
 alias l='ls -CF'
 
 DIRSTACKSIZE=100
-setopt AUTO_PUSHD
+setopt auto_pushd
 setopt pushd_minus
+# .. -> 'cd ..'
+setopt auto_cd
 ## Remove duplicate entries
-setopt PUSHD_IGNORE_DUPS
+setopt pushd_ignore_dups
 ## This reverts the +/- operators.
-setopt PUSHD_TO_HOME
+setopt pushd_to_home
 # Ignore dups
 setopt histignorealldups sharehistory
 # Reduce spaces
@@ -85,6 +78,16 @@ zstyle ':vcs_info:git:*' unstagedstr "%F{red}+"
 zstyle ':vcs_info:*' formats "%F{green}%c%u[%b]%f"
 zstyle ':vcs_info:*' actionformats '[%b|%a]'
 precmd () { vcs_info }
+
+# Use emacs keybindings even if our EDITOR is set to vi
+bindkey -e
+
+# Use vim keys in tab complete menu:
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+zmodload zsh/complist
 
 if [ -d ~/.zsh/zsh-syntax-highlighting ]; then
   source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

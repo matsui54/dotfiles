@@ -13,6 +13,14 @@ repo = 'itchyny/calendar.vim'
 # '''
 
 [[plugins]]
+repo = "puremourning/vimspector"
+on_ft = ["python", "cpp"]
+build = "./install_gadget.py --enable-python --enable-c"
+hook_add = '''
+  source ~/.config/nvim/plugins/vimspector.vim
+'''
+
+[[plugins]]
 repo = 'Shougo/denite.nvim'
 
 [[plugins]]
@@ -27,9 +35,9 @@ call defx#custom#column('icon', {
       \ 'opened_icon': '▾',
       \ 'root_icon': ' ',
       \ })
-nnoremap <silent><C-f> :<C-u>Defx -split=vertical<CR>
+nnoremap <silent><C-f> :<C-u>Defx -resume -listed -split=vertical<CR>
 call defx#custom#option('_', {
-      \ 'winwidth': 40,
+      \ 'winwidth': 30,
       \ 'direction': 'topleft',
       \ })
 '''

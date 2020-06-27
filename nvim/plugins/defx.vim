@@ -1,8 +1,15 @@
 autocmd FileType defx call s:defx_my_settings()
 
+function! s:quick_view()
+  let win = win_getid()
+  call defx#call_action('drop')
+  call win_gotoid(win)
+endfunction
 function! s:defx_my_settings() abort
   " Define mappings
   nnoremap <silent><buffer><expr> <CR>
+        \ defx#is_directory() ?
+        \ defx#do_action('open_directory') :
         \ defx#do_action('multi', ['drop', 'quit'])
   nnoremap <silent><buffer><expr> c
         \ defx#do_action('copy')
@@ -11,7 +18,9 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> p
         \ defx#do_action('paste')
   nnoremap <silent><buffer><expr> l
-        \ defx#do_action('drop')
+        \ defx#is_directory() ?
+        \ defx#do_action('open_directory') :
+        \ ":call <SID>quick_view()<CR>"
   nnoremap <silent><buffer><expr> E
         \ defx#do_action('open', 'vsplit')
   nnoremap <silent><buffer><expr> P
@@ -20,6 +29,8 @@ function! s:defx_my_settings() abort
         \ defx#do_action('open', 'tabnew')
   nnoremap <silent><buffer><expr> o
         \ defx#do_action('open_tree', 'toggle')
+  nnoremap <silent><buffer><expr> O
+        \ defx#async_action('open_tree', 'recursive')
   nnoremap <silent><buffer><expr> K
         \ defx#do_action('new_directory')
   nnoremap <silent><buffer><expr> N
@@ -43,8 +54,6 @@ function! s:defx_my_settings() abort
         \ defx#do_action('yank_path')
   nnoremap <silent><buffer><expr> .
         \ defx#do_action('toggle_ignored_files')
-  nnoremap <silent><buffer><expr> ;
-        \ defx#do_action('repeat')
   nnoremap <silent><buffer><expr> h
         \ defx#do_action('cd', ['..'])
   nnoremap <silent><buffer><expr> ~
@@ -65,4 +74,9 @@ function! s:defx_my_settings() abort
         \ defx#do_action('print')
   nnoremap <silent><buffer><expr> cd
         \ defx#do_action('change_vim_cwd')
+  nnoremap <silent><buffer><expr> '
+        \ defx#do_action('cd', [getcwd()])
+  nnoremap <silent><buffer><expr> <TAB>
+        \ winwidth(0) > 50 ? ":30 wincmd < <CR>" :
+        \ ":30 wincmd > <CR>"
 endfunction
