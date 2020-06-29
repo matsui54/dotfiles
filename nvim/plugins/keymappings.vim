@@ -3,12 +3,15 @@ inoremap jj <ESC>
 " add bracket automatically
 inoremap <silent><expr> <CR> <SID>check_bracket()
 function! s:check_bracket()
-  let col = col('.') - 1
-  let char = getline('.')[col - 1]
+  let char = getline('.')[col('.') - 2]
   let brackets = {'{':'}', '(':')', '[':']'}
-  let ope=''
-  if get(brackets, char, '') != ''
-    let ope = brackets[char] . "\<Left>\<CR>\<ESC>\<S-o>"
+  let c_bracket = get(brackets, char, '')
+  let ope = ''
+  if c_bracket != ''
+    if c_bracket != getline('.')[col('.') - 1]
+      let ope = brackets[char] . "\<Left>"
+    endif
+    let ope .= "\<CR>\<ESC>\<S-o>"
   else
     let ope = "\<CR>"
   endif
