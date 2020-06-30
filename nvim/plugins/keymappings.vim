@@ -21,6 +21,8 @@ endfunction
 nnoremap <expr> <leader>d (&filetype=='vim') ? ":w <bar> :source %<CR>" :
       \ (&filetype=='python') ? ":QuickRun <CR>" :
       \ ":wa <bar> :wincmd t <bar> :QuickRun <in.txt <CR>"
+
+" resize window using arrow key
 nnoremap <expr><silent> <Up> (win_screenpos(win_getid())[0] < 3) ?
       \":wincmd -<CR>" : ":wincmd +<CR>"
 nnoremap <expr><silent> <Down> (win_screenpos(win_getid())[0] < 3) ?
@@ -29,15 +31,26 @@ nnoremap <expr><silent> <Right> (win_screenpos(win_getid())[1] < 3) ?
       \":wincmd ><CR>" : ":wincmd <<CR>"
 nnoremap <expr><silent> <Left> (win_screenpos(win_getid())[1] < 3) ?
       \":wincmd <<CR>" : ":wincmd ><CR>"
+
 nnoremap ; :
+
+" move around tabpages
 nnoremap <C-j> gT
 nnoremap <C-k> gt
+
+" stop highlight for search
 nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
+
+" improved G
 nnoremap G Gzz7<C-y>
+
 "change local directory
 nnoremap <Leader>cd :lcd %:h<CR>
+
 nnoremap j gj
 nnoremap k gk
 
 cnoremap <silent><expr> <C-Space> system('fcitx-remote -c')
+
+" insert current directory
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'

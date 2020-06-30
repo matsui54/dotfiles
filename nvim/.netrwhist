@@ -1,5 +1,8 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =8
+let g:netrw_dirhistcnt =1
+let g:netrw_dirhist_1='/home/haruki/work/OxfDictionary.nvim/rplugin/python3/oxfdictionary'
+let g:netrw_dirhist_0='/home/haruki/work/OxfDictionary.nvim/rplugin/python3'
+let g:netrw_dirhist_9='/home/haruki/work/OxfDictionary.nvim/rplugin/python3/__pycache__'
 let g:netrw_dirhist_8='/home/haruki/work/Programming/examples'
 let g:netrw_dirhist_7='/home/haruki/.cache/dein/repos/github.com/puremourning/vimspector/support/test/python/simple_python'
 let g:netrw_dirhist_6='/home/haruki/.cache/dein/repos/github.com/puremourning/vimspector/support/test/python'
@@ -7,6 +10,3 @@ let g:netrw_dirhist_5='/home/haruki/.cache/dein/repos/github.com/puremourning/vi
 let g:netrw_dirhist_4='/home/haruki/.cache/dein/repos/github.com/puremourning/vimspector/support/test/example'
 let g:netrw_dirhist_3='/home/haruki/.cache/dein/repos/github.com/puremourning/vimspector/support/test'
 let g:netrw_dirhist_2='/home/haruki/.cache/dein/repos/github.com/puremourning/vimspector/support/test/python'
-let g:netrw_dirhist_1='/home/haruki/.cache/dein/repos/github.com/puremourning/vimspector/support/test'
-let g:netrw_dirhist_0='/home/haruki/.cache/dein/repos/github.com/puremourning/vimspector/support'
-let g:netrw_dirhist_9='/home/haruki/.cache/dein/repos/github.com/puremourning/vimspector'

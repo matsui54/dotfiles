@@ -3,6 +3,7 @@ HISTSIZE=5000
 SAVEHIST=10000
 HISTFILE=~/.zsh_history
 
+EDITOR='nvim'
 # enable color support of ls and also add handy aliases
 alias ls='ls --color=auto'
 #alias dir='dir --color=auto'
