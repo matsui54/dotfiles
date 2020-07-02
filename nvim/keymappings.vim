@@ -18,9 +18,11 @@ function! s:check_bracket()
   return ope
 endfunction
 
-nnoremap <expr> <leader>d (&filetype=='vim') ? ":w <bar> :source %<CR>" :
-      \ (&filetype=='python') ? ":QuickRun <CR>" :
-      \ ":wa <bar> :wincmd t <bar> :QuickRun <in.txt <CR>"
+if has('nvim')
+  nnoremap <expr> <leader>d (&filetype=='vim') ? ":w <bar> :source %<CR>" :
+        \ (&filetype=='python') ? ":QuickRun <CR>" :
+        \ ":wa <bar> :wincmd t <bar> :QuickRun <in.txt <CR>"
+endif
 
 " resize window using arrow key
 nnoremap <expr><silent> <Up> (win_screenpos(win_getid())[0] < 3) ?
@@ -50,7 +52,6 @@ nnoremap <Leader>cd :lcd %:h<CR>
 nnoremap j gj
 nnoremap k gk
 
-cnoremap <silent><expr> <C-Space> system('fcitx-remote -c')
 
 " insert current directory
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
