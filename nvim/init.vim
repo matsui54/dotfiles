@@ -63,6 +63,8 @@ highlight MatchParen cterm=underline, gui=underline
 
 source ~/.config/nvim/plugins/keymappings.vim
 
+command Vterm :vsplit | :terminal
+
 if has('nvim')
   command! Fterminal :call Floating_terminal()
 endif
@@ -83,20 +85,36 @@ function! Floating_terminal() abort
   setlocal winblend=15
 endfunction
 
-augroup vimrc 
-  autocmd!
-augroup END
-
 if has('unix')
   augroup im_change
-    autocmd InsertEnter * :call system('fcitx-remote -c')
-    autocmd InsertLeave * :call system('fcitx-remote -o')
+    autocmd!
+    autocmd InsertEnter * :call <SID>resume_ime()
+    autocmd InsertLeave * :call <SID>save_fcitx_status()
     autocmd VimEnter * :call system('fcitx-remote -o')
-    autocmd VimLeave * :call system('fcitx-remote -c')
-    autocmd CmdlineLeave * :call system('fcitx-remote -o')
+    " autocmd VimLeave * :call system('fcitx-remote -o')
+    " autocmd CmdlineLeave * :call system('fcitx-remote -o')
+    " autocmd CompleteChanged * :call system('fcitx-remote -c')
   augroup END
 endif
 
+let g:fcitx_status = 'en'
+
+function! s:save_fcitx_status()
+  if system('fcitx-remote') == 1
+    let g:fcitx_status = 'ja'
+  else
+    let g:fcitx_status = 'en'
+  endif
+  call system('fcitx-remote -o')
+endfunction
+
+function! s:resume_ime()
+  if g:fcitx_status ==# 'ja'
+    call system('fcitx-remote -c')
+  else
+    call system('fcitx-remote -o')
+  endif
+endfunction
 
 " netrw settings------------------------------------------
 let g:netrw_preview=1
@@ -106,7 +124,6 @@ function! Netrw_map_space(islocal) abort
 endfunction
 
 let g:Netrw_UserMaps = [['<Space>', 'Netrw_map_space']]
-
 
 " tabline settings----------------------------------------
 function MyTabLine()
