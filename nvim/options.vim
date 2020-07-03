@@ -43,33 +43,33 @@ endfunction
 if has('unix')
   augroup im_change
     autocmd!
-    autocmd InsertEnter * :call <SID>resume_ime()
-    autocmd InsertLeave * :call <SID>save_fcitx_status()
+    autocmd InsertEnter * :call system('fcitx-remote -c')
+    autocmd InsertLeave * :call system('fcitx-remote -o')
     autocmd VimEnter * :call system('fcitx-remote -o')
-    " autocmd VimLeave * :call system('fcitx-remote -o')
-    " autocmd CmdlineLeave * :call system('fcitx-remote -o')
-    " autocmd CompleteChanged * :call system('fcitx-remote -c')
+    autocmd VimLeave * :call system('fcitx-remote -c')
+    autocmd CmdlineLeave * :call system('fcitx-remote -o')
+    autocmd CompleteChanged * :call system('fcitx-remote -c')
   augroup END
 
-  let g:fcitx_status = 'en'
+  " let g:fcitx_status = 'en'
 endif
 
-function! s:save_fcitx_status()
-  if system('fcitx-remote') == 1
-    let g:fcitx_status = 'ja'
-  else
-    let g:fcitx_status = 'en'
-  endif
-  call system('fcitx-remote -o')
-endfunction
+" function! s:save_fcitx_status()
+"   if system('fcitx-remote') == 1
+"     let g:fcitx_status = 'ja'
+"   else
+"     let g:fcitx_status = 'en'
+"   endif
+"   call system('fcitx-remote -o')
+" endfunction
 
-function! s:resume_ime()
-  if g:fcitx_status ==# 'ja'
-    call system('fcitx-remote -c')
-  else
-    call system('fcitx-remote -o')
-  endif
-endfunction
+" function! s:resume_ime()
+"   if g:fcitx_status ==# 'ja'
+"     call system('fcitx-remote -c')
+"   else
+"     call system('fcitx-remote -o')
+"   endif
+" endfunction
 
 " netrw settings------------------------------------------
 let g:netrw_preview=1

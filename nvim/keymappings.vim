@@ -55,3 +55,7 @@ nnoremap k gk
 
 " insert current directory
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+
+if has('unix')
+cnoremap <silent><expr> <C-Space> system('fcitx-remote -c')
+endif
