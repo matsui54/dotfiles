@@ -21,7 +21,8 @@ if has('nvim')
   highlight clear MatchParen
   highlight MatchParen cterm=underline, gui=underline
   command! Fterminal :call Floating_terminal()
-  command Vterm :vsplit | :terminal
+  command! Vterm :vsplit | :terminal
+  command! Tterm :tabnew | :terminal
 endif
 
 function! Floating_terminal() abort
@@ -73,12 +74,6 @@ endif
 
 " netrw settings------------------------------------------
 let g:netrw_preview=1
-
-function! Netrw_map_space(islocal) abort
-  return 'normal! <Space>'
-endfunction
-
-let g:Netrw_UserMaps = [['<Space>', 'Netrw_map_space']]
 
 autocmd FileType netrw call s:netrw_my_settings()
 
