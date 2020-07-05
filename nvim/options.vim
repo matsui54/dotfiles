@@ -41,7 +41,11 @@ function! Floating_terminal() abort
   setlocal winblend=15
 endfunction
 
-if has('unix')
+function! s:is_wsl()
+  return executable('cmd.exe')
+endfunction
+
+if has('unix') && !s:is_wsl()
   augroup im_change
     autocmd!
     autocmd InsertEnter * :call system('fcitx-remote -c')
