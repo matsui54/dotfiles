@@ -21,6 +21,7 @@ function! s:enter_debug_mode() abort
   nmap <LeftMouse> <LeftMouse><CR>
   " :の前の<CR>はマウスクリックのズレをなくすため
   nnoremap <buffer> <CR> <CR>:call vimspector#ToggleBreakpoint()<CR>
+  nmap <F5> <Plug>VimspectorContinue
   call vimspector#Continue()
 endfunction
 
@@ -28,5 +29,6 @@ function! s:exit_debug_mode() abort
   set mouse=
   nnoremap <LeftMouse> <LeftMouse>
   nnoremap <CR> <CR>
+  nmap <F5> :call <SID>enter_debug_mode()<CR>
   VimspectorReset
 endfunction

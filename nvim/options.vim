@@ -17,7 +17,7 @@ set ignorecase
 set completeopt-=preview
 
 if has('nvim')
-  colorscheme hybrid
+  colorscheme iceberg
   highlight clear MatchParen
   highlight MatchParen cterm=underline, gui=underline
   command! Fterminal :call Floating_terminal()
@@ -56,25 +56,7 @@ if has('unix') && !s:is_wsl()
     autocmd CompleteChanged * :call system('fcitx-remote -c')
   augroup END
 
-  " let g:fcitx_status = 'en'
 endif
-
-" function! s:save_fcitx_status()
-"   if system('fcitx-remote') == 1
-"     let g:fcitx_status = 'ja'
-"   else
-"     let g:fcitx_status = 'en'
-"   endif
-"   call system('fcitx-remote -o')
-" endfunction
-
-" function! s:resume_ime()
-"   if g:fcitx_status ==# 'ja'
-"     call system('fcitx-remote -c')
-"   else
-"     call system('fcitx-remote -o')
-"   endif
-" endfunction
 
 " netrw settings------------------------------------------
 let g:netrw_preview=1
@@ -99,7 +81,7 @@ function MyTabLine()
     let currentnr = tabpagenr()
 
     highlight MyTabHi cterm=underline, gui=underline
-    let hi = (i + 1 == currentnr) ? '%#airline_c#' : '%#MyTabHi#'
+    let hi = (i + 1 == currentnr) ? '%#TabLineSel#' : '%#MyTabHi#'
 
     let space1 = (i == currentnr) ? '  ' : ' '
 

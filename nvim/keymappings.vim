@@ -24,6 +24,8 @@ if has('nvim')
         \ ":wa <bar> :wincmd t <bar> :QuickRun <in.txt <CR>"
 endif
 
+nnoremap <Leader>m :wa <Bar> :make<CR>
+
 " resize window using arrow key
 nnoremap <expr><silent> <Up> (win_screenpos(win_getid())[0] < 3) ?
       \":wincmd -<CR>" : ":wincmd +<CR>"
