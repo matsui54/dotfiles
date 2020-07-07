@@ -81,4 +81,9 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> <TAB>
         \ winwidth(0) > 50 ? ":30 wincmd < <CR>" :
         \ ":30 wincmd > <CR>"
+
+  if isdirectory($WIN_HOME)
+    nnoremap <silent><buffer><expr> w
+          \ defx#do_action('cd', [$WIN_HOME])
+  endif
 endfunction

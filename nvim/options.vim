@@ -55,7 +55,6 @@ if has('unix') && !s:is_wsl()
     autocmd CmdlineLeave * :call system('fcitx-remote -o')
     autocmd CompleteChanged * :call system('fcitx-remote -c')
   augroup END
-
 endif
 
 " netrw settings------------------------------------------

@@ -80,6 +80,11 @@ zstyle ':vcs_info:*' formats "%F{green}%c%u[%b]%f"
 zstyle ':vcs_info:*' actionformats '[%b|%a]'
 precmd () { vcs_info }
 
+# if wsl
+if [ -d /mnt/c/Users/harum ]; then
+  export WIN_HOME=/mnt/c/Users/harum
+fi
+
 # Use emacs keybindings even if our EDITOR is set to vi
 bindkey -e
 
