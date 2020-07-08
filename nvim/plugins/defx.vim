@@ -67,7 +67,7 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> *
         \ defx#do_action('toggle_select_all')
   nnoremap <silent><buffer><expr> j
-        \ line('.') == line('$') ? 'tab' : 'j'
+        \ line('.') == line('$') ? 'gg' : 'j'
   nnoremap <silent><buffer><expr> k
         \ line('.') == 1 ? 'G' : 'k'
   nnoremap <silent><buffer><expr> <C-l>
