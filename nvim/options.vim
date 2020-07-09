@@ -3,18 +3,37 @@ syntax enable
 
 set number
 set title
+
 set expandtab
 set tabstop=2
 set shiftwidth=0
 set smartindent
+
 set clipboard=unnamedplus
+
 set splitright
+
 set showmatch
 set showtabline=2
+
 set termguicolors
+
 set smartcase
 set ignorecase
+
 set completeopt-=preview
+
+if exists('&inccommand')
+  set inccommand=nosplit
+endif
+
+if exists('&pumblend')
+  set pumblend=30
+endif
+
+if exists('&winblend')
+  set winblend=30
+endif
 
 if has('nvim')
   colorscheme iceberg
