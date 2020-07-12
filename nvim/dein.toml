@@ -13,6 +13,15 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'SirVer/ultisnips'
+hook_add = '''
+  let g:UltiSnipsExpandTrigger='<C-j>'
+'''
+
+[[plugins]]
+repo = 'honza/vim-snippets'
+
+[[plugins]]
 repo = 'tomasr/molokai'
 
 [[plugins]]

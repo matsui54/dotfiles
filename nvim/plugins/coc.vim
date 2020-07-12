@@ -23,8 +23,18 @@ inoremap <silent><expr> <TAB>
       \ coc#refresh()
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-nmap <silent> <Leader>] <Plug>(coc-definition)
-nmap <silent> <Leader>r <Plug>(coc-references)
+" Use <C-j> for trigger snippet expand.
+imap <C-j> <Plug>(coc-snippets-expand)
+
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<C-j>'
+
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -37,15 +47,18 @@ function! s:show_documentation()
 endfunction
 
 nmap <silent><Leader>n <Plug>(coc-rename)
+nmap <silent> <Leader>] <Plug>(coc-definition)
+nmap <silent> <Leader>r <Plug>(coc-references)
 
 xmap <silent><leader>f <Plug>(coc-format-selected)
 nmap <silent><leader>f <plug>(coc-format)
 
+
 augroup coc-config
   autocmd!
-    " Setup formatexpr specified filetype(s).
-    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-	autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup END
 
 " Show commands.

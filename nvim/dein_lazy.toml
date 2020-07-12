@@ -1,7 +1,7 @@
 [[plugins]]
 repo = 'thinca/vim-quickrun'
 hook_add = '''
-	source ~/.config/nvim/plugins/quickrun.vim
+  source ~/.config/nvim/plugins/quickrun.vim
 '''
 
 [[plugins]]
@@ -24,6 +24,7 @@ hook_add = '''
   source ~/.config/nvim/plugins/vimspector.vim
 '''
 
+# TODO:add config
 [[plugins]]
 repo = 'Shougo/denite.nvim'
 

@@ -1,6 +1,6 @@
 {
   "suggest.labelMaxLength": 45,
-  "python.jediEnabled": false,
+  "python.jediEnabled": true,
   "python.linting.pylintEnabled": true,
   "python.linting.flake8Enabled": false,
   "python.linting.mypyEnabled": true
