@@ -18,8 +18,8 @@ if filereadable(expand('~/.vim/colors/iceberg.vim'))
   colorscheme iceberg
 endif
 
-source ~/dotfiles/nvim/options.vim
-source ~/dotfiles/nvim/keymappings.vim
+source ~/dotfiles/nvim/options.rc.vim
+source ~/dotfiles/nvim/map.rc.vim
 
 nnoremap <expr><F5> (&filetype=='vim') ? ":w <bar> :source %<CR>" 
 			\: (&filetype=='python') ? ":wa <bar> :!python3 %" 
