@@ -36,8 +36,8 @@ repo = 'w0ng/vim-hybrid'
 [[plugins]]
 repo = 'altercation/vim-colors-solarized'
 
-[[plugins]]
-repo = 'octol/vim-cpp-enhanced-highlight'
+# [[plugins]]
+# repo = 'octol/vim-cpp-enhanced-highlight'
 
 [[plugins]]
 repo = 'vim-airline/vim-airline'
