@@ -28,9 +28,11 @@ hook_add = '''
 repo = 'jackguo380/vim-lsp-cxx-highlight'
 on_ft = ["cpp"]
 
-# TODO:add config
 [[plugins]]
 repo = 'Shougo/denite.nvim'
+hook_source = '''
+source ~/.config/nvim/plugins/denite.rc.vim
+'''
 
 [[plugins]]
 repo = 'Shougo/defx.nvim'
