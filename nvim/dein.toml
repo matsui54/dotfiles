@@ -9,7 +9,7 @@ repo = 'neoclide/coc.nvim'
 merged = 0
 rev = 'release'
 hook_add = '''
-  source ~/.config/nvim/plugins/coc.vim
+  source ~/.config/nvim/plugins/coc.rc.vim
 '''
 
 [[plugins]]
@@ -42,7 +42,7 @@ repo = 'altercation/vim-colors-solarized'
 [[plugins]]
 repo = 'vim-airline/vim-airline'
 hook_add = '''
-	source ~/.config/nvim/plugins/airline.vim
+	source ~/.config/nvim/plugins/airline.rc.vim
 '''
 
 [[plugins]]

@@ -1,7 +1,7 @@
 [[plugins]]
 repo = 'thinca/vim-quickrun'
 hook_add = '''
-  source ~/.config/nvim/plugins/quickrun.vim
+  source ~/.config/nvim/plugins/quickrun.rc.vim
 '''
 
 [[plugins]]
@@ -21,7 +21,7 @@ repo = "puremourning/vimspector"
 on_ft = ["python", "cpp"]
 build = "./install_gadget.py --enable-python --enable-c"
 hook_add = '''
-  source ~/.config/nvim/plugins/vimspector.vim
+  source ~/.config/nvim/plugins/vimspector.rc.vim
 '''
 
 [[plugins]]
@@ -51,7 +51,7 @@ call defx#custom#option('_', {
       \ })
 '''
 hook_add = '''
-source ~/.config/nvim/plugins/defx.vim
+source ~/.config/nvim/plugins/defx.rc.vim
 '''
 
 # [[plugins]]

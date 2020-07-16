@@ -1,7 +1,7 @@
 let g:quickrun_config = {}
 let g:quickrun_config['cpp'] = {
 			\  'command': 'g++',
-			\  'cmdopt' : '-std=c++17 -Wall',
+			\  'cmdopt' : '-std=c++2a -Wall',
 			\  'outputter' : 'quickfix',
 			\  'outputter/message/log' : 1
 			\}
