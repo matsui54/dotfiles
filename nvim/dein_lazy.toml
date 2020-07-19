@@ -47,10 +47,12 @@ call defx#custom#column('icon', {
       \ 'root_icon': ' ',
       \ })
 nnoremap <silent><C-f> :<C-u>Defx -resume -listed -split=vertical<CR>
+nmap <silent><Space>f <C-f> :call defx#call_action('cd', [expand('~/dotfiles/nvim')])<CR>
+nmap <silent><Space>w <C-f> :call defx#call_action('cd', [expand('~/work')])<CR>
 call defx#custom#option('_', {
       \ 'winwidth': 30,
       \ 'direction': 'topleft',
-      \ 'columns': 'mark:indent:icon:filename:type:size'
+      \ 'columns': 'mark:indent:icon:filename:type:time:size'
       \ })
 '''
 hook_add = '''

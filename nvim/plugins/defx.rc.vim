@@ -62,7 +62,7 @@ function! s:defx_my_settings() abort
         \ defx#do_action('quit')
   nnoremap <silent><buffer><expr> <Esc>
         \ defx#do_action('quit')
-  nnoremap <silent><buffer><expr> <Space>
+  nnoremap <silent><buffer><expr> ,
         \ defx#do_action('toggle_select') . 'j'
   nnoremap <silent><buffer><expr> *
         \ defx#do_action('toggle_select_all')
@@ -79,8 +79,8 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> '
         \ defx#do_action('cd', [getcwd()])
   nnoremap <silent><buffer><expr> <TAB>
-        \ winwidth(0) > 50 ? ":30 wincmd < <CR>" :
-        \ ":30 wincmd > <CR>"
+        \ winwidth(0) > 50 ? ":80 wincmd < <CR>" :
+        \ ":80 wincmd > <CR>"
 
   if isdirectory($WIN_HOME)
     nnoremap <silent><buffer><expr> w
