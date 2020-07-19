@@ -50,6 +50,7 @@ nnoremap <silent><C-f> :<C-u>Defx -resume -listed -split=vertical<CR>
 call defx#custom#option('_', {
       \ 'winwidth': 30,
       \ 'direction': 'topleft',
+      \ 'columns': 'mark:indent:icon:filename:type:size'
       \ })
 '''
 hook_add = '''
