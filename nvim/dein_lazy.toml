@@ -31,29 +31,32 @@ on_ft = ["cpp"]
 [[plugins]]
 repo = 'Shougo/denite.nvim'
 hook_source = '''
-source ~/.config/nvim/plugins/denite.rc.vim
+  source ~/.config/nvim/plugins/denite.rc.vim
+  nnoremap <silent> <Space>g :Denite grep<CR>
+  nnoremap <Space>d :Denite 
 '''
 
 [[plugins]]
 repo = 'Shougo/defx.nvim'
 hook_source = '''
-call defx#custom#column('mark', {
-      \ 'readonly_icon': '✗',
-      \ 'selected_icon': '✓',
-      \ })
-call defx#custom#column('icon', {
-      \ 'directory_icon': '▸',
-      \ 'opened_icon': '▾',
-      \ 'root_icon': ' ',
-      \ })
-nnoremap <silent><C-f> :<C-u>Defx -resume -listed -split=vertical<CR>
-nmap <silent><Space>f <C-f> :call defx#call_action('cd', [expand('~/dotfiles/nvim')])<CR>
-nmap <silent><Space>w <C-f> :call defx#call_action('cd', [expand('~/work')])<CR>
-call defx#custom#option('_', {
-      \ 'winwidth': 30,
-      \ 'direction': 'topleft',
-      \ 'columns': 'mark:indent:icon:filename:type:time:size'
-      \ })
+  call defx#custom#column('mark', {
+        \ 'readonly_icon': '✗',
+        \ 'selected_icon': '✓',
+        \ })
+  call defx#custom#column('icon', {
+        \ 'directory_icon': '▸',
+        \ 'opened_icon': '▾',
+        \ 'root_icon': ' ',
+        \ })
+  call defx#custom#option('_', {
+        \ 'winwidth': 30,
+        \ 'direction': 'topleft',
+        \ 'columns': 'mark:indent:icon:filename:type:time:size'
+        \ })
+
+  nnoremap <silent><C-f> :<C-u>Defx -resume -listed -split=vertical<CR>
+  nmap <silent><Space>f <C-f> :call defx#call_action('cd', [expand('~/dotfiles/nvim')])<CR>
+  nmap <silent><Space>w <C-f> :call defx#call_action('cd', [expand('~/work')])<CR>
 '''
 hook_add = '''
 source ~/.config/nvim/plugins/defx.rc.vim
