@@ -46,12 +46,12 @@ function! s:show_documentation()
   endif
 endfunction
 
-nmap <silent><Leader>n <Plug>(coc-rename)
+nmap <silent> <Leader>n <Plug>(coc-rename)
 nmap <silent> <Leader>] <Plug>(coc-definition)
 nmap <silent> <Leader>r <Plug>(coc-references)
 
-xmap <silent><leader>f <Plug>(coc-format-selected)
-nmap <silent><leader>f <plug>(coc-format)
+xmap <silent> <leader>f <Plug>(coc-format-selected)
+nmap <silent> <leader>f <plug>(coc-format)
 
 
 augroup coc-config

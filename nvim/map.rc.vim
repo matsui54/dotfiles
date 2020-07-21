@@ -20,7 +20,7 @@ endfunction
 
 if has('nvim')
   nnoremap <expr> <leader>d (&filetype=='vim') ? ":w <bar> :source %<CR>" :
-        \ (&filetype=='python') ? ":QuickRun <CR>" :
+        \ (&filetype=='python') ? ":w <bar> :QuickRun <CR>" :
         \ ":wa <bar> :wincmd t <bar> :QuickRun <in.txt <CR>"
 endif
 
@@ -59,5 +59,5 @@ nnoremap k gk
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 if has('unix')
-cnoremap <silent><expr> <C-Space> system('fcitx-remote -c')
+  cnoremap <silent><expr> <C-Space> system('fcitx-remote -c')
 endif

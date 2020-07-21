@@ -82,8 +82,8 @@ let g:netrw_preview=1
 autocmd FileType netrw call s:netrw_my_settings()
 
 function! s:netrw_my_settings()
-  nmap l <CR>
-  nmap h -
+  nmap <buffer>l <CR>
+  nmap <buffer>h -
 endfunction
 
 " tabline settings----------------------------------------
