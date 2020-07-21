@@ -51,7 +51,7 @@ hook_source = '''
   call defx#custom#option('_', {
         \ 'winwidth': 30,
         \ 'direction': 'topleft',
-        \ 'columns': 'mark:indent:icon:filename:type:time:size'
+        \ 'columns': 'mark:indent:icons:filename:type:time:size'
         \ })
 
   nnoremap <silent><C-f> :<C-u>Defx -resume -listed -split=vertical<CR>
@@ -61,6 +61,9 @@ hook_source = '''
 hook_add = '''
 source ~/.config/nvim/plugins/defx.rc.vim
 '''
+
+[[plugins]]
+repo = 'kristijanhusak/defx-icons'
 
 # [[plugins]]
 # repo = 'Shougo/neoinclude.vim'

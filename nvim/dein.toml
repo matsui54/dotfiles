@@ -59,6 +59,9 @@ repo = 'tpope/vim-surround'
 
 [[plugins]]
 repo = 'yonchu/accelerated-smooth-scroll'
+hook_add = '''
+  let g:ac_smooth_scroll_du_sleep_time_msec=5
+'''
 
 [[plugins]]
 repo = 'vim-jp/vimdoc-ja'

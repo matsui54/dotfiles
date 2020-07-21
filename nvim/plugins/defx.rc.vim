@@ -71,7 +71,7 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> k
         \ line('.') == 1 ? 'G' : 'k'
   nnoremap <silent><buffer><expr> <C-l>
-        \ defx#do_action('redraw')
+        \ defx#do_action('redraw').":nohlsearch<CR>"
   nnoremap <silent><buffer><expr> <C-g>
         \ defx#do_action('print')
   nnoremap <silent><buffer><expr> cd

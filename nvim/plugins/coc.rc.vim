@@ -51,7 +51,9 @@ nmap <silent> <Leader>] <Plug>(coc-definition)
 nmap <silent> <Leader>r <Plug>(coc-references)
 
 xmap <silent> <leader>f <Plug>(coc-format-selected)
-nmap <silent> <leader>f <plug>(coc-format)
+nmap <silent><expr> <leader>f (&filetype == 'vim') ?
+      \ 'ggVG=' :
+      \ '<plug>(coc-format)'
 
 
 augroup coc-config
