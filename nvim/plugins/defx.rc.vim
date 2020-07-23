@@ -6,6 +6,9 @@ function! s:quick_view()
   call win_gotoid(win)
 endfunction
 function! s:defx_my_settings() abort
+
+  setlocal cursorline
+
   " Define mappings
   nnoremap <silent><buffer><expr> <CR>
         \ defx#is_directory() ?
@@ -71,7 +74,7 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> k
         \ line('.') == 1 ? 'G' : 'k'
   nnoremap <silent><buffer><expr> <C-l>
-        \ defx#do_action('redraw').":nohlsearch<CR>"
+        \ defx#do_action('redraw') . ":nohlsearch<CR>"
   nnoremap <silent><buffer><expr> <C-g>
         \ defx#do_action('print')
   nnoremap <silent><buffer><expr> cd
@@ -81,6 +84,10 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> <TAB>
         \ winwidth(0) > 50 ? ":80 wincmd < <CR>" :
         \ ":80 wincmd > <CR>"
+
+  nnoremap <buffer> <Space>g
+        \ :Denite grep:`fnamemodify(defx#get_candidate().action__path,':h:p')`<CR>
+
 
   if isdirectory($WIN_HOME)
     nnoremap <silent><buffer><expr> w
