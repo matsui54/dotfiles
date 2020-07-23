@@ -92,16 +92,16 @@ set tabline=%!MyTabLine()
 function MyTabLine()
   let s = ''
   " the number of tabs
-  let cnttab = tabpagenr('$')
+  let num_tab = tabpagenr('$')
 
-  for i in range(cnttab)
+  for i in range(num_tab)
     " tab number of current tab
-    let currentnr = tabpagenr()
+    let current_tab_nr = tabpagenr()
 
     highlight MyTabHi cterm=underline, gui=underline
-    let hi = (i + 1 == currentnr) ? '%#TabLineSel#' : '%#MyTabHi#'
+    let hi = (i + 1 == current_tab_nr) ? '%#TabLineSel#' : '%#MyTabHi#'
 
-    let space1 = (i == currentnr) ? '  ' : ' '
+    let space1 = (i == current_tab_nr) ? '  ' : ' '
 
     let bufnrs = tabpagebuflist(i+1)
     " shows the number of windows
@@ -116,9 +116,9 @@ function MyTabLine()
     let s .= hi . space1 . bufno . mod . space2 . '%{MyTabLabel(' . (i + 1) . ')} '
 
     " if the tab is not current, add '|'.
-    if i + 1 != cnttab && i + 1 != currentnr && i +2 != currentnr
+    if i + 1 != num_tab && i + 1 != current_tab_nr && i +2 != current_tab_nr
       let s .= '|'
-    elseif i + 2 == currentnr
+    elseif i + 2 == current_tab_nr
       let s .= ' '
     endif
   endfor
