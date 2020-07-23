@@ -113,7 +113,7 @@ function MyTabLine()
     let mod = len(filter(copy(bufnrs), 'getbufvar(v:val, "&modified")')) ? '+' : ''
     let space2 = (bufno . mod) ==# '' ? '' : ' '
 
-    let s .= hi . space1 . bufno . mod . space2 . '%{MyTabLabel(' . (i + 1) . ')} '
+    let s .= hi . space1 . bufno . mod . space2 . MyTabLabel(i + 1) . ' '
 
     " if the tab is not current, add '|'.
     if i + 1 != num_tab && i + 1 != current_tab_nr && i +2 != current_tab_nr
@@ -128,7 +128,7 @@ function MyTabLine()
   "Show current directory
   let s .= '%=%#MyTabHi#'
   let s .= strftime('%H:%M')
-  let s .= ' %#Cursor#%{fnamemodify(getcwd(), ":~/")}'
+  let s .= ' %#Cursor#' . fnamemodify(getcwd(), ":~/")
 
   return s
 endfunction
