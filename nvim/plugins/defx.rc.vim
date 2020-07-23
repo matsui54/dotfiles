@@ -41,7 +41,7 @@ function! s:defx_my_settings() abort
         \ defx#do_action('toggle_columns',
         \                'mark:indent:icon:filename:type:size:time')
   nnoremap <silent><buffer><expr> S
-        \ defx#do_action('toggle_sort', 'time')
+        \ defx#do_action('multi', [['toggle_sort', 'time'], 'redraw'])
   nnoremap <silent><buffer><expr> d
         \ defx#do_action('remove_trash')
   nnoremap <silent><buffer><expr> r

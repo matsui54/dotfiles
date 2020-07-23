@@ -54,7 +54,7 @@ hook_source = '''
         \ 'columns': 'mark:indent:icons:filename:type:time:size'
         \ })
 
-  nnoremap <silent><C-f> :<C-u>Defx -resume -listed -split=vertical<CR>
+  nnoremap <silent><C-f> :<C-u>Defx -resume -listed -split=vertical -buffer-name=`'defx' . tabpagenr()`<CR>
   nmap <silent><Space>f <C-f> :call defx#call_action('cd', [expand('~/dotfiles/nvim')])<CR>
   nmap <silent><Space>w <C-f> :call defx#call_action('cd', [expand('~/work')])<CR>
 '''
