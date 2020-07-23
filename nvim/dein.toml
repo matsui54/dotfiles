@@ -69,8 +69,8 @@ hook_add = '''
 set helplang=ja
 '''
 
-[[plugins]]
-repo = 'tpope/vim-commentary'
+# [[plugins]]
+# repo = 'tpope/vim-commentary'
 
 #[[plugins]]
 #repo = 'autozimu/LanguageClient-neovim'
