@@ -75,7 +75,7 @@ repo = 'tyru/caw.vim'
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
-if = 'has("win32 || win64")'
+if = 'has("win32") || has("win64")'
 hook_source = '''
   source ~/dotfiles/nvim/plugins/deoplete.vim
 '''
