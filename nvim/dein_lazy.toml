@@ -1,7 +1,7 @@
 [[plugins]]
 repo = 'thinca/vim-quickrun'
 hook_add = '''
-  source ~/.config/nvim/plugins/quickrun.rc.vim
+  source ~/dotfiles/nvim/plugins/quickrun.rc.vim
 '''
 
 [[plugins]]
@@ -18,20 +18,22 @@ endif
 
 [[plugins]]
 repo = "puremourning/vimspector"
+if = 'has("unix")'
 on_ft = ["python", "cpp"]
 build = "./install_gadget.py --enable-python --enable-c"
 hook_add = '''
-  source ~/.config/nvim/plugins/vimspector.rc.vim
+  source ~/dotfiles/nvim/plugins/vimspector.rc.vim
 '''
 
 [[plugins]]
 repo = 'jackguo380/vim-lsp-cxx-highlight'
+if = 'has("unix")'
 on_ft = ["cpp"]
 
 [[plugins]]
 repo = 'Shougo/denite.nvim'
 hook_source = '''
-  source ~/.config/nvim/plugins/denite.rc.vim
+  source ~/dotfiles/nvim/plugins/denite.rc.vim
   nnoremap <silent> <Space>g :Denite grep<CR>
   nnoremap <Space>d :Denite 
 '''
@@ -59,7 +61,7 @@ hook_source = '''
   nmap <silent><Space>w <C-f> :call defx#call_action('cd', [expand('~/work')])<CR>
 '''
 hook_add = '''
-source ~/.config/nvim/plugins/defx.rc.vim
+  source ~/dotfiles/nvim/plugins/defx.rc.vim
 '''
 
 [[plugins]]
@@ -71,11 +73,12 @@ repo = 'tyru/caw.vim'
 # [[plugins]]
 # repo = 'Shougo/neoinclude.vim'
 
-# [[plugins]]
-# repo = 'Shougo/deoplete.nvim'
-# hook_source = '''
-#   source ~/.config/nvim/plugins/deoplete.vim
-# '''
+[[plugins]]
+repo = 'Shougo/deoplete.nvim'
+if = 'has("win32 || win64")'
+hook_source = '''
+  source ~/dotfiles/nvim/plugins/deoplete.vim
+'''
 
 # [[plugins]]
 # repo = 'Shougo/neco-vim'
@@ -106,6 +109,6 @@ repo = 'tyru/caw.vim'
 # repo = 'Shougo/neosnippet.vim'
 # depends = ['neosnippet-snippets']
 # hook_add = '''
-# 	source ~/.config/nvim/plugins/neosnippet.vim
+# 	source ~/dotfiles/nvim/plugins/neosnippet.vim
 # '''
 

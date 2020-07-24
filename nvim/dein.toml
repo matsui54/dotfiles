@@ -7,19 +7,22 @@ repo = 'sheerun/vim-polyglot'
 [[plugins]]
 repo = 'neoclide/coc.nvim'
 merged = 0
+if = 'has("unix")'
 rev = 'release'
 hook_add = '''
-  source ~/.config/nvim/plugins/coc.rc.vim
+  source ~/dotfiles/nvim/plugins/coc.rc.vim
 '''
 
 [[plugins]]
 repo = 'SirVer/ultisnips'
+if = 'has("unix")'
 hook_add = '''
   let g:UltiSnipsExpandTrigger='<C-j>'
 '''
 
 [[plugins]]
 repo = 'honza/vim-snippets'
+if = 'has("unix")'
 
 [[plugins]]
 repo = 'tomasr/molokai'
@@ -33,16 +36,13 @@ repo = 'cocopon/iceberg.vim'
 [[plugins]]
 repo = 'w0ng/vim-hybrid'
 
-[[plugins]]
-repo = 'altercation/vim-colors-solarized'
-
 # [[plugins]]
 # repo = 'octol/vim-cpp-enhanced-highlight'
 
 [[plugins]]
 repo = 'vim-airline/vim-airline'
 hook_add = '''
-	source ~/.config/nvim/plugins/airline.rc.vim
+	source ~/dotfiles/nvim/plugins/airline.rc.vim
 '''
 
 [[plugins]]
@@ -77,7 +77,7 @@ set helplang=ja
 #rev = 'next'
 #build = 'bash install.sh'
 #hook_add = '''
-	#source ~/.config/nvim/plugins/languageclient.vim
+	#source ~/dotfiles/nvim/plugins/languageclient.vim
 #'''
 
 #[[plugins]]
@@ -89,7 +89,7 @@ set helplang=ja
 # [[plugins]]
 # repo = 'dense-analysis/ale'
 # hook_add = '''
-# source ~/.config/nvim/plugins/ale.vim
+# source ~/dotfiles/nvim/plugins/ale.vim
 # '''
 
 # [[plugins]]
