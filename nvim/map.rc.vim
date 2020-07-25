@@ -37,6 +37,7 @@ nnoremap <expr><silent> <Left> (win_screenpos(win_getid())[1] < 3) ?
       \":wincmd <<CR>" : ":wincmd ><CR>"
 
 nnoremap ; :
+xnoremap ; :
 
 " move around tabpages
 nnoremap <C-j> gT
@@ -53,9 +54,11 @@ nnoremap <Leader>cd :lcd %:h<CR>
 
 nnoremap j gj
 nnoremap k gk
+xnoremap j gj
+xnoremap k gk
 
 
-" insert current directory
+" insert parent directory of current file
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 if has('unix')
