@@ -137,7 +137,7 @@ function MyTabLabel(n)
   let buflist = tabpagebuflist(a:n)
   let winnr = tabpagewinnr(a:n)
   "don't show directory name
-  let res = substitute(bufname(buflist[winnr - 1]), '.\+\/', '', '')
+  let res = substitute(bufname(buflist[winnr - 1]), '\v.+(\\|\/)', '', '')
   if res ==# ''
     let res = '[]'
   endif
