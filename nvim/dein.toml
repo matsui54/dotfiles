@@ -59,6 +59,7 @@ repo = 'tpope/vim-surround'
 
 [[plugins]]
 repo = 'yonchu/accelerated-smooth-scroll'
+if = 'has("unix")'
 hook_add = '''
   let g:ac_smooth_scroll_du_sleep_time_msec=5
 '''

@@ -31,12 +31,18 @@ if dein#check_install()
 endif
 
 call map(dein#check_clean(), "delete(v:val, 'rf')")
-call dein#recache_runtimepath()
+if has('unix')
+  call dein#recache_runtimepath()
+endif
 " end dein settings---------------------------------------
 
 let g:OxfDictionary#app_id='3fc46c58'
 let g:OxfDictionary#app_key='c4603e15e4eb3f7219bd477823507ad6'
 set runtimepath+=/home/haruki/work/OxfDictionary.nvim
+
+if has('win32') || has('win64')
+  let g:python3_host_prog = 'C:\Users\harum\AppData\Local\Programs\Python\Python38\python.EXE'
+endif
 
 source ~/dotfiles/nvim/map.rc.vim
 

@@ -55,13 +55,12 @@ hook_source = '''
         \ 'direction': 'topleft',
         \ 'columns': 'mark:indent:icons:filename:type:time:size'
         \ })
-
-  nnoremap <silent><C-f> :<C-u>Defx -resume -listed -split=vertical -buffer-name=`'defx' . tabpagenr()`<CR>
-  nmap <silent><Space>f <C-f> :call defx#call_action('cd', [expand('~/dotfiles/nvim')])<CR>
-  nmap <silent><Space>w <C-f> :call defx#call_action('cd', [expand('~/work')])<CR>
 '''
 hook_add = '''
   source ~/dotfiles/nvim/plugins/defx.rc.vim
+  nnoremap <silent><C-f> :<C-u>Defx -resume -listed -split=vertical -buffer-name=`'defx' . tabpagenr()`<CR>
+  nmap <silent><Space>f <C-f> :call defx#call_action('cd', [expand('~/dotfiles/nvim')])<CR>
+  nmap <silent><Space>w <C-f> :call defx#call_action('cd', [expand('~/work')])<CR>
 '''
 
 [[plugins]]
@@ -76,6 +75,7 @@ repo = 'tyru/caw.vim'
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
 if = 'has("win32") || has("win64")'
+on_event = 'InsertEnter'
 hook_source = '''
   source ~/dotfiles/nvim/plugins/deoplete.vim
 '''
