@@ -119,10 +119,10 @@ function MyTabLine()
     let avr = capacity / num_tab - 1
     for i in range(num_tab)
       if tabs[i].len > avr
-        let tabs[i].name = tabs[i].name[:avr-2]
+        let len = avr - len(tabs[i].pre . tabs[i].post) - 1
+        let tabs[i].name = tabs[i].name[:len] . '…'
       endif
     endfor
-    echo avr
   endif
 
   let s = ''
