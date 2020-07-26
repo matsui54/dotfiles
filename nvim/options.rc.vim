@@ -116,12 +116,13 @@ function MyTabLine()
       endif
     endfor
 
-    let avr = capacity / num_tab
+    let avr = capacity / num_tab - 1
     for i in range(num_tab)
       if tabs[i].len > avr
-        let tabs[i].name = tabs[i].name[avr-2:] . '~'
+        let tabs[i].name = tabs[i].name[:avr-2]
       endif
     endfor
+    echo avr
   endif
 
   let s = ''
