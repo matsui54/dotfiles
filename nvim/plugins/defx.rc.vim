@@ -86,7 +86,12 @@ function! s:defx_my_settings() abort
         \ ":80 wincmd > <CR>"
 
   nnoremap <buffer> <Space>g
-        \ :Denite grep:`fnamemodify(defx#get_candidate().action__path,':h:p')`<CR>
+        \ :call <SID>grep_in_defx()<CR>
+
+  function! s:grep_in_defx()
+    let path = escape(fnamemodify(defx#get_candidate().action__path,':h:p'), ':\')
+    execute "Denite grep:" . path
+  endfunction
 
 
   if isdirectory($WIN_HOME)
