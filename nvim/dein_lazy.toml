@@ -67,9 +67,6 @@ hook_add = '''
 [[plugins]]
 repo = 'kristijanhusak/defx-icons'
 
-[[plugins]]
-repo = 'tyru/caw.vim'
-
 # [[plugins]]
 # repo = 'Shougo/neoinclude.vim'
 

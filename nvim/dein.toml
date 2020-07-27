@@ -72,6 +72,9 @@ hook_add = '''
 set helplang=ja
 '''
 
+[[plugins]]
+repo = 'tyru/caw.vim'
+
 # [[plugins]]
 # repo = 'tpope/vim-commentary'
 

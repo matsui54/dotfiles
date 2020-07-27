@@ -5,6 +5,12 @@ function! s:quick_view()
   call defx#call_action('drop')
   call win_gotoid(win)
 endfunction
+function s:open_defx_in_tab()
+  let dir = defx#get_candidate().action__path
+  tabnew
+  execute "normal \<C-f>"
+  call defx#call_action('cd', [dir])
+endfunction
 function! s:defx_my_settings() abort
 
   setlocal cursorline
@@ -29,6 +35,8 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> P
         \ defx#do_action('open', 'pedit')
   nnoremap <silent><buffer><expr> t
+        \ defx#is_directory() ?
+        \ ":call <SID>open_defx_in_tab()<CR>" :
         \ defx#do_action('open', 'tabnew')
   nnoremap <silent><buffer><expr> o
         \ defx#do_action('open_tree', 'toggle')
