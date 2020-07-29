@@ -13,6 +13,10 @@ function! s:denite_my_settings() abort
         \ denite#do_map('open_filter_buffer')
   nnoremap <silent><buffer><expr> <Space>
         \ denite#do_map('toggle_select').'j'
+  nnoremap <silent><buffer><expr> t
+        \ denite#do_map('do_action', 'tabopen')
+  nnoremap <silent><buffer><expr> E
+        \ denite#do_map('do_action', 'vsplit')
 endfunction
 
 autocmd FileType denite-filter call s:denite_filter_my_settings()
@@ -25,7 +29,7 @@ call denite#custom#var('file/rec', 'command',
       \ ['rg', '--files', '--glob', '!.git', '--color', 'never'])
 
 " Change default action.
-call denite#custom#kind('file', 'default_action', 'split')
+call denite#custom#kind('file', 'default_action', 'open')
 
 " Add custom menus
 let s:menus = {}
