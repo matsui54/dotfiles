@@ -11,17 +11,21 @@ set smartindent
 
 set clipboard=unnamedplus
 
-set splitright
-
-set showmatch
-set showtabline=2
-
-set termguicolors
-
 set smartcase
 set ignorecase
 
+set showmatch
+" Highlight <>.
+set matchpairs+=<:>
+
+" Set undofile.
+set undofile
+
+set termguicolors
+
 set completeopt-=preview
+
+set splitright
 
 if exists('&inccommand')
   set inccommand=nosplit
@@ -39,7 +43,7 @@ if has('nvim')
   colorscheme iceberg
   highlight clear MatchParen
   highlight MatchParen cterm=underline, gui=underline
-  command! Fterminal :call Floating_terminal()
+  command! Fterm :call Floating_terminal()
   command! Vterm :vsplit | :terminal
   command! Tterm :tabnew | :terminal
 endif
@@ -87,10 +91,10 @@ function! s:netrw_my_settings()
 endfunction
 
 " tabline settings----------------------------------------
+set showtabline=2
 set tabline=%!MyTabLine()
 
 function MyTabLine()
-  " the number of tabs
   let num_tab = tabpagenr('$')
   let screen_width = &columns
   let len_str = 0
@@ -102,11 +106,12 @@ function MyTabLine()
     let len_str += tabs[i].len
   endfor
 
-  "Show current directory
+  "Show time and current directory
   let time = strftime('%H:%M')
   let dir = fnamemodify(getcwd(), ":~/")
   let len_tail = strlen(time . dir) + 3
 
+  " shrink tabs to fit to screen
   if len_str + len_tail > screen_width
     let capacity = screen_width - len_tail
     let avr = capacity / num_tab
@@ -172,7 +177,7 @@ endfunction
 function MyTabLabel(n)
   let buflist = tabpagebuflist(a:n)
   let winnr = tabpagewinnr(a:n)
-  "don't show directory name
+  " show only file name
   let res = substitute(bufname(buflist[winnr - 1]), '\v.+(\\|\/)', '', '')
   if res ==# ''
     let res = '[]'

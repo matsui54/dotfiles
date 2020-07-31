@@ -36,6 +36,7 @@ hook_source = '''
   source ~/dotfiles/nvim/plugins/denite.rc.vim
   nnoremap <silent> <Space>g :Denite grep<CR>
   nnoremap <Space>d :Denite 
+  nnoremap <Space>b :Denite buffer<CR>
 '''
 
 [[plugins]]
