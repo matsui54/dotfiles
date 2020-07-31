@@ -57,6 +57,9 @@ nnoremap k gk
 xnoremap j gj
 xnoremap k gk
 
+" for repeating indentation
+xnoremap > >gv
+xnoremap < <gv
 
 " insert parent directory of current file
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
