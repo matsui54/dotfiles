@@ -1,15 +1,15 @@
 inoremap jj <ESC>
 
 " add bracket automatically
-inoremap <silent><expr> <CR> <SID>check_bracket()
-function! s:check_bracket()
+inoremap <silent><expr> <CR> <SID>smart_bracket()
+function! s:smart_bracket()
   let char = getline('.')[col('.') - 2]
-  let brackets = {'{':'}', '(':')', '[':']'}
+  let brackets = {'{':'}', '(':')', '[':']', '<':'>'}
   let c_bracket = get(brackets, char, '')
   let ope = ''
   if c_bracket != ''
-    if c_bracket != getline('.')[col('.') - 1]
-      let ope = brackets[char] . "\<Left>"
+    if searchpair(char, '', c_bracket, 'n') != line('.')
+      let ope = c_bracket . "\<Left>"
     endif
     let ope .= "\<CR>\<ESC>\<S-o>"
   else
@@ -43,7 +43,7 @@ xnoremap ; :
 nnoremap <C-j> gT
 nnoremap <C-k> gt
 
-" stop highlight for search
+" erase highlight for search
 nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 
 " improved G
