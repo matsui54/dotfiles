@@ -33,7 +33,7 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> E
         \ defx#do_action('multi', [['open', 'vsplit'], 'quit'])
   nnoremap <silent><buffer><expr> P
-        \ defx#do_action('open', 'pedit')
+        \ defx#do_action('preview')
   nnoremap <silent><buffer><expr> t
         \ defx#is_directory() ?
         \ ":call <SID>open_defx_in_tab()<CR>" :

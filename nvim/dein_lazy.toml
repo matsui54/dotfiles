@@ -54,13 +54,18 @@ hook_source = '''
         \ })
   call defx#custom#option('_', {
         \ 'winwidth': 30,
+        \ 'split': 'vertical',
         \ 'direction': 'topleft',
-        \ 'columns': 'mark:indent:icons:filename:type:time:size'
+        \ 'resume': 1,
+        \ 'listed': 1,
+        \ 'columns': 'mark:indent:icons:filename:type:time:size',
+        \ 'vertical_preview': 1,
+        \ 'floating_preview': 1,
         \ })
 '''
 hook_add = '''
   source ~/dotfiles/nvim/plugins/defx.rc.vim
-  nnoremap <silent><C-f> :<C-u>Defx -resume -listed -split=vertical -buffer-name=`'defx' . tabpagenr()`<CR>
+  nnoremap <silent><C-f> :<C-u>Defx -buffer-name=`'defx' . tabpagenr()`<CR>
   nmap <silent><Space>f <C-f> :call defx#call_action('cd', [expand('~/dotfiles/nvim')])<CR>
   nmap <silent><Space>w <C-f> :call defx#call_action('cd', [expand('~/work')])<CR>
 '''
