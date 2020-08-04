@@ -7,7 +7,6 @@ repo = 'sheerun/vim-polyglot'
 [[plugins]]
 repo = 'neoclide/coc.nvim'
 merged = 0
-if = 'has("unix")'
 rev = 'release'
 hook_add = '''
   source ~/dotfiles/nvim/plugins/coc.rc.vim

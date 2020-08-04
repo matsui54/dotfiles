@@ -76,13 +76,13 @@ repo = 'kristijanhusak/defx-icons'
 # [[plugins]]
 # repo = 'Shougo/neoinclude.vim'
 
-[[plugins]]
-repo = 'Shougo/deoplete.nvim'
-if = 'has("win32") || has("win64")'
-on_event = 'InsertEnter'
-hook_source = '''
-  source ~/dotfiles/nvim/plugins/deoplete.vim
-'''
+# [[plugins]]
+# repo = 'Shougo/deoplete.nvim'
+# if = 'has("win32") || has("win64")'
+# on_event = 'InsertEnter'
+# hook_source = '''
+#   source ~/dotfiles/nvim/plugins/deoplete.vim
+# '''
 
 # [[plugins]]
 # repo = 'Shougo/neco-vim'
