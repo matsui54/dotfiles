@@ -58,11 +58,21 @@ xnoremap j gj
 xnoremap k gk
 
 " for repeating indentation
+" xnoremap <silent> > >gv:call <SID>improved_indent()<CR>
 xnoremap > >gv
 xnoremap < <gv
+" function! s:improved_indent()
+"   augroup my_indent
+"     autocmd cursormoved * call s:exit_indent_mode()
+"   augroup END
+" endfunction
+" function! s:exit_indent_mode()
+"   normal V
+"   autocmd! my_indent
+" endfunction
 
-" insert parent directory of current file
-cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+  " insert parent directory of current file
+  cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 if has('unix')
   cnoremap <silent><expr> <C-Space> system('fcitx-remote -c')

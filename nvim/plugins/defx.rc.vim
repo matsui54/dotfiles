@@ -5,11 +5,15 @@ function! s:quick_view()
   call defx#call_action('drop')
   call win_gotoid(win)
 endfunction
-function s:open_defx_in_tab()
+function! s:open_defx_in_tab()
   let dir = defx#get_candidate().action__path
   tabnew
   execute "normal \<C-f>"
   call defx#call_action('cd', [dir])
+endfunction
+function! s:grep_in_defx()
+  let path = escape(fnamemodify(defx#get_candidate().action__path,':h:p'), ':\')
+  execute "Denite grep:" . path
 endfunction
 function! s:defx_my_settings() abort
 
@@ -96,10 +100,6 @@ function! s:defx_my_settings() abort
   nnoremap <buffer> <Space>g
         \ :call <SID>grep_in_defx()<CR>
 
-  function! s:grep_in_defx()
-    let path = escape(fnamemodify(defx#get_candidate().action__path,':h:p'), ':\')
-    execute "Denite grep:" . path
-  endfunction
 
 
   if isdirectory($WIN_HOME)
