@@ -2,6 +2,7 @@
 let s:dein_dir = expand('~/.cache/dein')
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim' 
 let s:toml_dir = expand('~/dotfiles/nvim')
+let g:dein#auto_recache = 1
 
 if !isdirectory(s:dein_dir)
   execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
@@ -31,9 +32,9 @@ if dein#check_install()
 endif
 
 call map(dein#check_clean(), "delete(v:val, 'rf')")
-if has('unix')
-  call dein#recache_runtimepath()
-endif
+" if has('unix')
+"   call dein#recache_runtimepath()
+" endif
 " end dein settings---------------------------------------
 
 let g:OxfDictionary#app_id='3fc46c58'

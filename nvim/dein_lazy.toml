@@ -1,19 +1,17 @@
 [[plugins]]
 repo = 'thinca/vim-quickrun'
-hook_add = '''
+hook_source = '''
   source ~/dotfiles/nvim/plugins/quickrun.rc.vim
 '''
 
 [[plugins]]
 repo = 'itchyny/calendar.vim'
 hook_add = '''
-if has('unix')
-  let g:calendar_google_calendar = 1
-  let g:calendar_google_task = 1
   if filereadable(expand('~/.cache/calendar.vim/credentials.vim', ':h:p'))
+    let g:calendar_google_calendar = 1
+    let g:calendar_google_task = 1
     source ~/.cache/calendar.vim/credentials.vim
   endif
-endif
 '''
 
 [[plugins]]
@@ -34,6 +32,8 @@ on_ft = ["cpp"]
 repo = 'Shougo/denite.nvim'
 hook_source = '''
   source ~/dotfiles/nvim/plugins/denite.rc.vim
+'''
+hook_add = '''
   nnoremap <silent> <Space>g :Denite grep<CR>
   nnoremap <Space>d :Denite 
   nnoremap <Space>b :Denite buffer<CR>
@@ -62,9 +62,9 @@ hook_source = '''
         \ 'vertical_preview': 1,
         \ 'floating_preview': 1,
         \ })
+  source ~/dotfiles/nvim/plugins/defx.rc.vim
 '''
 hook_add = '''
-  source ~/dotfiles/nvim/plugins/defx.rc.vim
   nnoremap <silent><C-f> :<C-u>Defx -buffer-name=`'defx' . tabpagenr()`<CR>
   nmap <silent><Space>f <C-f> :call defx#call_action('cd', [expand('~/dotfiles/nvim')])<CR>
   nmap <silent><Space>w <C-f> :call defx#call_action('cd', [expand('~/work')])<CR>
@@ -72,6 +72,16 @@ hook_add = '''
 
 [[plugins]]
 repo = 'kristijanhusak/defx-icons'
+
+[[plugins]]
+repo = 'yonchu/accelerated-smooth-scroll'
+on_map = {n = '<Plug>'}
+hook_add = '''
+  let g:ac_smooth_scroll_no_default_key_mappings = 1
+  let g:ac_smooth_scroll_du_sleep_time_msec=5
+  nmap <silent> <C-d> <Plug>(ac-smooth-scroll-c-d)
+  nmap <silent> <C-u> <Plug>(ac-smooth-scroll-c-u)
+'''
 
 # [[plugins]]
 # repo = 'Shougo/neoinclude.vim'

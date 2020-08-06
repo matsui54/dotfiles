@@ -52,9 +52,14 @@ nmap <silent> <Leader>r <Plug>(coc-references)
 
 xmap <silent> <leader>f <Plug>(coc-format-selected)
 nmap <silent><expr> <leader>f (&filetype == 'vim') ?
-      \ 'ggVG=' :
+      \ ':call <SID>format_viml()<CR>' :
       \ '<plug>(coc-format)'
 
+function! s:format_viml()
+  let tmp = winsaveview()
+  normal! ggVG=
+  call winrestview(tmp)
+endfunction
 
 augroup coc-config
   autocmd!

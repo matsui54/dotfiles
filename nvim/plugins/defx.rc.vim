@@ -16,7 +16,6 @@ function! s:grep_in_defx()
   execute "Denite grep:" . path
 endfunction
 function! s:defx_my_settings() abort
-
   setlocal cursorline
 
   " Define mappings
@@ -97,10 +96,8 @@ function! s:defx_my_settings() abort
         \ winwidth(0) > 50 ? ":80 wincmd < <CR>" :
         \ ":80 wincmd > <CR>"
 
-  nnoremap <buffer> <Space>g
+  nnoremap <silent><buffer> <Space>g
         \ :call <SID>grep_in_defx()<CR>
-
-
 
   if isdirectory($WIN_HOME)
     nnoremap <silent><buffer><expr> w
