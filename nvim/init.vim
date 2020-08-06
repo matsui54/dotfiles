@@ -13,14 +13,11 @@ execute 'set runtimepath+=' . s:dein_repo_dir
 if dein#load_state(s:dein_dir)
   call dein#begin(s:dein_dir)
 
-
-  "Load TOML
   let s:toml = s:toml_dir . '/dein.toml'
   let s:lazy_toml = s:toml_dir . '/dein_lazy.toml'
 
   call dein#load_toml(s:toml, {'lazy': 0})
   call dein#load_toml(s:lazy_toml, {'lazy': 1})
-
 
   "finalize
   call dein#end()
@@ -32,9 +29,6 @@ if dein#check_install()
 endif
 
 call map(dein#check_clean(), "delete(v:val, 'rf')")
-" if has('unix')
-"   call dein#recache_runtimepath()
-" endif
 " end dein settings---------------------------------------
 
 let g:OxfDictionary#app_id='3fc46c58'
