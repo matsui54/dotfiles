@@ -75,7 +75,7 @@ repo = 'kristijanhusak/defx-icons'
 
 [[plugins]]
 repo = 'yonchu/accelerated-smooth-scroll'
-on_map = {n = '<Plug>'}
+on_map = {n = '<Plug>(ac-smooth-scroll-'}
 hook_add = '''
   let g:ac_smooth_scroll_no_default_key_mappings = 1
   let g:ac_smooth_scroll_du_sleep_time_msec=5
