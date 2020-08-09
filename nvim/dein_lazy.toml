@@ -38,6 +38,7 @@ hook_add = '''
   nnoremap <silent> <Space>g :Denite grep<CR>
   nnoremap <Space>d :Denite 
   nnoremap <Space>b :Denite buffer<CR>
+  nnoremap <Space><Space> :Denite file/rec<CR>
 '''
 
 [[plugins]]
@@ -107,6 +108,9 @@ hook_add = '''
 [[plugins]]
 repo = 'neoclide/coc-denite'
 on_source = 'denite.nvim'
+hook_add = '''
+  nnoremap <Space>s :Denite coc-symbols<CR>
+'''
 
 # [[plugins]]
 # repo = 'Shougo/neoinclude.vim'

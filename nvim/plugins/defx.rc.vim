@@ -11,10 +11,10 @@ function! s:open_defx_in_tab()
   execute "normal \<C-f>"
   call defx#call_action('cd', [dir])
 endfunction
-function! s:grep_in_defx()
-  let path = escape(fnamemodify(defx#get_candidate().action__path,':h:p'), ':\')
-  execute "Denite grep:" . path
+function! Get_defx_cwd()
+  return escape(fnamemodify(defx#get_candidate().action__path,':h:p'), ':\')
 endfunction
+
 function! s:defx_my_settings() abort
   setlocal cursorline
 
@@ -96,8 +96,10 @@ function! s:defx_my_settings() abort
         \ winwidth(0) > 50 ? ":80 wincmd < <CR>" :
         \ ":80 wincmd > <CR>"
 
-  nnoremap <silent><buffer> <Space>g
-        \ :call <SID>grep_in_defx()<CR>
+  nnoremap <silent><buffer><expr> <Space>g
+        \ ":Denite grep:" . Get_defx_cwd() . "<CR>"
+  nnoremap <silent><buffer><expr> <Space><Space>
+        \ ":Denite file/rec:" . Get_defx_cwd() . "<CR>"
 
   if isdirectory($WIN_HOME)
     nnoremap <silent><buffer><expr> w
