@@ -22,7 +22,7 @@ if has('nvim')
   nnoremap <expr> <leader>d (&filetype=='vim') ? ":w <bar> :source %<CR>" :
         \ (&filetype=='python') ? ":w <bar> :QuickRun <CR>" :
         \ ":wa <bar> :wincmd t <bar> :QuickRun <in.txt <CR>"
-  tnoremap jj <C-\><C-n>
+  tnoremap <C-\><C-\> <C-\><C-n>
 endif
 
 nnoremap <Leader>m :wa <Bar> :make<CR>

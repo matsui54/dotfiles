@@ -62,7 +62,7 @@ function! Floating_terminal() abort
   call nvim_win_set_option(0, 'winhl', 'Normal:MyFWin')
   setlocal nonumber
   setlocal winblend=15
-  nnoremap <buffer> q <Esc>
+  nnoremap <buffer> q :q<CR>
 endfunction
 
 function! s:is_wsl()
