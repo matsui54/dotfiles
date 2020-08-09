@@ -14,14 +14,12 @@ hook_add = '''
 
 [[plugins]]
 repo = 'SirVer/ultisnips'
-if = 'has("unix")'
 hook_add = '''
   let g:UltiSnipsExpandTrigger='<C-j>'
 '''
 
 [[plugins]]
 repo = 'honza/vim-snippets'
-if = 'has("unix")'
 
 [[plugins]]
 repo = 'tomasr/molokai'
