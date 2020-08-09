@@ -9,7 +9,7 @@ function! s:smart_bracket()
   let ope = ''
   if c_bracket != ''
     if searchpair(char, '', c_bracket, 'n') != line('.')
-      let ope = c_bracket . "\<Left>"
+      let ope = "\<End>" . c_bracket . "\<ESC>T" . char . "i"
     endif
     let ope .= "\<CR>\<ESC>\<S-o>"
   else
@@ -22,6 +22,7 @@ if has('nvim')
   nnoremap <expr> <leader>d (&filetype=='vim') ? ":w <bar> :source %<CR>" :
         \ (&filetype=='python') ? ":w <bar> :QuickRun <CR>" :
         \ ":wa <bar> :wincmd t <bar> :QuickRun <in.txt <CR>"
+  tnoremap jj <C-\><C-n>
 endif
 
 nnoremap <Leader>m :wa <Bar> :make<CR>
@@ -80,6 +81,22 @@ endfunction
 
 " insert parent directory of current file
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+
+" Command-line mode keymappings:
+" <C-a>, A: move to head.
+cnoremap <C-a>          <Home>
+" <C-d>: delete char.
+cnoremap <C-d>          <Del>
+" <C-e>, E: move to end.
+cnoremap <C-e>          <End>
+" <C-n>: next history.
+cnoremap <C-n>          <Down>
+" <C-p>: previous history.
+cnoremap <C-p>          <Up>
+" <C-y>: paste.
+cnoremap <C-y>          <C-r>*
+" <C-g>: Exit.
+cnoremap <C-g>          <C-c>
 
 if has('unix')
   cnoremap <silent><expr> <C-Space> system('fcitx-remote -c')

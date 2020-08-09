@@ -30,6 +30,7 @@ on_ft = ["cpp"]
 
 [[plugins]]
 repo = 'Shougo/denite.nvim'
+on_event = 'CmdlineEnter'
 hook_source = '''
   source ~/dotfiles/nvim/plugins/denite.rc.vim
 '''
@@ -82,6 +83,30 @@ hook_add = '''
   nmap <silent> <C-d> <Plug>(ac-smooth-scroll-c-d)
   nmap <silent> <C-u> <Plug>(ac-smooth-scroll-c-u)
 '''
+
+[[plugins]]
+repo = 'rhysd/clever-f.vim'
+on_map = '<Plug>'
+hook_add = '''
+  let g:clever_f_not_overwrites_standard_mappings = 1
+  let g:clever_f_mark_direct = 1
+  nmap f <Plug>(clever-f-f)
+  xmap f <Plug>(clever-f-f)
+  omap f <Plug>(clever-f-f)
+  nmap F <Plug>(clever-f-F)
+  xmap F <Plug>(clever-f-F)
+  omap F <Plug>(clever-f-F)
+  nmap t <Plug>(clever-f-t)
+  xmap t <Plug>(clever-f-t)
+  omap t <Plug>(clever-f-t)
+  nmap T <Plug>(clever-f-T)
+  xmap T <Plug>(clever-f-T)
+  omap T <Plug>(clever-f-T)
+'''
+
+[[plugins]]
+repo = 'neoclide/coc-denite'
+on_source = 'denite.nvim'
 
 # [[plugins]]
 # repo = 'Shougo/neoinclude.vim'

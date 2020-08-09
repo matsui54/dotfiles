@@ -24,12 +24,16 @@ function! s:denite_filter_my_settings() abort
   imap <silent><buffer> <C-o> <Plug>(denite_filter_quit)
 endfunction
 
+call denite#custom#option('default', {
+      \'preview_height': 20,
+      \})
+
 " For ripgrep
 call denite#custom#var('file/rec', 'command',
       \ ['rg', '--files', '--glob', '!.git', '--color', 'never'])
 
 " Change default action.
-call denite#custom#kind('file', 'default_action', 'open')
+" call denite#custom#kind('file', 'default_action', 'open')
 
 " Add custom menus
 let s:menus = {}

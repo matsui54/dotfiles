@@ -62,6 +62,7 @@ function! Floating_terminal() abort
   call nvim_win_set_option(0, 'winhl', 'Normal:MyFWin')
   setlocal nonumber
   setlocal winblend=15
+  nnoremap <buffer> q <Esc>
 endfunction
 
 function! s:is_wsl()
@@ -160,7 +161,7 @@ function! s:get_tab_info(i, num_tab)
   let space2 = (bufno . mod) ==# '' ? '' : ' '
 
   let tab.pre = space1 . bufno . mod . space2
-  let tab.name = MyTabLabel(n + 1)
+  let tab.name = s:myTabLabel(n + 1)
   let tab.post = ' '
 
   " if the tab is not current, add '|'.
@@ -174,7 +175,7 @@ function! s:get_tab_info(i, num_tab)
   return tab
 endfunction
 
-function MyTabLabel(n)
+function s:myTabLabel(n)
   let buflist = tabpagebuflist(a:n)
   let winnr = tabpagewinnr(a:n)
   " show only file name

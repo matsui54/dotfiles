@@ -5,7 +5,14 @@ let g:quickrun_config['cpp'] = {
 			\  'outputter' : 'quickfix',
 			\  'outputter/message/log' : 1
 			\}
-let g:quickrun_config['python'] = {
-			\  'command': 'python3',
-			\  'outputter' : 'quickfix',
-      \}
+if has('unix')
+  let g:quickrun_config['python'] = {
+        \  'command': 'python3',
+        \  'outputter' : 'quickfix',
+        \}
+else
+  let g:quickrun_config['python'] = {
+        \  'command': 'python',
+        \  'outputter' : 'quickfix',
+        \}
+endif
