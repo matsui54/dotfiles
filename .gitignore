@@ -1,1 +1,5 @@
 .netrwhist
+*.pyc
+.mypy_cache/
+node_modules/
+.lock
