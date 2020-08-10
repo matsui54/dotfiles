@@ -68,8 +68,9 @@ hook_source = '''
 '''
 hook_add = '''
   nnoremap <silent><C-f> :<C-u>Defx -buffer-name=`'defx' . tabpagenr()`<CR>
-  nmap <silent><Space>f <C-f> :call defx#call_action('cd', [expand('~/dotfiles/nvim')])<CR>
-  nmap <silent><Space>w <C-f> :call defx#call_action('cd', [expand('~/work')])<CR>
+  nmap <silent><Space>f <C-f>:call defx#call_action('cd', [expand('~/dotfiles/nvim')])<CR>
+  nmap <silent><Space>w <C-f>:call defx#call_action('cd', [expand('~/work')])<CR>
+  nmap <silent><Space>p <C-f>:call defx#call_action('cd', [expand('~/.cache/dein/repos/github.com')])<CR>
 '''
 
 [[plugins]]
@@ -111,6 +112,18 @@ on_source = 'denite.nvim'
 hook_add = '''
   nnoremap <Space>s :Denite coc-symbols<CR>
 '''
+
+[[plugins]]
+repo = 'SirVer/ultisnips'
+depends = 'vim-snippets'
+on_source = 'denite.nvim'
+hook_add = '''
+  let g:UltiSnipsExpandTrigger='<C-j>'
+'''
+on_event = 'InsertCharPre'
+
+[[plugins]]
+repo = 'honza/vim-snippets'
 
 # [[plugins]]
 # repo = 'Shougo/neoinclude.vim'

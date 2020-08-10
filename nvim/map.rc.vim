@@ -9,7 +9,7 @@ function! s:smart_bracket()
   let ope = ''
   if c_bracket != ''
     if searchpair(char, '', c_bracket, 'n') != line('.')
-      let ope = "\<End>" . c_bracket . "\<ESC>T" . char . "i"
+      let ope = "\<End>" . c_bracket . "\<ESC>%a"
     endif
     let ope .= "\<CR>\<ESC>\<S-o>"
   else
