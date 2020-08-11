@@ -98,6 +98,8 @@ function! s:defx_my_settings() abort
 
   nnoremap <silent><buffer><expr> <Space>g
         \ ":Denite grep:" . Get_defx_cwd() . "<CR>"
+  nnoremap <silent><buffer><expr> <Space>s
+        \ ":Denite directory_rec:" . Get_defx_cwd() . "<CR>"
   nnoremap <silent><buffer><expr> <Space><Space>
         \ ":Denite file/rec:" . Get_defx_cwd() . "<CR>"
 

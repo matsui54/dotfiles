@@ -7,6 +7,8 @@ function! s:denite_my_settings() abort
         \ denite#do_map('do_action', 'delete')
   nnoremap <silent><buffer><expr> p
         \ denite#do_map('do_action', 'preview')
+  nnoremap <silent><buffer><expr> <C-f>
+        \ denite#do_map('do_action', 'defx')
   nnoremap <silent><buffer><expr> q
         \ denite#do_map('quit')
   nnoremap <silent><buffer><expr> i
