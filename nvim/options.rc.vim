@@ -43,27 +43,7 @@ if has('nvim')
   colorscheme iceberg
   highlight clear MatchParen
   highlight MatchParen cterm=underline, gui=underline
-  command! Fterm :call Floating_terminal()
-  command! Vterm :vsplit | :terminal
-  command! Tterm :tabnew | :terminal
 endif
-
-function! Floating_terminal() abort
-  call nvim_open_win(
-        \ nvim_create_buf(v:false, v:true), 1,
-        \ {'relative':'win',
-        \ 'width':100,
-        \ 'height':28,
-        \ 'col':20,
-        \ 'row':3}
-        \ )
-  terminal
-  hi MyFWin ctermbg=0, guibg=#000000 " cterm:Black, gui:DarkBlue
-  call nvim_win_set_option(0, 'winhl', 'Normal:MyFWin')
-  setlocal nonumber
-  setlocal winblend=15
-  nnoremap <buffer> q :q<CR>
-endfunction
 
 function! s:is_wsl()
   return executable('cmd.exe')

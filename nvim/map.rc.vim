@@ -23,7 +23,27 @@ if has('nvim')
         \ (&filetype=='python') ? ":w <bar> :QuickRun <CR>" :
         \ ":wa <bar> :wincmd t <bar> :QuickRun <in.txt <CR>"
   tnoremap <C-\><C-\> <C-\><C-n>
+  command! Fterm :call <SID>floating_terminal()
+  command! Vterm :vsplit | :terminal
+  command! Tterm :tabnew | :terminal
 endif
+
+function! s:floating_terminal() abort
+  call nvim_open_win(
+        \ nvim_create_buf(v:false, v:true), 1,
+        \ {'relative':'win',
+        \ 'width':100,
+        \ 'height':28,
+        \ 'col':20,
+        \ 'row':3}
+        \ )
+  terminal
+  hi MyFWin ctermbg=0, guibg=#000000 " cterm:Black, gui:DarkBlue
+  call nvim_win_set_option(0, 'winhl', 'Normal:MyFWin')
+  setlocal nonumber
+  setlocal winblend=15
+  nnoremap <buffer> q :q<CR>
+endfunction
 
 nnoremap <Leader>m :wa <Bar> :make<CR>
 
@@ -101,3 +121,19 @@ cnoremap <C-g>          <C-c>
 if has('unix')
   cnoremap <silent><expr> <C-Space> system('fcitx-remote -c')
 endif
+
+command! -nargs=1 SaveSession :call SaveSession(<f-args>)
+
+function! SaveSession(arg) abort
+  wall
+  let name = substitute(a:arg, " ", "_", "g") . ".vim"
+  let path = expand("~/.vim/sessions/") . name
+  if filereadable(path)
+    let choice = confirm(printf("%s already exists. Overwrite?", path), 
+          \"&Overwrite\n&Cancel")
+    if choice == 2
+      return
+    endif
+  endif
+  execute "mksession!" . path 
+endfunction
