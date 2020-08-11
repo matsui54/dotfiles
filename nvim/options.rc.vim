@@ -94,21 +94,24 @@ function MyTabLine()
 
   " shrink tabs to fit to screen
   if len_str + len_tail > screen_width
-    let capacity = screen_width - len_tail
-    let avr = capacity / num_tab
-    for i in range(num_tab)
-      if tabs[i].len < avr
-        let capacity += avr - tabs[i].len
-      endif
-    endfor
+    let dir = substitute(dir, '\/[^\/]\{3}\zs[^\/]\+', '…', 'g')
+    let capacity = screen_width - strlen(time . dir) - 3
+    if capacity < len_str
+      let avr = capacity / num_tab
+      for i in range(num_tab)
+        if tabs[i].len < avr
+          let capacity += avr - tabs[i].len
+        endif
+      endfor
 
-    let avr = capacity / num_tab - 1
-    for i in range(num_tab)
-      if tabs[i].len > avr
-        let len = avr - len(tabs[i].pre . tabs[i].post) - 1
-        let tabs[i].name = tabs[i].name[:len] . '…'
-      endif
-    endfor
+      let avr = capacity / num_tab - 1
+      for i in range(num_tab)
+        if tabs[i].len > avr
+          let len = avr - len(tabs[i].pre . tabs[i].post) - 1
+          let tabs[i].name = tabs[i].name[:len] . '…'
+        endif
+      endfor
+    endif
   endif
 
   let s = ''
