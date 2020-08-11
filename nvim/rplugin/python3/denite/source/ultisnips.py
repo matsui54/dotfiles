@@ -44,18 +44,20 @@ class Source(Base):
         for key in items.keys():
             item = self.vim.vars["current_ulti_dict_info"][key]
             locs = item["location"].split(":")
+            path = ":".join(locs[0:-1])
+            line = locs[-1]
             candidates.append(
                 {
                     "word": "{} {}".format(key, item["description"]),
-                    "abbr": "{:<20}{}   {}".format(key, item["description"], locs[0]),
-                    "action__path": locs[0],
-                    "action__line": locs[1],
+                    "abbr": "{:<20}{}   {}".format(key, item["description"], path),
+                    "action__path": path,
+                    "action__line": line,
                     "action__col": 0,
                     "source__trigger": key,
-                    "__priority": 1 if item['description'] else 0,
+                    "__priority": 1 if item["description"] else 0,
                 }
             )
-        return sorted(candidates, key=lambda x:x['__priority'], reverse=True)
+        return sorted(candidates, key=lambda x: x["__priority"], reverse=True)
 
 
 class Kind(File):
