@@ -31,9 +31,10 @@ endif
 call map(dein#check_clean(), "delete(v:val, 'rf')")
 " end dein settings---------------------------------------
 
-let g:OxfDictionary#app_id='3fc46c58'
-let g:OxfDictionary#app_key='c4603e15e4eb3f7219bd477823507ad6'
 execute "set runtimepath+=" . expand("~/work/OxfDictionary.nvim")
+if filereadable(expand('~/.config/secret.vim'))
+  source ~/.config/secret.vim
+endif
 
 if has('win32') || has('win64')
   let g:python3_host_prog = 'C:\Users\harum\AppData\Local\Programs\Python\Python38\python.EXE'

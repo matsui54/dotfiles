@@ -15,6 +15,9 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'simplenote-vim/simplenote.vim'
+
+[[plugins]]
 repo = "puremourning/vimspector"
 if = 'has("unix")'
 on_ft = ["python", "cpp"]

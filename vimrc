@@ -18,6 +18,8 @@ if filereadable(expand('~/.vim/colors/iceberg.vim'))
   colorscheme iceberg
 endif
 
+execute "set runtimepath+=" . expand('~/dotfiles/nvim')
+
 source ~/dotfiles/nvim/options.rc.vim
 source ~/dotfiles/nvim/map.rc.vim
 
