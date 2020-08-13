@@ -57,7 +57,7 @@ if has('unix') && !s:is_wsl()
     autocmd CmdlineLeave * call system('fcitx-remote -o')
     autocmd CompleteChanged * call system('fcitx-remote -c')
   augroup END
-else
+elseif has('win32') || has('win64')
   " for windows
   py3file <sfile>:h/autoload/win_ime_con.py
   python3 wic = WinImeCon()
