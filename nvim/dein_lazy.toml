@@ -46,6 +46,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/defx.nvim'
+on_event = 'CursorHold'
 depends = ['defx-icons']
 hook_source = '''
   call defx#custom#column('mark', {

@@ -8,18 +8,15 @@ let g:polyglot_disabled = ['markdown']
 '''
 
 [[plugins]]
+repo = 'plasticboy/vim-markdown'
+
+[[plugins]]
 repo = 'neoclide/coc.nvim'
 merged = 0
 rev = 'release'
 hook_add = '''
   source ~/dotfiles/nvim/plugins/coc.rc.vim
 '''
-
-[[plugins]]
-repo = 'tomasr/molokai'
-
-[[plugins]]
-repo = 'NLKNguyen/papercolor-theme'
 
 [[plugins]]
 repo = 'cocopon/iceberg.vim'
@@ -56,6 +53,7 @@ repo = 'vim-airline/vim-airline-themes'
 repo = 'Yggdroot/indentLine'
 hook_add = '''
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+let g:indentLine_fileTypeExclude = ['help', 'calendar']
 '''
 
 [[plugins]]
@@ -69,9 +67,6 @@ set helplang=ja
 
 [[plugins]]
 repo = 'tyru/caw.vim'
-
-# [[plugins]]
-# repo = 'tpope/vim-commentary'
 
 #[[plugins]]
 #repo = 'autozimu/LanguageClient-neovim'
@@ -100,3 +95,8 @@ repo = 'tyru/caw.vim'
 # [[plugins]]
 # repo = 'Shougo/neosnippet-snippets'
 
+# [[plugins]]
+# repo = 'tomasr/molokai'
+
+# [[plugins]]
+# repo = 'NLKNguyen/papercolor-theme'

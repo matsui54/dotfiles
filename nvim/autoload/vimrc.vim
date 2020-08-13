@@ -1,4 +1,7 @@
 function! vimrc#on_insert_enter()
+  if !exists("b:win_ime_con_is_insert")
+    return
+  endif
   if b:win_ime_con_is_insert == 0
     if b:win_ime_con_is_active == 1
        python3 wic.activate()
@@ -8,6 +11,9 @@ function! vimrc#on_insert_enter()
 endfunction
 
 function! vimrc#disable_ime()
+  if !exists("b:win_ime_con_is_insert")
+    return
+  endif
   if b:win_ime_con_is_insert
     python3 wic.on_leave(True)
   else
