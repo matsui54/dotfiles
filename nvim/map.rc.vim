@@ -73,6 +73,11 @@ nnoremap G Gzz7<C-y>
 "change local directory
 nnoremap <Leader>cd :lcd %:h<CR>
 
+" multiple search
+nnoremap <expr> <Space>/ multi_search#hl_last_match() . "/"
+nnoremap <expr> <Space>* multi_search#hl_last_match() . "*"
+nmap <expr> <Space>l "\<C-l>" . multi_search#delete_search_all()
+
 nnoremap j gj
 nnoremap k gk
 xnoremap j gj
