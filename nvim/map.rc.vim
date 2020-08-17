@@ -94,9 +94,7 @@ function! s:improved_indent()
 endfunction
 function! s:exit_indent_mode()
   if s:moved
-    if mode() == 'V'
-      normal! V
-    endif
+    execute "normal! \<C-c>"
     autocmd! my_indent
     let s:moved = v:false
   else
