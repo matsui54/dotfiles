@@ -18,6 +18,8 @@ function! s:smart_bracket()
   return ope
 endfunction
 
+inoremap <C-r> <ESC>:call show_register#show()<CR>a<C-r>
+
 if has('nvim')
   nnoremap <expr> <leader>d (&filetype=='vim') ? ":w <bar> :source %<CR>" :
         \ (&filetype=='python') ? ":w <bar> :QuickRun <CR>" :
