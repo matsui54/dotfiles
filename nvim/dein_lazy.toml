@@ -71,7 +71,7 @@ hook_source = '''
   source ~/dotfiles/nvim/plugins/defx.rc.vim
 '''
 hook_add = '''
-  nnoremap <silent><C-f> :<C-u>Defx -buffer-name=`'defx' . tabpagenr()`<CR>
+  nnoremap <silent><C-f> :<C-u>Defx -buffer-name=`'defx' . t:defx_index`<CR>
   nmap <silent><Space>f <C-f>:call defx#call_action('cd', [expand('~/dotfiles/nvim')])<CR>
   nmap <silent><Space>w <C-f>:call defx#call_action('cd', [expand('~/work')])<CR>
   nmap <silent><Space>p <C-f>:call defx#call_action('cd', [expand('~/.cache/dein/repos/github.com')])<CR>

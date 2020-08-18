@@ -75,7 +75,17 @@ endif
 augroup MyAutoCmd
   autocmd!
   autocmd VimLeavePre,BufWrite * mksession! ~/.vim/sessions/saved_session.vim
+  autocmd VimEnter * let t:defx_index = 1
+  autocmd TabNew * let t:defx_index = s:get_defx_idx()
 augroup END
+
+function! s:get_defx_idx()
+  let idx = 1
+  for i in range(tabpagenr('$'))
+    let idx = max([idx, gettabvar(i+1, 'defx_index')])
+  endfor
+  return idx + 1
+endfunction
 
 " netrw settings
 let g:netrw_preview=1
