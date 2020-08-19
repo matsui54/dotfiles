@@ -48,7 +48,7 @@ function! s:multi_match_add()
 endfunction
 
 function! s:search_and_hi()
-  let word = histget("search")
+  let word = getreg('/')
   if &ignorecase && match(word, '\\C') == -1 &&
         \!(&smartcase && word !~# tolower(word))
     let word .= "\\c"
