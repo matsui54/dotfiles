@@ -51,9 +51,6 @@ function! s:defx_my_settings() abort
         \ defx#do_action('new_file')
   nnoremap <silent><buffer><expr> M
         \ defx#do_action('new_multiple_files')
-  nnoremap <silent><buffer><expr> C
-        \ defx#do_action('toggle_columns',
-        \                'mark:indent:icon:filename:type:size:time')
   nnoremap <silent><buffer><expr> S
         \ defx#do_action('multi', [['toggle_sort', 'time'], 'redraw'])
   nnoremap <silent><buffer><expr> d
@@ -95,6 +92,9 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> <TAB>
         \ winwidth(0) > 50 ? ":80 wincmd < <CR>" :
         \ ":80 wincmd > <CR>"
+
+  nnoremap <silent><buffer> <Space><Tab>
+        \ :<C-u>Defx -buffer-name=temp<CR>
 
   nnoremap <silent><buffer><expr> <Space>g
         \ ":Denite grep:" . Get_defx_cwd() . "<CR>"
