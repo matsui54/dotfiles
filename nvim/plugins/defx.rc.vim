@@ -93,6 +93,13 @@ function! s:defx_my_settings() abort
         \ winwidth(0) > 50 ? ":80 wincmd < <CR>" :
         \ ":80 wincmd > <CR>"
 
+  nnoremap <silent><buffer><expr> <Space>f 
+        \ defx#do_action('cd', [expand('~/dotfiles/nvim')])
+  nnoremap <silent><buffer><expr> <Space>w 
+        \ defx#do_action('cd', [expand('~/work')])
+  nnoremap <silent><buffer><expr> <Space>p 
+        \ defx#do_action('cd', [expand('~/.cache/dein/repos/github.com')])
+
   nnoremap <silent><buffer> <Space><Tab>
         \ :<C-u>Defx -buffer-name=temp<CR>
 
