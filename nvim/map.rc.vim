@@ -80,6 +80,17 @@ nnoremap <expr> <Space>/ multi_search#hl_last_match() . "/"
 nnoremap <expr> <Space>* multi_search#hl_last_match() . "*"
 nmap <expr> <Space>l "\<C-l>" . multi_search#delete_search_all()
 
+" from nelstrom/vim-visual-star-search
+function! s:VSetSearch(cmdtype)
+  let temp = @s
+  norm! gv"sy
+  let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
+  let @s = temp
+endfunction
+
+xnoremap * :<C-u>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
+xnoremap # :<C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
+
 nnoremap j gj
 nnoremap k gk
 xnoremap j gj
