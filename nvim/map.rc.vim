@@ -59,6 +59,15 @@ nnoremap <expr><silent> <Right> (win_screenpos(win_getid())[1] < 3) ?
 nnoremap <expr><silent> <Left> (win_screenpos(win_getid())[1] < 3) ?
       \":wincmd <<CR>" : ":wincmd ><CR>"
 
+nnoremap <expr><silent> <S-Up> (win_screenpos(win_getid())[0] < 3) ?
+      \":5wincmd -<CR>" : ":5wincmd +<CR>"
+nnoremap <expr><silent> <S-Down> (win_screenpos(win_getid())[0] < 3) ?
+      \":5wincmd +<CR>" : ":5wincmd -<CR>"
+nnoremap <expr><silent> <S-Right> (win_screenpos(win_getid())[1] < 3) ?
+      \":10wincmd ><CR>" : ":10wincmd <<CR>"
+nnoremap <expr><silent> <S-Left> (win_screenpos(win_getid())[1] < 3) ?
+      \":10wincmd <<CR>" : ":10wincmd ><CR>"
+
 nnoremap ; :
 xnoremap ; :
 
