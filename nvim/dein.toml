@@ -8,7 +8,7 @@ let g:polyglot_disabled = ['markdown']
 '''
 
 [[plugins]]
-repo = 'plasticboy/vim-markdown'
+repo = 'rcmdnk/vim-markdown'
 
 [[plugins]]
 repo = 'neoclide/coc.nvim'
