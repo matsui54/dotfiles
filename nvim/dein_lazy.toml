@@ -129,6 +129,14 @@ on_event = 'InsertCharPre'
 [[plugins]]
 repo = 'honza/vim-snippets'
 
+[[plugins]]
+repo = 'tyru/open-browser.vim'
+
+[[plugins]]
+repo = 'previm/previm'
+on_cmd = 'PrevimOpen'
+depends = 'open-browser.vim'
+
 # [[plugins]]
 # repo = 'Shougo/neoinclude.vim'
 

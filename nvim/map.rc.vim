@@ -138,9 +138,9 @@ if has('unix')
   cnoremap <silent><expr> <C-Space> system('fcitx-remote -c')
 endif
 
-command! -nargs=1 SaveSession :call SaveSession(<f-args>)
+command! -nargs=1 SaveSession :call <SID>save_session(<f-args>)
 
-function! SaveSession(arg) abort
+function! s:save_session(arg) abort
   wall
   let name = substitute(a:arg, " ", "_", "g") . ".vim"
   let path = expand("~/.vim/sessions/") . name
