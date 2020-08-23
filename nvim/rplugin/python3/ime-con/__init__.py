@@ -1,15 +1,19 @@
 import ctypes
-import vim
+import pynvim as vim
 
-class WinImeCon():
-    def __init__(self):
+
+@vim.plugin
+class WinImeCon:
+    def __init__(self, nvim):
         self.user32 = ctypes.windll.user32
         self.imm32 = ctypes.windll.imm32
 
+    @vim.function('_activate_ime', sync=True)
     def activate(self):
         hWnd = self.imm32.ImmGetDefaultIMEWnd(self.user32.GetForegroundWindow())
         self.user32.SendMessageW(hWnd, 0x283, 0x006, 0x001)
 
+    @vim.function('_disable_ime', sync=True)
     def on_leave(self, is_insert):
         hWnd = self.imm32.ImmGetDefaultIMEWnd(self.user32.GetForegroundWindow())
         if is_insert:

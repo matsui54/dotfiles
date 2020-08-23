@@ -59,9 +59,6 @@ if has('unix') && !s:is_wsl()
   augroup END
 elseif has('win32') || has('win64')
   " for windows
-  py3file <sfile>:h/autoload/win_ime_con.py
-  python3 wic = WinImeCon()
-
   augroup win_ime_con
     autocmd!
     autocmd BufWinEnter * let b:win_ime_con_is_active = 0
