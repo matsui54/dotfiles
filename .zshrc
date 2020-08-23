@@ -4,10 +4,9 @@ SAVEHIST=10000
 HISTFILE=~/.zsh_history
 
 EDITOR='nvim'
+
 # enable color support of ls and also add handy aliases
 alias ls='ls --color=auto'
-#alias dir='dir --color=auto'
-#alias vdir='vdir --color=auto'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
@@ -16,6 +15,11 @@ alias egrep='egrep --color=auto'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+
+# git alias
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
 
 DIRSTACKSIZE=100
 setopt auto_pushd
