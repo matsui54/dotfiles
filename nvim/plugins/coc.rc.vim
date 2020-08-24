@@ -23,17 +23,14 @@ inoremap <silent><expr> <TAB>
       \ coc#refresh()
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-" Use <C-j> for trigger snippet expand.
-imap <C-j> <Plug>(coc-snippets-expand)
-
 " Use <C-j> for select text for visual placeholder of snippet.
-vmap <C-j> <Plug>(coc-snippets-select)
+" vmap <C-j> <Plug>(coc-snippets-select)
 
 " Use <C-j> for jump to next placeholder, it's default of coc.nvim
-let g:coc_snippet_next = '<C-j>'
+" let g:coc_snippet_next = '<C-j>'
 
 " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
-let g:coc_snippet_prev = '<c-k>'
+" let g:coc_snippet_prev = '<c-k>'
 
 
 " Use K to show documentation in preview window.

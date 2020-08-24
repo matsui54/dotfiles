@@ -44,7 +44,7 @@ if has('nvim')
 endif
 
 function! s:is_wsl()
-  return executable('cmd.exe')
+  return executable('cmd.exe') && isdirectory('/mnt/c')
 endfunction
 
 if has('unix') && !s:is_wsl()
@@ -57,7 +57,7 @@ if has('unix') && !s:is_wsl()
     autocmd CmdlineLeave * call system('fcitx-remote -o')
     autocmd CompleteChanged * call system('fcitx-remote -c')
   augroup END
-elseif (has('win32') || has('win64') || s:is_wsl()) && has('nvim')
+elseif (has('win32') || has('win64')) && has('nvim')
   " for windows
   augroup win_ime_con
     autocmd!

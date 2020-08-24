@@ -124,7 +124,9 @@ repo = 'SirVer/ultisnips'
 depends = 'vim-snippets'
 on_source = 'denite.nvim'
 hook_add = '''
-  let g:UltiSnipsExpandTrigger='<C-j>'
+  let g:UltiSnipsExpandTrigger='<C-l>'
+  let g:UltiSnipsJumpForwardTrigger='<C-j>'
+  let g:UltiSnipsJumpBackwardTrigger='<C-k>'
 '''
 on_event = 'InsertCharPre'
 
@@ -147,6 +149,7 @@ hook_add = '''
   cmap <C-j>     <Plug>(eskk:toggle)
 '''
 hook_source = '''
+  let g:eskk#enable_completion=0
   let g:eskk#directory = expand('~/.cache/eskk')
   let g:eskk#dictionary = {
         \   'path': expand('~/.cache/skk-jisyo'),
