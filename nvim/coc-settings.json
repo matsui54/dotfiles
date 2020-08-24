@@ -5,5 +5,10 @@
   "python.linting.flake8Enabled": false,
   "python.linting.mypyEnabled": true,
   "python.formatting.provider": "black",
-  "clangd.semanticHighlighting": true
+  "clangd.semanticHighlighting": true,
+  "coc.source.word.filetypes": [
+    "markdown",
+    "text",
+    ""
+  ]
 }
