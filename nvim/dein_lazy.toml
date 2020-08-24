@@ -67,6 +67,8 @@ hook_source = '''
         \ 'columns': 'mark:indent:icons:filename:type:time:size',
         \ 'vertical_preview': 1,
         \ 'floating_preview': 1,
+        \ 'preview_width': 80,
+        \ 'preview_height': 30,
         \ })
   source ~/dotfiles/nvim/plugins/defx.rc.vim
 '''
@@ -137,6 +139,21 @@ repo = 'previm/previm'
 on_cmd = 'PrevimOpen'
 depends = 'open-browser.vim'
 
+[[plugins]]
+repo = 'tyru/eskk.vim'
+on_map = {ic = '<Plug>'}
+hook_add = '''
+  imap <C-j>     <Plug>(eskk:toggle)
+  cmap <C-j>     <Plug>(eskk:toggle)
+'''
+hook_source = '''
+  let g:eskk#directory = expand('~/.cache/eskk')
+  let g:eskk#dictionary = {
+        \   'path': expand('~/.cache/skk-jisyo'),
+        \   'sorted': 0,
+        \   'encoding': 'utf-8',
+        \}
+'''
 # [[plugins]]
 # repo = 'Shougo/neoinclude.vim'
 
