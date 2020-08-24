@@ -156,6 +156,13 @@ hook_source = '''
         \   'sorted': 0,
         \   'encoding': 'utf-8',
         \}
+  if has('win32') || has('win64')
+    let g:eskk#large_dictionary = {
+    \	'path': expand('~/AppData/Local/skk/SKK-JISYO.L'),
+    \	'sorted': 1,
+    \	'encoding': 'euc-jp',
+    \}
+  endif
 '''
 # [[plugins]]
 # repo = 'Shougo/neoinclude.vim'
