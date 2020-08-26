@@ -11,13 +11,13 @@ let g:polyglot_disabled = ['markdown']
 [[plugins]]
 repo = 'rcmdnk/vim-markdown'
 
-[[plugins]]
-repo = 'neoclide/coc.nvim'
-merged = 0
-rev = 'release'
-hook_add = '''
-  source ~/dotfiles/nvim/plugins/coc.rc.vim
-'''
+# [[plugins]]
+# repo = 'neoclide/coc.nvim'
+# merged = 0
+# rev = 'release'
+# hook_add = '''
+#   source ~/dotfiles/nvim/plugins/coc.rc.vim
+# '''
 
 [[plugins]]
 repo = 'cocopon/iceberg.vim'
