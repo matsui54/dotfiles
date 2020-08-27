@@ -84,6 +84,14 @@ nnoremap G Gzz7<C-y>
 "change local directory
 nnoremap <Leader>cd :lcd %:h<CR>
 
+" viml formatting
+function! s:format_viml()
+  let tmp = winsaveview()
+  normal! ggVG=
+  call winrestview(tmp)
+endfunction
+nnoremap <silent> <Leader>f :call <SID>format_viml()<CR>
+
 " multiple search
 nnoremap <expr> <Space>/ multi_search#hl_last_match() . "/"
 nnoremap <expr> <Space>* multi_search#hl_last_match() . "*"

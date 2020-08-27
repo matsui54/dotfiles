@@ -4,16 +4,33 @@ hook_source = '''
   source ~/dotfiles/nvim/plugins/quickrun.rc.vim
 '''
 
+# [[plugins]]
+# repo = 'prabirshrestha/vim-lsp'
+# depends = ['deoplete-vim-lsp']
+# on_ft = ['python', 'cpp', 'vim']
+# hook_add = '''
+# 	let g:lsp_log_file = expand('~/vim-lsp.log')
+# '''
+ 
 [[plugins]]
-repo = 'prabirshrestha/vim-lsp'
-depends = ['deoplete-vim-lsp']
+repo = 'dense-analysis/ale'
 on_ft = ['python', 'cpp', 'vim']
-hook_source = '''
-  source ~/dotfiles/nvim/plugins/lsp.rc.vim
+hook_add = '''
+source ~/dotfiles/nvim/plugins/ale.vim
 '''
 
 [[plugins]]
-repo = 'lighttiger2505/deoplete-vim-lsp'
+repo = 'autozimu/LanguageClient-neovim'
+rev = 'next'
+build = 'bash install.sh'
+on_ft = ['python', 'cpp']
+hook_source = '''
+	source ~/dotfiles/nvim/plugins/languageclient.vim
+'''
+
+# [[plugins]]
+# repo = 'lighttiger2505/deoplete-vim-lsp'
+# depends = ['deoplete.nvim']
 
 [[plugins]]
 repo = 'itchyny/calendar.vim'
@@ -123,12 +140,12 @@ hook_add = '''
   omap T <Plug>(clever-f-T)
 '''
 
-[[plugins]]
-repo = 'neoclide/coc-denite'
-on_source = 'denite.nvim'
-hook_add = '''
-  nnoremap <Space>s :Denite coc-symbols<CR>
-'''
+# [[plugins]]
+# repo = 'neoclide/coc-denite'
+# on_source = 'denite.nvim'
+# hook_add = '''
+#   nnoremap <Space>s :Denite coc-symbols<CR>
+# '''
 
 [[plugins]]
 repo = 'SirVer/ultisnips'
@@ -197,7 +214,6 @@ on_ft = 'vim'
 [[plugins]]
 repo = 'ncm2/float-preview.nvim'
 on_source = 'deoplete.nvim'
-if = 'has("nvim")'
 hook_source = '''
   let g:float_preview#docked = 0
   let g:float_preview#max_width = 60

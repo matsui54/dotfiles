@@ -31,7 +31,7 @@ endif
 call map(dein#check_clean(), "delete(v:val, 'rf')")
 " end dein settings---------------------------------------
 
-execute "set runtimepath+=" . expand("~/work/OxfDictionary.nvim")
+execute 'set runtimepath+=' . expand('~/work/OxfDictionary.nvim')
 if filereadable(expand('~/.config/secret.vim'))
   source ~/.config/secret.vim
 endif

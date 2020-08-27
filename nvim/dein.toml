@@ -8,6 +8,10 @@ hook_add = '''
 let g:polyglot_disabled = ['markdown']
 '''
 
+# [[plugins]]
+# repo = 'mattn/vim-lsp-settings'
+# merged = 0
+
 [[plugins]]
 repo = 'rcmdnk/vim-markdown'
 
@@ -65,24 +69,10 @@ set helplang=ja
 repo = 'tyru/caw.vim'
 
 #[[plugins]]
-#repo = 'autozimu/LanguageClient-neovim'
-#rev = 'next'
-#build = 'bash install.sh'
-#hook_add = '''
-	#source ~/dotfiles/nvim/plugins/languageclient.vim
-#'''
-
-#[[plugins]]
 #repo = 'neovim/nvim-lsp'
 #hook_add = '''
 #lua require'nvim_lsp'.clangd.setup{}
 #'''
-
-# [[plugins]]
-# repo = 'dense-analysis/ale'
-# hook_add = '''
-# source ~/dotfiles/nvim/plugins/ale.vim
-# '''
 
 # [[plugins]]
 # repo = 'tbodt/deoplete-tabnine'

@@ -92,6 +92,8 @@ fi
 # Use emacs keybindings even if our EDITOR is set to vi
 bindkey -e
 
+export PATH=$PATH:~/.local/bin
+
 # Use vim keys in tab complete menu:
 zmodload zsh/complist
 bindkey -M menuselect 'h' vi-backward-char
