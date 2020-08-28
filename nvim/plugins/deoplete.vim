@@ -6,6 +6,9 @@ inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
+call deoplete#custom#option({
+      \ 'ignore_sources': {'cpp': ['ale'], 'python': ['ale']},
+      \ })
 " call deoplete#custom#var('tabnine', {
 "      \ 'line_limit': 300,
 "      \ 'max_num_results': 5,

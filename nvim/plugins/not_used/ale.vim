@@ -1,12 +1,3 @@
-let g:ale_linters = {
-			\'cpp': ['clangd'],
-			\'python': ['pyls', 'flake8', 'mypy'],
-			\'vim': ['vint']
-			\}
-let g:ale_fixers = {
-			\'cpp':['clang-format'],
-			\'python':['autopep8', 'isort']
-			\}
 
 " nnoremap <Leader>f :ALEFix <CR>
 " nnoremap <Leader>] :ALEGoToDefinition <CR>

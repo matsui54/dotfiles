@@ -16,13 +16,30 @@ hook_source = '''
 repo = 'dense-analysis/ale'
 on_ft = ['python', 'cpp', 'vim']
 hook_add = '''
-source ~/dotfiles/nvim/plugins/ale.vim
+  let g:ale_linters = {
+        \'cpp': ['clangd'],
+        \'python': ['pyls', 'flake8', 'mypy'],
+        \'vim': ['vint']
+        \}
+  let g:ale_fixers = {
+        \'cpp':['clang-format'],
+        \'python':['autopep8', 'isort']
+        \}
+  let g:ale_hover_cursor=0
 '''
 
 [[plugins]]
 repo = 'autozimu/LanguageClient-neovim'
 rev = 'next'
-build = 'bash install.sh'
+hook_post_update = '''
+  if has('win32') || has('win64')
+      call system(
+      \ 'powershell -executionpolicy bypass -File install.ps1')
+  else
+      call system('bash install.sh')
+  endif
+  let g:LanguageClient_preferredMarkupKind: ['plaintext']
+'''
 on_ft = ['python', 'cpp']
 hook_source = '''
 	source ~/dotfiles/nvim/plugins/languageclient.vim
@@ -194,8 +211,6 @@ hook_source = '''
     \}
   endif
 '''
-# [[plugins]]
-# repo = 'Shougo/neoinclude.vim'
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
@@ -207,9 +222,6 @@ hook_source = '''
 [[plugins]]
 repo = 'Shougo/neco-vim'
 on_ft = 'vim'
-
-# [[plugins]]
-# repo = 'neoclide/coc-neco'
 
 [[plugins]]
 repo = 'ncm2/float-preview.nvim'
