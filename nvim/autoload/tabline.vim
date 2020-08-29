@@ -12,7 +12,7 @@ function tabline#MyTabLine()
 
   "Show time and current directory
   let time = strftime('%H:%M')
-  let dir = fnamemodify(getcwd(), ":~/")
+  let dir = fnamemodify(getcwd(), ':~/')
   let len_tail = strlen(time . dir) + 3
 
   " shrink tabs to fit to screen
