@@ -133,6 +133,7 @@ on_map = {n = '<Plug>(ac-smooth-scroll-'}
 hook_add = '''
   let g:ac_smooth_scroll_no_default_key_mappings = 1
   let g:ac_smooth_scroll_du_sleep_time_msec=5
+  let g:ac_smooth_scroll_min_limit_msec = 80
   nmap <silent> <C-d> <Plug>(ac-smooth-scroll-c-d)
   nmap <silent> <C-u> <Plug>(ac-smooth-scroll-c-u)
 '''

@@ -4,6 +4,7 @@ syntax enable
 set number
 set title
 set updatetime=300
+set relativenumber
 
 set expandtab
 set tabstop=2
