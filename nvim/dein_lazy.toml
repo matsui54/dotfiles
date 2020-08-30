@@ -34,7 +34,7 @@ hook_post_update = '''
   let g:LanguageClient_preferredMarkupKind: ['plaintext']
 '''
 hook_source = '''
-	source ~/dotfiles/nvim/plugins/languageclient.vim
+	source ~/dotfiles/nvim/plugins/languageclient.rc.vim
 '''
 
 [[plugins]]
@@ -198,7 +198,7 @@ hook_source = '''
 repo = 'Shougo/deoplete.nvim'
 on_event = 'InsertEnter'
 hook_source = '''
-  source ~/dotfiles/nvim/plugins/deoplete.vim
+  source ~/dotfiles/nvim/plugins/deoplete.rc.vim
 '''
 
 [[plugins]]
