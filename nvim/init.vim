@@ -28,7 +28,6 @@ if dein#check_install()
   call dein#install()
 endif
 
-call map(dein#check_clean(), "delete(v:val, 'rf')")
 " end dein settings---------------------------------------
 
 execute 'set runtimepath+=' . expand('~/work/OxfDictionary.nvim')
