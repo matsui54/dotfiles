@@ -1,7 +1,7 @@
 set hidden
 
 let g:LanguageClient_serverCommands = {
-      \ 'cpp': ['clangd'],
+      \ 'cpp': ['ccls'],
       \ 'python': ['pyls']
       \ }
 let g:LanguageClient_loadSettings = 1

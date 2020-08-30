@@ -2,7 +2,7 @@ let s:clr_idx = 0
 highlight Search2 ctermfg=234 ctermbg=203 guifg=#161821 guibg=#e27878
 highlight Search3 ctermfg=234 ctermbg=203 guifg=#161821 guibg=#32cd32
 highlight Search4 ctermfg=234 ctermbg=203 guifg=#161821 guibg=#1e90ff
-let s:HI_LIST = ["Search2", "Search3", "Search4"]
+let s:HI_LIST = ['Search2', 'Search3', 'Search4']
 
 function! multi_search#hl_last_match()
   if s:clr_idx == len(s:HI_LIST)
@@ -17,7 +17,7 @@ function! multi_search#hl_last_match()
 endfunction
 
 function! multi_search#delete_search_all()
-  if !exists("w:multi_search_hl_idx")
+  if !exists('w:multi_search_hl_idx')
     return
   endif
   for idx in keys(w:multi_search_hl_idx)
@@ -39,7 +39,7 @@ function! s:multi_match_add()
   let current_id = win_getid()
   for win in gettabinfo(tabpagenr())[0].windows
     call win_gotoid(win)
-    if !exists("w:multi_search_hl_idx")
+    if !exists('w:multi_search_hl_idx')
       let w:multi_search_hl_idx = {}
     endif
     let w:multi_search_hl_idx[s:clr_idx] = s:search_and_hi()
@@ -51,7 +51,7 @@ function! s:search_and_hi()
   let word = getreg('/')
   if &ignorecase && match(word, '\\C') == -1 &&
         \!(&smartcase && word !~# tolower(word))
-    let word .= "\\c"
+    let word .= '\\c'
   endif
   return matchadd(s:HI_LIST[s:clr_idx], word)
 endfunction
