@@ -1,0 +1,284 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	//
+#	map.rc.vim	/^xnoremap # :<C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@\/<CR><CR>$/;"	m
+%%	map.rc.vim	/^cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'\/' : '%%'$/;"	m
+'	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> '$/;"	m
+*	map.rc.vim	/^xnoremap * :<C-u>call <SID>VSetSearch('\/')<CR>\/<C-R>=@\/<CR><CR>$/;"	m
+*	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> *$/;"	m
+,	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> ,$/;"	m
+.	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> .$/;"	m
+;	map.rc.vim	/^nnoremap ; :$/;"	m
+;	map.rc.vim	/^xnoremap ; :$/;"	m
+<	map.rc.vim	/^xnoremap <silent> < <:call <SID>improved_indent()<CR>gv$/;"	m
+<C-Space>	map.rc.vim	/^  cnoremap <silent><expr> <C-Space> system('fcitx-remote -c')$/;"	m
+<C-a>	map.rc.vim	/^cnoremap <C-a>          <Home>$/;"	m
+<C-d>	dein_lazy.toml	/^  nmap <silent> <C-d> <Plug>(ac-smooth-scroll-c-d)$/;"	m
+<C-d>	map.rc.vim	/^cnoremap <C-d>          <Del>$/;"	m
+<C-e>	map.rc.vim	/^cnoremap <C-e>          <End>$/;"	m
+<C-f>	dein_lazy.toml	/^  nnoremap <silent><C-f> :<C-u>Defx -buffer-name=`'defx' . t:defx_index`<CR>$/;"	m
+<C-f>	plugins/denite.rc.vim	/^  nnoremap <silent><buffer><expr> <C-f>$/;"	m
+<C-g>	map.rc.vim	/^cnoremap <C-g>          <C-c>$/;"	m
+<C-g>	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> <C-g>$/;"	m
+<C-j>	dein_lazy.toml	/^  cmap <C-j>     <Plug>(eskk:toggle)$/;"	m
+<C-j>	dein_lazy.toml	/^  imap <C-j>     <Plug>(eskk:toggle)$/;"	m
+<C-j>	map.rc.vim	/^nnoremap <C-j> gT$/;"	m
+<C-k>	map.rc.vim	/^nnoremap <C-k> gt$/;"	m
+<C-k>	plugins/not_used/neosnippet.vim	/^imap <C-k>     <Plug>(neosnippet_expand_or_jump)$/;"	m
+<C-k>	plugins/not_used/neosnippet.vim	/^nmap <C-k>     <Plug>(neosnippet_expand_or_jump)$/;"	m
+<C-k>	plugins/not_used/neosnippet.vim	/^smap <C-k>     <Plug>(neosnippet_expand_or_jump)$/;"	m
+<C-k>	plugins/not_used/neosnippet.vim	/^xmap <C-k>     <Plug>(neosnippet_expand_or_jump)$/;"	m
+<C-l>	map.rc.vim	/^nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>$/;"	m
+<C-l>	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> <C-l>$/;"	m
+<C-n>	map.rc.vim	/^cnoremap <C-n>          <Down>$/;"	m
+<C-o>	plugins/denite.rc.vim	/^  imap <silent><buffer> <C-o> <Plug>(denite_filter_quit)$/;"	m
+<C-p>	map.rc.vim	/^cnoremap <C-p>          <Up>$/;"	m
+<C-r>	map.rc.vim	/^inoremap <C-r> <ESC>:call show_register#show()<CR>a<C-r>$/;"	m
+<C-u>	dein_lazy.toml	/^  nmap <silent> <C-u> <Plug>(ac-smooth-scroll-c-u)$/;"	m
+<C-y>	map.rc.vim	/^cnoremap <C-y>          <C-r>*$/;"	m
+<CR>	map.rc.vim	/^inoremap <silent><expr> <CR> <SID>smart_bracket()$/;"	m
+<CR>	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> <CR>$/;"	m
+<CR>	plugins/denite.rc.vim	/^  nnoremap <silent><buffer><expr> <CR>$/;"	m
+<CR>	plugins/vimspector.rc.vim	/^  nnoremap <CR> <CR>$/;"	m
+<CR>	plugins/vimspector.rc.vim	/^  nnoremap <buffer> <CR> <CR>:call vimspector#ToggleBreakpoint()<CR>$/;"	m
+<Down>	map.rc.vim	/^nnoremap <expr><silent> <Down> (win_screenpos(win_getid())[0] < 3) ?$/;"	m
+<Esc>	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> <Esc>$/;"	m
+<F10>	plugins/vimspector.rc.vim	/^nmap <F10> <Plug>VimspectorAddFunctionBreakpoint$/;"	m
+<F3>	plugins/vimspector.rc.vim	/^nmap <F3> :call <SID>exit_debug_mode()<CR>$/;"	m
+<F4>	plugins/vimspector.rc.vim	/^nmap <F4> <Plug>VimspectorRestart$/;"	m
+<F5>	plugins/vimspector.rc.vim	/^  nmap <F5> :call <SID>enter_debug_mode()<CR>$/;"	m
+<F5>	plugins/vimspector.rc.vim	/^  nmap <F5> <Plug>VimspectorContinue$/;"	m
+<F5>	plugins/vimspector.rc.vim	/^nmap <F5> :call <SID>enter_debug_mode()<CR>$/;"	m
+<F6>	plugins/vimspector.rc.vim	/^nmap <F6> <Plug>VimspectorToggleBreakpoint$/;"	m
+<F7>	plugins/vimspector.rc.vim	/^nmap <F7> <Plug>VimspectorStepOver$/;"	m
+<F8>	plugins/vimspector.rc.vim	/^nmap <F8> <Plug>VimspectorStepInto$/;"	m
+<F9>	plugins/vimspector.rc.vim	/^nmap <F9> <Plug>VimspectorStepOut$/;"	m
+<Leader><F6>	plugins/vimspector.rc.vim	/^nmap <Leader><F6> <Plug>VimspectorToggleConditionalBreakpoint$/;"	m
+<Leader>]	plugins/languageclient.vim	/^  nnoremap <silent><buffer> <Leader>]$/;"	m
+<Leader>]	plugins/not_used/coc.rc.vim	/^nmap <silent> <Leader>] <Plug>(coc-definition)$/;"	m
+<Leader>]	plugins/not_used/lsp.vim	/^nnoremap <Leader>] :LspDefinition <CR>$/;"	m
+<Leader>c	plugins/not_used/coc.rc.vim	/^nnoremap <silent> <Leader>c  :<C-u>CocList commands<cr>$/;"	m
+<Leader>cd	map.rc.vim	/^nnoremap <Leader>cd :lcd %:h<CR>$/;"	m
+<Leader>f	map.rc.vim	/^nnoremap <silent> <Leader>f :call <SID>format_viml()<CR>$/;"	m
+<Leader>f	plugins/languageclient.vim	/^  nnoremap <silent><buffer> <Leader>f$/;"	m
+<Leader>f	plugins/not_used/lsp.vim	/^nnoremap <Leader>f :LspDocumentFormat <CR>$/;"	m
+<Leader>h	plugins/not_used/lsp.vim	/^nnoremap <Leader>h :LspHover <CR>$/;"	m
+<Leader>m	map.rc.vim	/^nnoremap <Leader>m :wa <Bar> :make<CR>$/;"	m
+<Leader>n	plugins/languageclient.vim	/^  nnoremap <silent><buffer> <Leader>n$/;"	m
+<Leader>n	plugins/not_used/coc.rc.vim	/^nmap <silent> <Leader>n <Plug>(coc-rename)$/;"	m
+<Leader>r	plugins/languageclient.vim	/^  nnoremap <buffer> <Leader>r$/;"	m
+<Leader>r	plugins/not_used/coc.rc.vim	/^nmap <silent> <Leader>r <Plug>(coc-references)$/;"	m
+<Leader>rn	plugins/not_used/lsp.vim	/^nnoremap <Leader>rn :LspRename <CR>$/;"	m
+<Left>	map.rc.vim	/^nnoremap <expr><silent> <Left> (win_screenpos(win_getid())[1] < 3) ?$/;"	m
+<LeftMouse>	plugins/vimspector.rc.vim	/^  nmap <LeftMouse> <LeftMouse><CR>$/;"	m
+<LeftMouse>	plugins/vimspector.rc.vim	/^  nnoremap <LeftMouse> <LeftMouse>$/;"	m
+<Right>	map.rc.vim	/^nnoremap <expr><silent> <Right> (win_screenpos(win_getid())[1] < 3) ?$/;"	m
+<S-Down>	map.rc.vim	/^nnoremap <expr><silent> <S-Down> (win_screenpos(win_getid())[0] < 3) ?$/;"	m
+<S-Left>	map.rc.vim	/^nnoremap <expr><silent> <S-Left> (win_screenpos(win_getid())[1] < 3) ?$/;"	m
+<S-Right>	map.rc.vim	/^nnoremap <expr><silent> <S-Right> (win_screenpos(win_getid())[1] < 3) ?$/;"	m
+<S-Tab>	plugins/deoplete.vim	/^inoremap <expr> <S-Tab> pumvisible() ? "\\<C-p>" : "\\<S-Tab>"$/;"	m
+<S-Tab>	plugins/not_used/coc.rc.vim	/^inoremap <expr> <S-Tab> pumvisible() ? "\\<C-p>" : "\\<S-Tab>"$/;"	m
+<S-Up>	map.rc.vim	/^nnoremap <expr><silent> <S-Up> (win_screenpos(win_getid())[0] < 3) ?$/;"	m
+<Space>	plugins/denite.rc.vim	/^  nnoremap <silent><buffer><expr> <Space>$/;"	m
+<Space>*	map.rc.vim	/^nnoremap <expr> <Space>* multi_search#hl_last_match() . "*"$/;"	m
+<Space>/	map.rc.vim	/^nnoremap <expr> <Space>\/ multi_search#hl_last_match() . "\/"$/;"	m
+<Space><Space>	dein_lazy.toml	/^  nnoremap <Space><Space> :Denite file\/rec<CR>$/;"	m
+<Space><Space>	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> <Space><Space>$/;"	m
+<Space><Tab>	plugins/defx.rc.vim	/^  nnoremap <silent><buffer> <Space><Tab>$/;"	m
+<Space>b	dein_lazy.toml	/^  nnoremap <Space>b :Denite buffer<CR>$/;"	m
+<Space>d	dein_lazy.toml	/^  nnoremap <Space>d :Denite $/;"	m
+<Space>f	dein_lazy.toml	/^  nmap <silent><Space>f <C-f>:call defx#call_action('cd', [expand('~\/dotfiles\/nvim')])<CR>$/;"	m
+<Space>f	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> <Space>f $/;"	m
+<Space>g	dein_lazy.toml	/^  nnoremap <silent> <Space>g :Denite grep<CR>$/;"	m
+<Space>g	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> <Space>g$/;"	m
+<Space>l	map.rc.vim	/^nmap <expr> <Space>l "\\<C-l>" . multi_search#delete_search_all()$/;"	m
+<Space>p	dein_lazy.toml	/^  nmap <silent><Space>p <C-f>:call defx#call_action('cd', [expand('~\/.cache\/dein\/repos\/githu/;"	m
+<Space>p	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> <Space>p $/;"	m
+<Space>s	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> <Space>s$/;"	m
+<Space>w	dein_lazy.toml	/^  nmap <silent><Space>w <C-f>:call defx#call_action('cd', [expand('~\/work')])<CR>$/;"	m
+<Space>w	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> <Space>w $/;"	m
+<TAB>	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> <TAB>$/;"	m
+<TAB>	plugins/deoplete.vim	/^inoremap <silent><expr> <TAB>$/;"	m
+<TAB>	plugins/not_used/coc.rc.vim	/^inoremap <silent><expr> <TAB>$/;"	m
+<TAB>	plugins/not_used/neosnippet.vim	/^imap <expr><TAB>$/;"	m
+<TAB>	plugins/not_used/neosnippet.vim	/^smap <expr><TAB> neosnippet#expandable_or_jumpable() ?$/;"	m
+<Up>	map.rc.vim	/^nnoremap <expr><silent> <Up> (win_screenpos(win_getid())[0] < 3) ?$/;"	m
+<leader>d	map.rc.vim	/^  nnoremap <expr> <leader>d (&filetype=='vim') ? ":w <bar> :source %<CR>" :$/;"	m
+<leader>f	plugins/languageclient.vim	/^  xnoremap <silent><buffer> <leader>f$/;"	m
+<leader>f	plugins/not_used/coc.rc.vim	/^nmap <silent><expr> <leader>f (&filetype == 'vim') ?$/;"	m
+<leader>f	plugins/not_used/coc.rc.vim	/^xmap <silent> <leader>f <Plug>(coc-format-selected)$/;"	m
+>	map.rc.vim	/^xnoremap <silent> > >:call <SID>improved_indent()<CR>gv$/;"	m
+E	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> E$/;"	m
+E	plugins/denite.rc.vim	/^  nnoremap <silent><buffer><expr> E$/;"	m
+F	dein_lazy.toml	/^  nmap F <Plug>(clever-f-F)$/;"	m
+F	dein_lazy.toml	/^  omap F <Plug>(clever-f-F)$/;"	m
+F	dein_lazy.toml	/^  xmap F <Plug>(clever-f-F)$/;"	m
+Fterm	map.rc.vim	/^  command! Fterm :call <SID>floating_terminal()$/;"	c
+G	map.rc.vim	/^nnoremap G Gzz7<C-y>$/;"	m
+Get_defx_cwd	plugins/defx.rc.vim	/^function! Get_defx_cwd()$/;"	f
+K	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> K$/;"	m
+K	plugins/languageclient.vim	/^  nnoremap <silent><buffer> K$/;"	m
+K	plugins/not_used/coc.rc.vim	/^nnoremap <silent> K :call <SID>show_documentation()<CR>$/;"	m
+M	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> M$/;"	m
+MyAutoCmd	options.rc.vim	/^augroup MyAutoCmd$/;"	a
+N	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> N$/;"	m
+O	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> O$/;"	m
+P	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> P$/;"	m
+RegisterComp	autoload/show_register.vim	/^augroup RegisterComp$/;"	a
+S	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> S$/;"	m
+SaveSession	map.rc.vim	/^command! -nargs=1 SaveSession :call <SID>save_session(<f-args>)$/;"	c
+T	dein_lazy.toml	/^  nmap T <Plug>(clever-f-T)$/;"	m
+T	dein_lazy.toml	/^  omap T <Plug>(clever-f-T)$/;"	m
+T	dein_lazy.toml	/^  xmap T <Plug>(clever-f-T)$/;"	m
+Tterm	map.rc.vim	/^  command! Tterm :tabnew | :terminal$/;"	c
+Vterm	map.rc.vim	/^  command! Vterm :vsplit | :terminal$/;"	c
+\x21	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> !$/;"	m
+c	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> c$/;"	m
+cd	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> cd$/;"	m
+coc	plugins/not_used/coc.rc.vim	/^augroup coc-config$/;"	a
+d	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> d$/;"	m
+d	plugins/denite.rc.vim	/^  nnoremap <silent><buffer><expr> d$/;"	m
+e	plugins/denite.rc.vim	/^  nnoremap <silent><buffer><expr> e$/;"	m
+f	dein_lazy.toml	/^  nmap f <Plug>(clever-f-f)$/;"	m
+f	dein_lazy.toml	/^  omap f <Plug>(clever-f-f)$/;"	m
+f	dein_lazy.toml	/^  xmap f <Plug>(clever-f-f)$/;"	m
+g:LanguageClient_diagnosticsEnable	plugins/languageclient.vim	/^let g:LanguageClient_diagnosticsEnable = 0$/;"	v
+g:LanguageClient_hasSnippetSupport	plugins/languageclient.vim	/^let g:LanguageClient_hasSnippetSupport = 0$/;"	v
+g:LanguageClient_loadSettings	plugins/languageclient.vim	/^let g:LanguageClient_loadSettings = 1$/;"	v
+g:LanguageClient_preferredMarkupKind:	dein_lazy.toml	/^  let g:LanguageClient_preferredMarkupKind: ['plaintext']$/;"	v
+g:LanguageClient_serverCommands	plugins/languageclient.vim	/^let g:LanguageClient_serverCommands = {$/;"	v
+g:UltiSnipsExpandTrigger	dein_lazy.toml	/^  let g:UltiSnipsExpandTrigger='<C-l>'$/;"	v
+g:UltiSnipsJumpBackwardTrigger	dein_lazy.toml	/^  let g:UltiSnipsJumpBackwardTrigger='<C-k>'$/;"	v
+g:UltiSnipsJumpForwardTrigger	dein_lazy.toml	/^  let g:UltiSnipsJumpForwardTrigger='<C-j>'$/;"	v
+g:ac_smooth_scroll_du_sleep_time_msec	dein_lazy.toml	/^  let g:ac_smooth_scroll_du_sleep_time_msec=5$/;"	v
+g:ac_smooth_scroll_no_default_key_mappings	dein_lazy.toml	/^  let g:ac_smooth_scroll_no_default_key_mappings = 1$/;"	v
+g:airline_left_alt_sep	dein.toml	/^  let g:airline_left_alt_sep = ''$/;"	v
+g:airline_left_sep	dein.toml	/^  let g:airline_left_sep = ''$/;"	v
+g:airline_right_alt_sep	dein.toml	/^  let g:airline_right_alt_sep = ''$/;"	v
+g:airline_right_sep	dein.toml	/^  let g:airline_right_sep = ''$/;"	v
+g:airline_symbols	dein.toml	/^    let g:airline_symbols = {}$/;"	v
+g:ale_fixers	dein_lazy.toml	/^  let g:ale_fixers = {$/;"	v
+g:ale_hover_cursor	dein_lazy.toml	/^  let g:ale_hover_cursor=0$/;"	v
+g:ale_linters	dein_lazy.toml	/^  let g:ale_linters = {$/;"	v
+g:calendar_google_calendar	dein_lazy.toml	/^    let g:calendar_google_calendar = 1$/;"	v
+g:calendar_google_task	dein_lazy.toml	/^    let g:calendar_google_task = 1$/;"	v
+g:clever_f_mark_direct	dein_lazy.toml	/^  let g:clever_f_mark_direct = 1$/;"	v
+g:clever_f_not_overwrites_standard_mappings	dein_lazy.toml	/^  let g:clever_f_not_overwrites_standard_mappings = 1$/;"	v
+g:dein#auto_recache	init.vim	/^let g:dein#auto_recache = 1$/;"	v
+g:deoplete#enable_at_startup	plugins/deoplete.vim	/^let g:deoplete#enable_at_startup = 1$/;"	v
+g:echodoc#type	dein_lazy.toml	/^  let g:echodoc#type = 'virtual'$/;"	v
+g:eskk#dictionary	dein_lazy.toml	/^  let g:eskk#dictionary = {$/;"	v
+g:eskk#directory	dein_lazy.toml	/^  let g:eskk#directory = expand('~\/.cache\/eskk')$/;"	v
+g:eskk#enable_completion	dein_lazy.toml	/^  let g:eskk#enable_completion=0$/;"	v
+g:eskk#large_dictionary	dein_lazy.toml	/^    let g:eskk#large_dictionary = {$/;"	v
+g:eskk#start_completion_length	dein_lazy.toml	/^  let g:eskk#start_completion_length=2$/;"	v
+g:eskk#tab_select_completion	dein_lazy.toml	/^  let g:eskk#tab_select_completion=1$/;"	v
+g:float_preview#docked	dein_lazy.toml	/^  let g:float_preview#docked = 0$/;"	v
+g:float_preview#max_height	dein_lazy.toml	/^  let g:float_preview#max_height = 20$/;"	v
+g:float_preview#max_width	dein_lazy.toml	/^  let g:float_preview#max_width = 60$/;"	v
+g:indentLine_char_list	dein.toml	/^let g:indentLine_char_list = ['|', '¦', '┆', '┊']$/;"	v
+g:indentLine_fileTypeExclude	dein.toml	/^let g:indentLine_fileTypeExclude = ['help', 'calendar']$/;"	v
+g:lsp_diagnostics_echo_cursor	plugins/not_used/lsp.vim	/^let g:lsp_diagnostics_echo_cursor = 1$/;"	v
+g:lsp_diagnostics_enabled	plugins/not_used/lsp.vim	/^let g:lsp_diagnostics_enabled = 1$/;"	v
+g:netrw_dirhist_0	.netrwhist	/^let g:netrw_dirhist_0='\/home\/haruki'$/;"	v
+g:netrw_dirhist_1	.netrwhist	/^let g:netrw_dirhist_1='\/home'$/;"	v
+g:netrw_dirhist_2	.netrwhist	/^let g:netrw_dirhist_2='\/home\/haruki\/.config'$/;"	v
+g:netrw_dirhist_3	.netrwhist	/^let g:netrw_dirhist_3='\/home'$/;"	v
+g:netrw_dirhist_4	.netrwhist	/^let g:netrw_dirhist_4='\/home\/haruki'$/;"	v
+g:netrw_dirhist_5	.netrwhist	/^let g:netrw_dirhist_5='\/home'$/;"	v
+g:netrw_dirhist_6	.netrwhist	/^let g:netrw_dirhist_6='\/home\/haruki\/.config'$/;"	v
+g:netrw_dirhist_7	.netrwhist	/^let g:netrw_dirhist_7='\/home'$/;"	v
+g:netrw_dirhist_8	.netrwhist	/^let g:netrw_dirhist_8='\/home\/haruki\/.vim\/sessions'$/;"	v
+g:netrw_dirhist_9	.netrwhist	/^let g:netrw_dirhist_9='\/home\/haruki\/.config'$/;"	v
+g:netrw_dirhistcnt	.netrwhist	/^let g:netrw_dirhistcnt =8$/;"	v
+g:netrw_dirhistmax	.netrwhist	/^let g:netrw_dirhistmax  =10$/;"	v
+g:netrw_preview	options.rc.vim	/^let g:netrw_preview=1$/;"	v
+g:polyglot_disabled	dein.toml	/^let g:polyglot_disabled = ['markdown']$/;"	v
+g:python3_host_prog	init.vim	/^  let g:python3_host_prog = 'C:\\Users\\harum\\AppData\\Local\\Programs\\Python\\Python38\\pytho/;"	v
+g:quickrun_config	plugins/quickrun.rc.vim	/^  let g:quickrun_config['python'] = {$/;"	v
+g:quickrun_config	plugins/quickrun.rc.vim	/^let g:quickrun_config = {}$/;"	v
+g:quickrun_config	plugins/quickrun.rc.vim	/^let g:quickrun_config['cpp'] = {$/;"	v
+h	options.rc.vim	/^  nmap <buffer>h -$/;"	m
+h	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> h$/;"	m
+i	plugins/denite.rc.vim	/^  nnoremap <silent><buffer><expr> i$/;"	m
+im_change	options.rc.vim	/^  augroup im_change$/;"	a
+j	map.rc.vim	/^nnoremap j gj$/;"	m
+j	map.rc.vim	/^xnoremap j gj$/;"	m
+j	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> j$/;"	m
+jj	map.rc.vim	/^inoremap jj <ESC>$/;"	m
+k	map.rc.vim	/^nnoremap k gk$/;"	m
+k	map.rc.vim	/^xnoremap k gk$/;"	m
+k	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> k$/;"	m
+l	options.rc.vim	/^  nmap <buffer>l <CR>$/;"	m
+l	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> l$/;"	m
+m	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> m$/;"	m
+multi_search#delete_search_all	autoload/multi_search.vim	/^function! multi_search#delete_search_all()$/;"	f
+multi_search#hl_last_match	autoload/multi_search.vim	/^function! multi_search#hl_last_match()$/;"	f
+my_indent	map.rc.vim	/^  augroup my_indent$/;"	a
+o	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> o$/;"	m
+p	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> p$/;"	m
+p	plugins/denite.rc.vim	/^  nnoremap <silent><buffer><expr> p$/;"	m
+q	map.rc.vim	/^  nnoremap <buffer> q :q<CR>$/;"	m
+q	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> q$/;"	m
+q	plugins/denite.rc.vim	/^  nnoremap <silent><buffer><expr> q$/;"	m
+r	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> r$/;"	m
+s:HI_LIST	autoload/multi_search.vim	/^let s:HI_LIST = ['Search2', 'Search3', 'Search4']$/;"	v
+s:VSetSearch	map.rc.vim	/^function! s:VSetSearch(cmdtype)$/;"	f
+s:check_back_space	plugins/not_used/coc.rc.vim	/^function! s:check_back_space() abort$/;"	f
+s:clear_fwin	autoload/show_register.vim	/^function! s:clear_fwin()$/;"	f
+s:clr_idx	autoload/multi_search.vim	/^let s:clr_idx = 0$/;"	v
+s:defx_my_settings	plugins/defx.rc.vim	/^function! s:defx_my_settings() abort$/;"	f
+s:dein_dir	init.vim	/^let s:dein_dir = expand('~\/.cache\/dein')$/;"	v
+s:dein_repo_dir	init.vim	/^let s:dein_repo_dir = s:dein_dir . '\/repos\/github.com\/Shougo\/dein.vim' $/;"	v
+s:denite_filter_my_settings	plugins/denite.rc.vim	/^function! s:denite_filter_my_settings() abort$/;"	f
+s:denite_my_settings	plugins/denite.rc.vim	/^function! s:denite_my_settings() abort$/;"	f
+s:do_and_return	plugins/vimspector.rc.vim	/^function! s:do_and_return(func)$/;"	f
+s:enter_debug_mode	plugins/vimspector.rc.vim	/^function! s:enter_debug_mode() abort$/;"	f
+s:exit_debug_mode	plugins/vimspector.rc.vim	/^function! s:exit_debug_mode() abort$/;"	f
+s:exit_indent_mode	map.rc.vim	/^function! s:exit_indent_mode()$/;"	f
+s:floating_terminal	map.rc.vim	/^function! s:floating_terminal() abort$/;"	f
+s:format_viml	map.rc.vim	/^function! s:format_viml()$/;"	f
+s:format_viml	plugins/not_used/coc.rc.vim	/^function! s:format_viml()$/;"	f
+s:get_defx_idx	options.rc.vim	/^function! s:get_defx_idx()$/;"	f
+s:get_tab_info	autoload/tabline.vim	/^function! s:get_tab_info(i, num_tab)$/;"	f
+s:getreg	autoload/show_register.vim	/^function! s:getreg(reg) abort$/;"	f
+s:improved_indent	map.rc.vim	/^function! s:improved_indent()$/;"	f
+s:is_wsl	options.rc.vim	/^function! s:is_wsl()$/;"	f
+s:lazy_toml	init.vim	/^  let s:lazy_toml = s:toml_dir . '\/dein_lazy.toml'$/;"	v
+s:lc_my_settings	plugins/languageclient.vim	/^function! s:lc_my_settings() abort$/;"	f
+s:menus	plugins/denite.rc.vim	/^let s:menus = {}$/;"	v
+s:menus	plugins/denite.rc.vim	/^let s:menus.my_commands = {$/;"	v
+s:menus	plugins/denite.rc.vim	/^let s:menus.my_commands.command_candidates = [$/;"	v
+s:menus	plugins/denite.rc.vim	/^let s:menus.zsh = {$/;"	v
+s:menus	plugins/denite.rc.vim	/^let s:menus.zsh.file_candidates = [$/;"	v
+s:multi_match_add	autoload/multi_search.vim	/^function! s:multi_match_add()$/;"	f
+s:multi_match_delete	autoload/multi_search.vim	/^function! s:multi_match_delete(idx)$/;"	f
+s:myTabLabel	autoload/tabline.vim	/^function s:myTabLabel(n)$/;"	f
+s:netrw_my_settings	options.rc.vim	/^function! s:netrw_my_settings()$/;"	f
+s:open_defx_in_tab	plugins/defx.rc.vim	/^function! s:open_defx_in_tab()$/;"	f
+s:quick_view	plugins/defx.rc.vim	/^function! s:quick_view()$/;"	f
+s:save_session	map.rc.vim	/^function! s:save_session(arg) abort$/;"	f
+s:search_and_hi	autoload/multi_search.vim	/^function! s:search_and_hi()$/;"	f
+s:show_documentation	plugins/not_used/coc.rc.vim	/^function! s:show_documentation()$/;"	f
+s:smart_bracket	map.rc.vim	/^function! s:smart_bracket()$/;"	f
+s:toml	init.vim	/^  let s:toml = s:toml_dir . '\/dein.toml'$/;"	v
+s:toml_dir	init.vim	/^let s:toml_dir = expand('~\/dotfiles\/nvim')$/;"	v
+s:win	autoload/show_register.vim	/^let s:win = v:null$/;"	v
+show_register#show	autoload/show_register.vim	/^function! show_register#show() abort$/;"	f
+t	dein_lazy.toml	/^  nmap t <Plug>(clever-f-t)$/;"	m
+t	dein_lazy.toml	/^  omap t <Plug>(clever-f-t)$/;"	m
+t	dein_lazy.toml	/^  xmap t <Plug>(clever-f-t)$/;"	m
+t	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> t$/;"	m
+t	plugins/denite.rc.vim	/^  nnoremap <silent><buffer><expr> t$/;"	m
+tabline#MyTabLine	autoload/tabline.vim	/^function tabline#MyTabLine()$/;"	f
+vimrc#disable_ime	autoload/vimrc.vim	/^function! vimrc#disable_ime()$/;"	f
+vimrc#on_insert_enter	autoload/vimrc.vim	/^function! vimrc#on_insert_enter()$/;"	f
+w	plugins/defx.rc.vim	/^    nnoremap <silent><buffer><expr> w$/;"	m
+win_ime_con	options.rc.vim	/^  augroup win_ime_con$/;"	a
+x	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> x$/;"	m
+yy	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> yy$/;"	m
+~	plugins/defx.rc.vim	/^  nnoremap <silent><buffer><expr> ~$/;"	m
