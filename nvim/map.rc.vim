@@ -7,7 +7,7 @@ function! s:smart_bracket()
   let brackets = {'{':'}', '(':')', '[':']', '<':'>'}
   let c_bracket = get(brackets, char, '')
   let ope = ''
-  if c_bracket != ''
+  if c_bracket !=# ''
     if searchpair(char, '', c_bracket, 'n') != line('.')
       let ope = "\<End>" . c_bracket . "\<ESC>%a"
     endif
@@ -155,18 +155,26 @@ if has('unix')
   cnoremap <silent><expr> <C-Space> system('fcitx-remote -c')
 endif
 
-command! -nargs=1 SaveSession :call <SID>save_session(<f-args>)
+command! -nargs=1 -complete=customlist,s:find_sessions
+      \ SaveSession :call <SID>save_session(<f-args>)
 
+function! s:find_sessions(A, L, P) abort
+  let candidates = []
+  for f in split(glob('~/.vim/sessions/*'), '\n')
+    call add(candidates, fnamemodify(f, ':t:r'))
+  endfor
+  return candidates
+endfunction
 function! s:save_session(arg) abort
   wall
-  let name = substitute(a:arg, " ", "_", "g") . ".vim"
-  let path = expand("~/.vim/sessions/") . name
+  let name = substitute(a:arg, ' ', '_', 'g') . '.vim'
+  let path = expand('~/.vim/sessions/') . name
   if filereadable(path)
-    let choice = confirm(printf("%s already exists. Overwrite?", path), 
+    let choice = confirm(printf('%s already exists. Overwrite?', path), 
           \"&Overwrite\n&Cancel")
     if choice == 2
       return
     endif
   endif
-  execute "mksession!" . path 
+  execute 'mksession!' . path 
 endfunction
