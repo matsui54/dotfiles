@@ -9,6 +9,15 @@ let g:polyglot_disabled = ['markdown']
 '''
 
 [[plugins]]
+repo = 'itchyny/lightline.vim'
+hook_add = '''
+  source ~/dotfiles/nvim/plugins/lightline.rc.vim
+'''
+
+[[plugins]]
+repo = 'gkeep/iceberg-dark'
+
+[[plugins]]
 repo = 'rcmdnk/vim-markdown'
 
 [[plugins]]
@@ -19,20 +28,6 @@ repo = 'w0ng/vim-hybrid'
 
 # [[plugins]]
 # repo = 'octol/vim-cpp-enhanced-highlight'
-
-[[plugins]]
-repo = 'vim-airline/vim-airline'
-hook_add = '''
-  if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-  endif
-
-  " powerline symbols
-  let g:airline_left_sep = ''
-  let g:airline_left_alt_sep = ''
-  let g:airline_right_sep = ''
-  let g:airline_right_alt_sep = ''
-'''
 
 [[plugins]]
 repo = 'vim-airline/vim-airline-themes'
