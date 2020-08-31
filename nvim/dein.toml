@@ -15,9 +15,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'gkeep/iceberg-dark'
-
-[[plugins]]
 repo = 'rcmdnk/vim-markdown'
 
 [[plugins]]
