@@ -10,7 +10,9 @@ set tabstop=2
 set shiftwidth=0
 set smartindent
 
-set clipboard=unnamedplus
+if !vimrc#is_wsl()
+  set clipboard=unnamedplus
+endif
 
 set smartcase
 set ignorecase
@@ -48,11 +50,7 @@ if has('nvim')
   highlight MatchParen cterm=underline, gui=underline
 endif
 
-function! s:is_wsl()
-  return executable('cmd.exe') && isdirectory('/mnt/c')
-endfunction
-
-if has('unix') && !s:is_wsl()
+if has('unix') && !vimrc#is_wsl()
   augroup im_change
     autocmd!
     autocmd InsertEnter * call system('fcitx-remote -c')

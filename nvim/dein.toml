@@ -27,9 +27,6 @@ repo = 'w0ng/vim-hybrid'
 # repo = 'octol/vim-cpp-enhanced-highlight'
 
 [[plugins]]
-repo = 'vim-airline/vim-airline-themes'
-
-[[plugins]]
 repo = 'Yggdroot/indentLine'
 hook_add = '''
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
