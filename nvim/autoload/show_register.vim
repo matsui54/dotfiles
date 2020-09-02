@@ -21,7 +21,7 @@ function! show_register#show() abort
       continue
     endif
 
-    let line = reg . ": " . register
+    let line = reg . ': ' . register
     let max_width = max([max_width, len(line)])
     call add(lines, line[:96])
   endfor
@@ -49,13 +49,13 @@ function! show_register#show() abort
         \ 'row': row,
         \ 'col': 1,
         \ 'anchor': anchor,
-        \ 'style': "minimal"})
+        \ 'style': 'minimal'})
 
   call nvim_win_set_option(s:win, 'colorcolumn', '')
   call nvim_win_set_option(s:win, 'conceallevel', 2)
 
-  call nvim_buf_set_option(s:buf, "buftype", "nofile")
-  call nvim_buf_set_option(s:buf, "bufhidden", "delete")
+  call nvim_buf_set_option(s:buf, 'buftype', 'nofile')
+  call nvim_buf_set_option(s:buf, 'bufhidden', 'delete')
   autocmd RegisterComp InsertLeave * call s:clear_fwin()
   autocmd RegisterComp InsertCharPre * call s:clear_fwin()
 endfunction
