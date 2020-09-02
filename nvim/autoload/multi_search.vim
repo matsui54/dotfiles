@@ -51,7 +51,7 @@ function! s:search_and_hi()
   let word = getreg('/')
   if &ignorecase && match(word, '\\C') == -1 &&
         \!(&smartcase && word !~# tolower(word))
-    let word .= '\\c'
+    let word .= '\c'
   endif
   return matchadd(s:HI_LIST[s:clr_idx], word)
 endfunction
