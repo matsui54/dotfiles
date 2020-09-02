@@ -202,6 +202,18 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = 'deoplete-plugins/deoplete-dictionary'
+on_source = 'deoplete.nvim'
+hook_source = '''
+  " If dictionary is already sorted, no need to sort it again.
+  call deoplete#custom#source(
+  \ 'dictionary', 'sorters', [])
+  " Do not complete too short words
+  call deoplete#custom#source(
+  \ 'dictionary', 'min_pattern_length', 4)
+'''
+
+[[plugins]]
 repo = 'Shougo/neco-vim'
 on_ft = 'vim'
 

@@ -26,6 +26,10 @@ set completeopt-=preview
 
 set splitright
 
+if filereadable(expand('~/.vim/10k.txt'))
+  set dictionary=~/.vim/10k.txt
+endif
+
 if exists('&inccommand')
   set inccommand=nosplit
 endif
