@@ -92,6 +92,9 @@ function! s:format_viml()
 endfunction
 nnoremap <silent> <Leader>f :call <SID>format_viml()<CR>
 
+" improved gd
+nnoremap gd :call godef#go_to_definition()<CR>
+
 " multiple search
 nnoremap <expr> <Space>/ multi_search#hl_last_match() . "/"
 nnoremap <expr> <Space>* multi_search#hl_last_match() . "*"
@@ -135,21 +138,11 @@ endfunction
 " insert parent directory of current file
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
-" Command-line mode keymappings:
-" <C-a>, A: move to head.
-cnoremap <C-a>          <Home>
-" <C-d>: delete char.
-cnoremap <C-d>          <Del>
-" <C-e>, E: move to end.
-cnoremap <C-e>          <End>
-" <C-n>: next history.
-cnoremap <C-n>          <Down>
-" <C-p>: previous history.
-cnoremap <C-p>          <Up>
-" <C-y>: paste.
-cnoremap <C-y>          <C-r>*
-" <C-g>: Exit.
-cnoremap <C-g>          <C-c>
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-n> <Down>
+cnoremap <C-p> <Up>
+cnoremap <C-y> <C-r>*
 
 if has('unix')
   cnoremap <silent><expr> <C-Space> system('fcitx-remote -c')

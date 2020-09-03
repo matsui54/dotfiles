@@ -13,7 +13,7 @@ function! s:denite_my_settings() abort
         \ denite#do_map('quit')
   nnoremap <silent><buffer><expr> i
         \ denite#do_map('open_filter_buffer')
-  nnoremap <silent><buffer><expr> <Space>
+  nnoremap <silent><buffer><expr> ,
         \ denite#do_map('toggle_select').'j'
   nnoremap <silent><buffer><expr> t
         \ denite#do_map('do_action', 'tabopen')
