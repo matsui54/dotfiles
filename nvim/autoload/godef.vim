@@ -1,22 +1,20 @@
 function! godef#go_to_definition() abort
   let cur_word = expand('<cword>')
   let prefix = s:get_prefix()
+  let is_dict_value = search('\.\k*\%#', 'n')
+  if is_dict_value
+    let cur_word = s:get_dict_func()
+  endif
+
   if s:is_func()
-    " if dict
-    if search('\.\k*\%#', 'n')
-      let cur_word = s:get_dict_func()
-    endif
     if cur_word =~# '#'
       call s:jump_to_autoload_func(prefix . cur_word)
     else
       call s:jump_to_local_func(prefix . cur_word)
     endif
   else
-    " TODO: var including '#'
-    if search('\.\k*\%#', 'n')
-      let cur_word = substitute(s:get_dict_func(), '\.[^\.]\+', '')
-    endif
-    call s:jump_to_local_var(prefix . cur_word)
+    let cur_word = substitute(s:get_dict_func(), '\.[^\.]\+', '', 'g')
+    call s:jump_to_var(prefix . cur_word)
   endif
 endfunction
 
@@ -38,7 +36,7 @@ function! s:get_prefix() abort
   endif
 
   let &l:iskeyword = keyword
-  if word =~# '^[gswbt]:'
+  if word =~# '^[gswbta]:'
     return word[0] . ':'
   else
     return ''
@@ -66,7 +64,7 @@ function! s:jump_to_autoload_func(name) abort
     let path = project_root . '/' . tailpath
     if filereadable(path)
       execute 'e ' . path
-      call search('^\s*fun\%[ction]\%[!]\s*' . a:name)
+      call search('^\s*fun\%[ction]\%[!]\s*\zs' . a:name)
       return
     endif
   endif
@@ -75,39 +73,37 @@ function! s:jump_to_autoload_func(name) abort
     let path = rtp . '/autoload/' . tailpath
     if filereadable(path)
       execute 'e ' . path
-      call search('^\s*fun\%[ction]\%[!]\s*' . a:name)
+      call search('^\s*fun\%[ction]\%[!]\s*\zs' . a:name)
       return
     endif
   endfor
 endfunction
 
 function! s:jump_to_local_func(name) abort
-  call search('^\s*fun\%[ction]\%[!]\s*' . a:name)
+  call search('^\s*fun\%[ction]\%[!]\s*\zs' . a:name)
 endfunction
 
-function! s:jump_to_local_var(name) abort
+function! s:jump_to_var(name) abort
   if a:name =~# '^[gsbwt]:'
     call cursor(1, 1)
-    call search('\<let\s\+' . a:name)
+    call search('\<let\s\+\zs' . a:name)
   elseif a:name =~# '^a:'
-    call search('\<fu\%[nction]!\?\s\+[^(]\+(\zs', 'b')
+    call search('^\s*fu\%[nction]!\?\s\+[^(]\+(\zs', 'b')
   else
     let line_num = line('.')
     let pos = [0, 0]
     while line_num > 0
       let line = getline(line_num)
-      if line =~# '\<endfu\%[nction]\>'
+      if line =~# '^\s*endfu\%[nction]\>'
         let pos = [0, 0]
         break
-      elseif line =~# '\<fu\%[nction]!\?\s\+'
+      elseif line =~# '^\s*fu\%[nction]!\?\s\+'
         break
-      elseif line =~# '\<\%(let\|for\)\s\+' . a:name
+      elseif line =~# '\<\%(let\|for\)\s\+' . a:name . '\>'
         let pos = [line_num, match(line, a:name) + 1]
       endif
       let line_num -= 1
     endwhile
-    if pos[0] != 0
-      call cursor(pos)
-    endif
+    call cursor(pos)
   endif
 endfunction
