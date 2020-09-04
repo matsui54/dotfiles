@@ -23,9 +23,6 @@ repo = 'cocopon/iceberg.vim'
 [[plugins]]
 repo = 'w0ng/vim-hybrid'
 
-# [[plugins]]
-# repo = 'octol/vim-cpp-enhanced-highlight'
-
 [[plugins]]
 repo = 'Yggdroot/indentLine'
 hook_add = '''
@@ -59,3 +56,6 @@ repo = 'tyru/caw.vim'
 
 # [[plugins]]
 # repo = 'Shougo/neosnippet-snippets'
+
+# [[plugins]]
+# repo = 'octol/vim-cpp-enhanced-highlight'

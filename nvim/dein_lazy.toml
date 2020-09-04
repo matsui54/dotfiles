@@ -61,7 +61,6 @@ hook_add = '''
 
 [[plugins]]
 repo = 'jackguo380/vim-lsp-cxx-highlight'
-if = 'has("unix")'
 on_ft = ["cpp"]
 
 [[plugins]]

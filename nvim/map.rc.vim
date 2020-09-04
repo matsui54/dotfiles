@@ -75,7 +75,7 @@ xnoremap ; :
 nnoremap <C-j> gT
 nnoremap <C-k> gt
 
-" erase highlight for search
+" stop highlighting for search
 nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 
 " improved G
