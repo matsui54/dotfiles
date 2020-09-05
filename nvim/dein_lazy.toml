@@ -146,6 +146,17 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'rhysd/vim-operator-surround'
+depends = 'vim-operator-user'
+on_map = {n = '<Plug>'}
+hook_add = '''
+  nmap <silent>sa <Plug>(operator-surround-append)a
+  nmap <silent>sd <Plug>(operator-surround-delete)a
+  nmap <silent>sr <Plug>(operator-surround-replace)a
+  nmap <silent>sc <Plug>(operator-surround-replace)a
+'''
+
+[[plugins]]
 repo = 'SirVer/ultisnips'
 depends = 'vim-snippets'
 on_source = 'denite.nvim'
@@ -191,6 +202,16 @@ hook_source = '''
     \	'encoding': 'euc-jp',
     \}
   endif
+'''
+
+[[plugins]]
+repo = 'tyru/caw.vim'
+on_map = {nx = '<Plug>'}
+hook_add = '''
+  nmap gc <Plug>(caw:prefix)
+  xmap gc <Plug>(caw:prefix)
+  nmap gcc <Plug>(caw:hatpos:toggle)
+  xmap gcc <Plug>(caw:hatpos:toggle)
 '''
 
 [[plugins]]

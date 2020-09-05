@@ -11,7 +11,17 @@ function! s:open_defx_in_tab()
   execute "normal \<C-f>"
   call defx#call_action('cd', [dir])
 endfunction
-function! Get_defx_cwd()
+function! s:switch_defx_win() abort
+  for i in tabpagebuflist()
+    if bufname(i) =~# '^\[defx]' &&
+          \ i != bufnr('')
+      call win_gotoid(win_findbuf(i)[0])
+      return
+    endif
+  endfor
+  :Defx -buffer-name=temp
+endfunction
+function! s:get_defx_cwd()
   return escape(fnamemodify(defx#get_candidate().action__path,':h:p'), ':\')
 endfunction
 
@@ -92,6 +102,8 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> <TAB>
         \ winwidth(0) > 50 ? ":80 wincmd < <CR>" :
         \ ":80 wincmd > <CR>"
+  nnoremap <silent><buffer> <Space><Tab>
+        \ :call <SID>switch_defx_win()<CR>
 
   nnoremap <silent><buffer><expr> <Space>f 
         \ defx#do_action('cd', [expand('~/dotfiles/nvim')])
@@ -100,18 +112,10 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> <Space>p 
         \ defx#do_action('cd', [expand('~/.cache/dein/repos/github.com')])
 
-  nnoremap <silent><buffer> <Space><Tab>
-        \ :<C-u>Defx -buffer-name=temp<CR>
-
   nnoremap <silent><buffer><expr> <Space>g
-        \ ":Denite grep:" . Get_defx_cwd() . "<CR>"
+        \ ":Denite grep:" . <SID>get_defx_cwd() . "<CR>"
   nnoremap <silent><buffer><expr> <Space>s
-        \ ":Denite directory_rec:" . Get_defx_cwd() . "<CR>"
+        \ ":Denite directory_rec:" . <SID>get_defx_cwd() . "<CR>"
   nnoremap <silent><buffer><expr> <Space><Space>
-        \ ":Denite file/rec:" . Get_defx_cwd() . "<CR>"
-
-  if isdirectory($WIN_HOME)
-    nnoremap <silent><buffer><expr> w
-          \ defx#do_action('cd', [$WIN_HOME])
-  endif
+        \ ":Denite file/rec:" . <SID>get_defx_cwd() . "<CR>"
 endfunction
