@@ -150,12 +150,12 @@ repo = 'easymotion/vim-easymotion'
 on_map = '<plug>(easymotion-'
 hook_add = '''
   let g:EasyMotion_do_mapping = 0
-  " JK motions: Line motions
   map <Space>j <Plug>(easymotion-j)
   map <Space>k <Plug>(easymotion-k)
+  nmap <Space>j <Plug>(easymotion-overwin-line)
   nmap <Space>s <Plug>(easymotion-overwin-f2)
   xmap <Space>s <Plug>(easymotion-s2)
-  omap <Space>z <Plug>(easymotion-s2)
+  omap <Space>s <Plug>(easymotion-s2)
 '''
 
 [[plugins]]
