@@ -73,15 +73,12 @@ elseif (has('win32') || has('win64')) && has('nvim')
   augroup END
 endif
 
-autocmd MyAutoCmd VimEnter * let t:defx_index = 1
+autocmd MyAutoCmd VimEnter * let t:defx_index = 1 | let g:tab_idx = 1
 autocmd MyAutoCmd TabNew * let t:defx_index = s:get_defx_idx()
 
 function! s:get_defx_idx()
-  let idx = 1
-  for i in range(tabpagenr('$'))
-    let idx = max([idx, gettabvar(i+1, 'defx_index')])
-  endfor
-  return idx + 1
+  let g:tab_idx += 1
+  return g:tab_idx
 endfunction
 
 " netrw settings

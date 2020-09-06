@@ -8,7 +8,7 @@ function! s:denite_my_settings() abort
   nnoremap <silent><buffer><expr> p
         \ denite#do_map('do_action', 'preview')
   nnoremap <silent><buffer><expr> <C-f>
-        \ denite#do_map('do_action', 'defx')
+        \ denite#do_map('do_action', 'jump_defx')
   nnoremap <silent><buffer><expr> q
         \ denite#do_map('quit')
   nnoremap <silent><buffer><expr> i
@@ -32,34 +32,16 @@ call denite#custom#option('default', {
       \'preview_height': 20,
       \})
 
+call denite#custom#action('directory', 'jump_defx',
+      \ {context -> execute(printf("Defx -buffer-name='defx%d' %s",
+      \ t:defx_index, context.targets[0].action__path))})
+
 " For ripgrep
 call denite#custom#var('file/rec', 'command',
       \ ['rg', '--files', '--glob', '!.git', '--color', 'never'])
 
 " Change default action.
 " call denite#custom#kind('file', 'default_action', 'open')
-
-" Add custom menus
-let s:menus = {}
-
-let s:menus.zsh = {
-      \ 'description': 'Edit your import zsh configuration'
-      \ }
-let s:menus.zsh.file_candidates = [
-      \ ['zshrc', '~/.config/zsh/.zshrc'],
-      \ ['zshenv', '~/.zshenv'],
-      \ ]
-
-let s:menus.my_commands = {
-      \ 'description': 'Example commands'
-      \ }
-let s:menus.my_commands.command_candidates = [
-      \ ['Split the window', 'vnew'],
-      \ ['Open zsh menu', 'Denite menu:zsh'],
-      \ ['Format code', 'FormatCode', 'go,python'],
-      \ ]
-
-call denite#custom#var('menu', 'menus', s:menus)
 
 " Ripgrep command on grep source
 call denite#custom#var('grep', {
@@ -79,4 +61,3 @@ call denite#custom#var('grep', {
 call denite#custom#alias('source', 'file/rec/git', 'file/rec')
 call denite#custom#var('file/rec/git', 'command',
       \ ['git', 'ls-files', '-co', '--exclude-standard'])
-
