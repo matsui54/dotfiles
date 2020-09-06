@@ -1,8 +1,12 @@
+augroup MyAutoCmd
+  autocmd!
+  autocmd VimLeavePre,BufWrite * mksession! ~/.vim/sessions/saved_session.vim
+augroup END
+
 " dein settings--------------------------------------------
 let s:dein_dir = expand('~/.cache/dein')
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim' 
 let s:toml_dir = expand('~/dotfiles/nvim')
-let g:dein#auto_recache = 1
 
 if !isdirectory(s:dein_repo_dir)
   execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir

@@ -63,7 +63,7 @@ if has('unix') && !vimrc#is_wsl()
   augroup END
 elseif (has('win32') || has('win64')) && has('nvim')
   " for windows
-  augroup win_ime_con
+  augroup im_change
     autocmd!
     autocmd BufWinEnter * let b:win_ime_con_is_active = 0
     autocmd BufWinEnter * let b:win_ime_con_is_insert = 0
@@ -73,12 +73,8 @@ elseif (has('win32') || has('win64')) && has('nvim')
   augroup END
 endif
 
-augroup MyAutoCmd
-  autocmd!
-  autocmd VimLeavePre,BufWrite * mksession! ~/.vim/sessions/saved_session.vim
-  autocmd VimEnter * let t:defx_index = 1
-  autocmd TabNew * let t:defx_index = s:get_defx_idx()
-augroup END
+autocmd MyAutoCmd VimEnter * let t:defx_index = 1
+autocmd MyAutoCmd TabNew * let t:defx_index = s:get_defx_idx()
 
 function! s:get_defx_idx()
   let idx = 1
@@ -90,7 +86,7 @@ endfunction
 
 " netrw settings
 let g:netrw_preview=1
-autocmd FileType netrw call s:netrw_my_settings()
+autocmd MyAutoCmd FileType netrw call s:netrw_my_settings()
 function! s:netrw_my_settings()
   nmap <buffer>l <CR>
   nmap <buffer>h -

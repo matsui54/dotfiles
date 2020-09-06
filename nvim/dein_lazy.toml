@@ -146,6 +146,19 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'easymotion/vim-easymotion'
+on_map = '<plug>(easymotion-'
+hook_add = '''
+  let g:EasyMotion_do_mapping = 0
+  " JK motions: Line motions
+  map <Space>j <Plug>(easymotion-j)
+  map <Space>k <Plug>(easymotion-k)
+  nmap <Space>s <Plug>(easymotion-overwin-f2)
+  xmap <Space>s <Plug>(easymotion-s2)
+  omap <Space>z <Plug>(easymotion-s2)
+'''
+
+[[plugins]]
 repo = 'rhysd/vim-operator-surround'
 depends = 'vim-operator-user'
 on_map = {n = '<Plug>'}
@@ -216,10 +229,14 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
+depends = 'context_filetype.vim'
 on_event = 'InsertEnter'
 hook_source = '''
   source ~/dotfiles/nvim/plugins/deoplete.rc.vim
 '''
+
+[[plugins]]
+repo = 'Shougo/context_filetype.vim'
 
 [[plugins]]
 repo = 'deoplete-plugins/deoplete-dictionary'

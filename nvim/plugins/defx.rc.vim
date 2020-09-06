@@ -1,4 +1,4 @@
-autocmd FileType defx call s:defx_my_settings()
+autocmd MyAutoCmd FileType defx call s:defx_my_settings()
 
 function! s:quick_view()
   let win = win_getid()
@@ -37,7 +37,7 @@ function! s:defx_my_settings() abort
         \ defx#do_action('copy')
   nnoremap <silent><buffer><expr> m
         \ defx#do_action('move')
-  nnoremap <silent><buffer><expr> p
+  nnoremap <silent><buffer><expr> P
         \ defx#do_action('paste')
   nnoremap <silent><buffer><expr> l
         \ defx#is_directory() ?
@@ -45,7 +45,7 @@ function! s:defx_my_settings() abort
         \ ":call <SID>quick_view()<CR>"
   nnoremap <silent><buffer><expr> E
         \ defx#do_action('multi', [['open', 'vsplit'], 'quit'])
-  nnoremap <silent><buffer><expr> P
+  nnoremap <silent><buffer><expr> p
         \ defx#do_action('preview')
   nnoremap <silent><buffer><expr> t
         \ defx#is_directory() ?
