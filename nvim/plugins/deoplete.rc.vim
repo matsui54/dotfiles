@@ -1,6 +1,6 @@
 let g:deoplete#enable_at_startup = 1
 
-autocmd InsertLeave * silent! pclose!
+autocmd MyAutoCmd InsertLeave * silent! pclose!
 
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" : "\<TAB>"

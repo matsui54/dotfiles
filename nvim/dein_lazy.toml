@@ -73,7 +73,7 @@ hook_add = '''
   nnoremap <silent> <Space>g :Denite grep<CR>
   nnoremap <Space>d :Denite 
   nnoremap <Space>b :Denite buffer<CR>
-  nnoremap <Space><Space> :Denite file/rec<CR>
+  nnoremap <Space>s :Denite file/rec<CR>
 '''
 
 [[plugins]]
@@ -153,9 +153,9 @@ hook_add = '''
   map <Space>j <Plug>(easymotion-j)
   map <Space>k <Plug>(easymotion-k)
   nmap <Space>j <Plug>(easymotion-overwin-line)
-  nmap <Space>s <Plug>(easymotion-overwin-f2)
-  xmap <Space>s <Plug>(easymotion-s2)
-  omap <Space>s <Plug>(easymotion-s2)
+  nmap <Space><Space> <Plug>(easymotion-overwin-f2)
+  xmap <Space><Space> <Plug>(easymotion-s2)
+  omap <Space><Space> <Plug>(easymotion-s2)
 '''
 
 [[plugins]]
