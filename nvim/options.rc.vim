@@ -15,8 +15,8 @@ if !vimrc#is_wsl()
   set clipboard=unnamedplus
 endif
 
-set smartcase
 set ignorecase
+set smartcase
 
 set showmatch
 set matchpairs+=<:>
@@ -28,6 +28,8 @@ set termguicolors
 set completeopt-=preview
 
 set splitright
+
+set helplang=en,ja
 
 if filereadable(expand('~/.vim/10k.txt'))
   set dictionary=~/.vim/10k.txt
