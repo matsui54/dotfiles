@@ -99,8 +99,11 @@ function! s:jump_to_var(name) abort
         break
       elseif line =~# '^\s*fu\%[nction]!\?\s\+'
         break
-      elseif line =~# '\<\%(let\|for\)\s\+' . a:name . '\>'
+      elseif line =~# '^\s*\%(let\|for\)\s\+' . a:name . '\>'
         let pos = [line_num, match(line, a:name) + 1]
+        if line =~# '^\s*for'
+          break
+        endif
       endif
       let line_num -= 1
     endwhile

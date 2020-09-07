@@ -1,5 +1,11 @@
 autocmd MyAutoCmd FileType defx call s:defx_my_settings()
 
+autocmd MyAutoCmd User defx-preview call s:defx_preview()
+function! s:defx_preview() abort
+  ALEDisableBuffer
+  setlocal nonumber
+endfunction
+
 function! s:quick_view()
   let win = win_getid()
   call defx#call_action('drop')
@@ -114,8 +120,8 @@ function! s:defx_my_settings() abort
 
   nnoremap <silent><buffer><expr> <Space>g
         \ ":Denite grep:" . <SID>get_defx_cwd() . "<CR>"
-  nnoremap <silent><buffer><expr> <Space>s
-        \ ":Denite directory_rec:" . <SID>get_defx_cwd() . "<CR>"
   nnoremap <silent><buffer><expr> <Space><Space>
+        \ ":Denite directory_rec:" . <SID>get_defx_cwd() . "<CR>"
+  nnoremap <silent><buffer><expr> <Space>s
         \ ":Denite file/rec:" . <SID>get_defx_cwd() . "<CR>"
 endfunction

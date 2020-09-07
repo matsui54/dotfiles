@@ -14,6 +14,9 @@ if has('vim_starting')
   let &t_SR .= "\e[4 q"
 endif
 
+augroup MyAutoCmd
+  autocmd!
+augroup END
 if filereadable(expand('~/.vim/colors/iceberg.vim'))
   colorscheme iceberg
 endif
