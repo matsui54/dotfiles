@@ -271,10 +271,13 @@ hook_source = '''
   call echodoc#enable()
 '''
 
+[[plugins]]
+repo = 'tpope/vim-fugitive'
+on_event = 'CmdlineEnter'
+
 # [[plugins]]
 # repo = 'Shougo/neosnippet.vim'
 # depends = ['neosnippet-snippets']
 # hook_add = '''
 # 	source ~/dotfiles/nvim/plugins/neosnippet.vim
 # '''
-
