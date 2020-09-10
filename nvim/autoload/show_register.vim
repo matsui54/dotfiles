@@ -4,7 +4,7 @@ augroup RegisterComp
 augroup END
 
 function! show_register#show() abort
-  if s:win != v:null || mode() ==# 'c'
+  if s:win != v:null || getcmdwintype() !=# ''
     return
   endif
   let regs = ['+', '*', '"',
@@ -23,7 +23,7 @@ function! show_register#show() abort
 
     let line = reg . ': ' . register
     let max_width = max([max_width, len(line)])
-    call add(lines, line[:96])
+    call add(lines, substitute(line[:96], '\n', '\\n', 'g'))
   endfor
 
   if lines == []
@@ -56,8 +56,7 @@ function! show_register#show() abort
 
   call nvim_buf_set_option(s:buf, 'buftype', 'nofile')
   call nvim_buf_set_option(s:buf, 'bufhidden', 'delete')
-  autocmd RegisterComp InsertLeave * call s:clear_fwin()
-  autocmd RegisterComp InsertCharPre * call s:clear_fwin()
+  autocmd RegisterComp InsertLeave,InsertCharPre * call s:clear_fwin()
 endfunction
 
 function! s:clear_fwin()

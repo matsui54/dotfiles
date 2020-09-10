@@ -18,7 +18,7 @@ function! s:smart_bracket()
   return ope
 endfunction
 
-inoremap <C-r> <ESC> <cmd>call show_register#show()<CR>a<C-r>
+inoremap <silent> <C-r> <ESC><cmd>call show_register#show()<CR>a<C-r>
 
 if has('nvim')
   nnoremap <expr> <leader>d (&filetype=='vim') ? ":w <bar> :source %<CR>" :
