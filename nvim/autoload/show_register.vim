@@ -4,7 +4,7 @@ augroup RegisterComp
 augroup END
 
 function! show_register#show() abort
-  if s:win != v:null
+  if s:win != v:null || mode() ==# 'c'
     return
   endif
   let regs = ['+', '*', '"',

@@ -131,6 +131,7 @@ on_map = '<Plug>'
 hook_add = '''
   let g:clever_f_not_overwrites_standard_mappings = 1
   let g:clever_f_mark_direct = 1
+  let g:clever_f_smart_case = 1
   nmap f <Plug>(clever-f-f)
   xmap f <Plug>(clever-f-f)
   omap f <Plug>(clever-f-f)
@@ -150,6 +151,7 @@ repo = 'easymotion/vim-easymotion'
 on_map = '<plug>(easymotion-'
 hook_add = '''
   let g:EasyMotion_do_mapping = 0
+  let g:EasyMotion_smartcase = 1
   map <Space>j <Plug>(easymotion-j)
   map <Space>k <Plug>(easymotion-k)
   nmap <Space>j <Plug>(easymotion-overwin-line)
