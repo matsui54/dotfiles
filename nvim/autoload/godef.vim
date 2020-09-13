@@ -31,11 +31,11 @@ function! s:get_prefix() abort
   setlocal iskeyword=@,48-57,_,192-255,#,.,:
 
   let word = expand('<cword>')
+  let &l:iskeyword = keyword
   if search('\c<sid>\k*\%#', 'n')
     return 's:'
   endif
 
-  let &l:iskeyword = keyword
   if word =~# '^[gswbta]:'
     return word[0] . ':'
   else
@@ -62,33 +62,28 @@ function! s:jump_to_autoload_func(name) abort
   if sfile =~# '/autoload/'
     let project_root = substitute(sfile, 'autoload\zs.*', '', '')
     let path = project_root . '/' . tailpath
-    if filereadable(path)
-      execute 'e ' . path
-      call search('^\s*fun\%[ction]\%[!]\s*\zs' . a:name)
-      return
-    endif
+    call s:jump_to_def(path, '^\s*fun\%[ction]\%[!]\s*\zs' . a:name)
   endif
 
   for rtp in split(&runtimepath, ',')
     let path = rtp . '/autoload/' . tailpath
-    if filereadable(path)
-      execute 'e ' . path
-      call search('^\s*fun\%[ction]\%[!]\s*\zs' . a:name)
-      return
-    endif
+    call s:jump_to_def(path, '^\s*fun\%[ction]\%[!]\s*\zs' . a:name)
   endfor
 endfunction
 
 function! s:jump_to_local_func(name) abort
-  call search('^\s*fun\%[ction]\%[!]\s*\zs' . a:name)
+  call s:search('^\s*fun\%[ction]\%[!]\s*\zs' . a:name, '')
 endfunction
 
 function! s:jump_to_var(name) abort
   if a:name =~# '^[gsbwt]:'
+    let tmp = winsaveview()
     call cursor(1, 1)
-    call search('\<let\s\+\zs' . a:name)
+    if s:search('\<let\s\+\zs' . a:name, '') == 1
+      call winrestview(tmp)
+    endif
   elseif a:name =~# '^a:'
-    call search('^\s*fu\%[nction]!\?\s\+[^(]\+(\zs', 'b')
+    call s:search('^\s*fu\%[nction]!\?\s\+[^(]\+(\zs', 'b')
   else
     let line_num = line('.')
     let pos = [0, 0]
@@ -107,6 +102,44 @@ function! s:jump_to_var(name) abort
       endif
       let line_num -= 1
     endwhile
-    call cursor(pos)
+    if pos[0] != 0
+      normal! m'
+      call cursor(pos)
+    endif
   endif
+endfunction
+
+function! s:jump_to_def(path, pattern) abort
+  if !filereadable(a:path)
+    return 1
+  endif
+  if a:path ==# expand('%')
+    let tmp = winsaveview()
+    if searchpos(a:pattern)[0] == 0
+      call winrestview(tmp)
+      return 1
+    endif
+    return 0
+  endif
+  let listed = buflisted(a:path)
+  execute 'e ' . a:path
+  if searchpos(a:pattern)[0] == 0
+    let bname = bufname()
+    execute "normal \<C-o>"
+    if !listed
+      execute 'bdelete! ' . bname
+    endif
+    return 1
+  endif
+  return 0
+endfunction
+
+function! s:search(pattern, flag) abort
+  let pos = searchpos(a:pattern, 'n' . a:flag)
+  if pos[0] != 0
+    normal! m'
+    call cursor(pos)
+    return 0
+  endif
+  return 1
 endfunction

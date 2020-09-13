@@ -75,8 +75,13 @@ elseif (has('win32') || has('win64')) && has('nvim')
   augroup END
 endif
 
-autocmd MyAutoCmd VimEnter * let t:defx_index = 1 | let g:tab_idx = 1
-autocmd MyAutoCmd TabNew * let t:defx_index = s:get_defx_idx()
+augroup MyAutoCmd
+  autocmd VimEnter * let t:defx_index = 1 | let g:tab_idx = 1
+  autocmd TabNew * let t:defx_index = s:get_defx_idx()
+  autocmd VimLeavePre,BufWrite * mksession! ~/.vim/sessions/saved_session.vim
+	autocmd CmdwinEnter [:>] iunmap <buffer> <Tab>
+	autocmd CmdwinEnter [:>] nunmap <buffer> <Tab>
+augroup END
 
 function! s:get_defx_idx()
   let g:tab_idx += 1

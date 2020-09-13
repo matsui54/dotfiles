@@ -268,8 +268,12 @@ hook_source = '''
 [[plugins]]
 repo = 'Shougo/echodoc.vim'
 on_event = 'CompleteDone'
-hook_source = '''
+hook_add = '''
 	let g:echodoc#type = 'floating'
+  autocmd MyAutoCmd CmdWinEnter [:>] let g:echodoc#type = 'virtual'
+  autocmd MyAutoCmd CmdWinLeave * let g:echodoc#type = 'floating'
+'''
+hook_source = '''
   call echodoc#enable()
 '''
 

@@ -1,6 +1,5 @@
 augroup MyAutoCmd
   autocmd!
-  autocmd VimLeavePre,BufWrite * mksession! ~/.vim/sessions/saved_session.vim
 augroup END
 
 " dein settings--------------------------------------------
