@@ -254,7 +254,7 @@ hook_source = '''
 
 [[plugins]]
 repo = 'Shougo/neco-vim'
-on_ft = 'vim'
+on_source = 'context_filetype.vim'
 
 [[plugins]]
 repo = 'ncm2/float-preview.nvim'

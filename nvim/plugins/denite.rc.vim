@@ -34,7 +34,8 @@ function! s:denite_filter_my_settings() abort
 endfunction
 
 call denite#custom#option('default', {
-      \'preview_height': 20,
+      \ 'preview_height': 20,
+      \ 'auto_resize': v:true,
       \})
 
 call denite#custom#action('directory', 'jump_defx',
