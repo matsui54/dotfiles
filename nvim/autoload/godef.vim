@@ -114,9 +114,7 @@ function! s:jump_to_def(path, pattern) abort
     return 1
   endif
   if a:path ==# expand('%')
-    let tmp = winsaveview()
-    if searchpos(a:pattern)[0] == 0
-      call winrestview(tmp)
+    if s:search(a:pattern, '') == 1
       return 1
     endif
     return 0
