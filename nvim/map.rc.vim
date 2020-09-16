@@ -157,7 +157,7 @@ command! DeinClean :call map(dein#check_clean(), "delete(v:val, 'rf')") |
 command! -nargs=1 -complete=customlist,s:find_sessions
       \ SaveSession :call <SID>save_session(<f-args>)
 
-function! s:find_sessions(A, L, P) abort
+function! s:find_sessions(...) abort
   let candidates = []
   for f in split(glob('~/.vim/sessions/*'), '\n')
     call add(candidates, fnamemodify(f, ':t:r'))
