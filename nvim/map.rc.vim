@@ -169,11 +169,11 @@ function! s:save_session(arg) abort
   let name = substitute(a:arg, ' ', '_', 'g') . '.vim'
   let path = expand('~/.vim/sessions/') . name
   if filereadable(path)
-    let choice = confirm(printf('%s already exists. Overwrite?', path), 
+    let choice = confirm(printf('%s already exists. Overwrite?', path),
           \"&Overwrite\n&Cancel")
     if choice == 2
       return
     endif
   endif
-  execute 'mksession!' . path 
+  execute 'mksession!' . path
 endfunction

@@ -4,7 +4,7 @@ augroup END
 
 " dein settings--------------------------------------------
 let s:dein_dir = expand('~/.cache/dein')
-let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim' 
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 let s:toml_dir = expand('~/dotfiles/nvim')
 
 if !isdirectory(s:dein_repo_dir)
@@ -12,7 +12,7 @@ if !isdirectory(s:dein_repo_dir)
 endif
 execute 'set runtimepath+=' . s:dein_repo_dir
 
-" dein settings 
+" dein settings
 if dein#load_state(s:dein_dir)
   call dein#begin(s:dein_dir)
 

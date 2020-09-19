@@ -105,23 +105,24 @@ function! s:defx_my_settings() abort
         \ defx#do_action('change_vim_cwd')
   nnoremap <silent><buffer><expr> '
         \ defx#do_action('cd', [getcwd()])
-  nnoremap <silent><buffer><expr> <TAB>
-        \ winwidth(0) > 50 ? ":80 wincmd < <CR>" :
-        \ ":80 wincmd > <CR>"
-  nnoremap <silent><buffer> <Space><Tab>
+  nnoremap <silent><buffer><expr> e
+        \ winwidth(0) == len(getline('.')) ?
+        \ ":vertical resize 30<CR>" :
+        \ ":vertical resize " . len(getline('.')) . "<CR>"
+  nnoremap <silent><buffer> <Tab>
         \ :call <SID>switch_defx_win()<CR>
 
-  nnoremap <silent><buffer><expr> <Space>f 
+  nnoremap <silent><buffer><expr> <Space>f
         \ defx#do_action('cd', [expand('~/dotfiles/nvim')])
-  nnoremap <silent><buffer><expr> <Space>w 
+  nnoremap <silent><buffer><expr> <Space>w
         \ defx#do_action('cd', [expand('~/work')])
-  nnoremap <silent><buffer><expr> <Space>p 
+  nnoremap <silent><buffer><expr> <Space>p
         \ defx#do_action('cd', [expand('~/.cache/dein/repos/github.com')])
 
   nnoremap <silent><buffer><expr> <Space>g
         \ ":Denite grep:" . <SID>get_defx_cwd() . "<CR>"
-  nnoremap <silent><buffer><expr> <Space><Space>
-        \ ":Denite directory_rec:" . <SID>get_defx_cwd() . "<CR>"
   nnoremap <silent><buffer><expr> <Space>s
+        \ ":Denite directory_rec:" . <SID>get_defx_cwd() . "<CR>"
+  nnoremap <silent><buffer><expr> <Space>a
         \ ":Denite file/rec:" . <SID>get_defx_cwd() . "<CR>"
 endfunction
