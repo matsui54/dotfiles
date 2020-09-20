@@ -9,13 +9,10 @@ function! typing#start(v_start, v_end, enable_bs) abort
   let s:counter.count = 0
   let s:list_cur_pos = []
 
-  let cnt_typo = 0
-  let cnt_type = 0
-
   tabnew
-  setlocal nobuflisted
-  setlocal filetype=vim-typing
   call setline(1, s:lines)
+  setlocal filetype=vim-typing
+  setlocal nobuflisted
 
   call s:before_start()
   echo 'Start!'
@@ -23,85 +20,18 @@ function! typing#start(v_start, v_end, enable_bs) abort
   let timer = timer_start(1000, s:counter.countdown, {'repeat' : -1})
 
   try
-    if s:trimed_lines == []
-      let cursor = s:next_pos([1, 1])
-    else
-      let cursor = [1, stridx(s:lines[0], s:trimed_lines[0]) + 1]
-      call add(s:list_cur_pos, cursor)
-    endif
-    call matchaddpos('Cursor', [cursor])
-    redraw
-
-    while s:typing_continue
-      let err_his = []
-
-      let char = nr2char(getchar())
-      if char ==# "\<Esc>"
-        let s:typing_continue = 0
-      elseif s:is_BS(char2nr(char))
-        call matchaddpos('Normal', [cursor])
-        let cursor = s:previous_pos()
-        call matchaddpos('Cursor', [cursor])
-      elseif char == s:lines[cursor[0]-1][cursor[1]-1]
-        let cnt_type += 1
-        call matchaddpos('Label', [cursor])
-        let cursor = s:next_pos(cursor)
-        if cursor[0] == 0
-          break
-        endif
-        call matchaddpos('Cursor', [cursor])
-      else
-        let cnt_typo += 1
-        call add(err_his, matchaddpos('Error', [cursor]))
-
-        " operation executed when BS_enable = true
-        if a:enable_bs
-          let cursor = s:next_pos(cursor)
-          call add(err_his, matchaddpos('Error', [cursor]))
-          redraw
-          while len(err_his) > 1
-            let char_nr = getchar()
-            if s:is_BS(char_nr)
-              let cursor = s:previous_pos()
-              call matchdelete(err_his[-1])
-              call remove(err_his, -1)
-            elseif char_nr ==# 27 " <Esc>
-              let s:typing_continue = 0
-              break
-            else
-              let cnt_typo += 1
-              let cursor = s:next_pos(cursor)
-              if cursor[0] != 0
-                call add(err_his, matchaddpos('Error', [cursor]))
-              endif
-            endif
-            redraw
-          endwhile
-          call matchaddpos('Cursor', [cursor])
-        endif
-
-      endif
-      redraw
-    endwhile
-
-    echo 'FINISH!'
+    let result = s:main(a:enable_bs)
+  catch
+    echomsg v:exception
+  finally
     call timer_stop(timer)
-    redraw
-    let result = [
-          \'        typed  ' . (cnt_type + cnt_typo),
-          \'      mistype  ' . (cnt_typo),
-          \' elapsed time  ' . (s:counter.count/60 . ':' . s:counter.count % 60),
-          \'        Speed  ' . printf('%s', printf('%.1f', cnt_type * (60.00 /s:counter.count))) . ' key/s'
-          \]
     setlocal nomodifiable
     setlocal nomodified
     sleep 50m
     nnoremap <buffer>q :q<CR>
-    call s:show_floatingwindow(result)
-
-  catch
-    call timer_stop(timer)
-    echomsg v:exception
+    if exists('result')
+      call s:show_floatingwindow(result)
+    endif
   endtry
 
 endfunction
@@ -111,6 +41,18 @@ function! s:before_start()
     echo i
     sleep 1
   endfor
+endfunction
+
+function! s:counter.countdown(timer)
+  let s:re_time = s:time_limit - self.count
+  let self.count += 1
+  if s:re_time >= 0
+    call setline(s:line_len + 1, self.count)
+    redraw
+  else
+    let s:typing_continue = 0
+    call timer_stop(a:timer)
+  endif
 endfunction
 
 " returns the list of next cursor's position(1 based)
@@ -150,16 +92,79 @@ function! s:previous_pos() abort
   return s:list_cur_pos[-1]
 endfunction
 
-function! s:counter.countdown(timer)
-  let s:re_time = s:time_limit - self.count
-  let self.count += 1
-  if s:re_time >= 0
-    call setline(s:line_len + 1, self.count)
-    redraw
+function! s:main(enable_bs) abort
+  let cnt_typo = 0
+  let cnt_type = 0
+
+  if s:trimed_lines == []
+    let cursor = s:next_pos([1, 1])
   else
-    let s:typing_continue = 0
-    call timer_stop(a:timer)
+    let cursor = [1, stridx(s:lines[0], s:trimed_lines[0]) + 1]
+    call add(s:list_cur_pos, cursor)
   endif
+  call matchaddpos('Cursor', [cursor])
+  redraw
+
+  while s:typing_continue
+    let err_his = []
+
+    let char = nr2char(getchar())
+    if char ==# "\<Esc>"
+      let s:typing_continue = 0
+    elseif s:is_BS(char2nr(char))
+      call matchaddpos('Normal', [cursor])
+      let cursor = s:previous_pos()
+      call matchaddpos('Cursor', [cursor])
+    elseif char == s:lines[cursor[0]-1][cursor[1]-1]
+      let cnt_type += 1
+      call matchaddpos('Label', [cursor])
+      let cursor = s:next_pos(cursor)
+      if cursor[0] == 0
+        break
+      endif
+      call matchaddpos('Cursor', [cursor])
+    else
+      let cnt_typo += 1
+      call add(err_his, matchaddpos('Error', [cursor]))
+
+      " operation executed when BS_enable = true
+      if a:enable_bs
+        let cursor = s:next_pos(cursor)
+        call add(err_his, matchaddpos('Error', [cursor]))
+        redraw
+        while len(err_his) > 1
+          let char_nr = getchar()
+          if s:is_BS(char_nr)
+            let cursor = s:previous_pos()
+            call matchdelete(err_his[-1])
+            call remove(err_his, -1)
+          elseif char_nr ==# 27 " <Esc>
+            let s:typing_continue = 0
+            break
+          else
+            let cnt_typo += 1
+            let cursor = s:next_pos(cursor)
+            if cursor[0] != 0
+              call add(err_his, matchaddpos('Error', [cursor]))
+            endif
+          endif
+          redraw
+        endwhile
+        call matchaddpos('Cursor', [cursor])
+      endif
+
+    endif
+    redraw
+  endwhile
+
+  echo 'FINISH!'
+  return [
+        \'        typed  ' . (cnt_type + cnt_typo),
+        \'      mistype  ' . (cnt_typo),
+        \' elapsed time  ' . (s:counter.count/60 . ':' . s:counter.count % 60),
+        \'        Speed  ' . printf('%s', printf('%.1f', cnt_type * (60.00 /s:counter.count))) . ' key/s'
+        \]
+
 endfunction
 
 function! s:show_floatingwindow(messages)
