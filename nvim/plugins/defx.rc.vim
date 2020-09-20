@@ -106,9 +106,9 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> '
         \ defx#do_action('cd', [getcwd()])
   nnoremap <silent><buffer><expr> e
-        \ winwidth(0) == len(getline('.')) ?
+        \ winwidth(0) == len(getline(1)) ?
         \ ":vertical resize 30<CR>" :
-        \ ":vertical resize " . len(getline('.')) . "<CR>"
+        \ ":vertical resize " . strlen(getline(1)) . "<CR>"
   nnoremap <silent><buffer> <Tab>
         \ :call <SID>switch_defx_win()<CR>
 
