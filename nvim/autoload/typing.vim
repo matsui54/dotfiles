@@ -38,7 +38,7 @@ function! typing#start(v_start, v_end, enable_bs) abort
       let char = nr2char(getchar())
       if char ==# "\<Esc>"
         let s:typing_continue = 0
-      elseif char2nr(char) ==# "\<BS>"
+      elseif s:is_BS(char2nr(char))
         call matchaddpos('Normal', [cursor])
         let cursor = s:previous_pos()
         call matchaddpos('Cursor', [cursor])
@@ -61,7 +61,7 @@ function! typing#start(v_start, v_end, enable_bs) abort
           redraw
           while len(err_his) > 1
             let char_nr = getchar()
-            if char_nr ==# "\<BS>"
+            if s:is_BS(char_nr)
               let cursor = s:previous_pos()
               call matchdelete(err_his[-1])
               call remove(err_his, -1)
@@ -181,3 +181,6 @@ function! s:show_floatingwindow(messages)
   nnoremap <buffer>q :q<CR>
 endfunction
 
+function! s:is_BS(char_nr) abort
+  return a:char_nr == 8 || a:char_nr ==# "\<BS>"
+endfunction
