@@ -21,11 +21,11 @@ if filereadable(expand('~/.vim/colors/iceberg.vim'))
   colorscheme iceberg
 endif
 
-execute "set runtimepath+=" . expand('~/dotfiles/nvim')
+execute 'set runtimepath+=' . expand('~/dotfiles/nvim')
 
 source ~/dotfiles/nvim/options.rc.vim
 source ~/dotfiles/nvim/map.rc.vim
 
 nnoremap <expr><F5> (&filetype=='vim') ? ":w <bar> :source %<CR>" 
       \: (&filetype=='python') ? ":wa <bar> :!python3 %" 
-      \: ":wa"
+      \: ':wa'
