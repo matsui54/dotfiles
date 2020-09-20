@@ -53,6 +53,3 @@ set helplang=ja
 
 # [[plugins]]
 # repo = 'Shougo/neosnippet-snippets'
-
-# [[plugins]]
-# repo = 'octol/vim-cpp-enhanced-highlight'

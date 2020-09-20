@@ -154,6 +154,10 @@ endif
 command! DeinClean :call map(dein#check_clean(), "delete(v:val, 'rf')") |
       \ call dein#recache_runtimepath()
 
+command! -range=% Typing :call typing#start(<line1>, <line2>)
+
+command! LineCount :call line_counter#count()
+
 command! -nargs=1 -complete=customlist,s:find_sessions
       \ SaveSession :call <SID>save_session(<f-args>)
 
