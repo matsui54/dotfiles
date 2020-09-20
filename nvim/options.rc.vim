@@ -96,6 +96,6 @@ function! s:netrw_my_settings()
   nmap <buffer>h -
 endfunction
 
-" tabline settiong
+" tabline setting
 set showtabline=2
 set tabline=%!tabline#MyTabLine()
