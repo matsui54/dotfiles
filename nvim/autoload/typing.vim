@@ -1,7 +1,7 @@
 let s:time_limit = 120
 let s:counter = {'count' : 0}
 
-function! typing#start(v_start, v_end) abort
+function! typing#start(v_start, v_end, enable_bs) abort
   let s:line_len = min([a:v_end - a:v_start + 1, 7])
   let s:lines = getbufline(bufnr(), a:v_start, a:v_start + s:line_len -1)
   let s:trimed_lines = map(copy(s:lines), 'trim(v:val)')
@@ -55,28 +55,30 @@ function! typing#start(v_start, v_end) abort
         call add(err_his, matchaddpos('Error', [cursor]))
 
         " operation executed when BS_enable = true
-        let cursor = s:next_pos(cursor)
-        call add(err_his, matchaddpos('Error', [cursor]))
-        redraw
-        while len(err_his) > 1
-          let char_nr = getchar()
-          if char_nr ==# "\<BS>"
-            let cursor = s:previous_pos()
-            call matchdelete(err_his[-1])
-            call remove(err_his, -1)
-          elseif char_nr ==# 27 " <Esc>
-            let s:typing_continue = 0
-            break
-          else
-            let cnt_typo += 1
-            let cursor = s:next_pos(cursor)
-            if cursor[0] != 0
-              call add(err_his, matchaddpos('Error', [cursor]))
-            endif
-          endif
+        if a:enable_bs
+          let cursor = s:next_pos(cursor)
+          call add(err_his, matchaddpos('Error', [cursor]))
           redraw
-        endwhile
-        call matchaddpos('Cursor', [cursor])
+          while len(err_his) > 1
+            let char_nr = getchar()
+            if char_nr ==# "\<BS>"
+              let cursor = s:previous_pos()
+              call matchdelete(err_his[-1])
+              call remove(err_his, -1)
+            elseif char_nr ==# 27 " <Esc>
+              let s:typing_continue = 0
+              break
+            else
+              let cnt_typo += 1
+              let cursor = s:next_pos(cursor)
+              if cursor[0] != 0
+                call add(err_his, matchaddpos('Error', [cursor]))
+              endif
+            endif
+            redraw
+          endwhile
+          call matchaddpos('Cursor', [cursor])
+        endif
 
       endif
       redraw
@@ -86,10 +88,10 @@ function! typing#start(v_start, v_end) abort
     call timer_stop(timer)
     redraw
     let result = [
-          \'       typed  ' . (cnt_type + cnt_typo),
-          \'     mistype  ' . (cnt_typo),
-          \'elapsed time  ' . (s:counter.count/60 . ':' . s:counter.count % 60),
-          \'       Speed  ' . printf('%s', printf('%.1f', cnt_type * (60.00 /s:counter.count))) . ' key/s'
+          \'        typed  ' . (cnt_type + cnt_typo),
+          \'      mistype  ' . (cnt_typo),
+          \' elapsed time  ' . (s:counter.count/60 . ':' . s:counter.count % 60),
+          \'        Speed  ' . printf('%s', printf('%.1f', cnt_type * (60.00 /s:counter.count))) . ' key/s'
           \]
     setlocal nomodifiable
     setlocal nomodified
