@@ -33,7 +33,6 @@ function! typing#start(v_start, v_end, enable_bs) abort
       call s:show_floatingwindow(result)
     endif
   endtry
-
 endfunction
 
 function! s:before_start()
@@ -53,6 +52,51 @@ function! s:counter.countdown(timer)
     let s:typing_continue = 0
     call timer_stop(a:timer)
   endif
+endfunction
+
+function! s:main(enable_bs) abort
+  let s:cnt_typo = 0
+  let cnt_type = 0
+
+  if s:trimed_lines == []
+    let cursor = s:next_pos([1, 1])
+  else
+    let cursor = [1, stridx(s:lines[0], s:trimed_lines[0]) + 1]
+    call add(s:list_cur_pos, cursor)
+  endif
+  call matchaddpos('Cursor', [cursor])
+  redraw
+
+  while s:typing_continue
+    let char = nr2char(getchar())
+    if char ==# "\<Esc>"
+      let s:typing_continue = 0
+    elseif s:is_BS(char2nr(char))
+      call matchaddpos('Normal', [cursor])
+      let cursor = s:previous_pos()
+      call matchaddpos('Cursor', [cursor])
+    elseif char == s:lines[cursor[0]-1][cursor[1]-1]
+      let cnt_type += 1
+      call matchaddpos('Label', [cursor])
+      let cursor = s:next_pos(cursor)
+      if cursor[0] == 0
+        break
+      endif
+      call matchaddpos('Cursor', [cursor])
+    else
+      call s:when_typo(cursor, a:enable_bs)
+    endif
+    redraw
+  endwhile
+
+  echo 'FINISH!'
+  return [
+        \'        typed  ' . (cnt_type + s:cnt_typo),
+        \'      mistype  ' . (s:cnt_typo),
+        \' elapsed time  ' . (s:counter.count/60 . ':' . s:counter.count % 60),
+        \'        Speed  ' . printf('%s', printf('%.1f', cnt_type * (60.00 /s:counter.count))) . ' key/s'
+        \]
+
 endfunction
 
 " returns the list of next cursor's position(1 based)
@@ -92,81 +136,6 @@ function! s:previous_pos() abort
   return s:list_cur_pos[-1]
 endfunction
 
-function! s:main(enable_bs) abort
-  let cnt_typo = 0
-  let cnt_type = 0
-
-  if s:trimed_lines == []
-    let cursor = s:next_pos([1, 1])
-  else
-    let cursor = [1, stridx(s:lines[0], s:trimed_lines[0]) + 1]
-    call add(s:list_cur_pos, cursor)
-  endif
-  call matchaddpos('Cursor', [cursor])
-  redraw
-
-  while s:typing_continue
-    let err_his = []
-
-    let char = nr2char(getchar())
-    if char ==# "\<Esc>"
-      let s:typing_continue = 0
-    elseif s:is_BS(char2nr(char))
-      call matchaddpos('Normal', [cursor])
-      let cursor = s:previous_pos()
-      call matchaddpos('Cursor', [cursor])
-    elseif char == s:lines[cursor[0]-1][cursor[1]-1]
-      let cnt_type += 1
-      call matchaddpos('Label', [cursor])
-      let cursor = s:next_pos(cursor)
-      if cursor[0] == 0
-        break
-      endif
-      call matchaddpos('Cursor', [cursor])
-    else
-      let cnt_typo += 1
-      call add(err_his, matchaddpos('Error', [cursor]))
-
-      " operation executed when BS_enable = true
-      if a:enable_bs
-        let cursor = s:next_pos(cursor)
-        call add(err_his, matchaddpos('Error', [cursor]))
-        redraw
-        while len(err_his) > 1
-          let char_nr = getchar()
-          if s:is_BS(char_nr)
-            let cursor = s:previous_pos()
-            call matchdelete(err_his[-1])
-            call remove(err_his, -1)
-          elseif char_nr ==# 27 " <Esc>
-            let s:typing_continue = 0
-            break
-          else
-            let cnt_typo += 1
-            let cursor = s:next_pos(cursor)
-            if cursor[0] != 0
-              call add(err_his, matchaddpos('Error', [cursor]))
-            endif
-          endif
-          redraw
-        endwhile
-        call matchaddpos('Cursor', [cursor])
-      endif
-
-    endif
-    redraw
-  endwhile
-
-  echo 'FINISH!'
-  return [
-        \'        typed  ' . (cnt_type + cnt_typo),
-        \'      mistype  ' . (cnt_typo),
-        \' elapsed time  ' . (s:counter.count/60 . ':' . s:counter.count % 60),
-        \'        Speed  ' . printf('%s', printf('%.1f', cnt_type * (60.00 /s:counter.count))) . ' key/s'
-        \]
-
-endfunction
-
 function! s:show_floatingwindow(messages)
   " let width = float2nr(winwidth(0) * 0.8)
   let height = float2nr(winheight(0) * 0.8)
@@ -187,5 +156,39 @@ function! s:show_floatingwindow(messages)
 endfunction
 
 function! s:is_BS(char_nr) abort
+  " for windows
   return a:char_nr == 8 || a:char_nr ==# "\<BS>"
+endfunction
+
+function! s:when_typo(cursor, enable_bs) abort
+  let s:cnt_typo += 1
+  let err_his = []
+  let cursor = a:cursor
+
+  call add(err_his, matchaddpos('Error', [cursor]))
+
+  if a:enable_bs
+    let cursor = s:next_pos(cursor)
+    call add(err_his, matchaddpos('Error', [cursor]))
+    redraw
+    while len(err_his) > 1
+      let char_nr = getchar()
+      if s:is_BS(char_nr)
+        let cursor = s:previous_pos()
+        call matchdelete(err_his[-1])
+        call remove(err_his, -1)
+      elseif char_nr ==# 27 " <Esc>
+        let s:typing_continue = 0
+        break
+      else
+        let s:cnt_typo += 1
+        let cursor = s:next_pos(cursor)
+        if cursor[0] != 0
+          call add(err_his, matchaddpos('Error', [cursor]))
+        endif
+      endif
+      redraw
+    endwhile
+    call matchaddpos('Cursor', [cursor])
+  endif
 endfunction
