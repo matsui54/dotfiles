@@ -1,5 +1,7 @@
 let s:time_limit = 120
 let s:counter = {'count' : 0}
+highlight TypingError cterm=underline ctermfg=167 ctermbg=52 gui=underline guifg=#cc6666 guibg=#5f0000
+highlight TypingCursor ctermfg=234 ctermbg=252 guifg=#161821 guibg=#c6c8d1
 
 function! typing#start(v_start, v_end, enable_bs) abort
   let s:line_len = min([a:v_end - a:v_start + 1, 7])
@@ -64,7 +66,7 @@ function! s:main(enable_bs) abort
     let cursor = [1, stridx(s:lines[0], s:trimed_lines[0]) + 1]
     call add(s:list_cur_pos, cursor)
   endif
-  call matchaddpos('Cursor', [cursor])
+  call matchaddpos('TypingCursor', [cursor])
   redraw
 
   while s:typing_continue
@@ -74,7 +76,7 @@ function! s:main(enable_bs) abort
     elseif s:is_BS(char2nr(char))
       call matchaddpos('Normal', [cursor])
       let cursor = s:previous_pos()
-      call matchaddpos('Cursor', [cursor])
+      call matchaddpos('TypingCursor', [cursor])
     elseif char == s:lines[cursor[0]-1][cursor[1]-1]
       let cnt_type += 1
       call matchaddpos('Label', [cursor])
@@ -82,7 +84,7 @@ function! s:main(enable_bs) abort
       if cursor[0] == 0
         break
       endif
-      call matchaddpos('Cursor', [cursor])
+      call matchaddpos('TypingCursor', [cursor])
     else
       call s:when_typo(cursor, a:enable_bs)
     endif
@@ -165,11 +167,11 @@ function! s:when_typo(cursor, enable_bs) abort
   let err_his = []
   let cursor = a:cursor
 
-  call add(err_his, matchaddpos('Error', [cursor]))
+  call add(err_his, matchaddpos('TypingError', [cursor]))
 
   if a:enable_bs
     let cursor = s:next_pos(cursor)
-    call add(err_his, matchaddpos('Error', [cursor]))
+    call add(err_his, matchaddpos('TypingError', [cursor]))
     redraw
     while len(err_his) > 1
       let char_nr = getchar()
@@ -184,11 +186,11 @@ function! s:when_typo(cursor, enable_bs) abort
         let s:cnt_typo += 1
         let cursor = s:next_pos(cursor)
         if cursor[0] != 0
-          call add(err_his, matchaddpos('Error', [cursor]))
+          call add(err_his, matchaddpos('TypingError', [cursor]))
         endif
       endif
       redraw
     endwhile
-    call matchaddpos('Cursor', [cursor])
+    call matchaddpos('TypingCursor', [cursor])
   endif
 endfunction

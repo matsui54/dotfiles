@@ -49,6 +49,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'simplenote-vim/simplenote.vim'
+on_event = 'CmdlineEnter'
 
 [[plugins]]
 repo = "puremourning/vimspector"
