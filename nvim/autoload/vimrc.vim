@@ -25,3 +25,7 @@ endfunction
 function! vimrc#is_wsl()
   return executable('cmd.exe') && isdirectory('/mnt/c')
 endfunction
+
+function! vimrc#is_windows() abort
+  return has('win32') || has('win64')
+endfunction
