@@ -2,7 +2,8 @@ set hidden
 
 let g:LanguageClient_serverCommands = {
       \ 'cpp': ['ccls'],
-      \ 'python': ['pyls']
+      \ 'python': ['pyls'],
+      \ 'c': ['clangd']
       \ }
 let g:LanguageClient_loadSettings = 1
 let g:LanguageClient_hasSnippetSupport = 0
