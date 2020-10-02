@@ -18,6 +18,9 @@ hook_add = '''
         \'cpp':['clang-format'],
         \'python':['autopep8', 'isort']
         \}
+  if vimrc#is_windows()
+    let g:ale_c_cc_options='-std=c11 -Wall -I C:\MinGW\include'
+  endif
   let g:ale_hover_cursor=0
 '''
 
