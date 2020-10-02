@@ -12,7 +12,7 @@ hook_add = '''
         \'cpp': ['clangd'],
         \'python': ['pyls', 'flake8', 'mypy'],
         \'vim': ['vint'],
-        \'c': ['clangd']
+        \'c': ['gcc']
         \}
   let g:ale_fixers = {
         \'cpp':['clang-format'],
