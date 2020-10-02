@@ -207,6 +207,7 @@ hook_source = '''
   let g:eskk#directory = expand('~/.cache/eskk')
   let g:eskk#start_completion_length=2
   let g:eskk#tab_select_completion=1
+  let g:eskk#keep_state = 1
   let g:eskk#dictionary = {
         \   'path': expand('~/.cache/skk-jisyo'),
         \   'sorted': 0,

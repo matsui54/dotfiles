@@ -63,7 +63,7 @@ if has('unix') && !vimrc#is_wsl()
     autocmd CmdlineLeave * call system('fcitx-remote -o')
     autocmd CompleteChanged * call system('fcitx-remote -c')
   augroup END
-elseif (has('win32') || has('win64')) && has('nvim')
+elseif vimrc#is_windows() && has('nvim')
   " for windows
   augroup im_change
     autocmd!
@@ -78,9 +78,11 @@ endif
 augroup MyAutoCmd
   autocmd VimEnter * let t:defx_index = 1 | let g:tab_idx = 1
   autocmd TabNew * let t:defx_index = s:get_defx_idx()
-  autocmd VimLeavePre,BufWrite * mksession! ~/.vim/sessions/saved_session.vim
-	autocmd CmdwinEnter [:>] iunmap <buffer> <Tab>
-	autocmd CmdwinEnter [:>] nunmap <buffer> <Tab>
+  if !vimrc#is_windows()
+    autocmd VimLeavePre,BufWrite * mksession! ~/.vim/sessions/saved_session.vim
+  endif
+  autocmd CmdwinEnter [:>] iunmap <buffer> <Tab>
+  autocmd CmdwinEnter [:>] nunmap <buffer> <Tab>
 augroup END
 
 function! s:get_defx_idx()
