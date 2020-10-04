@@ -9,7 +9,7 @@ let g:LanguageClient_loadSettings = 1
 let g:LanguageClient_hasSnippetSupport = 0
 let g:LanguageClient_diagnosticsEnable = 0
 
-autocmd MyAutoCmd FileType python,cpp call s:lc_my_settings()
+autocmd MyAutoCmd FileType python,cpp,c call s:lc_my_settings()
 
 function! s:lc_my_settings() abort
   nnoremap <silent><buffer> K
