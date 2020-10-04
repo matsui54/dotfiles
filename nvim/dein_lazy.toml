@@ -66,6 +66,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'octol/vim-cpp-enhanced-highlight'
+on_ft = 'cpp'
 
 [[plugins]]
 repo = 'Shougo/denite.nvim'
