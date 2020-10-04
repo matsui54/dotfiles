@@ -21,9 +21,6 @@ endfunction
 inoremap <silent> <C-r> <ESC><cmd>call show_register#show()<CR>a<C-r>
 
 if has('nvim')
-  nnoremap <expr> <leader>d (&filetype=='vim') ? ":w <bar> :source %<CR>" :
-        \ (&filetype=='python') ? ":w <bar> :QuickRun <CR>" :
-        \ ":wa <bar> :wincmd t <bar> :QuickRun <in.txt <CR>"
   tnoremap <C-\><C-\> <C-\><C-n>
   command! Fterm :call <SID>floating_terminal()
   command! Vterm :vsplit | :terminal
