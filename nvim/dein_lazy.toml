@@ -16,6 +16,7 @@ hook_add = '''
         \}
   let g:ale_fixers = {
         \'cpp':['clang-format'],
+        \'c':['clang-format'],
         \'python':['autopep8', 'isort']
         \}
   if vimrc#is_windows()
@@ -35,7 +36,6 @@ hook_post_update = '''
   else
       call system('bash install.sh')
   endif
-  let g:LanguageClient_preferredMarkupKind: ['plaintext']
 '''
 hook_source = '''
 	source ~/dotfiles/nvim/plugins/languageclient.rc.vim
