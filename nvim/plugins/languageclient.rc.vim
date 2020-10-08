@@ -5,6 +5,7 @@ let g:LanguageClient_serverCommands = {
       \ 'python': ['pyls'],
       \ 'c': ['clangd']
       \ }
+let g:LanguageClient_preferredMarkupKind = ['plaintext']
 let g:LanguageClient_loadSettings = 1
 let g:LanguageClient_hasSnippetSupport = 0
 let g:LanguageClient_diagnosticsEnable = 0
