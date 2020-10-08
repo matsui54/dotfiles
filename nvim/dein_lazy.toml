@@ -98,27 +98,6 @@ repo = 'Shougo/defx.nvim'
 on_event = 'CursorHold'
 depends = ['defx-icons']
 hook_source = '''
-  call defx#custom#column('mark', {
-        \ 'readonly_icon': '✗',
-        \ 'selected_icon': '✓',
-        \ })
-  call defx#custom#column('icon', {
-        \ 'directory_icon': '▸',
-        \ 'opened_icon': '▾',
-        \ 'root_icon': ' ',
-        \ })
-  call defx#custom#option('_', {
-        \ 'winwidth': 30,
-        \ 'split': 'vertical',
-        \ 'direction': 'topleft',
-        \ 'resume': 1,
-        \ 'listed': 1,
-        \ 'columns': 'mark:indent:icons:filename:type:time:size',
-        \ 'vertical_preview': 1,
-        \ 'floating_preview': 1,
-        \ 'preview_width': 80,
-        \ 'preview_height': 30,
-        \ })
   source ~/dotfiles/nvim/plugins/defx.rc.vim
 '''
 hook_add = '''

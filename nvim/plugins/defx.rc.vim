@@ -1,37 +1,36 @@
 autocmd MyAutoCmd FileType defx call s:defx_my_settings()
 
 autocmd MyAutoCmd User defx-preview call s:defx_preview()
+
 function! s:defx_preview() abort
   ALEDisableBuffer
   setlocal nonumber
 endfunction
 
-function! s:quick_view()
-  let win = win_getid()
-  call defx#call_action('drop')
-  call win_gotoid(win)
-endfunction
-function! s:open_defx_in_tab()
-  let dir = defx#get_candidate().action__path
-  tabnew
-  execute "normal \<C-f>"
-  call defx#call_action('cd', [dir])
-endfunction
-function! s:switch_defx_win() abort
-  for i in tabpagebuflist()
-    if bufname(i) =~# '^\[defx]' &&
-          \ i != bufnr('')
-      call win_gotoid(win_findbuf(i)[0])
-      return
-    endif
-  endfor
-  :Defx -buffer-name=temp
-endfunction
-function! s:get_defx_cwd()
-  return escape(fnamemodify(defx#get_candidate().action__path,':h:p'), ':\')
-endfunction
+call defx#custom#column('mark', {
+      \ 'readonly_icon': '✗',
+      \ 'selected_icon': '✓',
+      \ })
+call defx#custom#column('icon', {
+      \ 'directory_icon': '▸',
+      \ 'opened_icon': '▾',
+      \ 'root_icon': ' ',
+      \ })
+call defx#custom#option('_', {
+      \ 'winwidth': 30,
+      \ 'split': 'vertical',
+      \ 'direction': 'topleft',
+      \ 'resume': 1,
+      \ 'listed': 1,
+      \ 'columns': 'mark:indent:icons:filename:type:time:size',
+      \ 'vertical_preview': 1,
+      \ 'floating_preview': 1,
+      \ 'preview_width': 80,
+      \ 'preview_height': 30,
+      \ })
 
 function! s:defx_my_settings() abort
+  setlocal nonumber
   setlocal cursorline
 
   " Define mappings
@@ -125,4 +124,29 @@ function! s:defx_my_settings() abort
         \ ":Denite directory_rec:" . <SID>get_defx_cwd() . "<CR>"
   nnoremap <silent><buffer><expr> <Space>a
         \ ":Denite file/rec:" . <SID>get_defx_cwd() . "<CR>"
+endfunction
+
+function! s:quick_view()
+  let win = win_getid()
+  call defx#call_action('drop')
+  call win_gotoid(win)
+endfunction
+function! s:open_defx_in_tab()
+  let dir = defx#get_candidate().action__path
+  tabnew
+  execute "normal \<C-f>"
+  call defx#call_action('cd', [dir])
+endfunction
+function! s:switch_defx_win() abort
+  for i in tabpagebuflist()
+    if bufname(i) =~# '^\[defx]' &&
+          \ i != bufnr('')
+      call win_gotoid(win_findbuf(i)[0])
+      return
+    endif
+  endfor
+  :Defx -buffer-name=temp
+endfunction
+function! s:get_defx_cwd()
+  return escape(fnamemodify(defx#get_candidate().action__path,':h:p'), ':\')
 endfunction
