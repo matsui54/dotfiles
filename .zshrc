@@ -71,8 +71,6 @@ if [ -f $HOME/.xkb/keymap/mykbd ]; then
   xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mykbd $DISPLAY 2> /dev/null
 fi
 
-export HISTTIMEFORMAT='%F %T '
-
 # prompt settings
 PROMPT='%F{cyan}[%~]%f${vcs_info_msg_0_}%# '
 autoload -Uz vcs_info
