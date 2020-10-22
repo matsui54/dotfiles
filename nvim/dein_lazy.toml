@@ -19,7 +19,7 @@ hook_source = '''
 [[plugins]]
 repo = 'dense-analysis/ale'
 on_ft = ['python', 'cpp', 'c', 'vim']
-hook_add = '''
+hook_source = '''
   let g:ale_linters = {
         \'cpp': ['clangd'],
         \'python': ['pyls', 'flake8', 'mypy'],
