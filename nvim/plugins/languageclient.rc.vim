@@ -15,8 +15,10 @@ autocmd MyAutoCmd FileType python,cpp,c call s:lc_my_settings()
 function! s:lc_my_settings() abort
   nnoremap <silent><buffer> K
         \ :call LanguageClient#textDocument_hover()<CR>
+  " nnoremap <silent><buffer> <Leader>f
+  "      \ :call LanguageClient#textDocument_formatting()<CR>
   nnoremap <silent><buffer> <Leader>f
-        \ :call LanguageClient#textDocument_formatting()<CR>
+        \ :ALEFix<CR>
   xnoremap <silent><buffer> <leader>f
         \ :call LanguageClient#textDocument_rangeFormatting()<CR>
   nnoremap <silent><buffer> <Leader>n
