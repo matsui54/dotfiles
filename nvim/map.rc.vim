@@ -8,7 +8,7 @@ function! s:smart_bracket()
   let c_bracket = get(brackets, char, '')
   let ope = ''
   if c_bracket !=# ''
-    if searchpair(char, '', c_bracket, 'n') == 0
+    if searchpair(char, '', c_bracket, 'n') != line('.')
       if getline('.')[col('.') -1] !=# c_bracket
         let ope = "\<End>" . c_bracket . "\<ESC>%a"
       endif
