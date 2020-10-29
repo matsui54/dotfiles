@@ -72,14 +72,14 @@ hook_source = '''
 repo = 'simplenote-vim/simplenote.vim'
 on_event = 'CmdlineEnter'
 
-[[plugins]]
-repo = "puremourning/vimspector"
-if = 'has("unix")'
-on_ft = ["python", "cpp"]
-build = "./install_gadget.py --enable-python --enable-c"
-hook_add = '''
-  source ~/dotfiles/nvim/plugins/vimspector.rc.vim
-'''
+# [[plugins]]
+# repo = "puremourning/vimspector"
+# if = 'has("unix")'
+# on_ft = ["python", "cpp"]
+# build = "./install_gadget.py --enable-python --enable-c"
+# hook_add = '''
+#   source ~/dotfiles/nvim/plugins/vimspector.rc.vim
+# '''
 
 [[plugins]]
 repo = 'octol/vim-cpp-enhanced-highlight'
