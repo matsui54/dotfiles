@@ -284,6 +284,10 @@ hook_source = '''
 repo = 'tpope/vim-fugitive'
 on_event = 'CmdlineEnter'
 
+[[plugins]]
+repo = 't9md/vim-choosewin'
+on_source = 'defx.nvim'
+
 # [[plugins]]
 # repo = 'Shougo/neosnippet.vim'
 # depends = ['neosnippet-snippets']

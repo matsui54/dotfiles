@@ -38,6 +38,8 @@ function! s:defx_my_settings() abort
         \ defx#is_directory() ?
         \ defx#do_action('open_directory') :
         \ defx#do_action('multi', ['drop', 'quit'])
+  nnoremap <silent><buffer><expr> +
+        \ defx#do_action('multi', [['open', 'choose'], 'quit'])
   nnoremap <silent><buffer><expr> c
         \ defx#do_action('copy')
   nnoremap <silent><buffer><expr> m
