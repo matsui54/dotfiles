@@ -16,9 +16,16 @@ function tabline#MyTabLine()
   let len_tail = strlen(time . dir) + 3
 
   " shrink tabs to fit to screen
+  " first, shrink current dir
   if len_str + len_tail > screen_width
     let dir = substitute(dir, '\/[^\/]\{3}\zs[^\/]\+', '…', 'g')
-    let capacity = screen_width - strlen(time . dir) - 3
+    " multibite char is recognised as 3 chars
+    let len_tail = strlen(time . substitute(dir, '…', '.', 'g')) + 3
+  endif
+
+  " if too long yet, shrink file name
+  if len_str + len_tail > screen_width
+    let capacity = screen_width - len_tail
     if capacity < len_str
       let avr = capacity / num_tab
       for i in range(num_tab)
