@@ -1,4 +1,3 @@
-filetype plugin indent off
 syntax off
 
 set number

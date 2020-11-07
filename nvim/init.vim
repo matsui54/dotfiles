@@ -2,6 +2,10 @@ augroup MyAutoCmd
   autocmd!
 augroup END
 
+if has('vim_starting') && !empty(argv())
+  call vimrc#on_filetype()
+endif
+
 " dein settings--------------------------------------------
 let s:dein_dir = expand('~/.cache/dein')
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
