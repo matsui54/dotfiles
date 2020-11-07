@@ -39,6 +39,8 @@ function! vimrc#on_filetype() abort
     let g:hoge = 1
     highlight clear MatchParen
     highlight MatchParen cterm=underline, gui=underline
-    call lightline#colorscheme()
+    if !has('vim_starting')
+      call lightline#colorscheme()
+    endif
   endif
 endfunction

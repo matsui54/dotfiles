@@ -1,4 +1,6 @@
-syntax off
+if has('vim_starting') && empty(argv())
+  syntax off
+endif
 
 set number
 set title
