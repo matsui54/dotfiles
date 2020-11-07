@@ -29,3 +29,16 @@ endfunction
 function! vimrc#is_windows() abort
   return has('win32') || has('win64')
 endfunction
+
+function! vimrc#on_filetype() abort
+  if execute('filetype') =~# 'OFF'
+    " Lazy loading
+    silent! filetype plugin indent on
+    syntax enable
+    filetype detect
+    let g:hoge = 1
+    highlight clear MatchParen
+    highlight MatchParen cterm=underline, gui=underline
+    call lightline#colorscheme()
+  endif
+endfunction
