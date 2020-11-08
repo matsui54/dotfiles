@@ -193,6 +193,10 @@ repo = 'tyru/open-browser.vim'
 [[plugins]]
 repo = 'previm/previm'
 on_cmd = 'PrevimOpen'
+if = '!vimrc#is_wsl()'
+hook_source = '''
+  let g:previm_show_header=0
+'''
 depends = 'open-browser.vim'
 
 [[plugins]]
