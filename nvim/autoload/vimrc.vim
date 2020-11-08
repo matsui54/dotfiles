@@ -1,4 +1,4 @@
-function! vimrc#on_insert_enter()
+function! vimrc#on_insert_enter() abort
   if !exists('b:win_ime_con_is_insert')
     return
   endif
@@ -10,7 +10,7 @@ function! vimrc#on_insert_enter()
   endif
 endfunction
 
-function! vimrc#disable_ime()
+function! vimrc#disable_ime() abort
   if !exists('b:win_ime_con_is_insert')
     return
   endif
@@ -22,7 +22,7 @@ function! vimrc#disable_ime()
   let b:win_ime_con_is_insert = 0
 endfunction
 
-function! vimrc#is_wsl()
+function! vimrc#is_wsl() abort
   return executable('cmd.exe') && isdirectory('/mnt/c')
 endfunction
 

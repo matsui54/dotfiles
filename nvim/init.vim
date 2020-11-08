@@ -3,6 +3,8 @@ augroup MyAutoCmd
 augroup END
 
 " dein settings--------------------------------------------
+let g:dein#lazy_rplugins = v:true
+
 let s:dein_dir = expand('~/.cache/dein')
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 let s:toml_dir = expand('~/dotfiles/nvim')
@@ -35,7 +37,7 @@ if filereadable(expand('~/.config/secret.vim'))
   source ~/.config/secret.vim
 endif
 
-if has('win32') || has('win64')
+if vimrc#is_windows()
   let g:python3_host_prog = 'C:\Users\harum\AppData\Local\Programs\Python\Python38\python.EXE'
 endif
 
