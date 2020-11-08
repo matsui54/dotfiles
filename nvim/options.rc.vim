@@ -1,5 +1,6 @@
-filetype plugin indent on
-syntax enable
+if has('vim_starting') && empty(argv())
+  syntax off
+endif
 
 set number
 set title
@@ -83,6 +84,8 @@ augroup MyAutoCmd
   endif
   autocmd CmdwinEnter [:>] iunmap <buffer> <Tab>
   autocmd CmdwinEnter [:>] nunmap <buffer> <Tab>
+  autocmd FileType,Syntax,BufNewFile,BufNew,BufRead *?
+        \ call vimrc#on_filetype()
 augroup END
 
 function! s:get_defx_idx()

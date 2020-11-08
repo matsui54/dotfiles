@@ -1,12 +1,12 @@
 [[plugins]]
 repo = 'Shougo/dein.vim'
 
-[[plugins]]
-repo = 'sheerun/vim-polyglot'
-merged = 0
-hook_add = '''
-let g:polyglot_disabled = ['markdown']
-'''
+# [[plugins]]
+# repo = 'sheerun/vim-polyglot'
+# merged = 0
+# hook_add = '''
+# let g:polyglot_disabled = ['markdown']
+# '''
 
 [[plugins]]
 repo = 'itchyny/lightline.vim'
