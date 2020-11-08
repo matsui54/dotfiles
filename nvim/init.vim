@@ -2,6 +2,10 @@ augroup MyAutoCmd
   autocmd!
 augroup END
 
+if has('vim_starting') && !empty(argv())
+  call vimrc#on_filetype()
+endif
+
 " dein settings--------------------------------------------
 let g:dein#lazy_rplugins = v:true
 
