@@ -93,14 +93,6 @@ function! s:get_defx_idx()
   return g:tab_idx
 endfunction
 
-" netrw settings
-let g:netrw_preview=1
-autocmd MyAutoCmd FileType netrw call s:netrw_my_settings()
-function! s:netrw_my_settings()
-  nmap <buffer>l <CR>
-  nmap <buffer>h -
-endfunction
-
 " tabline setting
 set showtabline=2
 set tabline=%!tabline#MyTabLine()

@@ -155,7 +155,7 @@ endif
 command! DeinClean :call map(dein#check_clean(), "delete(v:val, 'rf')") |
       \ call dein#recache_runtimepath()
 
-command! -range=% Typing :call typing#start(<line1>, <line2>)
+command! -range=% Typing :call typing#start(<line1>, <line2>, 1)
 
 command! LineCount :call line_counter#count()
 

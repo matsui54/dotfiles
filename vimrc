@@ -21,6 +21,14 @@ if filereadable(expand('~/.vim/colors/iceberg.vim'))
   colorscheme iceberg
 endif
 
+" netrw settings
+let g:netrw_preview=1
+autocmd MyAutoCmd FileType netrw call s:netrw_my_settings()
+function! s:netrw_my_settings()
+  nmap <buffer>l <CR>
+  nmap <buffer>h -
+endfunction
+
 execute 'set runtimepath+=' . expand('~/dotfiles/nvim')
 
 source ~/dotfiles/nvim/options.rc.vim

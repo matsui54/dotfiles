@@ -1,6 +1,6 @@
 let g:lightline = {}
 let g:lightline.active = {'left': [ ['mode', 'paste'], ['readonly'], ['relativepath'] ]}
-let g:lightline.colorscheme = 'icebergDark'
+let g:lightline.colorscheme = 'iceberg'
 let g:lightline.enable = {
       \ 'statusline': 1,
       \ 'tabline': 0
