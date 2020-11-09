@@ -64,9 +64,9 @@ function! s:defx_my_settings() abort
         \ defx#async_action('open_tree', 'recursive')
   nnoremap <silent><buffer><expr> K
         \ defx#do_action('new_directory')
-  nnoremap <silent><buffer><expr> N
-        \ defx#do_action('new_file')
   nnoremap <silent><buffer><expr> M
+        \ defx#do_action('new_file')
+  nnoremap <silent><buffer><expr> N
         \ defx#do_action('new_multiple_files')
   nnoremap <silent><buffer><expr> S
         \ defx#do_action('multi', [['toggle_sort', 'time'], 'redraw'])
