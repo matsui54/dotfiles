@@ -189,11 +189,21 @@ repo = 'honza/vim-snippets'
 
 [[plugins]]
 repo = 'tyru/open-browser.vim'
+on_map = '<Plug>(openbrowser'
+hook_add = '''
+	nmap gx <Plug>(openbrowser-smart-search)
+	vmap gx <Plug>(openbrowser-smart-search)
+  if vimrc#is_wsl()
+    let g:openbrowser_browser_commands = [
+    \   {'name': 'explorer.exe',
+		\  "args": ["{browser}", "{uri}"]},
+    \]
+  endif
+'''
 
 [[plugins]]
 repo = 'previm/previm'
 on_cmd = 'PrevimOpen'
-if = '!vimrc#is_wsl()'
 hook_source = '''
   let g:previm_show_header=0
 '''
