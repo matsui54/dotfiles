@@ -77,6 +77,7 @@ nnoremap <C-j> gT
 nnoremap <C-k> gt
 nnoremap <Space><C-j> :tabmove -<CR>
 nnoremap <Space><C-k> :tabmove +<CR>
+nnoremap <Space>t :tabe<CR>
 
 " stop highlighting for search
 nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
