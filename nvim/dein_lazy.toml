@@ -195,7 +195,7 @@ hook_add = '''
 	vmap gx <Plug>(openbrowser-smart-search)
   if vimrc#is_wsl()
     let g:openbrowser_browser_commands = [
-    \   {'name': 'explorer.exe',
+    \   {'name': 'wsl-open',
 		\  "args": ["{browser}", "{uri}"]},
     \]
   endif
@@ -206,6 +206,9 @@ repo = 'previm/previm'
 on_cmd = 'PrevimOpen'
 hook_source = '''
   let g:previm_show_header=0
+  if vimrc#is_wsl()
+    let g:previm_open_cmd='wsl-open'
+  endif
 '''
 depends = 'open-browser.vim'
 
