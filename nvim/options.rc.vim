@@ -32,8 +32,8 @@ set splitright
 
 set helplang=en,ja
 
-if filereadable(expand('~/.vim/10k.txt'))
-  set dictionary=~/.vim/10k.txt
+if filereadable(expand('~/dotfiles/nvim/dict/10k.txt'))
+  set dictionary=~/dotfiles/nvim/dict/10k.txt
 endif
 
 if exists('&inccommand')
