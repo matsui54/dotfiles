@@ -2,6 +2,10 @@ augroup MyAutoCmd
   autocmd!
 augroup END
 
+if has('vim_starting') && !empty(argv())
+  call vimrc#on_filetype()
+endif
+
 " dein settings--------------------------------------------
 let g:dein#lazy_rplugins = v:true
 
@@ -44,10 +48,6 @@ endif
 source ~/dotfiles/nvim/map.rc.vim
 
 source ~/dotfiles/nvim/options.rc.vim
-
-if has('vim_starting') && !empty(argv())
-  call vimrc#on_filetype()
-endif
 
 let g:loaded_2html_plugin      = 1
 let g:loaded_logiPat           = 1

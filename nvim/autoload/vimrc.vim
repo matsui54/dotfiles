@@ -4,7 +4,7 @@ function! vimrc#on_insert_enter() abort
   endif
   if b:win_ime_con_is_insert == 0
     if b:win_ime_con_is_active == 1
-       call _activate_ime()
+      call _activate_ime()
     endif
     let b:win_ime_con_is_insert = 1
   endif
@@ -36,9 +36,16 @@ function! vimrc#on_filetype() abort
     silent! filetype plugin indent on
     syntax enable
     filetype detect
-    call My_highlight_settings()
-    " if !has('vim_starting')
-    "   call lightline#colorscheme()
-    " endif
+    call vimrc#color_settings()
   endif
+endfunction
+
+function! vimrc#color_settings() abort
+  highlight TabLineSel guifg=#ffffff
+  highlight TabLineFill guifg=#b8b8b8
+  highlight clear MatchParen
+  highlight MatchParen cterm=underline, gui=underline
+  highlight MyTabHi cterm=underline, gui=NONE, guifg=#737373
+  highlight EndOfBuffer guifg=#454545
+  highlight SignColumn guibg=#191c32
 endfunction
