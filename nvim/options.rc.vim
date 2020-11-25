@@ -55,7 +55,8 @@ if has('nvim')
     highlight clear MatchParen
     highlight MatchParen cterm=underline, gui=underline
     highlight MyTabHi cterm=underline, gui=NONE, guifg=#737373
-    highlight EndOfBuffer guifg=#737373
+    highlight EndOfBuffer guifg=#454545
+    highlight SignColumn guibg=#191c32
   endfunction
   autocmd MyAutoCmd ColorScheme * call My_highlight_settings()
   colorscheme iceberg
