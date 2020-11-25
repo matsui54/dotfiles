@@ -16,6 +16,9 @@ hook_add = '''
 
 [[plugins]]
 repo = 'rcmdnk/vim-markdown'
+hook_add = '''
+let g:vim_markdown_conceal=0
+'''
 
 [[plugins]]
 repo = 'cocopon/iceberg.vim'
