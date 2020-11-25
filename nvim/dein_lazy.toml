@@ -307,6 +307,7 @@ on_source = 'defx.nvim'
 
 [[plugins]]
 repo = 'sheerun/vim-polyglot'
+on_event = ['BufReadPre', 'BufNewFile']
 hook_add = '''
 let g:polyglot_disabled = ['markdown']
 '''
