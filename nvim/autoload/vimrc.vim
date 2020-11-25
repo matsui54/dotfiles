@@ -36,11 +36,9 @@ function! vimrc#on_filetype() abort
     silent! filetype plugin indent on
     syntax enable
     filetype detect
-    let g:hoge = 1
-    highlight clear MatchParen
-    highlight MatchParen cterm=underline, gui=underline
-    if !has('vim_starting')
-      call lightline#colorscheme()
-    endif
+    call My_highlight_settings()
+    " if !has('vim_starting')
+    "   call lightline#colorscheme()
+    " endif
   endif
 endfunction

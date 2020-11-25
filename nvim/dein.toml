@@ -2,17 +2,10 @@
 repo = 'Shougo/dein.vim'
 
 # [[plugins]]
-# repo = 'sheerun/vim-polyglot'
-# merged = 0
+# repo = 'itchyny/lightline.vim'
 # hook_add = '''
-# let g:polyglot_disabled = ['markdown']
+#   source ~/dotfiles/nvim/plugins/lightline.rc.vim
 # '''
-
-[[plugins]]
-repo = 'itchyny/lightline.vim'
-hook_add = '''
-  source ~/dotfiles/nvim/plugins/lightline.rc.vim
-'''
 
 [[plugins]]
 repo = 'rcmdnk/vim-markdown'

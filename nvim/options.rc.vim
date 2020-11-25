@@ -2,10 +2,10 @@ if has('vim_starting') && empty(argv())
   syntax off
 endif
 
-set number
 set title
 set updatetime=300
 set hidden
+set laststatus=0
 
 set expandtab
 set tabstop=2
@@ -49,9 +49,16 @@ if exists('&winblend')
 endif
 
 if has('nvim')
+  function! My_highlight_settings() abort
+    highlight TabLineSel guifg=#ffffff
+    highlight TabLineFill guifg=#b8b8b8
+    highlight clear MatchParen
+    highlight MatchParen cterm=underline, gui=underline
+    highlight MyTabHi cterm=underline, gui=NONE, guifg=#737373
+    highlight EndOfBuffer guifg=#737373
+  endfunction
+  autocmd MyAutoCmd ColorScheme * call My_highlight_settings()
   colorscheme iceberg
-  highlight clear MatchParen
-  highlight MatchParen cterm=underline, gui=underline
 endif
 
 if has('unix') && !vimrc#is_wsl()

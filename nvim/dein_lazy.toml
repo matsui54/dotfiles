@@ -20,6 +20,7 @@ hook_source = '''
 repo = 'dense-analysis/ale'
 on_ft = ['python', 'cpp', 'c', 'vim']
 hook_source = '''
+  autocmd MyAutoCmd FileType python,cpp,c,vim setlocal signcolumn=yes
   let g:ale_linters = {
         \'cpp': ['clangd'],
         \'python': ['pyls', 'flake8', 'mypy'],
@@ -306,7 +307,6 @@ on_source = 'defx.nvim'
 
 [[plugins]]
 repo = 'sheerun/vim-polyglot'
-on_event = ['BufReadPre', 'BufNewFile']
 hook_add = '''
 let g:polyglot_disabled = ['markdown']
 '''

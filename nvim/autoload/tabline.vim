@@ -3,7 +3,6 @@ function tabline#MyTabLine()
   let screen_width = &columns
   let len_str = 0
   let tabs = {}
-  highlight MyTabHi cterm=underline, gui=underline
 
   for i in range(num_tab)
     let tabs[i] = s:get_tab_info(i, num_tab)
@@ -49,7 +48,7 @@ function tabline#MyTabLine()
     let tab = tabs[i]
     let s .= tab.hi . tab.pre . tab.name . tab.post
   endfor
-  let s .= '%#MyTabHi#%T%=%#MyTabHi#' . time . ' %#Cursor#' . dir
+  let s .= '%#MyTabHi#%T%=%#Normal#' . time . ' ' . dir
   return s
 endfunction
 
