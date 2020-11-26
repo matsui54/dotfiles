@@ -48,7 +48,7 @@ function tabline#MyTabLine()
     let tab = tabs[i]
     let s .= tab.hi . tab.pre . tab.name . tab.post
   endfor
-  let s .= '%#MyTabHi#%T%=%#Normal#' . time . ' ' . dir
+  let s .= '%T%=%#Normal#' . time . ' ' . dir
   return s
 endfunction
 
@@ -58,7 +58,7 @@ function! s:get_tab_info(i, num_tab)
   " tab number of current tab
   let current_tab_nr = tabpagenr()
 
-  let tab.hi = (n + 1 == current_tab_nr) ? '%#TabLineSel#' : '%#MyTabHi#'
+  let tab.hi = (n + 1 == current_tab_nr) ? '%#Normal#' : '%#TabLineFill#'
 
   let space1 = (n == current_tab_nr) ? '  ' : ' '
 

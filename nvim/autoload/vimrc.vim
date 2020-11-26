@@ -42,10 +42,10 @@ endfunction
 
 function! vimrc#color_settings() abort
   highlight TabLineSel guifg=#ffffff
-  highlight TabLineFill guifg=#b8b8b8
+  highlight clear TabLineFill
+  highlight TabLineFill guifg=#525252 guibg=#161821
   highlight clear MatchParen
-  highlight MatchParen cterm=underline, gui=underline
-  highlight MyTabHi cterm=underline, gui=NONE, guifg=#737373
+  highlight MatchParen cterm=underline gui=underline
   highlight EndOfBuffer guifg=#454545
-  highlight SignColumn guibg=#191c32
+  highlight! link SignColumn Normal
 endfunction
