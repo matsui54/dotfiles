@@ -82,6 +82,7 @@ augroup MyAutoCmd
   endif
   autocmd CmdwinEnter [:>] iunmap <buffer> <Tab>
   autocmd CmdwinEnter [:>] nunmap <buffer> <Tab>
+  autocmd CursorHold * redrawtabline
   autocmd FileType,Syntax,BufNewFile,BufNew,BufRead *?
         \ call vimrc#on_filetype()
 augroup END
@@ -94,3 +95,12 @@ endfunction
 " tabline setting
 set showtabline=2
 set tabline=%!tabline#MyTabLine()
+
+if vimrc#is_wsl()
+  command! Wslput :put =substitute(substitute(system('powershell.exe get-clipboard'), '\r', '', 'g'), '\n$', '', '')
+
+  augroup Clip
+    autocmd!
+    autocmd TextYankPost * call system("clip.exe ", v:event.regcontents)
+  augroup END
+endif
