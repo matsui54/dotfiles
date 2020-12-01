@@ -12,9 +12,22 @@ set tabstop=2
 set shiftwidth=0
 set smartindent
 
-if !vimrc#is_wsl()
-  set clipboard=unnamedplus
+if vimrc#is_wsl()
+  let g:clipboard = {
+       \   'name': 'myClipboard',
+       \   'copy': {
+       \      '+': 'win32yank.exe -i',
+       \      '*': 'win32yank.exe -i',
+       \    },
+       \   'paste': {
+       \      '+': 'win32yank.exe -o',
+       \      '*': 'win32yank.exe -o',
+       \   },
+       \   'cache_enabled': 1,
+       \ }
 endif
+
+set clipboard=unnamedplus
 
 set ignorecase
 set smartcase
@@ -96,11 +109,11 @@ endfunction
 set showtabline=2
 set tabline=%!tabline#MyTabLine()
 
-if vimrc#is_wsl()
-  command! Wslput :put =substitute(substitute(system('powershell.exe get-clipboard'), '\r', '', 'g'), '\n$', '', '')
-
-  augroup Clip
-    autocmd!
-    autocmd TextYankPost * call system("clip.exe ", v:event.regcontents)
-  augroup END
-endif
+" if vimrc#is_wsl()
+"   command! Wslput :put =substitute(substitute(system('powershell.exe get-clipboard'), '\r', '', 'g'), '\n$', '', '')
+" 
+"   augroup Clip
+"     autocmd!
+"     autocmd TextYankPost * call system("clip.exe ", v:event.regcontents)
+"   augroup END
+" endif
