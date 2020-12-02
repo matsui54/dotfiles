@@ -17,8 +17,19 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = 'neovim/nvim-lspconfig'
+on_ft = ['python', 'cpp', 'c']
+hook_source = '''
+  lua require'lspconfig'.clangd.setup{}
+  lua require'lspconfig'.pyls.setup{}
+'''
+
+[[plugins]]
+repo = 'Shougo/deoplete-lsp'
+
+[[plugins]]
 repo = 'dense-analysis/ale'
-on_ft = ['python', 'cpp', 'c', 'vim']
+# on_ft = ['python', 'cpp', 'c', 'vim']
 hook_source = '''
   autocmd MyAutoCmd FileType python,cpp,c,vim setlocal signcolumn=yes
   let g:ale_linters = {
@@ -41,7 +52,7 @@ hook_source = '''
 [[plugins]]
 repo = 'autozimu/LanguageClient-neovim'
 rev = 'next'
-on_ft = ['python', 'cpp', 'c']
+# on_ft = ['python', 'cpp', 'c']
 hook_post_update = '''
   if has('win32') || has('win64')
       call system(
@@ -251,7 +262,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
-depends = 'context_filetype.vim'
+depends = ['context_filetype.vim', 'deoplete-lsp']
 on_event = 'InsertEnter'
 hook_source = '''
   source ~/dotfiles/nvim/plugins/deoplete.rc.vim
