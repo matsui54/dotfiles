@@ -17,53 +17,7 @@ hook_source = '''
 '''
 
 [[plugins]]
-repo = 'neovim/nvim-lspconfig'
-on_ft = ['python', 'cpp', 'c']
-hook_source = '''
-  lua require'lspconfig'.clangd.setup{}
-  lua require'lspconfig'.pyls.setup{}
-'''
-
-[[plugins]]
 repo = 'Shougo/deoplete-lsp'
-
-[[plugins]]
-repo = 'dense-analysis/ale'
-# on_ft = ['python', 'cpp', 'c', 'vim']
-hook_source = '''
-  autocmd MyAutoCmd FileType python,cpp,c,vim setlocal signcolumn=yes
-  let g:ale_linters = {
-        \'cpp': ['clangd'],
-        \'python': ['pyls', 'flake8', 'mypy'],
-        \'vim': ['vint'],
-        \'c': ['gcc']
-        \}
-  let g:ale_fixers = {
-        \'cpp':['clang-format'],
-        \'c':['clang-format'],
-        \'python':['autopep8', 'isort']
-        \}
-  if vimrc#is_windows()
-    let g:ale_c_cc_options='-std=c11 -Wall -I C:\MinGW\include'
-  endif
-  let g:ale_hover_cursor=0
-'''
-
-[[plugins]]
-repo = 'autozimu/LanguageClient-neovim'
-rev = 'next'
-# on_ft = ['python', 'cpp', 'c']
-hook_post_update = '''
-  if has('win32') || has('win64')
-      call system(
-      \ 'powershell -executionpolicy bypass -File install.ps1')
-  else
-      call system('bash install.sh')
-  endif
-'''
-hook_source = '''
-	source ~/dotfiles/nvim/plugins/languageclient.rc.vim
-'''
 
 [[plugins]]
 repo = 'itchyny/calendar.vim'
@@ -83,15 +37,6 @@ hook_source = '''
 [[plugins]]
 repo = 'simplenote-vim/simplenote.vim'
 on_event = 'CmdlineEnter'
-
-# [[plugins]]
-# repo = "puremourning/vimspector"
-# if = 'has("unix")'
-# on_ft = ["python", "cpp"]
-# build = "./install_gadget.py --enable-python --enable-c"
-# hook_add = '''
-#   source ~/dotfiles/nvim/plugins/vimspector.rc.vim
-# '''
 
 [[plugins]]
 repo = 'octol/vim-cpp-enhanced-highlight'
@@ -323,17 +268,6 @@ hook_add = '''
 let g:polyglot_disabled = ['markdown']
 '''
 
-# [[plugins]]
-# repo = 'Shougo/neosnippet.vim'
-# depends = ['neosnippet-snippets']
-# hook_add = '''
-# 	source ~/dotfiles/nvim/plugins/neosnippet.vim
-# '''
-
-# [[plugins]]
-# repo = 'jackguo380/vim-lsp-cxx-highlight'
-# on_ft = ["cpp"]
-
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
 if = 'has("nvim")'
@@ -373,3 +307,57 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 '''
+
+[[plugins]]
+repo = 'neovim/nvim-lspconfig'
+on_ft = ['python', 'cpp', 'c']
+hook_source = '''
+source ~/dotfiles/nvim/plugins/lsp.rc.vim
+'''
+
+# [[plugins]]
+# repo = 'dense-analysis/ale'
+# # on_ft = ['python', 'cpp', 'c', 'vim']
+# hook_source = '''
+#   autocmd MyAutoCmd FileType python,cpp,c,vim setlocal signcolumn=yes
+#   let g:ale_linters = {
+#         \'cpp': ['clangd'],
+#         \'python': ['pyls', 'flake8', 'mypy'],
+#         \'vim': ['vint'],
+#         \'c': ['gcc']
+#         \}
+#   let g:ale_fixers = {
+#         \'cpp':['clang-format'],
+#         \'c':['clang-format'],
+#         \'python':['autopep8', 'isort']
+#         \}
+#   if vimrc#is_windows()
+#     let g:ale_c_cc_options='-std=c11 -Wall -I C:\MinGW\include'
+#   endif
+#   let g:ale_hover_cursor=0
+# '''
+
+# [[plugins]]
+# repo = 'autozimu/LanguageClient-neovim'
+# rev = 'next'
+# # on_ft = ['python', 'cpp', 'c']
+# hook_post_update = '''
+#   if has('win32') || has('win64')
+#       call system(
+#       \ 'powershell -executionpolicy bypass -File install.ps1')
+#   else
+#       call system('bash install.sh')
+#   endif
+# '''
+# hook_source = '''
+# 	source ~/dotfiles/nvim/plugins/languageclient.rc.vim
+# '''
+
+# [[plugins]]
+# repo = "puremourning/vimspector"
+# if = 'has("unix")'
+# on_ft = ["python", "cpp"]
+# build = "./install_gadget.py --enable-python --enable-c"
+# hook_add = '''
+#   source ~/dotfiles/nvim/plugins/vimspector.rc.vim
+# '''
