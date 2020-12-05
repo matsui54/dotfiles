@@ -3,7 +3,6 @@ autocmd MyAutoCmd FileType defx call s:defx_my_settings()
 autocmd MyAutoCmd User defx-preview call s:defx_preview()
 
 function! s:defx_preview() abort
-  ALEDisableBuffer
   setlocal nonumber
 endfunction
 
