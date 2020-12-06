@@ -36,6 +36,9 @@ hook_add = '''
 set helplang=ja
 '''
 
+[[plugins]]
+repo = 'cespare/vim-toml'
+
 # [[plugins]]
 # repo = 'neoclide/coc.nvim'
 # merged = 0

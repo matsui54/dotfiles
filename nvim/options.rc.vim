@@ -14,17 +14,17 @@ set smartindent
 
 if vimrc#is_wsl()
   let g:clipboard = {
-       \   'name': 'myClipboard',
-       \   'copy': {
-       \      '+': 'win32yank.exe -i',
-       \      '*': 'win32yank.exe -i',
-       \    },
-       \   'paste': {
-       \      '+': 'win32yank.exe -o',
-       \      '*': 'win32yank.exe -o',
-       \   },
-       \   'cache_enabled': 1,
-       \ }
+        \   'name': 'myClipboard',
+        \   'copy': {
+        \      '+': 'win32yank.exe -i',
+        \      '*': 'win32yank.exe -i',
+        \    },
+        \   'paste': {
+        \      '+': 'win32yank.exe -o',
+        \      '*': 'win32yank.exe -o',
+        \   },
+        \   'cache_enabled': 1,
+        \ }
 endif
 
 set clipboard=unnamedplus
@@ -44,6 +44,7 @@ set completeopt-=preview
 set splitright
 
 set helplang=en,ja
+language en_US.utf8
 
 if filereadable(expand('~/dotfiles/nvim/dict/10k.txt'))
   set dictionary=~/dotfiles/nvim/dict/10k.txt

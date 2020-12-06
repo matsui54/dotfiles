@@ -261,13 +261,13 @@ on_event = 'CmdlineEnter'
 repo = 't9md/vim-choosewin'
 on_source = 'defx.nvim'
 
-[[plugins]]
-repo = 'sheerun/vim-polyglot'
-on_event = ['BufReadPre', 'BufNewFile']
-hook_add = '''
-let g:polyglot_disabled = ['markdown']
-'''
-
+# [[plugins]]
+# repo = 'sheerun/vim-polyglot'
+# on_event = ['BufReadPre', 'BufNewFile']
+# hook_add = '''
+# let g:polyglot_disabled = ['markdown']
+# '''
+ 
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
 if = 'has("nvim")'
