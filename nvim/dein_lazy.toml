@@ -310,7 +310,7 @@ EOF
 
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
-on_ft = ['python', 'cpp', 'c']
+on_ft = ['python', 'cpp', 'c', 'lua']
 hook_source = '''
 source ~/dotfiles/nvim/plugins/lsp.rc.vim
 '''
