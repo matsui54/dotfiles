@@ -30,7 +30,10 @@ function! vimrc#is_wsl() abort
 endfunction
 
 function! vimrc#is_windows() abort
-  return has('win32') || has('win64')
+  if !exists('g:vimrc_is_windows')
+    let g:vimrc_is_windows = has('win32') || has('win64')
+  endif
+  return g:vimrc_is_windows
 endfunction
 
 function! vimrc#on_filetype() abort
