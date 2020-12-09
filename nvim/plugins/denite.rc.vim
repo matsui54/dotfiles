@@ -23,10 +23,10 @@ function! s:denite_my_settings() abort
         \ denite#do_map('do_action', 'edit')
 endfunction
 
-autocmd MyAutoCmd User denite-preview call s:denite_preview()
-function! s:denite_preview() abort
-  ALEDisableBuffer
-endfunction
+" autocmd MyAutoCmd User denite-preview call s:denite_preview()
+" function! s:denite_preview() abort
+"   ALEDisableBuffer
+" endfunction
 
 autocmd MyAutoCmd FileType denite-filter call s:denite_filter_my_settings()
 function! s:denite_filter_my_settings() abort

@@ -18,6 +18,9 @@ let g:vim_markdown_folding_disabled = 1
 repo = 'cocopon/iceberg.vim'
 
 [[plugins]]
+repo = 'ulwlu/elly.vim'
+
+[[plugins]]
 repo = 'w0ng/vim-hybrid'
 
 [[plugins]]

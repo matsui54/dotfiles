@@ -1,7 +1,8 @@
 lua require'lspconfig'.clangd.setup{}
 lua require'lspconfig'.pyls.setup{}
+lua require'lspconfig'.sumneko_lua.setup{}
 
-autocmd MyAutoCmd FileType python,cpp,c call s:lsp_my_settings()
+autocmd MyAutoCmd FileType python,cpp,c,lua call s:lsp_my_settings()
 
 function! s:lsp_my_settings() abort
   setlocal signcolumn=yes
