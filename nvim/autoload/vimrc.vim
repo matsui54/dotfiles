@@ -23,7 +23,10 @@ function! vimrc#disable_ime() abort
 endfunction
 
 function! vimrc#is_wsl() abort
-  return executable('cmd.exe') && isdirectory('/mnt/c')
+  if !exists('g:vimrc_is_wsl')
+    let g:vimrc_is_wsl = executable('cmd.exe') && isdirectory('/mnt/c')
+  endif
+  return g:vimrc_is_wsl
 endfunction
 
 function! vimrc#is_windows() abort

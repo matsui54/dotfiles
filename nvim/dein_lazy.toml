@@ -1,11 +1,7 @@
 [[plugins]]
 repo = 'thinca/vim-quickrun'
 hook_add = '''
-  nnoremap <expr> <leader>d (&filetype=='vim') ? ":w <bar> :source %<CR>" :
-        \ (&filetype=='cpp') ? ":wa <bar> :wincmd t <bar> :call <SID>quickrun_redirect()<CR>" :
-        \ ":w <bar> :QuickRun <CR>"
-
-  function! s:quickrun_redirect() abort
+  function! My_quickrun_redirect() abort
     let input_file = expand('%:h') . '/in.txt'
     if filereadable(input_file)
       execute 'QuickRun <' . input_file

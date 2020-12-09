@@ -50,6 +50,17 @@ endfunction
 
 nnoremap <Leader>m :wa <Bar> :make<CR>
 
+nnoremap <silent><Leader>d :call <SID>run()<CR>
+
+function! s:run() abort
+  let cmd_table = {}
+  let cmd_table.vim = 'w | source %'
+  let cmd_table.cpp = 'wa | wincmd t | call My_quickrun_redirect()'
+  let cmd_table.lua = 'w | luafile %'
+  let cmd = get(cmd_table, &filetype, ':w | QuickRun')
+  execute cmd
+endfunction
+
 " resize window using arrow key
 nnoremap <expr><silent> <Up> (win_screenpos(win_getid())[0] < 3) ?
       \":wincmd -<CR>" : ":wincmd +<CR>"
