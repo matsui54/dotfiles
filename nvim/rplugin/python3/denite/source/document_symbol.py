@@ -9,7 +9,7 @@ class Source(Base):
         self.vim = vim
         self.name = "document_symbol"
         self.kind = Kind(vim)
-        vim.exec_lua("_lsp_denite = require('lsp_denite')")
+        vim.exec_lua("_lsp_denite = require'lsp_denite'")
 
     # def highlight(self):
     #     self.vim.command(
@@ -41,16 +41,18 @@ class Source(Base):
     #     )
 
     def gather_candidates(self, context: UserContext) -> Candidates:
+        # self.vim.exec_lua("_testplugin = require('testplugin')")
         candidates: Candidates = []
-        items = self.vim.lua._lsp_denite.document_symbol()
-        self.vim.command("echomsg '{}'".format(str(items)))
-        # for item in items:
-        #     candidates.append(
-        #         {
-        #             "word": "{}".format(item["text"]),
-        #         }
-        #     )
-        return []
+        # item = self.vim.lua._testplugin.add(2, 3)
+        self.vim.lua._lsp_denite.document_symbol()
+        items = self.vim.eval('b:document_symbols')
+        for item in items:
+            candidates.append(
+                {
+                    "word": "{}".format(item["text"]),
+                }
+            )
+        return candidates
         # for key in items.keys():
         #     item = self.vim.vars["current_ulti_dict_info"][key]
         #     locs = item["location"].split(":")
