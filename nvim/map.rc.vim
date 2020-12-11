@@ -25,7 +25,11 @@ endfunction
 inoremap <silent> <C-r> <ESC><cmd>call show_register#show()<CR>a<C-r>
 
 if has('nvim')
-  tnoremap <C-\><C-\> <C-\><C-n>
+  tnoremap <C-[>h <C-\><C-n><C-w>h
+  tnoremap <C-[>j <C-\><C-n><C-w>j
+  tnoremap <C-[>k <C-\><C-n><C-w>k
+  tnoremap <C-[>l <C-\><C-n><C-w>l
+  tnoremap <C-[><C-[> <C-\><C-n>
   command! Fterm :call <SID>floating_terminal()
   command! Vterm :vsplit | :terminal
   command! Tterm :tabnew | :terminal
