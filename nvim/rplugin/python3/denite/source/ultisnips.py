@@ -75,6 +75,15 @@ class Kind(File):
         self.vim.command("normal a{} ".format(trigger))
         self.vim.call("UltiSnips#ExpandSnippet")
 
+    def action_preview(self, context):
+        # 色付きのファイルだと遅い!
+        target = context["targets"][0]
+        self.vim.command(
+            r"pedit +normal\ {}G {}".format(
+                target["action__line"], target["action__path"]
+            )
+        )
+
     def action_edit(self, context):
         """
         edit snippet
