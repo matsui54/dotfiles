@@ -1,4 +1,4 @@
-inoremap jj <ESC>
+inoremap jj <Esc>
 
 " add bracket automatically
 inoremap <silent><expr> <CR> <SID>smart_bracket()
@@ -10,9 +10,9 @@ function! s:smart_bracket()
   if c_bracket !=# ''
     if searchpair(char, '', c_bracket, 'n') != line('.')
       if getline('.')[col('.') -1] !=# c_bracket
-        let ope = "\<End>" . c_bracket . "\<ESC>%a"
+        let ope = "\<End>" . c_bracket . "\<Esc>%a"
       endif
-      let ope .= "\<CR>\<ESC>\<S-o>"
+      let ope .= "\<CR>\<Esc>\<S-o>"
     else
       let ope = "\<CR>"
     endif
@@ -22,13 +22,14 @@ function! s:smart_bracket()
   return ope
 endfunction
 
-inoremap <silent> <C-r> <ESC><cmd>call show_register#show()<CR>a<C-r>
+inoremap <silent> <C-r> <Esc><cmd>call show_register#show()<CR>a<C-r>
 
 if has('nvim')
   tnoremap <C-[>h <C-\><C-n><C-w>h
   tnoremap <C-[>j <C-\><C-n><C-w>j
   tnoremap <C-[>k <C-\><C-n><C-w>k
   tnoremap <C-[>l <C-\><C-n><C-w>l
+  tnoremap <C-[>q <C-\><C-n>q
   tnoremap <C-[><C-[> <C-\><C-n>
   command! Fterm :call <SID>floating_terminal()
   command! Vterm :vsplit | :terminal
