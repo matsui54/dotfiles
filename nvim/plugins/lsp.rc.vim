@@ -16,4 +16,9 @@ function! s:lsp_my_settings() abort
   nnoremap <buffer><silent> gd        <cmd>lua vim.lsp.buf.declaration()<CR>
   nnoremap <buffer><silent> <Leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
   " nnoremap <buffer><silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+  augroup MyLspSettings
+    autocmd!
+    autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
+    autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+  augroup END
 endfunction

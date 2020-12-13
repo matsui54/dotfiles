@@ -1,12 +1,6 @@
 [[plugins]]
 repo = 'Shougo/dein.vim'
 
-# [[plugins]]
-# repo = 'itchyny/lightline.vim'
-# hook_add = '''
-#   source ~/dotfiles/nvim/plugins/lightline.rc.vim
-# '''
-
 [[plugins]]
 repo = 'rcmdnk/vim-markdown'
 hook_add = '''
@@ -56,3 +50,10 @@ repo = 'cespare/vim-toml'
 
 # [[plugins]]
 # repo = 'Shougo/neosnippet-snippets'
+
+# [[plugins]]
+# repo = 'itchyny/lightline.vim'
+# hook_add = '''
+#   source ~/dotfiles/nvim/plugins/lightline.rc.vim
+# '''
+

@@ -66,4 +66,7 @@ function! vimrc#color_settings() abort
   highlight! link LspDiagnosticsDefaultHint ALEVirtualTextWarning
   highlight! link LspDiagnosticsSignHint ALEWarningSign
   highlight! link LspDiagnosticsFloatingHint ALEVirtualTextWarning
+  highlight LspReferenceRead gui = underline
+  highlight LspReferenceText gui = underline
+  highlight LspReferenceWrite gui=underline
 endfunction

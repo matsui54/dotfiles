@@ -305,44 +305,6 @@ source ~/dotfiles/nvim/plugins/lsp.rc.vim
 '''
 
 # [[plugins]]
-# repo = 'dense-analysis/ale'
-# # on_ft = ['python', 'cpp', 'c', 'vim']
-# hook_source = '''
-#   autocmd MyAutoCmd FileType python,cpp,c,vim setlocal signcolumn=yes
-#   let g:ale_linters = {
-#         \'cpp': ['clangd'],
-#         \'python': ['pyls', 'flake8', 'mypy'],
-#         \'vim': ['vint'],
-#         \'c': ['gcc']
-#         \}
-#   let g:ale_fixers = {
-#         \'cpp':['clang-format'],
-#         \'c':['clang-format'],
-#         \'python':['autopep8', 'isort']
-#         \}
-#   if vimrc#is_windows()
-#     let g:ale_c_cc_options='-std=c11 -Wall -I C:\MinGW\include'
-#   endif
-#   let g:ale_hover_cursor=0
-# '''
-
-# [[plugins]]
-# repo = 'autozimu/LanguageClient-neovim'
-# rev = 'next'
-# # on_ft = ['python', 'cpp', 'c']
-# hook_post_update = '''
-#   if has('win32') || has('win64')
-#       call system(
-#       \ 'powershell -executionpolicy bypass -File install.ps1')
-#   else
-#       call system('bash install.sh')
-#   endif
-# '''
-# hook_source = '''
-# 	source ~/dotfiles/nvim/plugins/languageclient.rc.vim
-# '''
-
-# [[plugins]]
 # repo = "puremourning/vimspector"
 # if = 'has("unix")'
 # on_ft = ["python", "cpp"]
