@@ -46,8 +46,8 @@ set splitright
 set helplang=en,ja
 language en_US.utf8
 
-if filereadable(expand('~/dotfiles/nvim/dict/10k.txt'))
-  set dictionary=~/dotfiles/nvim/dict/10k.txt
+if filereadable(expand('/usr/share/dict/words'))
+  set dictionary=/usr/share/dict/words
 endif
 
 if exists('&inccommand')

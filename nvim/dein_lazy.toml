@@ -222,6 +222,8 @@ hook_source = '''
   " Do not complete too short words
   call deoplete#custom#source(
   \ 'dictionary', 'min_pattern_length', 4)
+  call deoplete#custom#source(
+  \ 'dictionary', 'max_candidates', 10)
 '''
 
 [[plugins]]
