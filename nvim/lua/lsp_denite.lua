@@ -23,6 +23,7 @@ function M.document_symbol()
   if client_id == 0  or raw_result == nil then
     return nil
   end
+  vim.b.document_symbols = raw_result
   local result = util.symbols_to_items(raw_result[client_id].result, 0)
   return result
 end
