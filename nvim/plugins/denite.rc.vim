@@ -43,8 +43,13 @@ call denite#custom#action('directory', 'jump_defx',
       \ t:defx_index, context.targets[0].action__path))})
 
 " For ripgrep
-call denite#custom#var('file/rec', 'command',
-      \ ['rg', '--files', '--glob', '!.git', '--color', 'never'])
+if executable('fdfind')
+  call denite#custom#var('file/rec', 'command',
+        \ ['fdfind', '.', '-H', '-E', '.git', '-E', '.__pycache__', '--type', 'f'])
+else
+  call denite#custom#var('file/rec', 'command',
+        \ ['rg', '--files', '--glob', '!.git', '--color', 'never'])
+endif
 
 " Change default action.
 " call denite#custom#kind('file', 'default_action', 'open')

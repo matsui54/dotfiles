@@ -46,6 +46,7 @@ function! vimrc#on_filetype() abort
   endif
 endfunction
 
+" additional settings for iceberg theme
 function! vimrc#color_settings() abort
   highlight TabLineSel guifg=#ffffff
   highlight clear TabLineFill
@@ -54,4 +55,15 @@ function! vimrc#color_settings() abort
   highlight MatchParen cterm=underline gui=underline
   highlight EndOfBuffer guifg=#454545
   highlight! link SignColumn Normal
+  highlight! link LspDiagnosticsDefaultError ErrorMsg
+  highlight! link LspDiagnosticsFloatingError ErrorMsg
+  highlight! link LspDiagnosticsDefaultWarning ALEVirtualTextWarning
+  highlight! link LspDiagnosticsSignWarning ALEWarningSign
+  highlight! link LspDiagnosticsFloatingWarning ALEVirtualTextWarning
+  highlight! link LspDiagnosticsDefaultInformation ALEVirtualTextWarning
+  highlight! link LspDiagnosticsSignInformation ALEWarningSign
+  highlight! link LspDiagnosticsFloatingInformation ALEVirtualTextWarning
+  highlight! link LspDiagnosticsDefaultHint ALEVirtualTextWarning
+  highlight! link LspDiagnosticsSignHint ALEWarningSign
+  highlight! link LspDiagnosticsFloatingHint ALEVirtualTextWarning
 endfunction
