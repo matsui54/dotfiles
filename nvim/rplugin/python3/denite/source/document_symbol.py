@@ -7,8 +7,28 @@ class Source(Base):
         super().__init__(vim)
         self.vim = vim
         self.name = "document_symbol"
-        self.kind = 'file'
+        self.kind = "file"
         vim.exec_lua("_lsp_denite = require'lsp_denite'")
+
+    def gather_candidates(self, context: UserContext) -> Candidates:
+        candidates: Candidates = []
+        items = self.vim.lua._lsp_denite.document_symbol()
+        if not items:
+            return []
+        for item in items:
+            col = item["col"]
+            lnum = item["lnum"]
+            text = item["text"]
+            word = text + ":" + str(lnum) + ":" + str(col)
+            candidates.append(
+                {
+                    "word": word,
+                    "action__path": item["filename"],
+                    "action__line": lnum,
+                    "action__col": col,
+                }
+            )
+        return candidates
 
     # def highlight(self):
     #     self.vim.command(
@@ -38,22 +58,3 @@ class Source(Base):
     #         r"syntax match deniteSource__UltisnipsDescription /\%22c.*  / contained "
     #         r"containedin=deniteSource__UltisnipsHeader"
     #     )
-
-    def gather_candidates(self, context: UserContext) -> Candidates:
-        candidates: Candidates = []
-        items = self.vim.lua._lsp_denite.document_symbol()
-        if not items:
-            return []
-        for item in items:
-            col = item['col']
-            lnum = item['lnum']
-            text = item['text']
-            candidates.append(
-                {
-                    "word": "{}".format(text + ':' + str(lnum) + ':' + str(col)),
-                    "action__path": item['filename'],
-                    "action__line": lnum,
-                    "action__col": col,
-                }
-            )
-        return candidates
