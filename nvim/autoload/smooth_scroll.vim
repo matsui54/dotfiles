@@ -11,8 +11,7 @@ function! s:smooth_scroll(fn) abort
   if working_timer
     call timer_stop(working_timer)
   endif
-  let s:smooth_scroll_timer = timer_start(10, function('s:' . a:fn), {'repeat' : &scroll})
-  let s:smooth_scroll_timer = 0
+  let s:smooth_scroll_timer = timer_start(5, function('s:' . a:fn), {'repeat' : &scroll})
 endfunction
 
 function! smooth_scroll#up() abort
