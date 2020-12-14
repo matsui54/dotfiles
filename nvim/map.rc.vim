@@ -120,6 +120,9 @@ nnoremap <expr> <Space>/ multi_search#hl_last_match() . "/"
 nnoremap <expr> <Space>* multi_search#hl_last_match() . "*"
 nmap <expr> <Space>l "\<C-l>" . multi_search#delete_search_all()
 
+nmap <silent> <C-u> <cmd>call smooth_scroll#up()<CR>
+nmap <silent> <C-d> <cmd>call smooth_scroll#down()<CR>
+
 " from nelstrom/vim-visual-star-search
 function! s:VSetSearch(cmdtype)
   let temp = @s
