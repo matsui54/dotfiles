@@ -8,10 +8,12 @@ endfunction
 
 function! s:smooth_scroll(fn) abort
   let working_timer = get(s:, 'smooth_scroll_timer', 0)
-  if working_timer
+  let stop_time = 5
+  if !empty(timer_info(working_timer))
     call timer_stop(working_timer)
+    let stop_time = 8
   endif
-  let s:smooth_scroll_timer = timer_start(5, function('s:' . a:fn), {'repeat' : &scroll})
+  let s:smooth_scroll_timer = timer_start(stop_time, function('s:' . a:fn), {'repeat' : &scroll})
 endfunction
 
 function! smooth_scroll#up() abort

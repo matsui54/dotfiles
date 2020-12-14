@@ -30,8 +30,18 @@ endfunction
 
 autocmd MyAutoCmd FileType denite-filter call s:denite_filter_my_settings()
 function! s:denite_filter_my_settings() abort
+  call deoplete#custom#buffer_option('auto_complete', v:false)
   imap <silent><buffer> <C-o> <Plug>(denite_filter_quit)
   imap <silent><buffer> <Tab> <C-o><cmd>Denite -resume -cursor-pos=+1<CR>i
+  inoremap <silent><buffer><expr> <Tab>
+        \ denite#increment_parent_cursor(1)
+  inoremap <silent><buffer><expr> <S-Tab>
+        \ denite#increment_parent_cursor(-1)
+  nnoremap <silent><buffer><expr> <C-j>
+        \ denite#increment_parent_cursor(1)
+  nnoremap <silent><buffer><expr> <C-k>
+        \ denite#increment_parent_cursor(-1)
+  imap <silent><buffer> <CR> <C-o><CR>
 endfunction
 
 call denite#custom#option('default', {
