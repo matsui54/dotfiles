@@ -1,9 +1,9 @@
 function! s:down(timer) abort
-  execute "normal \<C-e>"
+  execute "normal \<C-e>j"
 endfunction
 
 function! s:up(timer) abort
-  execute "normal \<C-y>"
+  execute "normal \<C-y>k"
 endfunction
 
 function! s:smooth_scroll(fn) abort
