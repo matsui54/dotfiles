@@ -53,7 +53,7 @@ hook_add = '''
   nnoremap <silent> <Space>h :Denite help<CR>
   augroup denite_config
     autocmd!
-    autocmd BufEnter * call vimrc#open_denite()
+    autocmd BufEnter * call vimrc#open_denite(expand('<amatch>'))
   augroup END
 '''
 

@@ -46,17 +46,17 @@ function! vimrc#on_filetype() abort
   endif
 endfunction
 
-function! vimrc#open_denite() abort
+function! vimrc#open_denite(path) abort
   try
-    let full_path = expand(expand('%:p'))
+    let full_path = expand(a:path)
   catch
     return
   endtry
 
   if isdirectory(full_path)
-    " bdelete
-    " execute "Denite file/rec:`expand('%:p')`"
-    " wincmd w
+    bdelete
+    execute "Denite file/rec:" . full_path
+    wincmd w
   endif
 endfunction
 
