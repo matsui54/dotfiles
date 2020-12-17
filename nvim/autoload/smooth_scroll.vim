@@ -23,4 +23,3 @@ endfunction
 function! smooth_scroll#down() abort
   call s:smooth_scroll('down')
 endfunction
-

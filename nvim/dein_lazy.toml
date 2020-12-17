@@ -51,6 +51,10 @@ hook_add = '''
   nnoremap <silent> <Space>a :Denite file/rec<CR>
   nnoremap <silent> <Space>f :Denite file/rec:~/dotfiles/nvim<CR>
   nnoremap <silent> <Space>h :Denite help<CR>
+  augroup denite_config
+    autocmd!
+    autocmd BufEnter * call vimrc#open_denite()
+  augroup END
 '''
 
 [[plugins]]
@@ -206,10 +210,6 @@ repo = 'Shougo/context_filetype.vim'
 repo = 'deoplete-plugins/deoplete-dictionary'
 on_source = 'deoplete.nvim'
 hook_source = '''
-  " If dictionary is already sorted, no need to sort it again.
-  call deoplete#custom#source(
-  \ 'dictionary', 'sorters', [])
-  " Do not complete too short words
   call deoplete#custom#source(
   \ 'dictionary', 'min_pattern_length', 4)
   call deoplete#custom#source(

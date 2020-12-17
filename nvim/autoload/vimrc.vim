@@ -46,6 +46,20 @@ function! vimrc#on_filetype() abort
   endif
 endfunction
 
+function! vimrc#open_denite() abort
+  try
+    let full_path = expand(expand('%:p'))
+  catch
+    return
+  endtry
+
+  if isdirectory(full_path)
+    " bdelete
+    " execute "Denite file/rec:`expand('%:p')`"
+    " wincmd w
+  endif
+endfunction
+
 " additional settings for iceberg theme
 function! vimrc#color_settings() abort
   highlight TabLineSel guifg=#ffffff
