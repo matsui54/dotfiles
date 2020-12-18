@@ -20,8 +20,8 @@ if vimrc#is_wsl()
         \      '*': 'win32yank.exe -i',
         \    },
         \   'paste': {
-        \      '*': 'win32yank.exe -o',
-        \      '+': 'win32yank.exe -o',
+        \      '*': 'win32yank.exe -o --lf',
+        \      '+': 'win32yank.exe -o --lf',
         \   },
         \   'cache_enabled': 1,
         \ }
