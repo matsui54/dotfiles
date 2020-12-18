@@ -47,12 +47,14 @@ hook_source = '''
 hook_add = '''
   nnoremap <Space>d :Denite 
   nnoremap <silent> <Space>g :Denite grep<CR>
-  nnoremap <silent><Space>b :Denite buffer<CR>
-  nnoremap <silent><Space>a :Denite file/rec<CR>
-  " augroup denite_config
-  "   autocmd!
-  "   autocmd BufEnter * call vimrc#open_denite()
-  " augroup END
+  nnoremap <silent> <Space>b :Denite buffer<CR>
+  nnoremap <silent> <Space>a :Denite file/rec<CR>
+  nnoremap <silent> <Space>f :Denite file/rec:~/dotfiles/nvim<CR>
+  nnoremap <silent> <Space>h :Denite help<CR>
+  augroup denite_config
+    autocmd!
+    autocmd BufEnter * call vimrc#open_denite(expand('<amatch>'))
+  augroup END
 '''
 
 [[plugins]]
@@ -64,7 +66,6 @@ hook_source = '''
 '''
 hook_add = '''
   nnoremap <silent><C-f> :<C-u>Defx -buffer-name=`'defx' . t:defx_index`<CR>
-  nmap <silent> <Space>f <C-f>:call defx#call_action('cd', [expand('~/dotfiles/nvim')])<CR>
   nmap <silent> <Space>w <C-f>:call defx#call_action('cd', [expand('~/work')])<CR>
   nmap <silent> <Space>p <C-f>:call defx#call_action('cd', [expand('~/.cache/dein/repos/github.com')])<CR>
 '''
