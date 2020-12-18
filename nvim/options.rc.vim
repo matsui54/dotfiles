@@ -20,13 +20,14 @@ if vimrc#is_wsl()
         \      '*': 'win32yank.exe -i',
         \    },
         \   'paste': {
-        \      '+': {-> split(substitute(system('win32yank.exe -o'), '\r\n', '\n', 'g'), '\n')},
-        \      '*': {-> split(substitute(system('win32yank.exe -o'), '\r\n', '\n', 'g'), '\n')},
+        \      '*': 'win32yank.exe -o',
+        \      '+': 'win32yank.exe -o',
         \   },
         \   'cache_enabled': 1,
         \ }
 endif
-
+        "\      '+': {-> split(substitute(system('win32yank.exe -o'), '\r\n', '\n', 'g'), '\n')},
+        "\      '*': {-> split(substitute(system('win32yank.exe -o'), '\r\n', '\n', 'g'), '\n')},
 set clipboard=unnamedplus
 
 set ignorecase

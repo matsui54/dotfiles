@@ -49,10 +49,10 @@ hook_add = '''
   nnoremap <silent> <Space>g :Denite grep<CR>
   nnoremap <silent><Space>b :Denite buffer<CR>
   nnoremap <silent><Space>a :Denite file/rec<CR>
-  augroup denite_config
-    autocmd!
-    autocmd BufEnter * call vimrc#open_denite()
-  augroup END
+  " augroup denite_config
+  "   autocmd!
+  "   autocmd BufEnter * call vimrc#open_denite()
+  " augroup END
 '''
 
 [[plugins]]

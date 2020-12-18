@@ -54,7 +54,9 @@ function! vimrc#open_denite() abort
   endtry
 
   if isdirectory(full_path)
-    " bdelete
+    execute "cd " . full_path
+    bdelete
+    Denite file/rec | wincmd K
     " execute "Denite file/rec:`expand('%:p')`"
     " wincmd w
   endif
