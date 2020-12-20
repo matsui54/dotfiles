@@ -15,6 +15,7 @@ function! s:lsp_my_settings() abort
   nnoremap <buffer><silent> gW        <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
   nnoremap <buffer><silent> gd        <cmd>lua vim.lsp.buf.declaration()<CR>
   nnoremap <buffer><silent> <Leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
+  nnoremap <buffer><silent> <Leader>r <cmd>lua vim.lsp.buf.rename()<CR>
   " nnoremap <buffer><silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
   augroup MyLspSettings
     autocmd!

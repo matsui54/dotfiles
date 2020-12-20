@@ -55,7 +55,7 @@ function! vimrc#open_denite(path) abort
 
   if isdirectory(full_path)
     bdelete
-    execute "Denite file/rec:" . full_path
+    execute "Denite -direction=dynamictop -filter-split-direction=topleft file/rec:" . full_path
     wincmd w
   endif
 endfunction
