@@ -35,10 +35,6 @@ repo = 'simplenote-vim/simplenote.vim'
 on_event = 'CmdlineEnter'
 
 [[plugins]]
-repo = 'octol/vim-cpp-enhanced-highlight'
-on_ft = ['cpp', 'c']
-
-[[plugins]]
 repo = 'Shougo/denite.nvim'
 on_event = 'CmdlineEnter'
 hook_source = '''
