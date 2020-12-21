@@ -22,7 +22,7 @@ function! s:smart_bracket()
   return ope
 endfunction
 
-inoremap <silent> <C-r> <Esc><cmd>call show_register#show()<CR>a<C-r>
+inoremap <silent> <C-r> <cmd>call show_register#show()<CR><C-r>
 
 if has('nvim')
   tnoremap <C-[>h <C-\><C-n><C-w>h

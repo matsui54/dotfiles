@@ -56,10 +56,11 @@ function! show_register#show() abort
 
   call nvim_buf_set_option(s:buf, 'buftype', 'nofile')
   call nvim_buf_set_option(s:buf, 'bufhidden', 'delete')
-  autocmd RegisterComp InsertLeave,InsertCharPre * call s:clear_fwin()
+  autocmd RegisterComp InsertLeave * call s:clear_fwin()
+  autocmd RegisterComp InsertCharPre,CursorMovedI * call timer_start(100, function('s:clear_fwin'))
 endfunction
 
-function! s:clear_fwin()
+function! s:clear_fwin(...)
   if s:win != v:null
     call nvim_win_close(s:win, v:false)
     let s:win = v:null
