@@ -19,7 +19,14 @@ function! s:lsp_my_settings() abort
   " nnoremap <buffer><silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
   augroup MyLspSettings
     autocmd!
-    autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
+    autocmd CursorHold  <buffer> call s:safe_hightlight()
     autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
   augroup END
+endfunction
+
+function! s:safe_hightlight() abort
+  try
+    lua vim.lsp.buf.document_highlight()
+  catch /^Vim\%((\a\+)\)\=:E5108/
+  endtry
 endfunction

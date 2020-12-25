@@ -107,12 +107,11 @@ hook_add = '''
 [[plugins]]
 repo = 'rhysd/vim-operator-surround'
 depends = 'vim-operator-user'
-on_map = {n = '<Plug>'}
+on_map = '<Plug>'
 hook_add = '''
-  nmap <silent>sa <Plug>(operator-surround-append)a
-  nmap <silent>sd <Plug>(operator-surround-delete)a
-  nmap <silent>sr <Plug>(operator-surround-replace)a
-  nmap <silent>sc <Plug>(operator-surround-replace)a
+  map <silent>sa <Plug>(operator-surround-append)
+  map <silent>sd <Plug>(operator-surround-delete)
+  map <silent>sr <Plug>(operator-surround-replace)
 '''
 
 [[plugins]]
@@ -166,7 +165,6 @@ hook_source = '''
   let g:eskk#directory = expand('~/.cache/eskk')
   let g:eskk#start_completion_length=2
   let g:eskk#tab_select_completion=1
-  let g:eskk#keep_state = 1
   let g:eskk#dictionary = {
         \   'path': expand('~/.cache/skk-jisyo'),
         \   'sorted': 0,
