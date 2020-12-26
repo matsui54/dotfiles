@@ -5,6 +5,8 @@ hook_add = '''
     let input_file = expand('%:h') . '/in.txt'
     if filereadable(input_file)
       execute 'QuickRun <' . input_file
+    else
+      QuickRun
     endif
   endfunction
 '''
