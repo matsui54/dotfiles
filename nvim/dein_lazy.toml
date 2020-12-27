@@ -229,7 +229,7 @@ hook_source = '''
 '''
 
 [[plugins]]
-repo = 'tpope/vim-fugitive'
+repo = 'lambdalisue/gina.vim'
 on_event = 'CmdlineEnter'
 
 [[plugins]]
