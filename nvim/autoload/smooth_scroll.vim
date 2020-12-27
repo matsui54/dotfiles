@@ -13,6 +13,10 @@ function! s:smooth_scroll(fn) abort
     call timer_stop(working_timer)
     let stop_time = 8
   endif
+  if (a:fn ==# 'down' && line('$') == line('w$')) ||
+        \ (a:fn ==# 'up' && line('w0') == 1)
+    return
+  endif
   let s:smooth_scroll_timer = timer_start(stop_time, function('s:' . a:fn), {'repeat' : &scroll})
 endfunction
 
