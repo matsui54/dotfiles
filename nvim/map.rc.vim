@@ -25,12 +25,11 @@ endfunction
 inoremap <silent> <C-r> <cmd>call show_register#show()<CR><C-r>
 
 if has('nvim')
-  tnoremap <C-[>h <C-\><C-n><C-w>h
-  tnoremap <C-[>j <C-\><C-n><C-w>j
-  tnoremap <C-[>k <C-\><C-n><C-w>k
-  tnoremap <C-[>l <C-\><C-n><C-w>l
-  tnoremap <C-[>q <C-\><C-n>q
-  tnoremap <C-[><C-[> <C-\><C-n>
+  tnoremap <A-h> <C-\><C-N><C-w>h
+  tnoremap <A-j> <C-\><C-N><C-w>j
+  tnoremap <A-k> <C-\><C-N><C-w>k
+  tnoremap <A-l> <C-\><C-N><C-w>l
+  tnoremap <Esc> <C-\><C-N>
   command! Fterm :call <SID>floating_terminal()
   command! Vterm :vsplit | :terminal
   command! Tterm :tabnew | :terminal
@@ -65,6 +64,11 @@ function! s:run() abort
   let cmd = get(cmd_table, &filetype, ':w | QuickRun')
   execute cmd
 endfunction
+
+nnoremap <A-h> <C-w>h
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-l> <C-w>l
 
 " resize window using arrow key
 nnoremap <expr><silent> <Up> (win_screenpos(win_getid())[0] < 3) ?
