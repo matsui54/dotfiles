@@ -69,6 +69,9 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'Shougo/deol.nvim'
+
+[[plugins]]
 repo = 'kristijanhusak/defx-icons'
 
 [[plugins]]
