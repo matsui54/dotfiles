@@ -312,7 +312,15 @@ repo = 'nvim-lua/plenary.nvim'
 
 [[plugins]]
 repo = 'nvim-telescope/telescope.nvim'
+on_event = 'CmdlineEnter'
 depends = ['popup.nvim', 'plenary.nvim']
+
+[[plugins]]
+repo = 'norcalli/nvim-colorizer.lua'
+on_event = 'BufRead'
+hook_source = '''
+  lua require'colorizer'.setup()
+'''
 
 # [[plugins]]
 # repo = "puremourning/vimspector"
