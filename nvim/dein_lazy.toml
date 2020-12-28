@@ -231,6 +231,9 @@ hook_source = '''
 [[plugins]]
 repo = 'lambdalisue/gina.vim'
 on_event = 'CmdlineEnter'
+hook_add = '''
+  nnoremap gs <cmd>Gina status<CR>
+'''
 
 [[plugins]]
 repo = 't9md/vim-choosewin'
