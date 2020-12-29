@@ -52,17 +52,18 @@ call denite#custom#action('directory', 'jump_defx',
       \ {context -> execute(printf("Defx -buffer-name='defx%d' %s",
       \ t:defx_index, context.targets[0].action__path))})
 
+let s:fd_cmds = ['fdfind', '.', '-H', '-E', '.git', '-E', '.__pycache__', '-t']
 " For ripgrep
 if executable('fdfind')
-  call denite#custom#var('file/rec', 'command',
-        \ ['fdfind', '.', '-H', '-E', '.git', '-E', '.__pycache__', '--type', 'f'])
-else
+  call denite#custom#var('file/rec', 'command', s:fd_cmds + ['f'])
+  call denite#custom#var('directory_rec', 'command', s:fd_cmds + ['d'])
+elseif executable('rg')
   call denite#custom#var('file/rec', 'command',
         \ ['rg', '--files', '--glob', '!.git', '--color', 'never'])
 endif
 
 " Change default action.
-" call denite#custom#kind('file', 'default_action', 'open')
+call denite#custom#source('directory_rec', 'default_action', 'cd')
 
 " Ripgrep command on grep source
 call denite#custom#var('grep', {
