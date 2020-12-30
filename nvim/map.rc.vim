@@ -45,7 +45,7 @@ function! s:floating_terminal() abort
         \ 'row':3}
         \ )
   terminal
-  hi MyFWin ctermbg=0, guibg=#000000 " cterm:Black, gui:DarkBlue
+  hi MyFWin ctermbg=0, guibg=#000000
   call nvim_win_set_option(0, 'winhl', 'Normal:MyFWin')
   setlocal nonumber
   setlocal winblend=15
