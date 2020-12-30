@@ -1,6 +1,13 @@
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
 
+SYMBOLS_HIGHLIGHT_SYNTAX = [
+    {'name': 'Type', 'link': 'Function',  're': r'\[\a\+\]'},
+    {'name': 'Name', 'link': 'Constant',  're': r'\w\+$'},
+    {'name': 'line', 'link': 'PreProc',   're': r'^ *\zs\d\+'},
+    {'name': 'col',  'link': 'Statement', 're': r'^ *\d\+ *\zs\d\+'},
+]
+
 
 class Source(Base):
     def __init__(self, vim: Nvim) -> None:
@@ -9,6 +16,15 @@ class Source(Base):
         self.name = "document_symbol"
         self.kind = "file"
         vim.exec_lua("_lsp_denite = require'lsp_denite'")
+
+    def highlight(self) -> None:
+        for syn in SYMBOLS_HIGHLIGHT_SYNTAX:
+            self.vim.command(
+                'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
+                    self.syntax_name, syn['name'], syn['re']))
+            self.vim.command(
+                'highlight default link {}_{} {}'.format(
+                    self.syntax_name, syn['name'], syn['link']))
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates: Candidates = []
@@ -19,7 +35,10 @@ class Source(Base):
             col = item["col"]
             lnum = item["lnum"]
             text = item["text"]
-            word = text + ":" + str(lnum) + ":" + str(col)
+            type, name = text.split()
+            word = "{:>4}{:>4} {:<15}{}".format(
+                str(lnum), str(col), type, name
+            )
             candidates.append(
                 {
                     "word": word,
@@ -29,32 +48,3 @@ class Source(Base):
                 }
             )
         return candidates
-
-    # def highlight(self):
-    #     self.vim.command(
-    #         r"highlight default link deniteSource__UltisnipsPath Comment")
-    #     self.vim.command(
-    #         r"highlight default link deniteSource__UltisnipsTrigger Identifier"
-    #     )
-    #     self.vim.command(
-    #         r"highlight default link deniteSource__UltisnipsDescription Statement"
-    #     )
-
-    # def define_syntax(self):
-    #     self.vim.command("syntax case ignore")
-    #     self.vim.command(
-    #         r"syntax match deniteSource__UltisnipsHeader /^.*$/ "
-    #         r"containedin=" + self.syntax_name
-    #     )
-    #     self.vim.command(
-    #         r"syntax match deniteSource__UltisnipsPath /[^ ]\+$/ contained "
-    #         r"containedin=deniteSource__UltisnipsHeader"
-    #     )
-    #     self.vim.command(
-    #         r"syntax match deniteSource__UltisnipsTrigger /^.*\%20c/ contained "
-    #         r"containedin=deniteSource__UltisnipsHeader"
-    #     )
-    #     self.vim.command(
-    #         r"syntax match deniteSource__UltisnipsDescription /\%22c.*  / contained "
-    #         r"containedin=deniteSource__UltisnipsHeader"
-    #     )
