@@ -239,6 +239,21 @@ on_event = 'CmdlineEnter'
 hook_add = '''
   nnoremap gs <cmd>Gina status<CR>
 '''
+hook_source = '''
+	call gina#custom#mapping#nmap(
+	      \ '/.*', '<C-j>',
+	      \ 'gT'
+	      \)
+	call gina#custom#mapping#nmap(
+	      \ '/.*', '<C-k>',
+	      \ 'gt'
+	      \)
+	call gina#custom#mapping#nmap(
+	      \ 'status', '<Space>gc',
+	      \ ':<C-u>Gina commit<CR>',
+	      \ {'noremap': 1, 'silent': 1},
+	      \)
+'''
 
 [[plugins]]
 repo = 't9md/vim-choosewin'
