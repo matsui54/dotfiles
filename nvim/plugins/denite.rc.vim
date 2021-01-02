@@ -52,7 +52,7 @@ call denite#custom#action('directory', 'jump_defx',
       \ {context -> execute(printf("Defx -buffer-name='defx%d' %s",
       \ t:defx_index, context.targets[0].action__path))})
 
-let s:fd_cmds = ['fdfind', '.', '-H', '-E', '.git', '-E', '.__pycache__', '-t']
+let s:fd_cmds = ['fdfind', '.', '-H', '-E', '.git', '-E', '__pycache__', '-t']
 " For ripgrep
 if executable('fdfind')
   call denite#custom#var('file/rec', 'command', s:fd_cmds + ['f'])
