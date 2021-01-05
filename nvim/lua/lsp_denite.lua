@@ -16,6 +16,25 @@ local function get_available_client(method)
   return 0
 end
 
+function M.references()
+  local params = util.make_position_params()
+  params.context = { includeDeclaration = true }
+
+  local results_lsp = vim.lsp.buf_request_sync(0, "textDocument/references", params, 10000)
+  local locations = {}
+  for _, server_results in pairs(results_lsp) do
+    if server_results.result then
+      vim.list_extend(locations, vim.lsp.util.locations_to_items(server_results.result) or {})
+    end
+  end
+
+  if vim.tbl_isempty(locations) then
+    return nil
+  end
+
+  return locations
+end
+
 function M.document_symbol()
   local params = { textDocument = util.make_text_document_params() }
   local raw_result = vim.lsp.buf_request_sync(0, 'textDocument/documentSymbol', params, 1000)
