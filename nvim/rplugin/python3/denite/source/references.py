@@ -31,19 +31,21 @@ class Source(Base):
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates: Candidates = []
         items = self.vim.lua._lsp_denite.references()
+        buf_path = Path(self.vim.call('expand', '%:p'))
         for item in items:
             col = item["col"]
             lnum = item["lnum"]
-            path = item['filename']
-            name = Path(path).name
+            path = Path(item['filename'])
+            name = path.name
+            line = self.vim.call('getline', lnum) if buf_path == path else ''
 
-            word = "{}{:>4}{:>4}".format(
-                name, str(lnum), str(col)
+            word = "{}{:>4}{:>4} {}".format(
+                name, str(lnum), str(col), line
             )
             candidates.append(
                 {
                     "word": word,
-                    "action__path": path,
+                    "action__path": str(path),
                     "action__line": lnum,
                     "action__col": col,
                 }
