@@ -21,7 +21,7 @@ repo = 'w0ng/vim-hybrid'
 repo = 'Yggdroot/indentLine'
 hook_add = '''
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
-let g:indentLine_fileTypeExclude = ['help', 'calendar']
+let g:indentLine_fileTypeExclude = ['help', 'calendar', 'denite']
 '''
 
 [[plugins]]

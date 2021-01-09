@@ -119,12 +119,13 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> <Space>p
         \ defx#do_action('cd', [expand('~/.cache/dein/repos/github.com')])
 
-  nnoremap <silent><buffer><expr> <Space>g
-        \ ":Denite grep:" . <SID>get_defx_cwd() . "<CR>"
   nnoremap <silent><buffer><expr> <Space>s
         \ ":Denite directory_rec:" . <SID>get_defx_cwd() . "<CR>"
   nnoremap <silent><buffer><expr> <Space>a
         \ ":Denite file/rec:" . <SID>get_defx_cwd() . "<CR>"
+  nnoremap <silent><buffer> <Space>g :<C-u>call denite#start(
+        \ [{'name': 'grep', 'args': map(defx#get_selected_candidates(),
+        \ "v:val['action__path']")}])<CR>
 endfunction
 
 function! s:quick_view()

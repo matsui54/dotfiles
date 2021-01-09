@@ -4,8 +4,8 @@ from denite.util import Nvim, UserContext, Candidates
 SYMBOLS_HIGHLIGHT_SYNTAX = [
     {'name': 'Type', 'link': 'Function',  're': r'\[\a\+\]'},
     {'name': 'Name', 'link': 'Constant',  're': r'\w\+$'},
-    {'name': 'line', 'link': 'PreProc',   're': r'^ *\zs\d\+'},
-    {'name': 'col',  'link': 'Statement', 're': r'^ *\d\+ *\zs\d\+'},
+    {'name': 'Line', 'link': 'Statement', 're': r'^ *\zs\d\+'},
+    {'name': 'Col',  'link': 'Statement', 're': r'^ *\d\+ *\zs\d\+'},
 ]
 
 
@@ -13,7 +13,7 @@ class Source(Base):
     def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
         self.vim = vim
-        self.name = "document_symbol"
+        self.name = "lsp/document_symbol"
         self.kind = "file"
         vim.exec_lua("_lsp_denite = require'lsp_denite'")
 

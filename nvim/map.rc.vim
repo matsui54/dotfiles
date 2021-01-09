@@ -61,7 +61,7 @@ function! s:run() abort
   let cmd_table.vim = 'w | source %'
   let cmd_table.cpp = 'wa | wincmd t | call My_quickrun_redirect()'
   let cmd_table.lua = 'w | luafile %'
-  let cmd = get(cmd_table, &filetype, ':w | QuickRun')
+  let cmd = get(cmd_table, &filetype, 'w | QuickRun')
   execute cmd
 endfunction
 

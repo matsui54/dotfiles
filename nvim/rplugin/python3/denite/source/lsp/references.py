@@ -15,7 +15,7 @@ class Source(Base):
     def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
         self.vim = vim
-        self.name = "references"
+        self.name = "lsp/references"
         self.kind = "file"
         vim.exec_lua("_lsp_denite = require'lsp_denite'")
 
