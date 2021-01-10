@@ -3,10 +3,6 @@ local util = require 'vim.lsp.util'
 
 local M = {}
 
--- local symbol_handler = function(_, _, result, _, bufnr)
---   if not result or vim.tbl_isempty(result) then return end
---   vim.b.document_symbols = util.symbols_to_items(result, bufnr)
--- end
 local function get_available_client(method)
   for id, client in pairs(vim.lsp.buf_get_clients()) do
     if client['resolved_capabilities'][method] == true then
