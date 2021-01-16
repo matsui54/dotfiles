@@ -18,7 +18,8 @@ class Source(Base):
         for rtp in self.vim.options['runtimepath'].split(','):
             paths = pathlib.Path(rtp).glob(suffix)
             command_names += [i.stem for i in paths]
-        for name in list(filter(lambda x: x[0] != '_', command_names)):
+        command_names = list(filter(lambda x: x[0] != '_', command_names))
+        for name in sorted(command_names):
             candidates.append(
                 {
                     "word": "{}".format(name),
