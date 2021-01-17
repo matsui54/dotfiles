@@ -50,6 +50,7 @@ hook_add = '''
   nnoremap <silent> <Space>f :Denite file/rec:~/dotfiles/nvim<CR>
   nnoremap <silent> <Space>h :Denite help<CR>
   nnoremap <silent> <Space>n :Denite dein<CR>
+  nnoremap <silent> <Space>r :Denite -resume<CR>
   augroup denite_config
     autocmd!
     autocmd BufEnter * call vimrc#open_denite(expand('<amatch>'))
@@ -335,6 +336,10 @@ on_event = 'BufRead'
 hook_source = '''
   lua require'colorizer'.setup()
 '''
+
+[[plugins]]
+repo = 'zchee/deoplete-zsh'
+on_ft = ['zsh', 'sh']
 
 # [[plugins]]
 # repo = "puremourning/vimspector"
