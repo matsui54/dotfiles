@@ -43,6 +43,11 @@ endif
 
 if vimrc#is_windows()
   let g:python3_host_prog = 'C:\Users\harum\AppData\Local\Programs\Python\Python38\python.EXE'
+else
+  " use virtualenv
+  let s:py3_dir = expand('~/.vim/python3/')
+  let g:python3_host_prog = s:py3_dir . 'bin/python3'
+  let $PATH = s:py3_dir . 'bin:' . $PATH
 endif
 
 source ~/dotfiles/nvim/map.rc.vim
