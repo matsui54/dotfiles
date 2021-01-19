@@ -40,7 +40,7 @@ function! s:denite_filter_my_settings() abort
         \ denite#increment_parent_cursor(1)
   nnoremap <silent><buffer><expr> <C-k>
         \ denite#increment_parent_cursor(-1)
-  imap <silent><buffer> <CR> <C-o><CR>
+  " imap <silent><buffer> <CR> <C-o><CR>
 endfunction
 
 call denite#custom#option('default', {

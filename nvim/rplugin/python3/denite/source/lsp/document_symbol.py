@@ -1,9 +1,11 @@
+import linecache
+
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
 
 SYMBOLS_HIGHLIGHT_SYNTAX = [
     {'name': 'Type', 'link': 'Function',  're': r'\[\a\+\]'},
-    {'name': 'Name', 'link': 'Constant',  're': r'\w\+$'},
+    {'name': 'Name', 'link': 'Constant',  're': r']\s\{2,}\zs\S*\ze\s\{2,}'},
     {'name': 'Line', 'link': 'Statement', 're': r'^ *\zs\d\+'},
     {'name': 'Col',  'link': 'Statement', 're': r'^ *\d\+ *\zs\d\+'},
 ]
@@ -32,17 +34,18 @@ class Source(Base):
         if not items:
             return []
         for item in items:
+            path = item["filename"]
             col = item["col"]
             lnum = item["lnum"]
-            text = item["text"]
-            type, name = text.split()
-            word = "{:>4}{:>4} {:<15}{}".format(
-                str(lnum), str(col), type, name
+            line = linecache.getline(path, lnum)
+            type, name = item["text"].split()
+            word = "{:>4}{:>4} {:<15}{}  {}".format(
+                str(lnum), str(col), type, name, line
             )
             candidates.append(
                 {
                     "word": word,
-                    "action__path": item["filename"],
+                    "action__path": path,
                     "action__line": lnum,
                     "action__col": col,
                 }
