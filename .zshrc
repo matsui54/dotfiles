@@ -99,6 +99,13 @@ bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 
+if [ -d /usr/share/doc/fzf/examples ]; then
+  # Append this line to ~/.zshrc to enable fzf keybindings for Zsh:
+  source /usr/share/doc/fzf/examples/key-bindings.zsh
+  # Append this line to ~/.zshrc to enable fuzzy auto-completion for Zsh:
+  source /usr/share/doc/fzf/examples/completion.zsh
+fi
+
 if [ -d ~/.zsh/zsh-syntax-highlighting ]; then
   source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
