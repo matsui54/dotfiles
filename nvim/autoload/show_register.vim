@@ -1,13 +1,15 @@
 let s:win = v:null
 augroup RegisterComp
   autocmd!
+  autocmd RegisterComp InsertLeave,CursorMoved * call s:clear_fwin()
+  autocmd RegisterComp InsertCharPre,CursorMovedI * call timer_start(100, function('s:clear_fwin'))
 augroup END
 
 function! show_register#show() abort
   if s:win != v:null || getcmdwintype() !=# ''
     return
   endif
-  let regs = ['+', '*', '"',
+  let regs = ['"',
         \'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         \'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
         \'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
@@ -23,7 +25,7 @@ function! show_register#show() abort
 
     let line = reg . ': ' . register
     let max_width = max([max_width, len(line)])
-    call add(lines, substitute(line[:96], '\n', '\\n', 'g'))
+    call add(lines, substitute(line, '\n', '\\n', 'g')[:96])
   endfor
 
   if lines == []
@@ -56,8 +58,6 @@ function! show_register#show() abort
 
   call nvim_buf_set_option(s:buf, 'buftype', 'nofile')
   call nvim_buf_set_option(s:buf, 'bufhidden', 'delete')
-  autocmd RegisterComp InsertLeave * call s:clear_fwin()
-  autocmd RegisterComp InsertCharPre,CursorMovedI * call timer_start(100, function('s:clear_fwin'))
 endfunction
 
 function! s:clear_fwin(...)
