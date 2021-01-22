@@ -55,6 +55,7 @@ hook_add = '''
     autocmd!
     autocmd BufEnter * call vimrc#open_denite(expand('<amatch>'))
   augroup END
+  cnoremap <C-r> <C-u>Denite command_history<CR>
 '''
 
 [[plugins]]

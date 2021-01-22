@@ -21,6 +21,9 @@ function! s:denite_my_settings() abort
         \ denite#do_map('do_action', 'vsplit')
   nnoremap <silent><buffer><expr> e
         \ denite#do_map('do_action', 'edit')
+
+  nnoremap <C-o> <Nop>
+  nnoremap <C-i> <Nop>
 endfunction
 
 " autocmd MyAutoCmd User denite-preview call s:denite_preview()

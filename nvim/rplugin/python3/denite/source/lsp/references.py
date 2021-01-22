@@ -31,6 +31,9 @@ class Source(Base):
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates: Candidates = []
         items = self.vim.lua._lsp_denite.references()
+        if items is None:
+            return []
+
         buf_path = Path(self.vim.call('expand', '%:p'))
         for item in items:
             col = item["col"]
