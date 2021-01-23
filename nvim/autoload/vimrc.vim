@@ -55,6 +55,8 @@ function! vimrc#open_denite(path) abort
 
   if isdirectory(full_path)
     bdelete
+    execute 'cd ' . full_path
+    " Telescope find_files
     execute "Denite -direction=dynamictop -filter-split-direction=topleft file/rec:" . full_path
     wincmd w
   endif

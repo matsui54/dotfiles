@@ -55,7 +55,7 @@ hook_add = '''
     autocmd!
     autocmd BufEnter * call vimrc#open_denite(expand('<amatch>'))
   augroup END
-  cnoremap <expr><silent> <C-r>
+  cnoremap <expr><silent> <C-t>
       \ '<c-u>Denite command_history -start-filter -input=' . getcmdline() . '<CR>'
 '''
 
@@ -67,7 +67,7 @@ hook_source = '''
   source ~/dotfiles/nvim/plugins/defx.rc.vim
 '''
 hook_add = '''
-  nnoremap <silent><C-f> <cmd><C-u>Defx -buffer-name=`'defx' . t:defx_index`<CR>
+  nnoremap <silent><C-f> <cmd>Defx -buffer-name=`'defx' . t:defx_index`<CR>
   nmap <silent> <Space>w <C-f>:call defx#call_action('cd', [expand('~/work')])<CR>
   nmap <silent> <Space>p <C-f>:call defx#call_action('cd', [expand('~/.cache/dein/repos/github.com')])<CR>
 '''
@@ -126,7 +126,6 @@ hook_add = '''
 [[plugins]]
 repo = 'SirVer/ultisnips'
 depends = 'vim-snippets'
-on_source = 'denite.nvim'
 hook_source = '''
   let g:UltiSnipsExpandTrigger='<C-l>'
   let g:UltiSnipsJumpForwardTrigger='<C-j>'
