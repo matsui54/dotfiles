@@ -44,18 +44,19 @@ hook_source = '''
 '''
 hook_add = '''
   nnoremap <Space>d :Denite 
-  nnoremap <silent> <Space>g :Denite grep<CR>
-  nnoremap <silent> <Space>b :Denite buffer<CR>
-  nnoremap <silent> <Space>a :Denite file/rec<CR>
-  nnoremap <silent> <Space>f :Denite file/rec:~/dotfiles/nvim<CR>
-  nnoremap <silent> <Space>h :Denite help<CR>
-  nnoremap <silent> <Space>n :Denite dein<CR>
-  nnoremap <silent> <Space>r :Denite -resume<CR>
+  nnoremap <silent> <Space>g <cmd>Denite grep<CR>
+  nnoremap <silent> <Space>b <cmd>Denite buffer<CR>
+  nnoremap <silent> <Space>a <cmd>Denite file/rec<CR>
+  nnoremap <silent> <Space>f <cmd>Denite file/rec:~/dotfiles/nvim<CR>
+  nnoremap <silent> <Space>h <cmd>Denite help<CR>
+  nnoremap <silent> <Space>n <cmd>Denite dein<CR>
+  nnoremap <silent> <Space>r <cmd>Denite -resume<CR>
   augroup denite_config
     autocmd!
     autocmd BufEnter * call vimrc#open_denite(expand('<amatch>'))
   augroup END
-  cnoremap <C-r> <C-u>Denite command_history<CR>
+  cnoremap <expr><silent> <C-r>
+      \ '<c-u>Denite command_history -start-filter -input=' . getcmdline() . '<CR>'
 '''
 
 [[plugins]]
@@ -66,7 +67,7 @@ hook_source = '''
   source ~/dotfiles/nvim/plugins/defx.rc.vim
 '''
 hook_add = '''
-  nnoremap <silent><C-f> :<C-u>Defx -buffer-name=`'defx' . t:defx_index`<CR>
+  nnoremap <silent><C-f> <cmd><C-u>Defx -buffer-name=`'defx' . t:defx_index`<CR>
   nmap <silent> <Space>w <C-f>:call defx#call_action('cd', [expand('~/work')])<CR>
   nmap <silent> <Space>p <C-f>:call defx#call_action('cd', [expand('~/.cache/dein/repos/github.com')])<CR>
 '''

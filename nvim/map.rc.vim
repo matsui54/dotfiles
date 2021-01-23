@@ -52,9 +52,9 @@ function! s:floating_terminal() abort
   nnoremap <buffer> q :q<CR>
 endfunction
 
-nnoremap <Leader>m :wa <Bar> :make<CR>
+nnoremap <Leader>m <cmd>wa <Bar> make<CR>
 
-nnoremap <silent><Leader>d :call <SID>run()<CR>
+nnoremap <silent><Leader>d <cmd>call <SID>run()<CR>
 
 function! s:run() abort
   let cmd_table = {}
@@ -95,18 +95,18 @@ xnoremap ; :
 " move around tabpages
 nnoremap <C-j> gT
 nnoremap <C-k> gt
-nnoremap <Space><C-j> :tabmove -<CR>
-nnoremap <Space><C-k> :tabmove +<CR>
-nnoremap <Space>t :tabe<CR>
+nnoremap <Space><C-j> <cmd>tabmove -<CR>
+nnoremap <Space><C-k> <cmd>tabmove +<CR>
+nnoremap <Space>t <cmd>tabe<CR>
 
 " stop highlighting for search
-nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
+nnoremap <silent> <C-l> <cmd><C-u>nohlsearch<CR><C-l>
 
 " improved G
 nnoremap G Gzz7<C-y>
 
 "change local directory
-nnoremap <Leader>cd :lcd %:h<CR>
+nnoremap <Leader>cd <cmd>lcd %:h<CR>
 
 " viml formatting
 function! s:format_viml()
@@ -114,10 +114,10 @@ function! s:format_viml()
   normal! ggVG=
   call winrestview(tmp)
 endfunction
-nnoremap <silent> <Leader>f :call <SID>format_viml()<CR>
+nnoremap <silent> <Leader>f <cmd>call <SID>format_viml()<CR>
 
 " improved gd
-nnoremap gd :call godef#go_to_definition()<CR>
+nnoremap gd <cmd>call godef#go_to_definition()<CR>
 
 " multiple search
 nnoremap <expr> <Space>/ multi_search#hl_last_match() . "/"
@@ -137,8 +137,8 @@ function! s:VSetSearch(cmdtype)
   let @s = temp
 endfunction
 
-xnoremap * :<C-u>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
-xnoremap # :<C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
+xnoremap * <cmd><C-u>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
+xnoremap # <cmd><C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
 
 nnoremap j gj
 nnoremap k gk
@@ -146,8 +146,8 @@ xnoremap j gj
 xnoremap k gk
 
 " for repeating indentation
-xnoremap <silent> > >:call <SID>improved_indent()<CR>gv
-xnoremap <silent> < <:call <SID>improved_indent()<CR>gv
+xnoremap <silent> > ><cmd>call <SID>improved_indent()<CR>gv
+xnoremap <silent> < <<cmd>call <SID>improved_indent()<CR>gv
 function! s:improved_indent()
   augroup my_indent
     autocmd cursormoved * call s:exit_indent_mode()
