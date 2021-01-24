@@ -100,7 +100,7 @@ nnoremap <Space><C-k> <cmd>tabmove +<CR>
 nnoremap <Space>t <cmd>tabe<CR>
 
 " stop highlighting for search
-nnoremap <silent> <C-l> <cmd><C-u>nohlsearch<CR><C-l>
+nnoremap <silent> <C-l> <cmd>nohlsearch<CR><C-l>
 
 " improved G
 nnoremap G Gzz7<C-y>
