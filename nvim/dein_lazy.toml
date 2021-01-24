@@ -47,7 +47,7 @@ hook_add = '''
   nnoremap <silent> <Space>g <cmd>Denite grep<CR>
   nnoremap <silent> <Space>b <cmd>Denite buffer<CR>
   nnoremap <silent> <Space>a <cmd>Denite file/rec<CR>
-  nnoremap <silent> <Space>f <cmd>Denite file/rec:~/dotfiles/nvim<CR>
+  nnoremap <silent> <Space>f <cmd>Denite file/rec:~/dotfiles<CR>
   nnoremap <silent> <Space>h <cmd>Denite help<CR>
   nnoremap <silent> <Space>n <cmd>Denite dein<CR>
   nnoremap <silent> <Space>r <cmd>Denite -resume<CR>
