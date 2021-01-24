@@ -29,10 +29,14 @@ function! typing#start(v_start, v_end, enable_bs) abort
     call timer_stop(timer)
     setlocal nomodifiable
     setlocal nomodified
-    sleep 50m
+    sleep 1
     nnoremap <buffer>q :q<CR>
     if exists('result')
-      call s:show_floatingwindow(result)
+      redraw
+      for l in result
+        echo l
+      endfor
+      " call s:show_floatingwindow(result)
     endif
   endtry
 endfunction

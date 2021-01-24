@@ -44,18 +44,19 @@ hook_source = '''
 '''
 hook_add = '''
   nnoremap <Space>d :Denite 
-  nnoremap <silent> <Space>g <cmd>Denite grep<CR>
+  nnoremap <silent> <Space>g <cmd>Denite grep -no-empty<CR>
   nnoremap <silent> <Space>b <cmd>Denite buffer<CR>
   nnoremap <silent> <Space>a <cmd>Denite file/rec<CR>
   nnoremap <silent> <Space>f <cmd>Denite file/rec:~/dotfiles<CR>
   nnoremap <silent> <Space>h <cmd>Denite help<CR>
   nnoremap <silent> <Space>n <cmd>Denite dein<CR>
   nnoremap <silent> <Space>r <cmd>Denite -resume<CR>
+  nnoremap <silent> gn <cmd>Denite gina/command<CR>
   augroup denite_config
     autocmd!
     autocmd BufEnter * call vimrc#open_denite(expand('<amatch>'))
   augroup END
-  cnoremap <expr><silent> <C-r>
+  cnoremap <expr><silent> <C-t>
       \ '<c-u>Denite command_history -start-filter -input=' . getcmdline() . '<CR>'
 '''
 
@@ -67,7 +68,7 @@ hook_source = '''
   source ~/dotfiles/nvim/plugins/defx.rc.vim
 '''
 hook_add = '''
-  nnoremap <silent><C-f> <cmd><C-u>Defx -buffer-name=`'defx' . t:defx_index`<CR>
+  nnoremap <silent><C-f> <cmd>Defx -buffer-name=`'defx' . t:defx_index`<CR>
   nmap <silent> <Space>w <C-f>:call defx#call_action('cd', [expand('~/work')])<CR>
   nmap <silent> <Space>p <C-f>:call defx#call_action('cd', [expand('~/.cache/dein/repos/github.com')])<CR>
 '''
@@ -126,7 +127,6 @@ hook_add = '''
 [[plugins]]
 repo = 'SirVer/ultisnips'
 depends = 'vim-snippets'
-on_source = 'denite.nvim'
 hook_source = '''
   let g:UltiSnipsExpandTrigger='<C-l>'
   let g:UltiSnipsJumpForwardTrigger='<C-j>'
@@ -284,16 +284,6 @@ require'nvim-treesitter.configs'.setup {
     highlight = {
         enable = true,
         disable = {},
-    },
-    incremental_selection = {
-        enable = true,
-        disable = {},
-        keymaps = {
-          init_selection = 'gnn',
-          node_incremental = 'grn',
-          scope_incremental = 'grc',
-          node_decremental = 'grm',
-        }
     },
     refactor = {
       highlight_defintions = {
