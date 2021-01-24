@@ -90,7 +90,7 @@ fi
 # Use emacs keybindings even if our EDITOR is set to vi
 bindkey -e
 
-export PATH=$PATH:~/.local/bin
+export PATH=$HOME/bin:$HOME/.local/bin:$PATH
 
 # Use vim keys in tab complete menu:
 zmodload zsh/complist
