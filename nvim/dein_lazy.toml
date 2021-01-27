@@ -11,6 +11,7 @@ hook_add = '''
       \ -auto-action=preview<CR>
   nnoremap <silent> <Space>a <cmd>Denite file/rec
       \ -auto-action=preview_bat<CR>
+  nnoremap <silent> <Space>s <cmd>Denite directory_rec<CR>
   nnoremap <silent> <Space>f <cmd>Denite file/rec:~/dotfiles
       \ -auto-action=preview_bat<CR>
   nnoremap <silent> <Space>h <cmd>Denite help<CR>
