@@ -53,8 +53,11 @@ call denite#custom#option('default', {
       \})
 
 call denite#custom#action('directory', 'jump_defx',
-      \ {context -> execute(printf("Defx -buffer-name='defx%d' %s",
-      \ t:defx_index, context.targets[0].action__path))})
+      \ function('s:jump_defx'))
+function! s:jump_defx(context) abort
+  let path = a:context.targets[0].action__path
+  execute "Defx -buffer-name=`t:defx_index` " . path
+endfunction
 
 let s:fd_cmds = ['fdfind', '.', '-H', '-E', '.git', '-E', '__pycache__', '-t']
 " For ripgrep
