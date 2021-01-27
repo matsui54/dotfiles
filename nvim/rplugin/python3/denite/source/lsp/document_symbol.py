@@ -5,9 +5,10 @@ from denite.util import Nvim, UserContext, Candidates
 
 SYMBOLS_HIGHLIGHT_SYNTAX = [
     {'name': 'Type', 'link': 'Function',  're': r'\[\a\+\]'},
-    {'name': 'Name', 'link': 'Constant',  're': r']\s\{2,}\zs\S*\ze\s\{2,}'},
-    {'name': 'Line', 'link': 'Statement', 're': r'^ *\zs\d\+'},
-    {'name': 'Col',  'link': 'Statement', 're': r'^ *\d\+ *\zs\d\+'},
+    {'name': 'Name', 'link': 'Constant',  're': r'\s\zs\S*\ze\s\{2,}'},
+    {'name': 'Pos', 'link': 'Statement', 're': r'\s*\zs\d\+\s\+\d\+'},
+    # {'name': 'Line', 'link': 'Statement', 're': r'^\s*\zs\d\+'},
+    # {'name': 'Col',  'link': 'Statement', 're': r'^\s*\d\+ *\zs\d\+'},
 ]
 
 
@@ -39,7 +40,7 @@ class Source(Base):
             lnum = item["lnum"]
             line = linecache.getline(path, lnum)
             type, name = item["text"].split()
-            word = "{:>4}{:>4} {:<15}{}  {}".format(
+            word = "{:>4}{:>4} {} {}    {}".format(
                 str(lnum), str(col), type, name, line
             )
             candidates.append(
