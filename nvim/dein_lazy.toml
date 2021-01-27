@@ -1,4 +1,31 @@
 [[plugins]]
+repo = 'Shougo/denite.nvim'
+on_event = 'CmdlineEnter'
+hook_source = '''
+  source ~/dotfiles/nvim/plugins/denite.rc.vim
+'''
+hook_add = '''
+  nnoremap <Space>d :Denite 
+  nnoremap <silent> <Space>g <cmd>Denite grep -no-empty<CR>
+  nnoremap <silent> <Space>b <cmd>Denite buffer
+      \ -auto-action=preview<CR>
+  nnoremap <silent> <Space>a <cmd>Denite file/rec
+      \ -auto-action=preview_bat<CR>
+  nnoremap <silent> <Space>f <cmd>Denite file/rec:~/dotfiles
+      \ -auto-action=preview_bat<CR>
+  nnoremap <silent> <Space>h <cmd>Denite help<CR>
+  nnoremap <silent> <Space>n <cmd>Denite dein<CR>
+  nnoremap <silent> <Space>r <cmd>Denite -resume<CR>
+  nnoremap <silent> gn <cmd>Denite gina/command<CR>
+  augroup denite_config
+    autocmd!
+    autocmd BufEnter * call vimrc#open_denite(expand('<amatch>'))
+  augroup END
+  cnoremap <expr><silent> <C-t>
+      \ "<c-u>Denite command_history -start-filter -input='" . getcmdline() . "'<CR>"
+'''
+
+[[plugins]]
 repo = 'thinca/vim-quickrun'
 hook_add = '''
   function! My_quickrun_redirect() abort
@@ -19,6 +46,7 @@ repo = 'Shougo/deoplete-lsp'
 
 [[plugins]]
 repo = 'itchyny/calendar.vim'
+on_cmd = 'Calendar'
 hook_source = '''
   if filereadable(expand('~/.cache/calendar.vim/credentials.vim', ':h:p'))
     let g:calendar_google_calendar = 1
@@ -35,30 +63,6 @@ hook_source = '''
 [[plugins]]
 repo = 'simplenote-vim/simplenote.vim'
 on_event = 'CmdlineEnter'
-
-[[plugins]]
-repo = 'Shougo/denite.nvim'
-on_event = 'CmdlineEnter'
-hook_source = '''
-  source ~/dotfiles/nvim/plugins/denite.rc.vim
-'''
-hook_add = '''
-  nnoremap <Space>d :Denite 
-  nnoremap <silent> <Space>g <cmd>Denite grep -no-empty<CR>
-  nnoremap <silent> <Space>b <cmd>Denite buffer<CR>
-  nnoremap <silent> <Space>a <cmd>Denite file/rec<CR>
-  nnoremap <silent> <Space>f <cmd>Denite file/rec:~/dotfiles<CR>
-  nnoremap <silent> <Space>h <cmd>Denite help<CR>
-  nnoremap <silent> <Space>n <cmd>Denite dein<CR>
-  nnoremap <silent> <Space>r <cmd>Denite -resume<CR>
-  nnoremap <silent> gn <cmd>Denite gina/command<CR>
-  augroup denite_config
-    autocmd!
-    autocmd BufEnter * call vimrc#open_denite(expand('<amatch>'))
-  augroup END
-  cnoremap <expr><silent> <C-t>
-      \ "<c-u>Denite command_history -start-filter -input='" . getcmdline() . "'<CR>"
-'''
 
 [[plugins]]
 repo = 'Shougo/defx.nvim'
@@ -320,7 +324,7 @@ repo = 'nvim-lua/plenary.nvim'
 
 [[plugins]]
 repo = 'nvim-telescope/telescope.nvim'
-on_event = 'CmdlineEnter'
+on_cmd = 'Telescope'
 depends = ['popup.nvim', 'plenary.nvim']
 
 [[plugins]]
