@@ -4,10 +4,8 @@ from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
 
 SYMBOLS_HIGHLIGHT_SYNTAX = [
-    {'name': 'Type', 'link': 'Function',  're': r'\[\a\+\]'},
-    {'name': 'Name', 'link': 'Constant',  're': r'\w\+$'},
-    {'name': 'line', 'link': 'PreProc',   're': r'^ *\zs\d\+'},
-    {'name': 'col',  'link': 'Statement', 're': r'^ *\d\+ *\zs\d\+'},
+    {'name': 'File', 'link': 'Comment',   're': r'\S\+:\d\+:\d\+'},
+    # {'name': 'Pos', 'link': 'Function',   're': r':\d\+:\d\+'},
 ]
 
 
@@ -42,7 +40,7 @@ class Source(Base):
             name = path.name
             line = self.vim.call('getline', lnum) if buf_path == path else ''
 
-            word = "{}{:>4}{:>4} {}".format(
+            word = "{}:{}:{} {}".format(
                 name, str(lnum), str(col), line
             )
             candidates.append(

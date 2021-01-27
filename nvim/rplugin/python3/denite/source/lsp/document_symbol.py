@@ -4,11 +4,9 @@ from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
 
 SYMBOLS_HIGHLIGHT_SYNTAX = [
+    {'name': 'Name', 'link': 'Constant',  're': r'\%(\] \zs\)\@<=\S*'},
     {'name': 'Type', 'link': 'Function',  're': r'\[\a\+\]'},
-    {'name': 'Name', 'link': 'Constant',  're': r'\s\zs\S*\ze\s\{2,}'},
-    {'name': 'Pos', 'link': 'Statement', 're': r'\s*\zs\d\+\s\+\d\+'},
-    # {'name': 'Line', 'link': 'Statement', 're': r'^\s*\zs\d\+'},
-    # {'name': 'Col',  'link': 'Statement', 're': r'^\s*\d\+ *\zs\d\+'},
+    # {'name': 'Pos', 'link': 'Statement', 're': r'\s*\d\+\s\+\d\+\s\@=\['},
 ]
 
 
