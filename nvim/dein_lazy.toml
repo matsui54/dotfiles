@@ -57,7 +57,7 @@ hook_add = '''
     autocmd BufEnter * call vimrc#open_denite(expand('<amatch>'))
   augroup END
   cnoremap <expr><silent> <C-t>
-      \ '<c-u>Denite command_history -start-filter -input=' . getcmdline() . '<CR>'
+      \ "<c-u>Denite command_history -start-filter -input='" . getcmdline() . "'<CR>"
 '''
 
 [[plugins]]
@@ -127,6 +127,7 @@ hook_add = '''
 [[plugins]]
 repo = 'SirVer/ultisnips'
 depends = 'vim-snippets'
+on_source = 'denite.nvim'
 hook_source = '''
   let g:UltiSnipsExpandTrigger='<C-l>'
   let g:UltiSnipsJumpForwardTrigger='<C-j>'

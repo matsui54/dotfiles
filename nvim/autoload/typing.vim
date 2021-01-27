@@ -4,12 +4,17 @@ highlight TypingError cterm=underline ctermfg=167 ctermbg=52 gui=underline guifg
 highlight TypingCursor ctermfg=234 ctermbg=252 guifg=#161821 guibg=#c6c8d1
 
 function! typing#start(v_start, v_end, enable_bs) abort
-  let s:line_len = min([a:v_end - a:v_start + 1, 7])
-  let s:lines = getbufline(bufnr(), a:v_start, a:v_start + s:line_len -1)
-  let s:trimed_lines = map(copy(s:lines), 'trim(v:val)')
   let s:typing_continue = 1
   let s:counter.count = 0
   let s:list_cur_pos = []
+
+  let s:line_len = min([a:v_end - a:v_start + 1, 7])
+  let s:lines = getbufline(bufnr(), a:v_start, a:v_start + s:line_len -1)
+  let s:trimed_lines = map(copy(s:lines), 'trim(v:val)')
+
+  if len(s:lines) == 1 && s:lines[0] == ''
+    return
+  endif
 
   tabnew
   call setline(1, s:lines)
