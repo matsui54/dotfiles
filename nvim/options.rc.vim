@@ -26,8 +26,7 @@ if vimrc#is_wsl()
         \   'cache_enabled': 1,
         \ }
 endif
-        "\      '+': {-> split(substitute(system('win32yank.exe -o'), '\r\n', '\n', 'g'), '\n')},
-        "\      '*': {-> split(substitute(system('win32yank.exe -o'), '\r\n', '\n', 'g'), '\n')},
+
 set clipboard=unnamedplus
 
 set ignorecase

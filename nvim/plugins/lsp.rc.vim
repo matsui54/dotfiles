@@ -46,8 +46,8 @@ function! s:lsp_my_settings() abort
   nnoremap <buffer><silent> <Leader>r <cmd>lua vim.lsp.buf.rename()<CR>
   " nnoremap <buffer><silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 
-  nnoremap <buffer><silent> g0        <cmd>Denite lsp/document_symbol -auto-action=preview<CR>
-  nnoremap <buffer><silent> gr        <cmd>Denite lsp/references -auto-action=preview<CR>
+  nnoremap <buffer><silent> g0        <cmd>Denite lsp/document_symbol -auto-action=preview_bat<CR>
+  nnoremap <buffer><silent> gr        <cmd>Denite lsp/references -auto-action=preview_bat<CR>
   augroup MyLspSettings
     autocmd!
     autocmd CursorHold  <buffer> call s:safe_hightlight()

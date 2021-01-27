@@ -52,12 +52,12 @@ call denite#custom#option('default', {
       \ 'auto_resize': v:true,
       \})
 
-call denite#custom#action('directory', 'jump_defx',
-      \ function('s:jump_defx'))
 function! s:jump_defx(context) abort
   let path = a:context.targets[0].action__path
   execute "Defx -buffer-name=`t:defx_index` " . path
 endfunction
+call denite#custom#action('directory', 'jump_defx',
+      \ function('s:jump_defx'))
 
 let s:fd_cmds = ['fdfind', '.', '-H', '-E', '.git', '-E', '__pycache__', '-t']
 " For ripgrep
