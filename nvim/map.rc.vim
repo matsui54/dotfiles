@@ -106,7 +106,7 @@ nnoremap <silent> <C-l> <cmd>nohlsearch<CR><C-l>
 nnoremap G Gzz7<C-y>
 
 "change local directory
-nnoremap <Leader>cd <cmd>lcd %:h<CR>
+nnoremap <Leader>cd <cmd>tcd %:h<CR>
 
 " viml formatting
 function! s:format_viml()
