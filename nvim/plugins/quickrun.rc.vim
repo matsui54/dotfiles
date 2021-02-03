@@ -7,7 +7,7 @@ let g:quickrun_config['cpp'] = {
       \}
 if has('unix')
   let g:quickrun_config['python'] = {
-        \  'command': 'python3',
+        \  'command': '/usr/bin/python3',
         \  'outputter' : 'quickfix',
         \}
 else

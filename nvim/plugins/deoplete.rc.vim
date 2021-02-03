@@ -7,7 +7,7 @@ inoremap <silent><expr> <TAB>
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 call deoplete#custom#option({
-      \ 'nofile_complete_filetypes': ['denite-filter', 'zsh'],
+      \ 'nofile_complete_filetypes': ['denite-filter', 'zsh', 'google'],
       \ 'num_processes': 4,
       \ 'refresh_always': v:true,
       \ })
