@@ -119,6 +119,9 @@ nnoremap <silent> <Leader>f <cmd>call <SID>format_viml()<CR>
 " improved gd
 nnoremap gd <cmd>call godef#go_to_definition()<CR>
 
+" google search
+nnoremap <C-p> <cmd>call browser_search#show_prompt()<CR>
+
 " multiple search
 nnoremap <expr> <Space>/ multi_search#hl_last_match() . "/"
 nnoremap <expr> <Space>* multi_search#hl_last_match() . "*"
