@@ -287,7 +287,7 @@ on_source = 'defx.nvim'
  
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
-if = 'has("nvim")'
+if = 'has("nvim") && !vimrc#is_windows()'
 on_event = 'BufRead'
 hook_source = '''
 lua <<EOF
