@@ -107,8 +107,11 @@ function! s:defx_my_settings() abort
         \ winwidth(0) == len(getline(1)) ?
         \ ":vertical resize 30<CR>" :
         \ ":vertical resize " . strlen(getline(1)) . "<CR>"
-  nnoremap <silent><buffer> <Tab>
-        \ :call <SID>switch_defx_win()<CR>
+  " nnoremap <silent><buffer> <Tab>
+  "      \ :call <SID>switch_defx_win()<CR>
+  nnoremap <silent><buffer><expr> <Tab> winnr('$') != 1 ?
+        \ ':<C-u>wincmd w<CR>' :
+        \ ':<C-u>Defx -buffer-name=temp -split=vertical<CR>'
 
   nnoremap <silent><buffer><expr> <Space>f
         \ defx#do_action('cd', [expand('~/dotfiles/nvim')])
