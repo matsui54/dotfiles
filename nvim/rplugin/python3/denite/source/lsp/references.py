@@ -1,3 +1,4 @@
+import linecache
 from pathlib import Path
 
 from denite.base.source import Base
@@ -33,16 +34,25 @@ class Source(Base):
             return []
 
         buf_path = Path(self.vim.call('expand', '%:p'))
+        cwd = self.vim.call('getcwd')
         for item in items:
             col = item["col"]
             lnum = item["lnum"]
             path = Path(item['filename'])
-            name = path.name
-            line = self.vim.call('getline', lnum) if buf_path == path else ''
+            if buf_path == path:
+                name = path.name
+                line = self.vim.call('getline', lnum)
+            else:
+                try:
+                    name = path.relative_to(cwd)
+                except ValueError:
+                    name = str(path)
+                line = linecache.getline(str(path), lnum)
 
             word = "{}:{}:{} {}".format(
                 name, str(lnum), str(col), line
             )
+
             candidates.append(
                 {
                     "word": word,
