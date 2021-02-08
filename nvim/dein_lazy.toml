@@ -287,7 +287,7 @@ on_source = 'defx.nvim'
  
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
-if = 'has("nvim")'
+if = 'has("nvim") && !vimrc#is_windows()'
 on_event = 'BufRead'
 hook_source = '''
 lua <<EOF
@@ -343,6 +343,10 @@ hook_source = '''
 [[plugins]]
 repo = 'zchee/deoplete-zsh'
 on_ft = ['zsh', 'sh']
+
+[[plugins]]
+repo = 'mattn/emmet-vim'
+on_ft = ['html', 'css']
 
 # [[plugins]]
 # repo = "puremourning/vimspector"
