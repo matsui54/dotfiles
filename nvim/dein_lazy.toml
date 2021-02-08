@@ -344,6 +344,10 @@ hook_source = '''
 repo = 'zchee/deoplete-zsh'
 on_ft = ['zsh', 'sh']
 
+[[plugins]]
+repo = 'mattn/emmet-vim'
+on_ft = ['html', 'css']
+
 # [[plugins]]
 # repo = "puremourning/vimspector"
 # if = 'has("unix")'
