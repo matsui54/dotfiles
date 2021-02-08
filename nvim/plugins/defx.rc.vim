@@ -21,7 +21,7 @@ call defx#custom#option('_', {
       \ 'listed': 1,
       \ 'columns': 'mark:indent:icons:filename:type:time:size',
       \ 'vertical_preview': 1,
-      \ 'floating_preview': 1,
+      "\ 'floating_preview': 1,
       \ 'preview_width': 80,
       \ 'preview_height': 30,
       \ })
@@ -128,27 +128,27 @@ function! s:defx_my_settings() abort
         \ ":Denite grep:" . <SID>get_defx_cwd() . "<CR>"
 endfunction
 
-function! s:quick_view()
-  let win = win_getid()
-  call defx#call_action('drop')
-  call win_gotoid(win)
-endfunction
 function! s:open_defx_in_tab()
   let dir = defx#get_candidate().action__path
   tabnew
   execute "normal \<C-f>"
   call defx#call_action('cd', [dir])
 endfunction
-function! s:switch_defx_win() abort
-  for i in tabpagebuflist()
-    if bufname(i) =~# '^\[defx]' &&
-          \ i != bufnr('')
-      call win_gotoid(win_findbuf(i)[0])
-      return
-    endif
-  endfor
-  :Defx -buffer-name=temp
-endfunction
 function! s:get_defx_cwd()
   return escape(fnamemodify(defx#get_candidate().action__path,':h:p'), ':\')
 endfunction
+" function! s:quick_view()
+"   let win = win_getid()
+"   call defx#call_action('drop')
+"   call win_gotoid(win)
+" endfunction
+" function! s:switch_defx_win() abort
+"   for i in tabpagebuflist()
+"     if bufname(i) =~# '^\[defx]' &&
+"          \ i != bufnr('')
+"       call win_gotoid(win_findbuf(i)[0])
+"       return
+"     endif
+"   endfor
+"   :Defx -buffer-name=temp
+" endfunction
