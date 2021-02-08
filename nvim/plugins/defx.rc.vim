@@ -31,10 +31,12 @@ function! s:defx_my_settings() abort
   setlocal cursorline
 
   " Define mappings
+  " nnoremap <silent><buffer><expr> <CR>
+  "      \ defx#is_directory() ?
+  "      \ defx#do_action('open_directory') :
+  "      \ defx#do_action('multi', ['drop', 'quit'])
   nnoremap <silent><buffer><expr> <CR>
-        \ defx#is_directory() ?
-        \ defx#do_action('open_directory') :
-        \ defx#do_action('multi', ['drop', 'quit'])
+       \ defx#do_action('open')
   nnoremap <silent><buffer><expr> +
         \ defx#do_action('multi', [['open', 'choose'], 'quit'])
   nnoremap <silent><buffer><expr> c
@@ -44,9 +46,7 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> P
         \ defx#do_action('paste')
   nnoremap <silent><buffer><expr> l
-        \ defx#is_directory() ?
-        \ defx#do_action('open_directory') :
-        \ ":call <SID>quick_view()<CR>"
+       \ defx#do_action('open')
   nnoremap <silent><buffer><expr> E
         \ defx#do_action('multi', [['open', 'vsplit'], 'quit'])
   nnoremap <silent><buffer><expr> p
@@ -103,10 +103,10 @@ function! s:defx_my_settings() abort
         \ defx#do_action('change_vim_cwd')
   nnoremap <silent><buffer><expr> '
         \ defx#do_action('cd', [getcwd()])
-  nnoremap <silent><buffer><expr> e
-        \ winwidth(0) == len(getline(1)) ?
-        \ ":vertical resize 30<CR>" :
-        \ ":vertical resize " . strlen(getline(1)) . "<CR>"
+  " nnoremap <silent><buffer><expr> e
+  "      \ winwidth(0) == len(getline(1)) ?
+  "      \ ":vertical resize 30<CR>" :
+  "      \ ":vertical resize " . strlen(getline(1)) . "<CR>"
   nnoremap <silent><buffer> <Tab>
         \ :call <SID>switch_defx_win()<CR>
 
