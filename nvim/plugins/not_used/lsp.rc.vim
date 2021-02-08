@@ -1,6 +1,8 @@
 lua require'lspconfig'.clangd.setup{}
 lua require'lspconfig'.pyls.setup{}
 lua require'lspconfig'.sumneko_lua.setup{}
+lua require'lspconfig'.tsserver.setup{}
+let $PATH= expand('~/.npm-global/bin') . ':' . $PATH
 
 lua << EOF
 local sumneko_root_path = vim.fn.stdpath('cache')..'/lspconfig/sumneko_lua/lua-language-server'
@@ -49,7 +51,6 @@ function! s:lsp_my_settings() abort
   nnoremap <buffer><silent> g0        <cmd>Denite lsp/document_symbol -auto-action=preview_bat<CR>
   nnoremap <buffer><silent> gr        <cmd>Denite lsp/references -auto-action=preview_bat<CR>
   augroup MyLspSettings
-    autocmd!
     autocmd CursorHold  <buffer> call s:safe_hightlight()
     autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
   augroup END

@@ -317,9 +317,9 @@ EOF
 
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
-on_ft = ['python', 'cpp', 'c', 'lua']
+on_event = 'BufEnter'
 hook_source = '''
-source ~/dotfiles/nvim/plugins/lsp.rc.vim
+  lua require('lsp_rc')
 '''
 
 [[plugins]]
