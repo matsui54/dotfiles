@@ -140,8 +140,8 @@ function! s:VSetSearch(cmdtype)
   let @s = temp
 endfunction
 
-xnoremap * <cmd><C-u>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
-xnoremap # <cmd><C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
+xnoremap * <cmd>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
+xnoremap # <cmd>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
 
 nnoremap j gj
 nnoremap k gk

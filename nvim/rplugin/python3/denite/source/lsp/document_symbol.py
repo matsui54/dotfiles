@@ -37,9 +37,9 @@ class Source(Base):
             col = item["col"]
             lnum = item["lnum"]
             line = linecache.getline(path, lnum)
-            type, name = item["text"].split()
-            word = "{:>4}{:>4} {} {}    {}".format(
-                str(lnum), str(col), type, name, line
+            # type, name = item["text"].split()
+            word = "{:>4}{:>4} {}    {}".format(
+                str(lnum), str(col), item["text"], line
             )
             candidates.append(
                 {
