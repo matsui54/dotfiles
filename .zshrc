@@ -67,9 +67,9 @@ function vimsettings() {
 }
 
 # load xkb config
-if [ -f $HOME/.xkb/keymap/mykbd ]; then
-  xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mykbd $DISPLAY 2> /dev/null
-fi
+# if [ -f $HOME/.xkb/keymap/mykbd ]; then
+#   xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mykbd $DISPLAY 2> /dev/null
+# fi
 
 # prompt settings
 PROMPT='%F{cyan}[%~]%f${vcs_info_msg_0_}%# '
