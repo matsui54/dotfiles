@@ -16,10 +16,17 @@ local on_attach = function(client)
     vim.api.nvim_buf_set_keymap(0, map[1], map[2], map[3], {noremap = true})
   end
 
+  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+    vim.lsp.diagnostic.on_publish_diagnostics, {
+      virtual_text = false,
+    }
+  )
+
   vim.api.nvim_exec(
   [[
     augroup MyLspSettings
       autocmd CursorHold  <buffer> call My_lsp_safe_hightlight()
+      autocmd CursorHold  <buffer> lua vim.lsp.diagnostic.show_line_diagnostics()
       autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
     augroup END
 
@@ -35,7 +42,6 @@ end
 
 require'lspconfig'.clangd.setup{on_attach = on_attach}
 require'lspconfig'.pyls.setup{on_attach = on_attach}
-require'lspconfig'.sumneko_lua.setup{on_attach = on_attach}
 require'lspconfig'.tsserver.setup{on_attach = on_attach}
 
 vim.env.PATH = vim.fn.expand('~/.npm-global/bin') .. ':' .. vim.env.PATH
@@ -66,4 +72,5 @@ require'lspconfig'.sumneko_lua.setup {
       },
     },
   },
+  on_attach = on_attach,
 }
