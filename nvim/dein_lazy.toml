@@ -81,7 +81,8 @@ hook_add = '''
 repo = 'Shougo/deol.nvim'
 hook_add = '''
   tnoremap <C-\><C-\> <C-\><C-N><cmd>Deol -toggle<CR>
-  nnoremap <C-\><C-\> <cmd>Deol -toggle -split=vertical<CR>
+  nnoremap <expr> <C-\><C-\> '<cmd>Deol -toggle ' .
+  \ ((winnr('$') == 1 && bufname()=='') ? '<CR>' : '-split=vertical<CR>')
 '''
 
 [[plugins]]

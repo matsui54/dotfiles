@@ -168,7 +168,7 @@ function! s:exit_indent_mode()
 endfunction
 
 " insert parent directory of current file
-cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+cnoremap <expr> %% getcmdtype() == ':' ? expand('%:p:h').'/' : '%%'
 
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>

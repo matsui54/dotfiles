@@ -30,6 +30,8 @@ class Source(Base):
             buf = requests.get(
                 self.base_url + input, timeout=(3.0, 0.9)
             ).json()
+        except OSError:
+            return []
         except requests.exceptions.Timeout:
             return []
 
