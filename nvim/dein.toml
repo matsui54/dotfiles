@@ -15,12 +15,6 @@ repo = 'cocopon/iceberg.vim'
 repo = 'kyazdani42/blue-moon'
 
 [[plugins]]
-repo = 'ulwlu/elly.vim'
-
-[[plugins]]
-repo = 'w0ng/vim-hybrid'
-
-[[plugins]]
 repo = 'Yggdroot/indentLine'
 hook_add = '''
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
