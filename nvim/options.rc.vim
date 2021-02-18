@@ -6,6 +6,7 @@ set title
 set updatetime=300
 set hidden
 set laststatus=0
+set signcolumn=yes
 
 set expandtab
 set tabstop=2

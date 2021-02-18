@@ -43,6 +43,7 @@ endif
 
 if vimrc#is_windows()
   let g:python3_host_prog = 'C:\Users\harum\AppData\Local\Programs\Python\Python38\python.EXE'
+  set shell=C:\Windows\System32\cmd.exe
 else
   " use virtualenv
   let s:py3_dir = expand('~/.vim/python3/')

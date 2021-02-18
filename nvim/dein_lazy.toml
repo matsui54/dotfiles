@@ -358,6 +358,13 @@ on_ft = ['zsh', 'sh']
 repo = 'mattn/emmet-vim'
 on_ft = ['html', 'css']
 
+[[plugins]]
+repo = 'matsui54/deoplete-google-search'
+on_cmd = 'GoogleSearchOpenPrompt'
+hook_add = '''
+nnoremap <C-p> :GoogleSearchOpenPrompt<CR>
+'''
+
 # [[plugins]]
 # repo = "puremourning/vimspector"
 # if = 'has("unix")'

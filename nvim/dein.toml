@@ -12,10 +12,7 @@ let g:vim_markdown_folding_disabled = 1
 repo = 'cocopon/iceberg.vim'
 
 [[plugins]]
-repo = 'ulwlu/elly.vim'
-
-[[plugins]]
-repo = 'w0ng/vim-hybrid'
+repo = 'kyazdani42/blue-moon'
 
 [[plugins]]
 repo = 'Yggdroot/indentLine'
