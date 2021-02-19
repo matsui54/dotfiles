@@ -44,7 +44,14 @@ require'lspconfig'.clangd.setup{on_attach = on_attach}
 require'lspconfig'.pyls.setup{on_attach = on_attach}
 require'lspconfig'.tsserver.setup{on_attach = on_attach}
 
-vim.env.PATH = vim.fn.expand('~/.npm-global/bin') .. ':' .. vim.env.PATH
+local sep = ''
+if vim.fn.has('win32') then
+  sep = ';'
+else
+  sep = ':'
+end
+
+vim.env.PATH = vim.fn.expand('~/.npm-global/bin') .. sep .. vim.env.PATH
 
 local sumneko_root_path = vim.fn.stdpath('cache')..'/lspconfig/sumneko_lua/lua-language-server'
 local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"
