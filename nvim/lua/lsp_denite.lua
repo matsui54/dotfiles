@@ -52,4 +52,27 @@ function M.workspace_symbol()
   return result
 end
 
+function M.diagnostic_buffer()
+  local res = vim.lsp.diagnostic.get(0)
+  if res == nil then
+    return nil
+  end
+  return res
+end
+
+function M.diagnostic_all()
+  local raw_result = vim.lsp.diagnostic.get_all()
+  if raw_result == nil then
+    return nil
+  end
+  local res = {}
+  for key, var in pairs(raw_result) do
+    for _, item in ipairs(var) do
+      item["bufnr"] = key
+      table.insert(res, item)
+    end
+  end
+  return res
+end
+
 return M
