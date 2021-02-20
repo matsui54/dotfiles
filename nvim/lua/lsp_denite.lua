@@ -42,4 +42,14 @@ function M.document_symbol()
   return result
 end
 
+function M.workspace_symbol()
+  local raw_result = vim.lsp.buf_request_sync(0, 'workspace/symbol', {query=''}, 1000)
+  local client_id = get_available_client('workspace_symbol')
+  if client_id == 0  or raw_result == nil then
+    return nil
+  end
+  local result = util.symbols_to_items(raw_result[client_id].result, 0)
+  return result
+end
+
 return M

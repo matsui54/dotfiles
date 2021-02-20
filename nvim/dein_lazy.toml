@@ -13,7 +13,7 @@ hook_add = '''
       \ -auto-action=preview_bat<CR>
   nnoremap <silent> <Space>s <cmd>Denite directory_rec<CR>
   nnoremap <silent> <Space>f <cmd>Denite file/rec:~/dotfiles<CR>
-  nnoremap <silent> <Space>h <cmd>Denite help<CR>
+  nnoremap <silent> <Space>h <cmd>Denite help -auto-action=preview<CR>
   nnoremap <silent> <Space>n <cmd>Denite dein<CR>
   nnoremap <silent> <Space>r <cmd>Denite -resume<CR>
   nnoremap <silent> gn <cmd>Denite gina/command<CR>
@@ -81,7 +81,7 @@ hook_add = '''
 repo = 'Shougo/deol.nvim'
 hook_add = '''
   tnoremap <C-\><C-\> <C-\><C-N><cmd>Deol -toggle<CR>
-  nnoremap <expr> <C-\><C-\> '<cmd>Deol -toggle ' .
+  nnoremap <expr> <C-\><C-\> '<cmd>Deol -toggle -winwidth=' . &columns/2 . ' ' .
   \ ((winnr('$') == 1 && bufname()=='') ? '<CR>' : '-split=vertical<CR>')
 '''
 
