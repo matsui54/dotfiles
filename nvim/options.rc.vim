@@ -3,7 +3,7 @@ if has('vim_starting') && empty(argv())
 endif
 
 set title
-set updatetime=300
+set updatetime=500
 set hidden
 set laststatus=0
 set signcolumn=yes
