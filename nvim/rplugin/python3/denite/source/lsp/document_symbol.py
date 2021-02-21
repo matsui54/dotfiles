@@ -3,11 +3,30 @@ import linecache
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
 
-SYMBOLS_HIGHLIGHT_SYNTAX = [
-    {'name': 'Name', 'link': 'Constant',  're': r'\%(\] \zs\)\@<=\S*'},
-    {'name': 'Type', 'link': 'Function',  're': r'\[\a\+\]'},
-    # {'name': 'Pos', 'link': 'Statement', 're': r'\s*\d\+\s\+\d\+\s\@=\['},
-]
+SYMBOLS_NR_SYNTAX = (
+    'syntax match {0}_NR '
+    r'/\d*\s*\d*/ '
+    'nextgroup={0}_kind'
+)
+# SYMBOLS_NR_HIGHLIGHT = (
+#     'highlight default link {0}_NR Statement'
+# )
+
+SYMBOLS_KIND_SYNTAX = (
+    'syntax match {0}_kind '
+    r'/\[\a\+\]/ '
+    'nextgroup={0}_name contained skipwhite'
+)
+SYMBOLS_KIND_HIGHLIGHT = (
+    'highlight default link {0}_kind Statement'
+)
+
+SYMBOLS_NAME_SYNTAX = (
+    r'syntax match {0}_name /\S\+/ contained'
+)
+SYMBOLS_NAME_HIGHLIGHT = (
+    'highlight default link {0}_name Constant'
+)
 
 
 class Source(Base):
@@ -19,13 +38,12 @@ class Source(Base):
         vim.exec_lua("_lsp_denite = require'lsp_denite'")
 
     def highlight(self) -> None:
-        for syn in SYMBOLS_HIGHLIGHT_SYNTAX:
-            self.vim.command(
-                'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
-                    self.syntax_name, syn['name'], syn['re']))
-            self.vim.command(
-                'highlight default link {}_{} {}'.format(
-                    self.syntax_name, syn['name'], syn['link']))
+        self.vim.command(SYMBOLS_NR_SYNTAX.format(self.syntax_name))
+        self.vim.command(SYMBOLS_KIND_SYNTAX.format(self.syntax_name))
+        self.vim.command(SYMBOLS_NAME_SYNTAX.format(self.syntax_name))
+        # self.vim.command(SYMBOLS_NR_HIGHLIGHT.format(self.syntax_name))
+        self.vim.command(SYMBOLS_KIND_HIGHLIGHT.format(self.syntax_name))
+        self.vim.command(SYMBOLS_NAME_HIGHLIGHT.format(self.syntax_name))
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates: Candidates = []
