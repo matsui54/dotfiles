@@ -1,8 +1,8 @@
 # Requirements
 - neovim 0.5+
 
-## python settings
-- create venv
+## Installation
+- create python venv
 ```
 python -m venv ~/.vim/python3
 source ~/.vim/python3/bin/activate

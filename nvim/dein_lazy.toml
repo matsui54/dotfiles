@@ -156,12 +156,14 @@ hook_add = '''
 	vmap gx <Plug>(openbrowser-smart-search)
 '''
 hook_source = '''
-  if vimrc#is_wsl()
-    let g:openbrowser_browser_commands = [
-    \   {'name': 'wsl-open',
-		\  "args": ["{browser}", "{uri}"]},
-    \]
-  endif
+  for cmd in ['wsl-open', 'xdg-open', 'exo-open']
+    if executable(cmd)
+      let g:openbrowser_browser_commands = [
+      \   {'name': cmd,
+      \  "args": ["{browser}", "{uri}"]},
+      \]
+    endif
+  endfor
 '''
 
 [[plugins]]
