@@ -1,0 +1,4 @@
+pynvim
+send2trash
+'python-language-server[all]'
+requests
