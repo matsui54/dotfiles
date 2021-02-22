@@ -5,7 +5,7 @@ from denite.util import Nvim, UserContext, Candidates
 
 SYMBOLS_NR_SYNTAX = (
     'syntax match {0}_NR '
-    r'/\d*\s*\d*/ '
+    r'/^\d*\s*\d*/ '
     'nextgroup={0}_kind'
 )
 # SYMBOLS_NR_HIGHLIGHT = (

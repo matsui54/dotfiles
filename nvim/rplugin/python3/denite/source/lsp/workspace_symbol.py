@@ -1,4 +1,5 @@
 import linecache
+from pathlib import Path
 
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
@@ -33,13 +34,14 @@ class Source(Base):
         if not items:
             return []
         for item in items:
+            filename = Path(item['filename']).name
             path = item["filename"]
             col = item["col"]
             lnum = item["lnum"]
             line = linecache.getline(path, lnum)
             # type, name = item["text"].split()
-            word = "{:>4}{:>4} {}    {}".format(
-                str(lnum), str(col), item["text"], line
+            word = "{}:{}:{} {}    {}".format(
+                filename, str(lnum), str(col), item["text"], line
             )
             candidates.append(
                 {
@@ -50,4 +52,3 @@ class Source(Base):
                 }
             )
         return candidates
-
