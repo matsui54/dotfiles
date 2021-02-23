@@ -46,22 +46,6 @@ function! vimrc#on_filetype() abort
   endif
 endfunction
 
-function! vimrc#open_denite(path) abort
-  try
-    let full_path = expand(a:path)
-  catch
-    return
-  endtry
-
-  if isdirectory(full_path)
-    bdelete
-    execute 'cd ' . full_path
-    " Telescope find_files
-    execute "Denite -direction=dynamictop -filter-split-direction=topleft file/rec:" . full_path
-    wincmd w
-  endif
-endfunction
-
 " additional settings for iceberg theme
 function! vimrc#color_settings() abort
   highlight TabLineSel guifg=#ffffff
