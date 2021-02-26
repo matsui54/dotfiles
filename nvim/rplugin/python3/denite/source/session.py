@@ -2,7 +2,7 @@ import pathlib
 from datetime import datetime
 
 from denite.base.source import Base
-from denite.util import globruntime, Nvim, UserContext, Candidates
+from denite.util import Nvim, UserContext, Candidates
 from denite.kind.command import Kind as Command
 
 
@@ -14,7 +14,8 @@ class Source(Base):
         self.kind = Kind(vim)
 
     def highlight(self):
-        self.vim.command(r"highlight default link deniteSource__SessionPath Statement")
+        self.vim.command(
+            r"highlight default link deniteSource__SessionPath Statement")
         self.vim.command(
             r"highlight default link deniteSource__UpdateTime Identifier"
         )
@@ -35,7 +36,7 @@ class Source(Base):
         )
 
     def gather_candidates(self, context):
-        candidates = []
+        candidates: Candidates = []
         root = pathlib.Path.home().joinpath(".vim/sessions/")
         if not root.exists():
             return []
