@@ -112,6 +112,8 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> <Tab> winnr('$') != 1 ?
         \ ':<C-u>wincmd w<CR>' :
         \ ':<C-u>Defx -buffer-name=temp -split=vertical<CR>'
+  nnoremap <silent><buffer><expr> L
+        \ defx#do_action('link')
 
   nnoremap <silent><buffer><expr> <Space>f
         \ defx#do_action('cd', [expand('~/dotfiles/nvim')])
