@@ -101,7 +101,7 @@
 # Font configuration
 font:
   # Normal (roman) font face
- normal:
+  normal:
     # Font family
     #
     # Default:
@@ -147,7 +147,7 @@ font:
     #style: Bold Italic
 
   # Point size
-  #size: 11.0
+  size: 12.0
 
   # Offset is the extra space around each character. `offset.y` can be thought
   # of as modifying the line spacing, and `offset.x` as modifying the letter
@@ -719,6 +719,7 @@ key_bindings:
   - { key: Key0,           mods: Control,                 action: ResetFontSize    }
   - { key: Equals,         mods: Control,                 action: IncreaseFontSize }
   - { key: Plus,           mods: Control,                 action: IncreaseFontSize }
+  - { key: Equals,         mods: Control|Shift,           action: IncreaseFontSize }
   #- { key: NumpadAdd,      mods: Control,                 action: IncreaseFontSize }
   - { key: Minus,          mods: Control,                 action: DecreaseFontSize }
   #- { key: NumpadSubtract, mods: Control,                 action: DecreaseFontSize }

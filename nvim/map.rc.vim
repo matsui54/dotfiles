@@ -188,6 +188,13 @@ command! LineCount :call line_counter#count()
 command! -nargs=1 -complete=customlist,s:find_sessions
       \ SaveSession :call <SID>save_session(<f-args>)
 
+command! MyUpdateRemotePlugins :call s:update_rplugins()
+
+function! s:update_rplugins() abort
+  call dein#source(['defx.nvim', 'deoplete.nvim', 'denite.nvim'])
+  UpdateRemotePlugins
+endfunction
+
 function! s:find_sessions(...) abort
   let candidates = []
   for f in split(glob('~/.vim/sessions/*'), '\n')
