@@ -80,6 +80,7 @@ hook_add = '''
   tnoremap <C-\><C-\> <C-\><C-N><cmd>Deol -toggle<CR>
   nnoremap <expr> <C-\><C-\> '<cmd>Deol -toggle -winwidth=' . &columns/2 . ' ' .
   \ ((winnr('$') == 1 && bufname()=='') ? '<CR>' : '-split=vertical<CR>')
+  nnoremap <C-\>j <cmd>Deol -toggle -split=h<CR>
 '''
 
 [[plugins]]
