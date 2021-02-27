@@ -1,20 +1,9 @@
 autocmd MyAutoCmd FileType defx call s:defx_my_settings()
 
-autocmd MyAutoCmd User defx-preview call s:defx_preview()
-
-function! s:defx_preview() abort
-  setlocal nonumber
-endfunction
-
 call defx#custom#column('mark', {
       \ 'readonly_icon': '✗',
       \ 'selected_icon': '✓',
       \ })
-" call defx#custom#column('icon', {
-"      \ 'directory_icon': '▸',
-"      \ 'opened_icon': '▾',
-"      \ 'root_icon': ' ',
-"      \ })
 call defx#custom#option('_', {
       \ 'direction': 'topleft',
       \ 'resume': 1,
@@ -31,10 +20,6 @@ function! s:defx_my_settings() abort
   setlocal cursorline
 
   " Define mappings
-  " nnoremap <silent><buffer><expr> <CR>
-  "      \ defx#is_directory() ?
-  "      \ defx#do_action('open_directory') :
-  "      \ defx#do_action('multi', ['drop', 'quit'])
   nnoremap <silent><buffer><expr> <CR>
        \ defx#do_action('open')
   nnoremap <silent><buffer><expr> +
@@ -103,12 +88,6 @@ function! s:defx_my_settings() abort
         \ defx#do_action('change_vim_cwd')
   nnoremap <silent><buffer><expr> '
         \ defx#do_action('cd', [getcwd()])
-  " nnoremap <silent><buffer><expr> e
-  "      \ winwidth(0) == len(getline(1)) ?
-  "      \ ":vertical resize 30<CR>" :
-  "      \ ":vertical resize " . strlen(getline(1)) . "<CR>"
-  " nnoremap <silent><buffer> <Tab>
-  "      \ :call <SID>switch_defx_win()<CR>
   nnoremap <silent><buffer><expr> <Tab> winnr('$') != 1 ?
         \ ':<C-u>wincmd w<CR>' :
         \ ':<C-u>Defx -buffer-name=temp -split=vertical<CR>'
@@ -139,18 +118,3 @@ endfunction
 function! s:get_defx_cwd()
   return escape(fnamemodify(defx#get_candidate().action__path,':h:p'), ':\')
 endfunction
-" function! s:quick_view()
-"   let win = win_getid()
-"   call defx#call_action('drop')
-"   call win_gotoid(win)
-" endfunction
-" function! s:switch_defx_win() abort
-"   for i in tabpagebuflist()
-"     if bufname(i) =~# '^\[defx]' &&
-"          \ i != bufnr('')
-"       call win_gotoid(win_findbuf(i)[0])
-"       return
-"     endif
-"   endfor
-"   :Defx -buffer-name=temp
-" endfunction
