@@ -1,13 +1,18 @@
 # Requirements
-- neovim 0.5
+- neovim 0.5+
 
-## python libraries
-- pynvim
-- send2trash
-- pyls
+## Installation
+- create python venv
+```
+python -m venv ~/.vim/python3
+source ~/.vim/python3/bin/activate
+pip install -r ~/dotfiles/requirements.txt
+```
 
 ## other dependencies
 - ripgrep
+- bat
+- fd
 - clangd
 - wsl-open(if wsl)
 - ~/.cache/skk-jisyo

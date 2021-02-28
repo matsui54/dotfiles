@@ -1,6 +1,3 @@
-import linecache
-from pathlib import Path
-
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
 
@@ -15,7 +12,7 @@ class Source(Base):
     def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
         self.vim = vim
-        self.name = "lsp/workspace_symbol"
+        self.name = "lsp/diagnostic_buffer"
         self.kind = "file"
         vim.exec_lua("_lsp_denite = require'lsp_denite'")
 
@@ -30,18 +27,15 @@ class Source(Base):
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates: Candidates = []
-        items = self.vim.lua._lsp_denite.workspace_symbol()
+        items: list = self.vim.lua._lsp_denite.diagnostic_buffer()
         if not items:
             return []
+        path = self.vim.call('expand', '%:p')
         for item in items:
-            filename = Path(item['filename']).name
-            path = item["filename"]
-            col = item["col"]
-            lnum = item["lnum"]
-            line = linecache.getline(path, lnum)
-            # type, name = item["text"].split()
-            word = "{}:{}:{} {}    {}".format(
-                filename, str(lnum), str(col), item["text"], line
+            col = item["range"]["start"]["character"]
+            lnum = item["range"]["start"]["line"]
+            word = "{}:{}   {}".format(
+                str(lnum), str(col), item["message"]
             )
             candidates.append(
                 {
