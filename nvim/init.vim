@@ -2,10 +2,6 @@ augroup MyAutoCmd
   autocmd!
 augroup END
 
-if has('vim_starting') && !empty(argv())
-  call vimrc#on_filetype()
-endif
-
 " dein settings--------------------------------------------
 let g:dein#lazy_rplugins = v:true
 
@@ -36,7 +32,10 @@ endif
 
 " end dein settings---------------------------------------
 
-execute 'set runtimepath+=' . expand('~/work/OxfDictionary.nvim')
+if has('vim_starting') && !empty(argv())
+  call vimrc#on_filetype()
+endif
+
 if filereadable(expand('~/.config/secret.vim'))
   source ~/.config/secret.vim
 endif
