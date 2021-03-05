@@ -1,0 +1,18 @@
+#!/bin/python3
+import subprocess
+import sys
+
+cmds = {
+    'Suspend': ['systemctl', 'suspend'],
+    'Shutdown': ['systemctl', 'shutdown'],
+    'Reboot': ['systemctl', 'reboot'],
+    'Hibernate': ['systemctl', 'hibernate'],
+    'Fix key repeat rate': ['xset', 'r', 'rate', '300', '50'],
+}
+
+args = sys.argv
+if len(args) < 2:
+    input_txt = '\n'.join([i for i in cmds])
+    print(input_txt)
+else:
+    subprocess.run(args=cmds[args[1]])

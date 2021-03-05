@@ -365,6 +365,13 @@ hook_add = '''
 nnoremap <silent><C-p> :GoogleSearchOpenPrompt<CR>
 '''
 
+[[plugins]]
+repo = 'lambdalisue/suda.vim'
+on_event = 'BufRead'
+hook_add = '''
+  let g:suda_smart_edit = 1
+'''
+
 # [[plugins]]
 # repo = "puremourning/vimspector"
 # if = 'has("unix")'
