@@ -4,7 +4,7 @@ import sys
 
 cmds = {
     'Suspend': ['systemctl', 'suspend'],
-    'Shutdown': ['systemctl', 'shutdown'],
+    'Shutdown': ['systemctl', 'poweroff'],
     'Reboot': ['systemctl', 'reboot'],
     'Hibernate': ['systemctl', 'hibernate'],
     'Exit i3': ['i3-msg', 'exit'],
