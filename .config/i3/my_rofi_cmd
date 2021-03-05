@@ -7,6 +7,7 @@ cmds = {
     'Shutdown': ['systemctl', 'shutdown'],
     'Reboot': ['systemctl', 'reboot'],
     'Hibernate': ['systemctl', 'hibernate'],
+    'Exit i3': ['i3-msg', 'exit'],
     'Fix key repeat rate': ['xset', 'r', 'rate', '300', '50'],
 }
 
