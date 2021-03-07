@@ -1,5 +1,26 @@
 snippet fn "function"
 function! ${1:function_name}($2) abort
-	${3:" code}
+  ${3:" code}
 endfunction
+endsnippet
+
+snippet minrc "minimal vimrc for python rplugin"
+let root = fnamemodify(expand('<sfile>'), ':h') . '/'
+execute "set runtimepath+=" . root . '${1}.nvim'
+
+if !has('nvim')
+  set encoding=utf-8
+  set nocompatible
+  syntax enable
+  filetype plugin indent on
+  execute "set runtimepath+=" . root . 'nvim-yarp'
+  execute "set runtimepath+=" . root . 'vim-hug-neovim-rpc'
+endif
+
+let s:py3_dir = expand('~/.vim/python3/')
+let g:python3_host_prog = s:py3_dir . 'bin/python3'
+let $PATH = s:py3_dir . 'bin:' . $PATH
+
+nnoremap ; :
+inoremap jj <ESC>
 endsnippet
