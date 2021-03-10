@@ -1,11 +1,11 @@
-let s:default_stop_time = (vimrc#is_windows() ? 2 : 5)
+let s:default_stop_time = (vimrc#is_windows() ? 5 : 10)
 
 function! s:down(timer) abort
-  execute "normal! \<C-e>j"
+  execute "normal! 3\<C-e>3j"
 endfunction
 
 function! s:up(timer) abort
-  execute "normal! \<C-y>k"
+  execute "normal! 3\<C-y>3k"
 endfunction
 
 function! s:smooth_scroll(fn) abort
@@ -19,7 +19,7 @@ function! s:smooth_scroll(fn) abort
         \ (a:fn ==# 'up' && line('w0') == 1)
     return
   endif
-  let s:smooth_scroll_timer = timer_start(stop_time, function('s:' . a:fn), {'repeat' : &scroll})
+  let s:smooth_scroll_timer = timer_start(stop_time, function('s:' . a:fn), {'repeat' : &scroll/3})
 endfunction
 
 function! smooth_scroll#up() abort
