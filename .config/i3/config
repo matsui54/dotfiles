@@ -42,8 +42,11 @@ set $refresh_i3status killall -SIGUSR1 i3status
 # bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
 # use '[' and ']' to change volume
-bindcode $mod+35 exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && $refresh_i3status
-bindcode $mod+34 exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && $refresh_i3status
+bindcode $mod+35 exec --no-startup-id "pactl set-sink-volume @DEFAULT_SINK@ +5% && $refresh_i3status"
+bindcode $mod+34 exec --no-startup-id "pactl set-sink-volume @DEFAULT_SINK@ -5% && $refresh_i3status"
+
+# screenshot using flameshot
+bindsym Print exec "flameshot full --path ~/Pictures/screenshot"
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -58,6 +61,7 @@ bindsym $mod+Shift+q kill
 # bindsym $mod+d exec --no-startup-id dmenu_run
 # A more modern dmenu replacement is rofi:
 bindsym $mod+d exec "rofi -modi drun,run,window,my-cmd:~/.config/i3/my_rofi_cmd,combi -show combi -combi-modi drun,window,my-cmd"
+bindsym $mod+g exec "gopass ls --flat | rofi -dmenu | xargs --no-run-if-empty gopass show -c -o"
 # There also is i3-dmenu-desktop which only displays applications shipping a
 # .desktop file. It is a wrapper around dmenu, so you need that installed.
 # bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop

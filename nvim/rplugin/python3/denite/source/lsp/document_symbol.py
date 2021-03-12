@@ -38,12 +38,12 @@ class Source(Base):
         vim.exec_lua("_lsp_denite = require'lsp_denite'")
 
     def highlight(self) -> None:
-        self.vim.command(SYMBOLS_NR_SYNTAX.format(self.syntax_name))
-        self.vim.command(SYMBOLS_KIND_SYNTAX.format(self.syntax_name))
-        self.vim.command(SYMBOLS_NAME_SYNTAX.format(self.syntax_name))
-        # self.vim.command(SYMBOLS_NR_HIGHLIGHT.format(self.syntax_name))
-        self.vim.command(SYMBOLS_KIND_HIGHLIGHT.format(self.syntax_name))
-        self.vim.command(SYMBOLS_NAME_HIGHLIGHT.format(self.syntax_name))
+        for cmd in [SYMBOLS_NR_SYNTAX,
+                    SYMBOLS_KIND_SYNTAX,
+                    SYMBOLS_NAME_SYNTAX,
+                    SYMBOLS_KIND_HIGHLIGHT,
+                    SYMBOLS_NAME_HIGHLIGHT]:
+            self.vim.command(cmd.format(self.syntax_name))
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates: Candidates = []

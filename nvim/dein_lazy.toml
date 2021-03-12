@@ -372,6 +372,10 @@ hook_add = '''
   let g:suda_smart_edit = 1
 '''
 
+[[plugins]]
+repo = 'neoclide/denite-git'
+on_source = 'denite.nvim'
+
 # [[plugins]]
 # repo = "puremourning/vimspector"
 # if = 'has("unix")'
