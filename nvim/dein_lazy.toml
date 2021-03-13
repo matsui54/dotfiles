@@ -7,7 +7,7 @@ hook_source = '''
 hook_add = '''
   nnoremap <Space>d :Denite<Space>
   nnoremap <silent> <Space>g <cmd>Denite grep
-      \ -no-empty -auto-action=preview_bat<CR>
+      \ -no-empty -auto-action=preview_bat -buffer-name=grep -no-auto-resize<CR>
   nnoremap <silent> <Space>b <cmd>Denite buffer
       \ -auto-action=preview<CR>
   nnoremap <silent> <Space>a <cmd>Denite file/rec
@@ -328,6 +328,7 @@ repo = 'nvim-lua/popup.nvim'
 
 [[plugins]]
 repo = 'nvim-lua/plenary.nvim'
+on_source = 'denite.nvim'
 
 [[plugins]]
 repo = 'nvim-telescope/telescope.nvim'

@@ -53,6 +53,14 @@ call denite#custom#option('default', {
       \ 'auto_resize': v:true,
       \})
 
+call denite#custom#option('grep', {
+      \ 'preview_height': 20,
+      \ 'auto_resize': v:true,
+      \ 'vertical_preview': v:true,
+      \ 'winheight': 100,
+      \ 'preview_width': 100,
+      \})
+
 function! s:jump_defx(context) abort
   let path = a:context.targets[0].action__path
   execute "Defx -buffer-name=`t:defx_index` " . path
@@ -76,6 +84,12 @@ elseif executable('rg')
   call denite#custom#var('file/rec', 'command',
         \ ['rg', '--files', '--glob', '!.git', '--color', 'never'])
 endif
+
+function! s:ts_preview(context) abort
+  call luaeval('require("denite_ts_preview").show(_A)', a:context)
+endfunction
+call denite#custom#action('file', 'preview_ts',
+      \ function('s:ts_preview'), {'is_quit': v:false})
 
 " Change default action.
 call denite#custom#source('directory_rec', 'default_action', 'cd')

@@ -102,7 +102,7 @@ function! s:defx_my_settings() abort
         \ defx#do_action('cd', [expand('~/.cache/dein/repos/github.com')])
 
   nnoremap <silent><buffer><expr> <Space>s
-        \ ":Denite directory_rec:" . <SID>get_defx_cwd() . "<CR>"
+        \ ":Denite directory_rec:" . <SID>get_defx_cwd() . " -default-action=jump_defx<CR>"
   nnoremap <silent><buffer><expr> <Space>a
         \ ":Denite file/rec:" . <SID>get_defx_cwd() . "<CR>"
   nnoremap <silent><buffer><expr> <Space>g

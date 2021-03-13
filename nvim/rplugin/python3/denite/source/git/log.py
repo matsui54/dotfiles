@@ -2,31 +2,15 @@ import subprocess
 
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
-from denite.kind.file import Kind as File
+from denite.base.kind import Base as KindBase
 
-SYMBOLS_NR_SYNTAX = (
-    'syntax match {0}_NR '
-    r'/\d*\s*\d*/ '
-    'nextgroup={0}_kind'
-)
-# SYMBOLS_NR_HIGHLIGHT = (
-#     'highlight default link {0}_NR Statement'
-# )
-
-SYMBOLS_KIND_SYNTAX = (
-    'syntax match {0}_kind '
-    r'/\[\a\+\]/ '
-    'nextgroup={0}_name contained skipwhite'
-)
-SYMBOLS_KIND_HIGHLIGHT = (
-    'highlight default link {0}_kind Statement'
+GITLOG_OBJ_SYNTAX = (
+    'syntax match {0}_obj '
+    r'/^\s\S*/ '
 )
 
-SYMBOLS_NAME_SYNTAX = (
-    r'syntax match {0}_name /\S\+/ contained'
-)
-SYMBOLS_NAME_HIGHLIGHT = (
-    'highlight default link {0}_name Constant'
+GITLOG_OBJ_HIGHLIGHT = (
+    'highlight default link {0}_obj Statement'
 )
 
 
@@ -38,12 +22,8 @@ class Source(Base):
         self.kind = Kind(vim)
 
     def highlight(self) -> None:
-        self.vim.command(SYMBOLS_NR_SYNTAX.format(self.syntax_name))
-        self.vim.command(SYMBOLS_KIND_SYNTAX.format(self.syntax_name))
-        self.vim.command(SYMBOLS_NAME_SYNTAX.format(self.syntax_name))
-        # self.vim.command(SYMBOLS_NR_HIGHLIGHT.format(self.syntax_name))
-        self.vim.command(SYMBOLS_KIND_HIGHLIGHT.format(self.syntax_name))
-        self.vim.command(SYMBOLS_NAME_HIGHLIGHT.format(self.syntax_name))
+        self.vim.command(GITLOG_OBJ_SYNTAX.format(self.syntax_name))
+        self.vim.command(GITLOG_OBJ_HIGHLIGHT.format(self.syntax_name))
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates: Candidates = []
@@ -64,51 +44,15 @@ class Source(Base):
         return candidates
 
 
-class Kind(File):
+class Kind(KindBase):
     def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
-        self.name = 'git'
+        self.name = 'gitdiff'
 
     def action_preview(self, context: UserContext) -> None:
         target = context['targets'][0]
 
-        if (self._previewed_target == target and
-                context['auto_action'] == 'preview'):
-            # Skip if auto_action
-            return
-
-        prev_id = self.vim.call('win_getid')
-        is_nvim = self.vim.call('has', 'nvim')
-
-        if self._previewed_winid:
-            self.vim.call('win_gotoid', self._previewed_winid)
-            if self.vim.call('win_getid') != prev_id:
-                self.vim.command('bdelete! ' +
-                                 str(self.vim.call('bufnr', '%')))
-                self.vim.vars['denite#_previewing_bufnr'] = -1
-            self.vim.call('win_gotoid', prev_id)
-            self._previewed_winid = 0
-
-            if self._previewed_target == target:
-                # Close the window only
-                return
-
-        self.vim.call('denite#helper#preview_file', context, '')
-
         diff_cmd = ['git', 'diff', target['__obj'] + '^!']
 
-        if is_nvim:
-            self.vim.call('termopen', diff_cmd)
-        else:
-            self.vim.call('term_start', diff_cmd, {
-                'curwin': True,
-                'term_kill': 'kill',
-            })
-
-        bufnr = self.vim.call('bufnr', '%')
-        self._previewed_winid = self.vim.call('win_getid')
-        self._vim.vars['denite#_previewing_bufnr'] = bufnr
-
-        self.vim.call('win_gotoid', prev_id)
-        self._previewed_target = target
+        self.preview_terminal(context, diff_cmd, 'preview')
