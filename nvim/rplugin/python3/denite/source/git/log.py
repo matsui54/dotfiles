@@ -47,8 +47,12 @@ class Source(Base):
 class Kind(KindBase):
     def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
-
         self.name = 'gitdiff'
+        self.default_action = 'open'
+
+    def action_open(self, context: UserContext) -> None:
+        target = context['targets'][0]
+        self.vim.command("Gina show {}".format(target['__obj']))
 
     def action_preview(self, context: UserContext) -> None:
         target = context['targets'][0]
