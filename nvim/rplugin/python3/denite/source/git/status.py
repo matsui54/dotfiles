@@ -78,43 +78,6 @@ class Kind(File):
 
     def action_preview(self, context: UserContext) -> None:
         target = context['targets'][0]
-
-        if (self._previewed_target == target and
-                context['auto_action'] == 'preview'):
-            # Skip if auto_action
-            return
-
-        prev_id = self.vim.call('win_getid')
-        is_nvim = self.vim.call('has', 'nvim')
-
-        if self._previewed_winid:
-            self.vim.call('win_gotoid', self._previewed_winid)
-            if self.vim.call('win_getid') != prev_id:
-                self.vim.command('bdelete! ' +
-                                 str(self.vim.call('bufnr', '%')))
-                self.vim.vars['denite#_previewing_bufnr'] = -1
-            self.vim.call('win_gotoid', prev_id)
-            self._previewed_winid = 0
-
-            if self._previewed_target == target:
-                # Close the window only
-                return
-
-        self.vim.call('denite#helper#preview_file', context, '')
-
         diff_cmd = ['git', 'diff', target['action__path']]
 
-        if is_nvim:
-            self.vim.call('termopen', diff_cmd)
-        else:
-            self.vim.call('term_start', diff_cmd, {
-                'curwin': True,
-                'term_kill': 'kill',
-            })
-
-        bufnr = self.vim.call('bufnr', '%')
-        self._previewed_winid = self.vim.call('win_getid')
-        self._vim.vars['denite#_previewing_bufnr'] = bufnr
-
-        self.vim.call('win_gotoid', prev_id)
-        self._previewed_target = target
+        self.preview_terminal(context, diff_cmd, 'preview')
