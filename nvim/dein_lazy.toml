@@ -377,6 +377,9 @@ hook_add = '''
 repo = 'neoclide/denite-git'
 on_source = 'denite.nvim'
 
+[[plugins]]
+repo = 'skanehira/gh.vim'
+
 # [[plugins]]
 # repo = "puremourning/vimspector"
 # if = 'has("unix")'
