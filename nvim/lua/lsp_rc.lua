@@ -48,7 +48,7 @@ local ts_on_attach = function()
   else
     sep = ':'
   end
-  
+
   vim.env.PATH = vim.fn.expand('~/.npm-global/bin') .. sep .. vim.env.PATH
 end
 
