@@ -24,7 +24,7 @@ endfunction
 
 function! vimrc#is_wsl() abort
   if !exists('g:vimrc_is_wsl')
-    let g:vimrc_is_wsl = executable('cmd.exe') && isdirectory('/mnt/c')
+    let g:vimrc_is_wsl = isdirectory('/mnt/c') && executable('/mnt/c/Windows/System32/cmd.exe')
   endif
   return g:vimrc_is_wsl
 endfunction
