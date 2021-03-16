@@ -1,11 +1,12 @@
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
 
-SYMBOLS_HIGHLIGHT_SYNTAX = [
-    {'name': 'Name', 'link': 'Constant',  're': r'\%(\] \zs\)\@<=\S*'},
-    {'name': 'Type', 'link': 'Function',  're': r'\[\a\+\]'},
-    # {'name': 'Pos', 'link': 'Statement', 're': r'\s*\d\+\s\+\d\+\s\@=\['},
-]
+TYPE_DIAGNOSTICS = {
+    1: "Error",
+    2: "Warning",
+    3: "Information",
+    4: "Hint"
+}
 
 
 class Source(Base):
@@ -17,13 +18,14 @@ class Source(Base):
         vim.exec_lua("_lsp_denite = require'lsp_denite'")
 
     def highlight(self) -> None:
-        for syn in SYMBOLS_HIGHLIGHT_SYNTAX:
+        for type in TYPE_DIAGNOSTICS.values():
             self.vim.command(
-                'syntax match {0}_{1} /{2}/ contained containedin={0}'.format(
-                    self.syntax_name, syn['name'], syn['re']))
+                r'syntax match {0}_{1} /{2}\s\d\+:\d\+/ '
+                'contained containedin={0}'.format(
+                    self.syntax_name, type, type[0]))
             self.vim.command(
-                'highlight default link {}_{} {}'.format(
-                    self.syntax_name, syn['name'], syn['link']))
+                r'highlight default link {0}_{1} LspDiagnosticsSign{1}'.format(
+                    self.syntax_name, type))
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates: Candidates = []
@@ -34,8 +36,9 @@ class Source(Base):
         for item in items:
             col = item["range"]["start"]["character"]
             lnum = item["range"]["start"]["line"]
-            word = "{}:{}   {}".format(
-                str(lnum), str(col), item["message"]
+            type = TYPE_DIAGNOSTICS[item['severity']]
+            word = "{} {}:{}   {}".format(
+                type[0], str(lnum), str(col), item["message"]
             )
             candidates.append(
                 {

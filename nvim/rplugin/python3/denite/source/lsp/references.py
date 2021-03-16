@@ -6,7 +6,6 @@ from denite.util import Nvim, UserContext, Candidates
 
 SYMBOLS_HIGHLIGHT_SYNTAX = [
     {'name': 'File', 'link': 'Comment',   're': r'\S\+:\d\+:\d\+'},
-    # {'name': 'Pos', 'link': 'Function',   're': r':\d\+:\d\+'},
 ]
 
 
