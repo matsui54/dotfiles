@@ -63,7 +63,7 @@ call denite#custom#option('grep', {
 
 function! s:jump_defx(context) abort
   let path = a:context.targets[0].action__path
-  execute "Defx -buffer-name=`t:defx_index` " . path
+  execute "Defx -buffer-name=defx`t:defx_index` " . path
 endfunction
 call denite#custom#action('directory', 'jump_defx',
       \ function('s:jump_defx'))
