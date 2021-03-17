@@ -17,6 +17,9 @@ class Source(Base):
         self.kind = "file"
         vim.exec_lua("_lsp_denite = require'lsp_denite'")
 
+    def on_init(self, context: UserContext) -> None:
+        linecache.clearcache()
+
     def highlight(self) -> None:
         for syn in SYMBOLS_HIGHLIGHT_SYNTAX:
             self.vim.command(
@@ -32,15 +35,15 @@ class Source(Base):
         if items is None:
             return []
 
-        buf_path = Path(self.vim.call('expand', '%:p'))
         cwd = self.vim.call('getcwd')
         for item in items:
             col = item["col"]
             lnum = item["lnum"]
             path = Path(item['filename'])
-            if buf_path == path:
+            if self.vim.call('bufloaded', str(path)):
+                bufnr = self.vim.call('bufnr', str(path))
                 name = path.name
-                line = self.vim.call('getline', lnum)
+                line = self.vim.call('getbufline', bufnr, lnum)[0]
             else:
                 try:
                     name = path.relative_to(cwd)

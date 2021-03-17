@@ -1,5 +1,3 @@
-import linecache
-
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
 
@@ -54,8 +52,7 @@ class Source(Base):
             path = item["filename"]
             col = item["col"]
             lnum = item["lnum"]
-            line = linecache.getline(path, lnum)
-            # type, name = item["text"].split()
+            line = self.vim.call('getline', lnum)
             word = "{:>4}{:>4} {}    {}".format(
                 str(lnum), str(col), item["text"], line
             )

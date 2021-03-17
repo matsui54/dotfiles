@@ -31,6 +31,7 @@ class Source(Base):
     def on_init(self, context: UserContext) -> None:
         args = dict(enumerate(context['args']))
         context['__pattern'] = self._init_patterns(context, args)
+        linecache.clearcache()
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates: Candidates = []
@@ -39,19 +40,23 @@ class Source(Base):
         if not items:
             return []
         for item in items:
-            filename = Path(item['filename']).name
-            path = item["filename"]
+            path = Path(item["filename"])
+            filename = path.name
             col = item["col"]
             lnum = item["lnum"]
-            line = linecache.getline(path, lnum)
-            # type, name = item["text"].split()
+            if self.vim.call('bufloaded', str(path)):
+                bufnr = self.vim.call('bufnr', str(path))
+                line = self.vim.call('getbufline', bufnr, lnum)[0]
+            else:
+                line = linecache.getline(str(path), lnum)
+
             word = "{}:{}:{} {}    {}".format(
                 filename, str(lnum), str(col), item["text"], line
             )
             candidates.append(
                 {
                     "word": word,
-                    "action__path": path,
+                    "action__path": str(path),
                     "action__line": lnum,
                     "action__col": col,
                 }
