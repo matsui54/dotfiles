@@ -380,6 +380,10 @@ on_source = 'denite.nvim'
 [[plugins]]
 repo = 'skanehira/gh.vim'
 
+[[plugins]]
+repo = 'matsui54/denite-nvim-lsp'
+on_source = 'denite.nvim'
+
 # [[plugins]]
 # repo = "puremourning/vimspector"
 # if = 'has("unix")'
