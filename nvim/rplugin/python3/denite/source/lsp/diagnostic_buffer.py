@@ -34,8 +34,8 @@ class Source(Base):
             return []
         path = self.vim.call('expand', '%:p')
         for item in items:
-            col = item["range"]["start"]["character"]
-            lnum = item["range"]["start"]["line"]
+            col = item["range"]["start"]["character"] + 1
+            lnum = item["range"]["start"]["line"] + 1
             type = TYPE_DIAGNOSTICS[item['severity']]
             word = "{} {}:{}   {}".format(
                 type[0], str(lnum), str(col), item["message"]

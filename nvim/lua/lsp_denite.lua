@@ -42,8 +42,8 @@ function M.document_symbol()
   return result
 end
 
-function M.workspace_symbol()
-  local raw_result = vim.lsp.buf_request_sync(0, 'workspace/symbol', {query=''}, 1000)
+function M.workspace_symbol(query)
+  local raw_result = vim.lsp.buf_request_sync(0, 'workspace/symbol', {query=query}, 1000)
   local client_id = get_available_client('workspace_symbol')
   if client_id == 0  or raw_result == nil then
     return nil

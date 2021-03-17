@@ -1,5 +1,6 @@
 import linecache
 from pathlib import Path
+import typing
 
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
@@ -7,7 +8,6 @@ from denite.util import Nvim, UserContext, Candidates
 SYMBOLS_HIGHLIGHT_SYNTAX = [
     {'name': 'Name', 'link': 'Constant',  're': r'\%(\] \zs\)\@<=\S*'},
     {'name': 'Type', 'link': 'Function',  're': r'\[\a\+\]'},
-    # {'name': 'Pos', 'link': 'Statement', 're': r'\s*\d\+\s\+\d\+\s\@=\['},
 ]
 
 
@@ -28,9 +28,14 @@ class Source(Base):
                 'highlight default link {}_{} {}'.format(
                     self.syntax_name, syn['name'], syn['link']))
 
+    def on_init(self, context: UserContext) -> None:
+        args = dict(enumerate(context['args']))
+        context['__pattern'] = self._init_patterns(context, args)
+
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates: Candidates = []
-        items = self.vim.lua._lsp_denite.workspace_symbol()
+        items = self.vim.lua._lsp_denite.workspace_symbol(
+            context['__pattern'])
         if not items:
             return []
         for item in items:
@@ -52,3 +57,19 @@ class Source(Base):
                 }
             )
         return candidates
+
+    def _init_patterns(self, context: UserContext,
+                       args: typing.Dict[int, str]) -> typing.List[str]:
+        pattern: str = ''
+        arg: typing.Union[str, typing.List[str]] = args.get(0, [])
+        if arg:
+            if isinstance(arg, str):
+                pattern = arg
+            else:
+                raise AttributeError(
+                    '`args[0]` needs to be a `str`')
+        elif context['input']:
+            pattern = context['input']
+        else:
+            pattern = self.vim.call('denite#util#input', 'Query: ')
+        return pattern

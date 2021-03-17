@@ -37,8 +37,8 @@ class Source(Base):
         for item in items:
             bufname = self.vim.call('bufname', item["bufnr"])
             path = Path(bufname).resolve()
-            col = item["range"]["start"]["character"]
-            lnum = item["range"]["start"]["line"]
+            col = item["range"]["start"]["character"] + 1
+            lnum = item["range"]["start"]["line"] + 1
             type = TYPE_DIAGNOSTICS[item['severity']]
             word = "{}: {} {}:{}   {}".format(
                 bufname, type[0], str(lnum), str(col), item["message"]
