@@ -215,3 +215,14 @@ function! s:save_session(arg) abort
   endif
   execute 'mksession!' . path
 endfunction
+
+" from https://zenn.dev/monaqa/articles/2020-09-17-vim-zenn-command
+function! s:create_zenn_article(article_name) abort
+  let date = strftime("%Y-%m-%d")
+  let slug = date . "-" . a:article_name
+  call system("npx zenn new:article --slug " . slug )
+  let article_path = "articles/" . slug . ".md"
+  execute "edit " . article_path
+endfunction
+
+command! -nargs=1 ZennCreateArticle call <SID>create_zenn_article("<args>")

@@ -14,16 +14,16 @@ set shiftwidth=0
 set smartindent
 
 if vimrc#is_wsl()
-  let clp_cmd = '/mnt/c/Users/harum/bin/win32yank.exe'
+  let s:clp_cmd = '/mnt/c/Users/harum/bin/win32yank.exe'
   let g:clipboard = {
         \   'name': 'myClipboard',
         \   'copy': {
-        \      '+': clp_cmd . ' -i',
-        \      '*': clp_cmd . ' -i',
+        \      '+': s:clp_cmd . ' -i',
+        \      '*': s:clp_cmd . ' -i',
         \    },
         \   'paste': {
-        \      '*': clp_cmd . ' -o --lf',
-        \      '+': clp_cmd . ' -o --lf',
+        \      '*': s:clp_cmd . ' -o --lf',
+        \      '+': s:clp_cmd . ' -o --lf',
         \   },
         \   'cache_enabled': 1,
         \ }

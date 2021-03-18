@@ -35,3 +35,11 @@ source ~/dotfiles/nvim/options.rc.vim
 source ~/dotfiles/nvim/map.rc.vim
 
 nnoremap <expr> <Leader>d (&filetype=='vim') ? ':w <bar> :source %<CR>' : ':wa'
+
+command! Wslput :r !win32yank.exe -o --lf
+
+" yank
+augroup Clip
+  autocmd!
+  autocmd TextYankPost * call system("win32yank.exe -i", v:event.regcontents)
+augroup END
