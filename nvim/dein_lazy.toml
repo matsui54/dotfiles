@@ -8,8 +8,7 @@ hook_add = '''
   nnoremap <Space>d :Denite<Space>
   nnoremap <silent> <Space>g <cmd>Denite grep
       \ -no-empty -auto-action=preview_bat -buffer-name=grep -no-auto-resize<CR>
-  nnoremap <silent> <Space>b <cmd>Denite buffer
-      \ -auto-action=preview<CR>
+  nnoremap <silent> <Space>b <cmd>Denite buffer<CR>
   nnoremap <silent> <Space>a <cmd>Denite file/rec
       \ -auto-action=preview_bat<CR>
   nnoremap <silent> <Space>s <cmd>Denite directory_rec<CR>
@@ -369,9 +368,6 @@ nnoremap <silent><C-p> :GoogleSearchOpenPrompt<CR>
 [[plugins]]
 repo = 'lambdalisue/suda.vim'
 on_event = 'BufRead'
-hook_add = '''
-  let g:suda_smart_edit = 1
-'''
 
 [[plugins]]
 repo = 'neoclide/denite-git'
