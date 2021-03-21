@@ -15,5 +15,10 @@ pip install -r ~/dotfiles/requirements.txt
 - fd
 - clangd
 - wsl-open(if wsl)
-- ~/.cache/skk-jisyo
 - SKK-JISYO.L(windows: ~/AppData/Local/skk/SKK-JISYO.L, linux: /usr/local/share/skk/SKK-JISYO.L)
+``` bash
+wget -P /tmp http://openlab.jp/skk/dic/SKK-JISYO.L.gz
+gunzip /tmp/SKK-JISYO.L.gz
+sudo mkdir /usr/local/share/skk
+mv /tmp/SKK-JISYO.L /usr/local/share/skk
+```
