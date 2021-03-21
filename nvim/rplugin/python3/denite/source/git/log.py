@@ -1,4 +1,5 @@
 import subprocess
+from pathlib import Path
 
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidates
@@ -27,11 +28,13 @@ class Source(Base):
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates: Candidates = []
-        cwd = self.vim.call('getcwd')
-        output = subprocess.run(['git', 'log', '--pretty=oneline',
-                                 '--abbrev-commit', '--', '.'],
-                                stdout=subprocess.PIPE, cwd=cwd)
-        items = output.stdout.decode().split('\n')
+        gitdir = run_command(
+            self.vim, ['git', 'rev-parse', '--show-toplevel'])[0]
+        format = r'%h %s %cr <%an>%d'
+        items = run_command(self.vim, [
+            'git', 'log',
+            f'--pretty=format:{format}', '--abbrev-commit', '--', '.'
+        ], cwd=gitdir)
         if not items:
             return []
         for item in items:
@@ -57,6 +60,22 @@ class Kind(KindBase):
     def action_preview(self, context: UserContext) -> None:
         target = context['targets'][0]
 
-        diff_cmd = ['git', 'diff', target['__obj'] + '^!']
+        format = ("commit %H%nparent %P%nauthor %an <%ae> %ad%ncommitter %cn "
+                  "<%ce> %cd%n %e%n%n%s%n%n%b")
 
-        self.preview_terminal(context, diff_cmd, 'preview')
+        gitdir = (Path(run_command(self.vim,
+                                   ['git', 'rev-parse', '--show-toplevel'])[0])
+                  .joinpath('.git'))
+
+        cmds = ['git', '--no-pager', '--git-dir=' + str(gitdir), 'show',
+                f'--pretty=format:{format}', target['__obj'], '--']
+        # diff_cmd = ['git', 'diff', target['__obj'] + '^!']
+
+        self.preview_terminal(context, cmds, 'preview')
+
+
+def run_command(vim: Nvim, cmd, cwd=''):
+    if not cwd:
+        cwd = vim.call('getcwd')
+    output = subprocess.run(cmd, stdout=subprocess.PIPE, cwd=cwd)
+    return output.stdout.decode().split('\n')
