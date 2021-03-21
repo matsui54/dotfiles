@@ -6,20 +6,6 @@ from pathlib import Path
 import fnmatch
 import re
 
-
-def get_tree():
-    owner = 'matsui54'
-    repo = 'dotfiles'
-    branch = 'master'
-    url = 'https://api.github.com/repos/{}/{}/git/trees/{}?recursive=1'.format(
-        owner, repo, branch)
-    headers = {'Authorization': 'd5c6448757506340cf8764b3161d742f59207244',
-               'Accept': 'application/vnd.github.v3+json'}
-    res = requests.get(url, headers=headers).json()
-    with open('ghdata.json', 'w') as f:
-        json.dump(res, f, indent=4)
-
-
 URL_FORMAT = 'https://api.github.com/repos/{}/{}/git/trees/{}?recursive=1'
 
 
