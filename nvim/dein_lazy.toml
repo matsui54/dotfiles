@@ -375,6 +375,7 @@ on_source = 'denite.nvim'
 
 [[plugins]]
 repo = 'skanehira/gh.vim'
+on_event = 'BufEnter'
 
 [[plugins]]
 repo = 'matsui54/denite-nvim-lsp'
