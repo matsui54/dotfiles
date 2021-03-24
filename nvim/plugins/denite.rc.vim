@@ -6,9 +6,11 @@ function! s:denite_my_settings() abort
   nnoremap <silent><buffer><expr><nowait> d
         \ denite#do_map('do_action', 'delete')
   nnoremap <silent><buffer><expr> p
-        \ denite#do_map('do_action', 'preview')
+        \ denite#do_map('toggle_auto_action', 'preview')
   nnoremap <silent><buffer><expr> P
-        \ denite#do_map('do_action', 'preview_bat')
+        \ denite#do_map('toggle_auto_action', 'preview_bat')
+  nnoremap <silent><buffer><expr> H
+        \ denite#do_map('toggle_auto_action', 'highlight')
   nnoremap <silent><buffer><expr> <C-f>
         \ denite#do_map('do_action', 'jump_defx')
   nnoremap <silent><buffer><expr> q
