@@ -71,6 +71,7 @@ if executable('rg')
 endif
 
 if executable('fd')
+  let s:fd_cmds = 'fd'
   call extend(s:fd_cmds, ['.', '-H', '-E', '.git', '-E', '__pycache__', '-t'])
   call denite#custom#var('file/rec', 'command', s:fd_cmds + ['f'])
   call denite#custom#var('directory_rec', 'command', s:fd_cmds + ['d'])
