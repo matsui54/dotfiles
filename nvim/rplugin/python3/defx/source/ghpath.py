@@ -5,13 +5,35 @@ import typing
 from pathlib import Path
 import fnmatch
 import re
-
-URL_FORMAT = 'https://api.github.com/repos/{}/{}/git/trees/{}?recursive=1'
+import base64
 
 
 class Gh:
     def __init__(self, vim):
         self.vim = vim
+        self.token = ''
+
+    def request_get(self, url) -> typing.Dict:
+        if not self.token:
+            self.token = self._get_token()
+        headers = {'Authorization': self.token,
+                   'Accept': 'application/vnd.github.v3+json'}
+        res = requests.get(url, headers=headers).json()
+        # with open('ghdata.json', 'w') as f:
+        #     json.dump(res, f, indent=4)
+        return res
+
+    def _get_token(self):
+        token = self.vim.vars.get('gh_defx_token', '')
+        if token:
+            return token
+        token_path = Path.home().joinpath('.config/gh/hosts.yml')
+        if not token_path.is_file():
+            token_path = Path.home().joinpath('.config/gh/config.yml')
+        with open(str(token_path.absolute()), 'r') as f:
+            for line in f.readlines():
+                if re.search('oauth_token', line):
+                    return re.findall(r'oauth_token: (.*)', line)[0]
 
 
 class GhPathTree:
@@ -21,11 +43,13 @@ class GhPathTree:
         self.repo = repo
         self.branch = branch
         self.file_tree = {}
+        self.gh = Gh(vim)
 
     def init_tree(self):
-        # data = self._get_tree()
-        data = self._retrieve_repo_data()
-        self._make_tree(data)
+        url = ('https://api.github.com/repos/{}/{}/git/trees/{}?recursive=1'
+               .format(self.owner, self.repo, self.branch))
+        data = self.gh.request_get(url)
+        self._make_tree(data['tree'])
 
     def get_parent(self, path: str):
         path_element = path.split('/')
@@ -51,13 +75,11 @@ class GhPathTree:
         for f in tree['children']:
             yield f['path']
 
-    def _retrieve_repo_data(self):
-        url = URL_FORMAT.format(self.owner, self.repo, self.branch)
-        token = self._get_token()
-        headers = {'Authorization': token,
-                   'Accept': 'application/vnd.github.v3+json'}
-        res = requests.get(url, headers=headers).json()
-        return res['tree']
+    def get_contents(self, path: str) -> typing.List[str]:
+        url = self.get_dir_tree(path)['url']
+        res = self.gh.request_get(url)
+        s = base64.b64decode(res['content'])
+        return s.splitlines()
 
     def _make_tree(self, data):
         self.file_tree = {
@@ -101,19 +123,6 @@ class GhPathTree:
             data = json.load(f)
         return data['tree']
 
-    def _get_token(self):
-        # token = self.vim.vars.get('gh_defx_token', '')
-        token = ''
-        if token:
-            return token
-        token_path = Path.home().joinpath('.config/gh/hosts.yml')
-        if not token_path.is_file():
-            token_path = Path.home().joinpath('.config/gh/config.yml')
-        with open(str(token_path.absolute()), 'r') as f:
-            for line in f.readlines():
-                if re.search('oauth_token', line):
-                    return re.findall(r'oauth_token: (.*)', line)[0]
-
 
 class GhPath:
     def __init__(self, tree: GhPathTree, path: str):
@@ -143,6 +152,9 @@ class GhPath:
     def is_symlink(self) -> bool:
         return False
 
+    def open(self) -> typing.List[str]:
+        return self.tree.get_contents(self.path)
+
     @property
     def parent(self) -> GhPath:
         return GhPath(self.tree, self.tree.get_parent(self.path))
@@ -154,11 +166,6 @@ class GhPath:
 
     @property
     def suffix(self):
-        """
-        The final component's last suffix, if any.
-
-        This includes the leading period. For example: '.txt'
-        """
         name = self.name
         i = name.rfind('.')
         if 0 < i < len(name) - 1:

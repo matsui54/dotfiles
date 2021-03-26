@@ -30,24 +30,10 @@ function! s:denite_my_settings() abort
   nnoremap <buffer> <C-i> <Nop>
 endfunction
 
-" autocmd MyAutoCmd User denite-preview call s:denite_preview()
-" function! s:denite_preview() abort
-"   ALEDisableBuffer
-" endfunction
-
 autocmd MyAutoCmd FileType denite-filter call s:denite_filter_my_settings()
 function! s:denite_filter_my_settings() abort
   imap <silent><buffer> <C-o> <Plug>(denite_filter_update)
   imap <silent><buffer> <C-c> <Plug>(denite_filter_quit)
-  inoremap <silent><buffer><expr> <Tab>
-        \ denite#increment_parent_cursor(1)
-  inoremap <silent><buffer><expr> <S-Tab>
-        \ denite#increment_parent_cursor(-1)
-  nnoremap <silent><buffer><expr> <C-j>
-        \ denite#increment_parent_cursor(1)
-  nnoremap <silent><buffer><expr> <C-k>
-        \ denite#increment_parent_cursor(-1)
-  " imap <silent><buffer> <CR> <C-o><CR>
 endfunction
 
 call denite#custom#option('default', {
@@ -70,21 +56,25 @@ endfunction
 call denite#custom#action('directory', 'jump_defx',
       \ function('s:jump_defx'))
 
-let s:fd_cmds = []
-if executable('fd')
-  let s:fd_cmds = ['fd']
-else
-  let s:fd_cmds = ['fdfind']
+" For ripgrep
+if executable('rg')
+  call denite#custom#var('file/rec', 'command',
+        \ ['rg', '--files', '--glob', '!.git', '--color', 'never'])
+  call denite#custom#var('grep', {
+        \ 'command': ['rg'],
+        \ 'default_opts': ['-i', '--vimgrep', '--no-heading'],
+        \ 'recursive_opts': [],
+        \ 'pattern_opt': ['--regexp'],
+        \ 'separator': ['--'],
+        \ 'final_opts': [],
+        \ })
 endif
 
-" For ripgrep
-if !empty(s:fd_cmds)
+if executable('fd')
+  let s:fd_cmds = ['fd']
   call extend(s:fd_cmds, ['.', '-H', '-E', '.git', '-E', '__pycache__', '-t'])
   call denite#custom#var('file/rec', 'command', s:fd_cmds + ['f'])
   call denite#custom#var('directory_rec', 'command', s:fd_cmds + ['d'])
-elseif executable('rg')
-  call denite#custom#var('file/rec', 'command',
-        \ ['rg', '--files', '--glob', '!.git', '--color', 'never'])
 endif
 
 function! s:ts_preview(context) abort
@@ -95,20 +85,6 @@ call denite#custom#action('file', 'preview_ts',
 
 " Change default action.
 call denite#custom#source('directory_rec', 'default_action', 'cd')
-
-" Ripgrep command on grep source
-call denite#custom#var('grep', {
-      \ 'command': ['rg'],
-      \ 'default_opts': ['-i', '--vimgrep', '--no-heading'],
-      \ 'recursive_opts': [],
-      \ 'pattern_opt': ['--regexp'],
-      \ 'separator': ['--'],
-      \ 'final_opts': [],
-      \ })
-
-" Specify multiple paths in grep source
-"call denite#start([{'name': 'grep',
-"      \ 'args': [['a.vim', 'b.vim'], '', 'pattern']}])
 
 " Define alias
 call denite#custom#alias('source', 'file/rec/git', 'file/rec')

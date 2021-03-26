@@ -54,52 +54,6 @@ def check_output(view: View, cwd: str, args: typing.List[str]) -> None:
         view.print_msg(output)
 
 
-def check_overwrite(view: View, dest: Path, src: Path) -> Path:
-    if not src.exists() or not dest.exists():
-        return Path('')
-
-    s_stat = src.stat()
-    s_mtime = s_stat.st_mtime
-    view.print_msg(f' src: {src} {s_stat.st_size} bytes')
-    view.print_msg(f'      {time.strftime("%c", time.localtime(s_mtime))}')
-    d_stat = dest.stat()
-    d_mtime = d_stat.st_mtime
-    view.print_msg(f'dest: {dest} {d_stat.st_size} bytes')
-    view.print_msg(f'      {time.strftime("%c", time.localtime(d_mtime))}')
-
-    choice: int = view._vim.call('defx#util#confirm',
-                                 f'{dest} already exists.  Overwrite?',
-                                 '&Force\n&No\n&Rename\n&Time\n&Underbar', 0)
-    ret: Path = Path('')
-    if choice == 1:
-        ret = dest
-    elif choice == 2:
-        ret = Path('')
-    elif choice == 3:
-        ret = Path(view._vim.call(
-            'defx#util#input',
-            f'{src} -> ', str(dest),
-            ('dir' if src.is_dir() else 'file')))
-    elif choice == 4 and d_mtime < s_mtime:
-        ret = src
-    elif choice == 5:
-        ret = Path(str(dest) + '_')
-    return ret
-
-
-def execute_job(view: View, args: typing.List[str]) -> None:
-    view._vim.call('defx#util#close_async_job')
-
-    if view._vim.call('has', 'nvim'):
-        jobfunc = 'jobstart'
-        jobopts = {}
-    else:
-        jobfunc = 'job_start'
-        jobopts = {'in_io': 'null', 'out_io': 'null', 'err_io': 'null'}
-
-    view._vim.vars['defx#_async_job'] = view._vim.call(jobfunc, args, jobopts)
-
-
 def switch(view: View) -> None:
     windows = [x for x in range(1, view._vim.call('winnr', '$') + 1)
                if view._vim.call('getwinvar', x, '&buftype') == '']
@@ -188,7 +142,6 @@ def _open(view: View, defx: Defx, context: Context) -> None:
     """
     Open the file.
     """
-    cwd = view._vim.call('getcwd', -1)
     command = context.args[0] if context.args else 'edit'
     choose = command == 'choose' and (
         view._vim.call('exists', 'g:loaded_choosewin')
@@ -201,17 +154,16 @@ def _open(view: View, defx: Defx, context: Context) -> None:
             view.cd(defx, defx._source.name, str(path), context.cursor)
             continue
 
-        if not view._vim.call('haslocaldir'):
-            try:
-                path = path.relative_to(cwd)
-            except ValueError:
-                pass
-
         if choose:
             switch(view)
 
         view._vim.call('defx#util#execute_path',
-                       'edit' if choose else command, str(path))
+                       'edit' if choose else command, 'defx_gh://' + str(path))
+
+        view._vim.command('setlocal buftype=nofile')
+        view._vim.command('setlocal noswapfile')
+        view._vim.call('setline', 1, path.open())
+        view._vim.command('setlocal nomodified')
 
         bufnr = str(view._vim.call('bufnr', str(path)))
         if bufnr in previewed_buffers:
