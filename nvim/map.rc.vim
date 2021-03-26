@@ -173,10 +173,6 @@ cnoremap <C-n> <Down>
 cnoremap <C-p> <Up>
 cnoremap <C-y> <C-r>*
 
-if has('unix')
-  cnoremap <silent><expr> <C-Space> system('fcitx-remote -c')
-endif
-
 " commands
 command! DeinClean :call map(dein#check_clean(), "delete(v:val, 'rf')") |
       \ call dein#recache_runtimepath()

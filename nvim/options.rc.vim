@@ -69,26 +69,26 @@ if has('nvim')
   colorscheme iceberg
 endif
 
-if has('unix') && !vimrc#is_wsl()
-  augroup im_change
-    autocmd!
-    autocmd InsertEnter * call system('fcitx-remote -c')
-    autocmd InsertLeave * call system('fcitx-remote -o')
-    autocmd VimLeave * call system('fcitx-remote -c')
-    autocmd CmdlineLeave * call system('fcitx-remote -o')
-    autocmd CompleteChanged * call system('fcitx-remote -c')
-  augroup END
-elseif vimrc#is_windows() && has('nvim')
-  " for windows
-  augroup im_change
-    autocmd!
-    autocmd BufWinEnter * let b:win_ime_con_is_active = 0
-    autocmd BufWinEnter * let b:win_ime_con_is_insert = 0
-    autocmd InsertEnter * call vimrc#on_insert_enter()
-    autocmd InsertLeave * call vimrc#disable_ime()
-    autocmd CmdlineLeave * call vimrc#disable_ime()
-  augroup END
-endif
+" if has('unix') && !vimrc#is_wsl()
+"   augroup im_change
+"     autocmd!
+"     autocmd InsertEnter * call system('fcitx-remote -c')
+"     autocmd InsertLeave * call system('fcitx-remote -o')
+"     autocmd VimLeave * call system('fcitx-remote -c')
+"     autocmd CmdlineLeave * call system('fcitx-remote -o')
+"     autocmd CompleteChanged * call system('fcitx-remote -c')
+"   augroup END
+" elseif vimrc#is_windows() && has('nvim')
+"   " for windows
+"   augroup im_change
+"     autocmd!
+"     autocmd BufWinEnter * let b:win_ime_con_is_active = 0
+"     autocmd BufWinEnter * let b:win_ime_con_is_insert = 0
+"     autocmd InsertEnter * call vimrc#on_insert_enter()
+"     autocmd InsertLeave * call vimrc#disable_ime()
+"     autocmd CmdlineLeave * call vimrc#disable_ime()
+"   augroup END
+" endif
 
 augroup MyAutoCmd
   autocmd VimEnter * let t:defx_index = 1 | let g:tab_idx = 1
