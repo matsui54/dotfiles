@@ -72,7 +72,11 @@ function vimsettings() {
 # fi
 
 # prompt settings
-PROMPT='%F{cyan}[%~]%f${vcs_info_msg_0_}%# '
+if [ -n "$SSH_CONNECTION" ]; then
+  PROMPT='%F{cyan}[%n@%m:%~]%f${vcs_info_msg_0_}%# '
+else
+  PROMPT='%F{cyan}[%~]%f${vcs_info_msg_0_}%# '
+fi
 autoload -Uz vcs_info
 setopt prompt_subst
 zstyle ':vcs_info:git:*' check-for-changes true
