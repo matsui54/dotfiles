@@ -69,7 +69,7 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> ~
         \ defx#do_action('cd')
   nnoremap <silent><buffer><expr> q
-        \ defx#do_action('quit')
+        \ ':call <SID>quit_all_defx()<CR>'
   nnoremap <silent><buffer><expr> <Esc>
         \ defx#do_action('quit')
   nnoremap <silent><buffer><expr> ,
@@ -109,6 +109,15 @@ function! s:defx_my_settings() abort
         \ ":Denite grep:" . <SID>get_defx_cwd() . "<CR>"
 endfunction
 
+function! s:quit_all_defx() abort
+  for buf in tabpagebuflist()
+    if bufname(buf) =~# '[defx]'
+      let winid = bufwinid(buf)
+      call win_gotoid(winid)
+      call defx#call_action('quit')
+    endif
+  endfor
+endfunction
 function! s:open_defx_in_tab()
   let dir = defx#get_candidate().action__path
   tabnew

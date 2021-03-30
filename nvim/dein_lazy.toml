@@ -68,8 +68,8 @@ hook_source = '''
 '''
 hook_add = '''
   nnoremap <silent><C-f> <cmd>Defx -buffer-name=`'defx' . t:defx_index`<CR>
-  nmap <silent> <Space>w <C-f>:call defx#call_action('cd', [expand('~/work')])<CR>
-  nmap <silent> <Space>p <C-f>:call defx#call_action('cd', [expand('~/.cache/dein/repos/github.com')])<CR>
+  nnoremap <silent> <Space>w <cmd>Defx -buffer-name=`'defx' . t:defx_index` ~/work<CR>
+  nnoremap <silent> <Space>p <cmd>Defx -buffer-name=`'defx' . t:defx_index` ~/.cache/dein/repos/github.com<CR>
 '''
 
 [[plugins]]
