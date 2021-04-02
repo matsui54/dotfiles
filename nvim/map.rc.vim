@@ -29,7 +29,6 @@ if has('nvim')
   tnoremap <A-j> <C-\><C-N><C-w>j
   tnoremap <A-k> <C-\><C-N><C-w>k
   tnoremap <A-l> <C-\><C-N><C-w>l
-  tnoremap <Esc> <C-\><C-N>
   command! Fterm :call <SID>floating_terminal()
   command! Vterm :vsplit | :terminal
   command! Tterm :tabnew | :terminal
