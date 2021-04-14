@@ -12,9 +12,13 @@ call deoplete#custom#option({
       \ 'refresh_always': v:true,
       \ })
 
+call deoplete#custom#var('omni', 'input_patterns', {
+      \ 'tex': g:vimtex#re#deoplete
+      \})
+
 " call deoplete#custom#var('tabnine', {
 "      \ 'line_limit': 300,
 "      \ 'max_num_results': 5,
 "      \ })
- 
+
 " call deoplete#custom#source('tabnine', 'rank', 600)
