@@ -35,6 +35,10 @@ repo = 'cespare/vim-toml'
 
 [[plugins]]
 repo = 'lervag/vimtex'
+[plugins.ftplugin]
+tex = '''
+  let g:vimtex_syntax_conceal_default = 0
+'''
 
 # [[plugins]]
 # repo = 'neoclide/coc.nvim'
