@@ -16,5 +16,5 @@ call deoplete#custom#option({
 "      \ 'line_limit': 300,
 "      \ 'max_num_results': 5,
 "      \ })
- 
+
 " call deoplete#custom#source('tabnine', 'rank', 600)
