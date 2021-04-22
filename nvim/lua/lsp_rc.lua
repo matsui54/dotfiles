@@ -56,6 +56,7 @@ end
 require'lspconfig'.clangd.setup{on_attach = on_attach}
 require'lspconfig'.pyls.setup{on_attach = on_attach}
 require'lspconfig'.rls.setup{on_attach = on_attach}
+require'lspconfig'.svls.setup{on_attach = on_attach}
 require'lspconfig'.tsserver.setup{on_attach = ts_on_attach}
 
 local sumneko_root_path = vim.fn.stdpath('cache')..'/lspconfig/sumneko_lua/lua-language-server'
