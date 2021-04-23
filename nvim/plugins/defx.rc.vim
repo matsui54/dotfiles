@@ -21,7 +21,7 @@ function! s:defx_my_settings() abort
 
   " Define mappings
   nnoremap <silent><buffer><expr> <CR>
-       \ defx#do_action('open')
+        \ defx#do_action('open')
   nnoremap <silent><buffer><expr> +
         \ defx#do_action('multi', [['open', 'choose'], 'quit'])
   nnoremap <silent><buffer><expr> c
@@ -31,7 +31,7 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> P
         \ defx#do_action('paste')
   nnoremap <silent><buffer><expr> l
-       \ defx#do_action('open')
+        \ defx#do_action('open')
   nnoremap <silent><buffer><expr> E
         \ defx#do_action('multi', [['open', 'vsplit'], 'quit'])
   nnoremap <silent><buffer><expr> p
@@ -68,7 +68,9 @@ function! s:defx_my_settings() abort
         \ defx#do_action('cd', ['..'])
   nnoremap <silent><buffer><expr> ~
         \ defx#do_action('cd')
-  nnoremap <silent><buffer><expr> q
+  nnoremap <silent><buffer><expr> q 
+        \ ((&filetype =~# 'defx') && (bufname() =~# 'temp')) ?
+        \ defx#do_action('quit') :
         \ ':call <SID>quit_all_defx()<CR>'
   nnoremap <silent><buffer><expr> <Esc>
         \ defx#do_action('quit')
@@ -111,7 +113,7 @@ endfunction
 
 function! s:quit_all_defx() abort
   for buf in tabpagebuflist()
-    if bufname(buf) =~# '[defx]'
+    if getwinvar(bufwinid(buf), '&filetype') =~# 'defx'
       let winid = bufwinid(buf)
       call win_gotoid(winid)
       call defx#call_action('quit')
