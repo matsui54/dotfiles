@@ -61,11 +61,6 @@ zstyle ':completion:*:cd:*' ignore-parents parent pwd
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-function vimsettings() {
-  cd ~/.config/nvim
-  nvim -O ~/.config/nvim/*.toml
-}
-
 # load xkb config
 # if [ -f $HOME/.xkb/keymap/mykbd ]; then
 #   xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mykbd $DISPLAY 2> /dev/null
