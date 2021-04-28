@@ -14,7 +14,7 @@
  ;; If there is more than one, they won't work right.
  )
 
-(setq visible-bell t)
+(setq ring-bell-function 'ignore)
 
 (require 'helm-config)
 (helm-mode 1)
