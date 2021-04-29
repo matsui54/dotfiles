@@ -9,6 +9,8 @@ local on_attach = function(client)
     {'n', 'gd',        '<cmd>lua vim.lsp.buf.declaration()<CR>'},
     {'n', '<Leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>'},
     {'n', '<Leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>'},
+    {'n', 'gl',        '<cmd>lua vim.lsp.buf.document_highlight()<CR>'},
+    {'n', 'gm',        '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>'},
     {'n', 'g0',        '<cmd>Denite lsp/document_symbol -auto-action=highlight<CR>'},
     {'n', 'gr',        '<cmd>Denite lsp/references -auto-action=preview_bat<CR>'},
   }
@@ -26,17 +28,8 @@ local on_attach = function(client)
   [[
     augroup MyLspSettings
       autocmd!
-      autocmd CursorHold  <buffer> call My_lsp_safe_hightlight()
-      autocmd CursorHold  <buffer> lua vim.lsp.diagnostic.show_line_diagnostics()
       autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
     augroup END
-
-    function! My_lsp_safe_hightlight() abort
-      try
-        lua vim.lsp.buf.document_highlight()
-      catch /^Vim\%((\a\+)\)\=:E5108/
-      endtry
-    endfunction
   ]],
   false)
 end

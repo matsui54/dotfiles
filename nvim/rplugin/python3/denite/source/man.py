@@ -56,8 +56,8 @@ class Kind(Command):
 
         self.name = 'man'
 
-    def action_(self, context: UserContext) -> None:
+    def action_preview(self, context: UserContext) -> None:
         target = context['targets'][0]
-        diff_cmd = ['git', 'diff', target['action__path']]
+        man_cmd = ['man', target['word']]
 
-        self.preview_terminal(context, diff_cmd, 'preview')
+        self.preview_terminal(context, man_cmd, 'preview')
