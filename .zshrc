@@ -97,7 +97,7 @@ fi
 # Use emacs keybindings even if our EDITOR is set to vi
 bindkey -e
 
-export PATH=$HOME/bin:$HOME/.local/bin:$PATH
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/texlive/2021/bin/x86_64-linux:$PATH
 
 # Use vim keys in tab complete menu:
 zmodload zsh/complist
