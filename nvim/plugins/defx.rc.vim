@@ -15,6 +15,10 @@ call defx#custom#option('_', {
       \ 'preview_height': 30,
       \ })
 
+call defx#custom#option('sftp', {
+      \ 'columns': 'sftp_mark:indent:icons:filename:type:sftp_time:sftp_size',
+      \ })
+
 function! s:defx_my_settings() abort
   setlocal nonumber
   setlocal cursorline
