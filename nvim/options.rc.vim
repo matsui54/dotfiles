@@ -93,7 +93,6 @@ endif
 augroup MyAutoCmd
   autocmd VimEnter * let t:defx_index = 1 | let g:tab_idx = 1
   autocmd TabNew * let t:defx_index = s:get_defx_idx()
-  autocmd BufWrite * mksession! ~/.vim/sessions/saved_session.vim
   autocmd CmdwinEnter [:>] iunmap <buffer> <Tab>
   autocmd CmdwinEnter [:>] nunmap <buffer> <Tab>
   autocmd CursorHold * redrawtabline

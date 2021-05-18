@@ -41,7 +41,7 @@ if filereadable(expand('~/.config/secret.vim'))
 endif
 
 if vimrc#is_windows()
-  let g:python3_host_prog = 'C:\Users\harum\AppData\Local\Programs\Python\Python38\python.EXE'
+  let g:python3_host_prog = $USERPROFILE . '\AppData\Local\Programs\Python\Python39\python.EXE'
   set shell=cmd.exe
 else
   " use virtualenv
