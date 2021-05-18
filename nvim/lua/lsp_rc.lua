@@ -9,6 +9,8 @@ local on_attach = function(client)
     {'n', 'gd',        '<cmd>lua vim.lsp.buf.declaration()<CR>'},
     {'n', '<Leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>'},
     {'n', '<Leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>'},
+    {'n', 'gl',        '<cmd>lua vim.lsp.buf.document_highlight()<CR>'},
+    {'n', 'gm',        '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>'},
     {'n', 'g0',        '<cmd>Denite lsp/document_symbol -auto-action=highlight<CR>'},
     {'n', 'gr',        '<cmd>Denite lsp/references -auto-action=preview_bat<CR>'},
   }
@@ -26,37 +28,18 @@ local on_attach = function(client)
   [[
     augroup MyLspSettings
       autocmd!
-      autocmd CursorHold  <buffer> call My_lsp_safe_hightlight()
-      autocmd CursorHold  <buffer> lua vim.lsp.diagnostic.show_line_diagnostics()
       autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
     augroup END
-
-    function! My_lsp_safe_hightlight() abort
-      try
-        lua vim.lsp.buf.document_highlight()
-      catch /^Vim\%((\a\+)\)\=:E5108/
-      endtry
-    endfunction
   ]],
   false)
-end
-
-local ts_on_attach = function()
-  on_attach()
-  local sep = ''
-  if vim.fn.has('win32') then
-    sep = ';'
-  else
-    sep = ':'
-  end
-
-  vim.env.PATH = vim.fn.expand('~/.npm-global/bin') .. sep .. vim.env.PATH
 end
 
 require'lspconfig'.clangd.setup{on_attach = on_attach}
 require'lspconfig'.pyls.setup{on_attach = on_attach}
 require'lspconfig'.rls.setup{on_attach = on_attach}
-require'lspconfig'.tsserver.setup{on_attach = ts_on_attach}
+require'lspconfig'.svls.setup{on_attach = on_attach}
+require'lspconfig'.texlab.setup{on_attach = on_attach}
+require'lspconfig'.denols.setup{on_attach = on_attach}
 
 local sumneko_root_path = vim.fn.stdpath('cache')..'/lspconfig/sumneko_lua/lua-language-server'
 local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"

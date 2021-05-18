@@ -1,0 +1,11 @@
+hook_add = '''
+'''
+
+[ftplugin]
+
+_ = '''
+'''
+
+c = '''
+packadd termdebug
+'''

@@ -200,6 +200,19 @@ hook_source = '''
     \	'encoding': 'euc-jp',
     \}
   endif
+
+  autocmd MyAutoCmd User eskk-initialize-pre call s:eskk_initial_pre()
+  function! s:eskk_initial_pre() abort
+    let t = eskk#table#new('rom_to_hira*', 'rom_to_hira')
+    call t.add_map('z ', '　')
+    call t.add_map('~', '〜')
+    call t.add_map('zc', '©')
+    call t.add_map('zr', '®')
+    call t.add_map('z9', '（')
+    call t.add_map('z0', '）')
+    call t.add_map('z,', '，')
+    call eskk#register_mode_table('hira', t)
+  endfunction
 '''
 
 [[plugins]]
@@ -377,17 +390,47 @@ on_source = 'denite.nvim'
 
 [[plugins]]
 repo = 'skanehira/gh.vim'
-on_event = 'BufEnter'
+on_event = 'BufRead'
 
 [[plugins]]
 repo = 'matsui54/denite-nvim-lsp'
 on_source = 'denite.nvim'
 
-# [[plugins]]
-# repo = "puremourning/vimspector"
-# if = 'has("unix")'
-# on_ft = ["python", "cpp"]
-# build = "./install_gadget.py --enable-python --enable-c"
-# hook_add = '''
-#   source ~/dotfiles/nvim/plugins/vimspector.rc.vim
-# '''
+[[plugins]]
+repo = "puremourning/vimspector"
+if = 'has("unix")'
+build = "./install_gadget.py --enable-c"
+on_ft = ["python", "cpp"]
+hook_add = '''
+  " source ~/dotfiles/nvim/plugins/vimspector.rc.vim
+'''
+
+[[plugins]]
+repo = 'mfussenegger/nvim-dap'
+on_ft = ["python", "cpp", "c"]
+hook_source = '''
+nnoremap <silent> <F5> :lua require'dap'.continue()<CR>
+nnoremap <silent> <F10> :lua require'dap'.step_over()<CR>
+nnoremap <silent> <F11> :lua require'dap'.step_into()<CR>
+nnoremap <silent> <F12> :lua require'dap'.step_out()<CR>
+nnoremap <silent> <leader>b :lua require'dap'.toggle_breakpoint()<CR>
+nnoremap <silent> <leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
+nnoremap <silent> <leader>lp :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
+nnoremap <silent> <leader>dr :lua require'dap'.repl.open()<CR>
+nnoremap <silent> <leader>dl :lua require'dap'.run_last()<CR>
+lua <<EOF
+local dap = require 'dap'
+dap.adapters.cpp = {
+  type = 'executable',
+  attach = {
+    pidProperty = "pid",
+    pidSelect = "ask"
+  },
+  command = 'lldb-vscode-10', -- my binary was called 'lldb-vscode-11'
+  env = {
+    LLDB_LAUNCH_FLAG_LAUNCH_IN_TTY = "YES"
+  },
+  name = "lldb"
+}
+EOF
+'''

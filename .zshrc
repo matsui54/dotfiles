@@ -61,15 +61,18 @@ zstyle ':completion:*:cd:*' ignore-parents parent pwd
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-function vimsettings() {
-  cd ~/.config/nvim
-  nvim -O ~/.config/nvim/*.toml
-}
-
 # load xkb config
 # if [ -f $HOME/.xkb/keymap/mykbd ]; then
 #   xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mykbd $DISPLAY 2> /dev/null
 # fi
+
+export LESS_TERMCAP_mb=$'\e[1;32m'
+export LESS_TERMCAP_md=$'\e[1;32m'
+export LESS_TERMCAP_me=$'\e[0m'
+export LESS_TERMCAP_se=$'\e[0m'
+export LESS_TERMCAP_so=$'\e[01;33m'
+export LESS_TERMCAP_ue=$'\e[0m'
+export LESS_TERMCAP_us=$'\e[1;4;31m'
 
 # prompt settings
 if [ -n "$SSH_CONNECTION" ]; then
@@ -94,7 +97,7 @@ fi
 # Use emacs keybindings even if our EDITOR is set to vi
 bindkey -e
 
-export PATH=$HOME/bin:$HOME/.local/bin:$PATH
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/texlive/2021/bin/x86_64-linux:$PATH
 
 # Use vim keys in tab complete menu:
 zmodload zsh/complist
