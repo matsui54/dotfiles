@@ -96,7 +96,7 @@ function! s:defx_my_settings() abort
         \ defx#do_action('cd', [getcwd()])
   nnoremap <silent><buffer><expr> <Tab> winnr('$') != 1 ?
         \ ':<C-u>wincmd w<CR>' :
-        \ ':<C-u>Defx -buffer-name=temp -split=vertical<CR>'
+        \ ':<C-u>Defx -buffer-name=temp -split=vertical -winwidth=`winwidth(0)/2`<CR>'
   nnoremap <silent><buffer><expr> L
         \ defx#do_action('link')
 
