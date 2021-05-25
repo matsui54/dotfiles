@@ -1,2 +1,7 @@
 map n navigate next
 map p navigate previous
+
+set scroll-step 80
+
+# copy selection to system clipboard
+set selection-clipboard clipboard
