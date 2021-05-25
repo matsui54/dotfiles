@@ -14,6 +14,7 @@ hook_add = '''
   nnoremap <silent> <Space>f <cmd>Denite file/rec:~/dotfiles<CR>
   nnoremap <silent> <Space>h <cmd>Denite help<CR>
   nnoremap <silent> <Space>n <cmd>Denite dein<CR>
+  nnoremap <silent> <Space>/ <cmd>Denite line<CR>
   nnoremap <silent> <Space>r <cmd>Denite -resume<CR>
   nnoremap <silent> gn <cmd>Denite gina/command<CR>
   cnoremap <expr><silent> <C-t>
@@ -73,6 +74,9 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'kristijanhusak/defx-icons'
+
+[[plugins]]
 repo = 'matsui54/defx-sftp'
 
 [[plugins]]
@@ -83,9 +87,6 @@ hook_add = '''
   \ ((winnr('$') == 1 && bufname()=='') ? '<CR>' : '-split=vertical<CR>')
   nnoremap <C-\>j <cmd>Deol -toggle -split=h<CR>
 '''
-
-[[plugins]]
-repo = 'kristijanhusak/defx-icons'
 
 [[plugins]]
 repo = 'rhysd/clever-f.vim'
@@ -263,10 +264,6 @@ hook_source = '''
 '''
 
 [[plugins]]
-repo = 'Shougo/junkfile.vim'
-on_source = 'denite.nvim'
-
-[[plugins]]
 repo = 'lambdalisue/gina.vim'
 on_event = 'CmdlineEnter'
 on_source = 'denite.nvim'
@@ -288,17 +285,6 @@ hook_source = '''
 	      \ {'noremap': 1, 'silent': 1},
 	      \)
 '''
-
-[[plugins]]
-repo = 't9md/vim-choosewin'
-on_source = 'defx.nvim'
-
-# [[plugins]]
-# repo = 'sheerun/vim-polyglot'
-# on_event = ['BufReadPre', 'BufNewFile']
-# hook_add = '''
-# let g:polyglot_disabled = ['markdown']
-# '''
  
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'

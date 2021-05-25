@@ -9,10 +9,8 @@ call defx#custom#option('_', {
       \ 'resume': 1,
       \ 'listed': 1,
       \ 'columns': 'mark:indent:icons:filename:type:time:size',
-      \ 'vertical_preview': 1,
-      "\ 'floating_preview': 1,
-      \ 'preview_width': 80,
       \ 'preview_height': 30,
+      \ 'session_file': expand('~/.cache/nvim/defx'),
       \ })
 
 call defx#custom#option('sftp', {
@@ -27,7 +25,7 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> <CR>
         \ defx#do_action('open')
   nnoremap <silent><buffer><expr> +
-        \ defx#do_action('multi', [['open', 'choose'], 'quit'])
+        \ defx#do_action('add_session')
   nnoremap <silent><buffer><expr> c
         \ defx#do_action('copy')
   nnoremap <silent><buffer><expr> m
