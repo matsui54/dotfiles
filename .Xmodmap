@@ -1,0 +1,9 @@
+clear lock
+clear control
+keycode 66 = Control_L
+add control = Control_L Control_R
+
+keycode 101 = Super_R
+keycode 51 = grave asciitilde
+keycode 132 = backslash bar
+keycode 49 = Zenkaku_Hankaku
