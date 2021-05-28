@@ -105,6 +105,9 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> <Space>p
         \ defx#do_action('cd', [expand('~/.cache/dein/repos/github.com')])
 
+  nnoremap <silent><buffer><expr> <Space>'
+        \ ":Denite defx/session<CR>"
+
   nnoremap <silent><buffer><expr> <Space>s
         \ ":Denite directory_rec:" . <SID>get_defx_cwd() . " -default-action=jump_defx<CR>"
   nnoremap <silent><buffer><expr> <Space>a
@@ -129,5 +132,5 @@ function! s:open_defx_in_tab()
   call defx#call_action('cd', [dir])
 endfunction
 function! s:get_defx_cwd()
-  return escape(fnamemodify(defx#get_candidate().action__path,':h:p'), ':\')
+  return defx#get_candidates()[0]['action__path']
 endfunction

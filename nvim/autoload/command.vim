@@ -1,7 +1,7 @@
 let g:command#history_path =
       \ get(g:, 'command#history_path', '~/.zsh_history')
 let g:command#shell_history_max = 
-      \ get(g:, 'command#shell_history_max', 10)
+      \ get(g:, 'command#shell_history_max', 1000)
 
 let g:command#_bufnr = -1
 let s:edit_bufnr = -1
@@ -31,18 +31,21 @@ function! s:switch_edit_buffer(cwd) abort
     return
   endif
 
-  let edit_bufname = 'command://' . a:cwd
-  call nvim_open_win(bufnr('%'), v:true, {
-        \ 'relative': 'win',
-        \ 'win': win_getid(),
-        \ 'anchor': "SW",
-        \ 'row': str2nr(winheight(0)),
-        \ 'col': str2nr(0),
-        \ 'width': winwidth(0),
-        \ 'height': 5,
-        \ })
+  let cwd = fnamemodify(a:cwd, ':p')
+  let edit_bufname = 'command://' . cwd
+  " call nvim_open_win(bufnr('%'), v:true, {
+  "      \ 'relative': 'win',
+  "      \ 'win': win_getid(),
+  "      \ 'anchor': "SW",
+  "      \ 'row': str2nr(winheight(0)),
+  "      \ 'col': str2nr(0),
+  "      \ 'width': winwidth(0),
+  "      \ 'height': 5,
+  "      \ })
   let bufnr = bufadd(edit_bufname)
+  botright split
   execute bufnr 'buffer'
+  resize 7
 
   if line('$') == 1
     call append(0, s:get_histories())
@@ -66,12 +69,18 @@ function! s:init_edit_buffer() abort
   setlocal norelativenumber
   setlocal noswapfile
 
-  nmap <buffer> <CR>  <Plug>(deol_execute_line)
+  nmap <buffer><expr> <CR> <SID>execute_line()
   nmap <buffer><silent> q    :close<CR>
 
-  imap <buffer> <CR>  <Plug>(deol_execute_line)
+  imap <buffer><expr> <CR> <SID>execute_line()
 
   setlocal filetype=zsh
+endfunction
+
+function! s:execute_line() abort
+  stopinsert
+  let line = getline('.')
+  execute '!' line
 endfunction
 
 function! s:get_histories() abort
