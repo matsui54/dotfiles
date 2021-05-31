@@ -92,9 +92,7 @@ function! s:defx_my_settings() abort
         \ defx#do_action('change_vim_cwd')
   nnoremap <silent><buffer><expr> '
         \ defx#do_action('cd', [getcwd()])
-  nnoremap <silent><buffer><expr> <Tab> winnr('$') != 1 ?
-        \ ':<C-u>wincmd w<CR>' :
-        \ ':<C-u>Defx -buffer-name=temp -split=vertical -winwidth=`winwidth(0)/2`<CR>'
+  nnoremap <silent><buffer> <Tab> <cmd>call <SID>switch_defx_buf()<CR>
   nnoremap <silent><buffer><expr> L
         \ defx#do_action('link')
 
@@ -116,11 +114,20 @@ function! s:defx_my_settings() abort
         \ ":Denite grep:" . <SID>get_defx_cwd() . "<CR>"
 endfunction
 
+function! s:switch_defx_buf() abort
+  for buf in tabpagebuflist()
+    if buf != bufnr() && getwinvar(bufwinid(buf), '&filetype') =~# 'defx'
+      call win_gotoid(bufwinid(buf))
+      return
+    endif
+  endfor
+  wincmd o
+  Defx -buffer-name=temp -split=vertical -winwidth=`winwidth(0)/2`
+endfunction
 function! s:quit_all_defx() abort
   for buf in tabpagebuflist()
     if getwinvar(bufwinid(buf), '&filetype') =~# 'defx'
-      let winid = bufwinid(buf)
-      call win_gotoid(winid)
+      call win_gotoid(bufwinid(buf))
       call defx#call_action('quit')
     endif
   endfor
