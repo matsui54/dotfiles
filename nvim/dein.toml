@@ -44,6 +44,9 @@ hook_add = '''
 [[plugins]]
 repo = 'vim-denops/denops.vim'
 
+[[plugins]]
+repo = 'machakann/vim-sandwich'
+
 # [[plugins]]
 # repo = 'neoclide/coc.nvim'
 # merged = 0

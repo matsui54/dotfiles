@@ -124,16 +124,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'rhysd/vim-operator-surround'
-depends = 'vim-operator-user'
-on_map = '<Plug>'
-hook_add = '''
-  map <silent>sa <Plug>(operator-surround-append)
-  map <silent>sd <Plug>(operator-surround-delete)
-  map <silent>sr <Plug>(operator-surround-replace)
-'''
-
-[[plugins]]
 repo = 'SirVer/ultisnips'
 depends = 'vim-snippets'
 on_source = 'denite.nvim'
