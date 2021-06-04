@@ -410,3 +410,15 @@ dap.adapters.cpp = {
 }
 EOF
 '''
+
+[[plugins]]
+repo = 'machakann/vim-swap'
+on_map = '<plug>(swap-'
+hook_add = '''
+  let g:swap_no_default_key_mappings = 1
+
+  nmap gs <Plug>(swap-interactive)
+  xmap gs <Plug>(swap-interactive)
+  nmap g< <Plug>(swap-prev)
+  nmap g> <Plug>(swap-next)
+'''
