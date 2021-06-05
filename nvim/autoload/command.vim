@@ -69,10 +69,17 @@ function! s:init_edit_buffer() abort
   setlocal norelativenumber
   setlocal noswapfile
 
-  nmap <buffer><expr> <CR> <SID>execute_line()
-  nmap <buffer><silent> q    :close<CR>
+  nnoremap <buffer><silent> <Plug>(command_execute_line)
+        \ :<C-u>call <SID>execute_line()<CR>
+  inoremap <buffer><silent> <Plug>(command_execute_line)
+        \ <ESC>:call <SID>execute_line()<CR>
 
-  imap <buffer><expr> <CR> <SID>execute_line()
+  nnoremap <buffer><silent> <Plug>(command_quit)
+        \ :<C-u>close<CR>
+
+  nmap <buffer><CR> <Plug>(command_execute_line)
+  imap <buffer><CR> <Plug>(command_execute_line)
+  nmap <buffer> q   <Plug>(command_quit)
 
   setlocal filetype=zsh
 endfunction
