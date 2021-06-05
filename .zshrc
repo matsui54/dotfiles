@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=5000
 SAVEHIST=10000
@@ -74,21 +81,6 @@ export LESS_TERMCAP_so=$'\e[01;33m'
 export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
 
-# prompt settings
-if [ -n "$SSH_CONNECTION" ]; then
-  PROMPT='%F{cyan}[%n@%m:%~]%f${vcs_info_msg_0_}%# '
-else
-  PROMPT='%F{cyan}[%~]%f${vcs_info_msg_0_}%# '
-fi
-autoload -Uz vcs_info
-setopt prompt_subst
-zstyle ':vcs_info:git:*' check-for-changes true
-zstyle ':vcs_info:git:*' stagedstr "%F{yellow}!"
-zstyle ':vcs_info:git:*' unstagedstr "%F{red}+"
-zstyle ':vcs_info:*' formats "%F{green}%c%u[%b]%f"
-zstyle ':vcs_info:*' actionformats '[%b|%a]'
-precmd () { vcs_info }
-
 # if wsl
 if [ -d /mnt/c/Users/harum ]; then
   export WIN_HOME=/mnt/c/Users/harum
@@ -116,3 +108,10 @@ fi
 if [ -d ~/.zsh/zsh-syntax-highlighting ]; then
   source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
+
+if [ -f ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme ]; then
+  source ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme
+fi
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

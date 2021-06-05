@@ -124,16 +124,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'rhysd/vim-operator-surround'
-depends = 'vim-operator-user'
-on_map = '<Plug>'
-hook_add = '''
-  map <silent>sa <Plug>(operator-surround-append)
-  map <silent>sd <Plug>(operator-surround-delete)
-  map <silent>sr <Plug>(operator-surround-replace)
-'''
-
-[[plugins]]
 repo = 'SirVer/ultisnips'
 depends = 'vim-snippets'
 on_source = 'denite.nvim'
@@ -419,4 +409,16 @@ dap.adapters.cpp = {
   name = "lldb"
 }
 EOF
+'''
+
+[[plugins]]
+repo = 'machakann/vim-swap'
+on_map = '<plug>(swap-'
+hook_add = '''
+  let g:swap_no_default_key_mappings = 1
+
+  nmap gs <Plug>(swap-interactive)
+  xmap gs <Plug>(swap-interactive)
+  nmap g< <Plug>(swap-prev)
+  nmap g> <Plug>(swap-next)
 '''
