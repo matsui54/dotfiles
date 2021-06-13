@@ -74,7 +74,7 @@ class Kind(File):
     def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
-        self.name = 'git'
+        self.name = 'git/status'
 
     def action_preview(self, context: UserContext) -> None:
         target = context['targets'][0]

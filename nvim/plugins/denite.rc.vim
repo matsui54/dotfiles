@@ -26,6 +26,11 @@ function! s:denite_my_settings() abort
   nnoremap <silent><buffer><expr> e
         \ denite#do_map('do_action', 'edit')
 
+  nnoremap <silent><buffer><expr> <C-n>
+        \ denite#do_map('do_action', 'scroll_down')
+  nnoremap <silent><buffer><expr> <C-p>
+        \ denite#do_map('do_action', 'scroll_up')
+
   nnoremap <buffer> <C-o> <Nop>
   nnoremap <buffer> <C-i> <Nop>
 endfunction
@@ -55,6 +60,28 @@ function! s:jump_defx(context) abort
 endfunction
 call denite#custom#action('directory', 'jump_defx',
       \ function('s:jump_defx'))
+
+function! s:preview_scroll(command) abort
+  let prev_id = win_getid()
+  let buffers = win_findbuf(g:denite#_previewing_bufnr)
+  if empty(buffers)
+    return
+  endif
+  let preview_winid = buffers[0]
+  call win_gotoid(preview_winid)
+  execute "normal! " . a:command
+  call win_gotoid(prev_id)
+endfunction
+function! s:preview_scroll_down(context) abort
+  call s:preview_scroll("\<C-d>")
+endfunction
+function! s:preview_scroll_up(context) abort
+  call s:preview_scroll("\<C-u>")
+endfunction
+call denite#custom#action('file,git/log', 'scroll_down',
+      \ function('s:preview_scroll_down'), {'is_quit': v:false})
+call denite#custom#action('file,git/log', 'scroll_up',
+      \ function('s:preview_scroll_up'), {'is_quit': v:false})
 
 " For ripgrep
 if executable('rg')
