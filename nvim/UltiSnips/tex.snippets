@@ -1,3 +1,30 @@
-snippet zu "picture"
+snippet zu "picture" w
 図\\ref{${1}}
+endsnippet
+
+snippet minipage "minipage"
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.4\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{${1}}
+    \caption{${2}}
+    \label{${3}}
+  \end{minipage}
+  \begin{minipage}{0.4\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{${4}}
+    \caption{${5}}
+    \label{${6}}
+  \end{minipage}
+\end{figure}
+endsnippet
+
+snippet figure "figure"
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=${1}cm]{${2}}
+  \caption{${3}}
+  \label{${4}}
+\end{figure}
 endsnippet
