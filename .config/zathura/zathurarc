@@ -1,5 +1,5 @@
-map n navigate next
-map p navigate previous
+map <C-n> navigate next
+map <C-p> navigate previous
 
 set scroll-step 80
 
