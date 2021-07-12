@@ -40,6 +40,9 @@ hook_source = '''
 
 [[plugins]]
 repo = 'Shougo/deoplete-lsp'
+hook_add = '''
+  let deoplete#lsp#use_icons_for_candidates = 1
+'''
 
 [[plugins]]
 repo = 'itchyny/calendar.vim'
