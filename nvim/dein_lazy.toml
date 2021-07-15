@@ -78,6 +78,9 @@ hook_add = '''
 
 [[plugins]]
 repo = 'kristijanhusak/defx-icons'
+hook_add = '''
+  let g:defx_icons_column_length = 2
+'''
 
 [[plugins]]
 repo = 'matsui54/defx-sftp'
