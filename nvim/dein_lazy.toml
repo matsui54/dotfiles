@@ -430,3 +430,7 @@ hook_add = '''
   nmap g< <Plug>(swap-prev)
   nmap g> <Plug>(swap-next)
 '''
+
+[[plugins]]
+repo = 'editorconfig/editorconfig-vim'
+on_cmd = 'EditorConfigEnable'
