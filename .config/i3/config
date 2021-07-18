@@ -60,7 +60,7 @@ bindsym $mod+Shift+q kill
 
 # A more modern dmenu replacement is rofi:
 bindsym $mod+d exec "rofi -modi drun,run,window,my-cmd:~/.config/i3/my_rofi_cmd,combi -show combi -combi-modi drun,window,my-cmd"
-bindsym $mod+g exec "gopass ls --flat | rofi -dmenu | xargs --no-run-if-empty gopass show -c -o"
+bindsym $mod+g exec "bwmenu"
 
 # change focus
 bindsym $mod+h focus left
