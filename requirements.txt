@@ -1,5 +1,5 @@
 pynvim
 send2trash
-python-language-server[all]
+python-lsp-server[all]
 requests
 ueberzug

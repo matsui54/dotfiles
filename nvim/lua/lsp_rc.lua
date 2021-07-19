@@ -35,7 +35,7 @@ local on_attach = function(client)
 end
 
 require'lspconfig'.clangd.setup{on_attach = on_attach}
-require'lspconfig'.pyls.setup{on_attach = on_attach}
+require'lspconfig'.pylsp.setup{on_attach = on_attach}
 require'lspconfig'.rls.setup{on_attach = on_attach}
 require'lspconfig'.texlab.setup{on_attach = on_attach}
 require'lspconfig'.denols.setup{on_attach = on_attach}
