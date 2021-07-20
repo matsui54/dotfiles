@@ -238,8 +238,10 @@ repo = 'Shougo/context_filetype.vim'
 repo = 'deoplete-plugins/deoplete-dictionary'
 on_source = 'deoplete.nvim'
 hook_source = '''
-  call deoplete#custom#source(
-  \ 'dictionary', 'min_pattern_length', 4)
+  call deoplete#custom#source('dictionary', {
+  \ 'min_pattern_length': 4,
+  \ 'ignore_case': v:true,
+  \ })
   call deoplete#custom#source(
   \ 'dictionary', 'max_candidates', 10)
 '''
