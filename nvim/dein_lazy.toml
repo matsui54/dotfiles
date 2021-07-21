@@ -24,6 +24,7 @@ hook_add = '''
 [[plugins]]
 repo = 'thinca/vim-quickrun'
 on_cmd = 'QuickRun'
+depends = ['vim-quickrun-runner-nvimterm']
 hook_add = '''
   function! My_quickrun_redirect() abort
     let input_file = expand('%:h') . '/in.txt'
@@ -37,6 +38,9 @@ hook_add = '''
 hook_source = '''
   source ~/dotfiles/nvim/plugins/quickrun.rc.vim
 '''
+
+[[plugins]]
+repo = 'statiolake/vim-quickrun-runner-nvimterm'
 
 [[plugins]]
 repo = 'Shougo/deoplete-lsp'
