@@ -337,15 +337,6 @@ on_source = 'denite.nvim'
 repo = 'nvim-telescope/telescope.nvim'
 on_cmd = 'Telescope'
 depends = ['popup.nvim', 'plenary.nvim']
-hook_source = '''
-lua << EOF
-require('telescope').setup{
-    file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
-    grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
-    qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
-}
-EOF
-'''
 
 [[plugins]]
 repo = 'norcalli/nvim-colorizer.lua'
@@ -365,9 +356,6 @@ on_ft = ['html', 'css']
 [[plugins]]
 repo = 'matsui54/deoplete-google-search'
 on_cmd = 'GoogleSearchOpenPrompt'
-hook_add = '''
-nnoremap <silent><C-p> :GoogleSearchOpenPrompt<CR>
-'''
 
 [[plugins]]
 repo = 'lambdalisue/suda.vim'
@@ -376,10 +364,6 @@ on_event = 'BufRead'
 [[plugins]]
 repo = 'neoclide/denite-git'
 on_source = 'denite.nvim'
-
-[[plugins]]
-repo = 'skanehira/gh.vim'
-on_event = 'BufRead'
 
 [[plugins]]
 repo = 'matsui54/denite-nvim-lsp'

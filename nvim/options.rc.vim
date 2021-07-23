@@ -69,27 +69,6 @@ if has('nvim')
   colorscheme iceberg
 endif
 
-" if has('unix') && !vimrc#is_wsl()
-"   augroup im_change
-"     autocmd!
-"     autocmd InsertEnter * call system('fcitx-remote -c')
-"     autocmd InsertLeave * call system('fcitx-remote -o')
-"     autocmd VimLeave * call system('fcitx-remote -c')
-"     autocmd CmdlineLeave * call system('fcitx-remote -o')
-"     autocmd CompleteChanged * call system('fcitx-remote -c')
-"   augroup END
-" elseif vimrc#is_windows() && has('nvim')
-"   " for windows
-"   augroup im_change
-"     autocmd!
-"     autocmd BufWinEnter * let b:win_ime_con_is_active = 0
-"     autocmd BufWinEnter * let b:win_ime_con_is_insert = 0
-"     autocmd InsertEnter * call vimrc#on_insert_enter()
-"     autocmd InsertLeave * call vimrc#disable_ime()
-"     autocmd CmdlineLeave * call vimrc#disable_ime()
-"   augroup END
-" endif
-
 augroup MyAutoCmd
   autocmd VimEnter * let t:defx_index = 1 | let g:tab_idx = 1
   autocmd TabNew * let t:defx_index = s:get_defx_idx()
@@ -108,12 +87,3 @@ endfunction
 " tabline setting
 set showtabline=2
 set tabline=%!tabline#MyTabLine()
-
-" if vimrc#is_wsl()
-"   command! Wslput :put =substitute(substitute(system('powershell.exe get-clipboard'), '\r', '', 'g'), '\n$', '', '')
-" 
-"   augroup Clip
-"     autocmd!
-"     autocmd TextYankPost * call system("clip.exe ", v:event.regcontents)
-"   augroup END
-" endif

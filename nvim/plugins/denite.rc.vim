@@ -104,12 +104,6 @@ if executable('fd')
   call denite#custom#var('directory_rec', 'command', s:fd_cmds + ['d'])
 endif
 
-function! s:ts_preview(context) abort
-  call luaeval('require("denite_ts_preview").show(_A)', a:context)
-endfunction
-call denite#custom#action('file', 'preview_ts',
-      \ function('s:ts_preview'), {'is_quit': v:false})
-
 " Change default action.
 call denite#custom#source('directory_rec', 'default_action', 'cd')
 
