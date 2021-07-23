@@ -131,10 +131,10 @@ vmap <silent> <C-d> <cmd>call smooth_scroll#down()<CR>
 
 " from nelstrom/vim-visual-star-search
 function! s:VSetSearch(cmdtype)
-  let temp = @s
-  norm! gv"sy
-  let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
-  let @s = temp
+  let temp = @"
+  norm! y
+  let @/ = '\V' . substitute(escape(@", a:cmdtype.'\'), '\n', '\\n', 'g')
+  let @" = temp
 endfunction
 
 xnoremap * <cmd>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
