@@ -2,6 +2,7 @@ map <C-n> navigate next
 map <C-p> navigate previous
 
 set scroll-step 80
+set incremental-search
 
 # copy selection to system clipboard
 set selection-clipboard clipboard
