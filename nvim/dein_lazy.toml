@@ -42,11 +42,11 @@ hook_source = '''
 [[plugins]]
 repo = 'statiolake/vim-quickrun-runner-nvimterm'
 
-[[plugins]]
-repo = 'Shougo/deoplete-lsp'
-hook_add = '''
-  let deoplete#lsp#use_icons_for_candidates = 1
-'''
+# [[plugins]]
+# repo = 'Shougo/deoplete-lsp'
+# hook_add = '''
+#   let deoplete#lsp#use_icons_for_candidates = 1
+# '''
 
 [[plugins]]
 repo = 'itchyny/calendar.vim'
@@ -227,44 +227,38 @@ hook_add = '''
   xmap gcc <Plug>(caw:hatpos:toggle)
 '''
 
-[[plugins]]
-repo = 'Shougo/deoplete.nvim'
-depends = ['context_filetype.vim', 'deoplete-lsp']
-on_event = 'InsertEnter'
-hook_source = '''
-  source ~/dotfiles/nvim/plugins/deoplete.rc.vim
-'''
+# [[plugins]]
+# repo = 'Shougo/deoplete.nvim'
 
 [[plugins]]
 repo = 'Shougo/context_filetype.vim'
 
-[[plugins]]
-repo = 'deoplete-plugins/deoplete-dictionary'
-on_source = 'deoplete.nvim'
-hook_source = '''
-  call deoplete#custom#source('dictionary', {
-  \ 'min_pattern_length': 4,
-  \ 'ignore_case': v:true,
-  \ })
-  call deoplete#custom#source(
-  \ 'dictionary', 'max_candidates', 10)
-'''
+# [[plugins]]
+# repo = 'deoplete-plugins/deoplete-dictionary'
+# hook_source = '''
+#   call deoplete#custom#source('dictionary', {
+#   \ 'min_pattern_length': 4,
+#   \ 'ignore_case': v:true,
+#   \ })
+#   call deoplete#custom#source(
+#   \ 'dictionary', 'max_candidates', 10)
+# '''
 
 [[plugins]]
 repo = 'Shougo/neco-vim'
 on_source = 'context_filetype.vim'
 
-[[plugins]]
-repo = 'Shougo/echodoc.vim'
-on_event = 'CompleteDone'
-hook_add = '''
-	let g:echodoc#type = 'floating'
-  autocmd MyAutoCmd CmdWinEnter [:>] let g:echodoc#type = 'virtual'
-  autocmd MyAutoCmd CmdWinLeave * let g:echodoc#type = 'floating'
-'''
-hook_source = '''
-  call echodoc#enable()
-'''
+# [[plugins]]
+# repo = 'Shougo/echodoc.vim'
+# on_event = 'CompleteDone'
+# hook_add = '''
+# 	let g:echodoc#type = 'floating'
+#   autocmd MyAutoCmd CmdWinEnter [:>] let g:echodoc#type = 'virtual'
+#   autocmd MyAutoCmd CmdWinLeave * let g:echodoc#type = 'floating'
+# '''
+# hook_source = '''
+#   call echodoc#enable()
+# '''
 
 [[plugins]]
 repo = 'lambdalisue/gina.vim'
@@ -345,17 +339,16 @@ hook_source = '''
   lua require'colorizer'.setup()
 '''
 
-[[plugins]]
-repo = 'zchee/deoplete-zsh'
-on_ft = ['zsh', 'sh']
+# [[plugins]]
+# repo = 'zchee/deoplete-zsh'
 
 [[plugins]]
 repo = 'mattn/emmet-vim'
 on_ft = ['html', 'css']
 
-[[plugins]]
-repo = 'matsui54/deoplete-google-search'
-on_cmd = 'GoogleSearchOpenPrompt'
+# [[plugins]]
+# repo = 'matsui54/deoplete-google-search'
+# on_cmd = 'GoogleSearchOpenPrompt'
 
 [[plugins]]
 repo = 'lambdalisue/suda.vim'
@@ -424,3 +417,8 @@ hook_add = '''
 [[plugins]]
 repo = 'editorconfig/editorconfig-vim'
 on_cmd = 'EditorConfigEnable'
+
+[[plugins]]
+repo = 'vim-denops/denops.vim'
+hook_add = '''
+'''
