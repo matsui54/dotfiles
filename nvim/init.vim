@@ -5,6 +5,7 @@ augroup END
 " dein settings--------------------------------------------
 let g:dein#lazy_rplugins = v:true
 let g:dein#auto_recache = v:true
+let g:dein#types#git#default_protocol = 'ssh'
 
 let s:dein_dir = expand('~/.cache/dein')
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
