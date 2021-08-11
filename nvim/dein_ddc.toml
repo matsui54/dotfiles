@@ -37,3 +37,11 @@ on_source = 'ddc.vim'
 [[plugins]]
 repo = 'matsui54/ddc-buffer'
 on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'matsui54/ddc-ultisnips'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'matsui54/ddc-filter_editdistance'
+on_source = 'ddc.vim'
