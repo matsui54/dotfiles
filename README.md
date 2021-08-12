@@ -1,15 +1,10 @@
-# Requirements
-- neovim 0.5+
-
-## Installation
+## dependencies
 - create python venv
 ```
 python -m venv ~/.vim/python3
 source ~/.vim/python3/bin/activate
 pip install -r ~/dotfiles/requirements.txt
 ```
-
-## other dependencies
 - ripgrep
 - bat
 - fd

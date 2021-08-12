@@ -9,7 +9,7 @@ call ddc#custom#patch_global('sourceOptions', {
         \   'sorters': ['sorter_rank'],
         \ },
         \ 'around': {'mark': 'A'},
-        \ 'dictionary': {'matchers': ['matcher_editdistance'], 'maxCandidates': 10, 'mark': 'D', 'minAutoCompleteLength': 3},
+        \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
         \ 'eskk': {'mark': 'eskk', 'matchers': [], 'sorters': []},
         \ 'necovim': {'mark': 'neco'},
         \ 'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': '\\.|:|->'},
