@@ -12,26 +12,21 @@ call ddc#custom#patch_global('sourceOptions', {
         \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
         \ 'eskk': {'mark': 'eskk', 'matchers': [], 'sorters': []},
         \ 'necovim': {'mark': 'neco'},
-        \ 'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': '\\.|:|->'},
+        \ 'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
         \ 'buffer': {'mark': 'B'},
         \ 'ultisnips': {'mark': 'US'},
         \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
+      \ 'nvimlsp': {'useIcon': v:true},
       \ })
 call ddc#custom#patch_global('filterParams', {
       \ 'matcher_fuzzy': {'camelcase': v:true},
       \ })
 
 call ddc#custom#patch_filetype(['vim', 'toml'], {
-      \ 'sources': ['buffer', 'necovim'],
+      \ 'sources': ['necovim', 'buffer'],
       \ })
-" call ddc#custom#patch_filetype(['vim', 'toml'], 'sourceOptions', {
-"      \ 'neco': {'matchers': ['matcher_head']},
-"        \ })
-call ddc#custom#patch_filetype(
-      \ ['denite-filter'], 'sources', ['around']
-      \ )
 call ddc#custom#patch_filetype(
       \ ['zsh'], 'sources', ['zsh']
       \ )
