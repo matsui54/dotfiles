@@ -209,6 +209,7 @@ hook_source = '''
     call t.add_map('z,', '，')
     call eskk#register_mode_table('hira', t)
   endfunction
+  call ddc#custom#patch_global('sources', ['nvimlsp', 'eskk', 'buffer', 'ultisnips', 'dictionary'])
 '''
 
 [[plugins]]
@@ -237,7 +238,7 @@ hook_add = '''
   autocmd MyAutoCmd CmdWinLeave * let g:echodoc#type = 'floating'
 '''
 hook_source = '''
-  call echodoc#enable()
+  " call echodoc#enable()
 '''
 
 [[plugins]]
@@ -298,6 +299,13 @@ repo = 'neovim/nvim-lspconfig'
 on_event = 'BufRead'
 hook_source = '''
   lua require('lsp_rc')
+'''
+
+[[plugins]]
+repo = 'kabouzeid/nvim-lspinstall'
+on_source = 'nvim-lspconfig'
+hook_source = '''
+  lua require'lspinstall'.setup()
 '''
 
 [[plugins]]
