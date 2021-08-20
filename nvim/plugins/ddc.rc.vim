@@ -23,6 +23,9 @@ call ddc#custom#patch_global('sourceParams', {
 call ddc#custom#patch_global('filterParams', {
       \ 'matcher_fuzzy': {'camelcase': v:true},
       \ })
+call ddc#custom#patch_global('specialBufferCompletionFiletypes', [
+      \ 'gina-commit',
+      \ ])
 
 call ddc#custom#patch_filetype(['vim', 'toml'], {
       \ 'sources': ['necovim', 'buffer'],
