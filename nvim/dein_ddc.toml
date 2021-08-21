@@ -45,3 +45,7 @@ on_source = 'ddc.vim'
 [[plugins]]
 repo = 'matsui54/ddc-filter_editdistance'
 on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'matsui54/ddc-nvim-lsp-doc'
+on_event = 'InsertEnter'
