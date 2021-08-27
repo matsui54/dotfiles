@@ -401,6 +401,3 @@ hook_add = '''
 [[plugins]]
 repo = 'editorconfig/editorconfig-vim'
 on_cmd = 'EditorConfigEnable'
-
-[[plugins]]
-repo = 'vim-denops/denops.vim'

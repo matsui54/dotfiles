@@ -1,6 +1,6 @@
 [[plugins]]
 repo = 'Shougo/ddc.vim'
-depends = ['context_filetype.vim', 'denops.vim']
+depends = ['context_filetype.vim']
 on_event = 'InsertEnter'
 hook_source = '''
   source ~/dotfiles/nvim/plugins/ddc.rc.vim
@@ -31,7 +31,8 @@ repo = 'matsui54/ddc-matcher_fuzzy'
 on_source = 'ddc.vim'
 
 [[plugins]]
-repo = 'Shougo/ddc-nvim-lsp'
+# repo = 'Shougo/ddc-nvim-lsp'
+repo = '~/ghq/github.com/matsui54/ddc-nvim-lsp'
 on_source = 'ddc.vim'
 
 [[plugins]]
@@ -45,3 +46,16 @@ on_source = 'ddc.vim'
 [[plugins]]
 repo = 'matsui54/ddc-filter_editdistance'
 on_source = 'ddc.vim'
+
+[[plugins]]
+repo = '~/ghq/github.com/matsui54/ddc-nvim-lsp-doc'
+on_source = 'ddc.vim'
+hook_source = '''
+call ddc_nvim_lsp_doc#enable()
+'''
+
+[[plugins]]
+repo = 'ray-x/lsp_signature.nvim.git'
+hook_add = '''
+  command! LspSigEnable call dde_nvim_lsp_doc#disable() | lua require("lsp_signature").setup()
+'''
