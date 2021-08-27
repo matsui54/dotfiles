@@ -39,12 +39,12 @@ require'lspconfig'.pylsp.setup{on_attach = on_attach}
 require'lspconfig'.rls.setup{on_attach = on_attach}
 require'lspconfig'.texlab.setup{on_attach = on_attach}
 require'lspconfig'.denols.setup{on_attach = on_attach}
-
-local sumneko_root_path = vim.fn.stdpath('cache')..'/lspconfig/sumneko_lua/lua-language-server'
+-- /home/denjo/.local/share/nvim/lspinstall/lua/sumneko-lua-language-server
+local sumneko_root_path = vim.fn.stdpath('cache')..'/lspinstall/sumneko_lua/lua-language-server'
 local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"
 
 require'lspconfig'.sumneko_lua.setup {
-  cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
+  cmd = {'/home/denjo/.local/share/nvim/lspinstall/lua/sumneko-lua-language-server'};
   settings = {
     Lua = {
       runtime = {
