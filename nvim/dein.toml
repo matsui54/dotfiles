@@ -46,31 +46,9 @@ repo = 'machakann/vim-sandwich'
 
 [[plugins]]
 repo = 'lambdalisue/guise.vim'
-# hook_add = '''
-# let g:denops#debug = 1
-# '''
 
 [[plugins]]
 repo = 'vim-denops/denops.vim'
-
-# [[plugins]]
-# repo = 'neoclide/coc.nvim'
-# merged = 0
-# rev = 'release'
 # hook_add = '''
-#   source ~/dotfiles/nvim/plugins/coc.rc.vim
+# let g:denops#debug = 1
 # '''
-
-# [[plugins]]
-# repo = 'tbodt/deoplete-tabnine'
-# build = './install.sh'
-
-# [[plugins]]
-# repo = 'Shougo/neosnippet-snippets'
-
-# [[plugins]]
-# repo = 'itchyny/lightline.vim'
-# hook_add = '''
-#   source ~/dotfiles/nvim/plugins/lightline.rc.vim
-# '''
-
