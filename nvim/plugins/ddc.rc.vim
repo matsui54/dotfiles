@@ -2,7 +2,11 @@ inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'ultisnips', 'dictionary'])
+if has('nvim')
+  call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'ultisnips', 'dictionary'])
+else
+  call ddc#custom#patch_global('sources', ['ddc-vim-lsp', 'buffer', 'ultisnips', 'dictionary'])
+endif
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
         \   'matchers': ['matcher_fuzzy'],

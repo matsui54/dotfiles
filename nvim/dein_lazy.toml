@@ -42,6 +42,7 @@ hook_source = '''
 
 [[plugins]]
 repo = 'statiolake/vim-quickrun-runner-nvimterm'
+if = 'has("nvim")'
 
 [[plugins]]
 repo = 'itchyny/calendar.vim'
@@ -231,18 +232,6 @@ repo = 'Shougo/neco-vim'
 on_source = 'context_filetype.vim'
 
 [[plugins]]
-repo = 'Shougo/echodoc.vim'
-on_event = 'CompleteDone'
-hook_add = '''
-	let g:echodoc#type = 'floating'
-  autocmd MyAutoCmd CmdWinEnter [:>] let g:echodoc#type = 'virtual'
-  autocmd MyAutoCmd CmdWinLeave * let g:echodoc#type = 'floating'
-'''
-hook_source = '''
-  " call echodoc#enable()
-'''
-
-[[plugins]]
 repo = 'lambdalisue/gina.vim'
 on_event = 'CmdlineEnter'
 on_source = 'denite.nvim'
@@ -297,6 +286,7 @@ EOF
 
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
+if = 'has("nvim")'
 on_event = 'BufRead'
 hook_source = '''
   lua require('lsp_rc')
@@ -314,15 +304,16 @@ repo = 'nvim-lua/popup.nvim'
 
 [[plugins]]
 repo = 'nvim-lua/plenary.nvim'
-on_source = 'denite.nvim'
 
 [[plugins]]
 repo = 'nvim-telescope/telescope.nvim'
 on_cmd = 'Telescope'
+if = 'has("nvim")'
 depends = ['popup.nvim', 'plenary.nvim']
 
 [[plugins]]
 repo = 'norcalli/nvim-colorizer.lua'
+if = 'has("nvim")'
 on_event = 'BufRead'
 hook_source = '''
   lua require'colorizer'.setup()
@@ -345,10 +336,11 @@ on_source = 'denite.nvim'
 
 [[plugins]]
 repo = 'matsui54/denite-nvim-lsp'
-on_source = 'denite.nvim'
+if = 'has("nvim")'
 
 [[plugins]]
 repo = 'mfussenegger/nvim-dap'
+if = 'has("nvim")'
 on_ft = ["python", "cpp", "c"]
 depends = ['DAPInstall.nvim']
 hook_source = '''
@@ -380,6 +372,7 @@ EOF
 
 [[plugins]]
 repo = 'Pocco81/DAPInstall.nvim'
+if = 'has("nvim")'
 hook_source = '''
 lua <<EOF
   local dap_install = require("dap-install")
