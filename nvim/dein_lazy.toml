@@ -337,6 +337,7 @@ on_source = 'denite.nvim'
 [[plugins]]
 repo = 'matsui54/denite-nvim-lsp'
 if = 'has("nvim")'
+on_source = 'denite.nvim'
 
 [[plugins]]
 repo = 'mfussenegger/nvim-dap'
