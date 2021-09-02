@@ -53,9 +53,3 @@ on_source = 'ddc.vim'
 hook_source = '''
 call ddc_nvim_lsp_doc#enable()
 '''
-
-[[plugins]]
-repo = 'ray-x/lsp_signature.nvim.git'
-hook_add = '''
-  command! LspSigEnable call dde_nvim_lsp_doc#disable() | lua require("lsp_signature").setup()
-'''
