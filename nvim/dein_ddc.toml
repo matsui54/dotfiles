@@ -31,8 +31,8 @@ repo = 'matsui54/ddc-matcher_fuzzy'
 on_source = 'ddc.vim'
 
 [[plugins]]
-# repo = 'Shougo/ddc-nvim-lsp'
-repo = '~/ghq/github.com/matsui54/ddc-nvim-lsp'
+repo = 'Shougo/ddc-nvim-lsp'
+if = "has('nvim')"
 on_source = 'ddc.vim'
 
 [[plugins]]
@@ -48,8 +48,21 @@ repo = 'matsui54/ddc-filter_editdistance'
 on_source = 'ddc.vim'
 
 [[plugins]]
-repo = '~/ghq/github.com/matsui54/ddc-nvim-lsp-doc'
+repo = 'matsui54/ddc-nvim-lsp-doc'
+if = "has('nvim')"
 on_source = 'ddc.vim'
 hook_source = '''
-call ddc_nvim_lsp_doc#enable()
+  call ddc_nvim_lsp_doc#enable()
 '''
+
+[[plugins]]
+repo = 'ray-x/lsp_signature.nvim'
+if = "has('nvim')"
+hook_add = '''
+  command! LspSigEnable call ddc_nvim_lsp_doc#disable() | lua require("lsp_signature").setup()
+'''
+
+[[plugins]]
+repo = 'shun/ddc-vim-lsp'
+on_source = 'ddc.vim'
+if = "!has('nvim')"

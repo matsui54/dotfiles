@@ -12,9 +12,6 @@ let g:vim_markdown_folding_disabled = 1
 repo = 'cocopon/iceberg.vim'
 
 [[plugins]]
-repo = 'kyazdani42/blue-moon'
-
-[[plugins]]
 repo = 'Yggdroot/indentLine'
 hook_add = '''
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
@@ -29,6 +26,14 @@ repo = 'vim-jp/vimdoc-ja'
 hook_add = '''
 set helplang=ja
 '''
+
+[[plugins]]
+repo = 'roxma/vim-hug-neovim-rpc'
+if = '!has("nvim")'
+
+[[plugins]]
+repo = 'roxma/nvim-yarp'
+if = '!has("nvim")'
 
 [[plugins]]
 repo = 'cespare/vim-toml'
@@ -46,31 +51,17 @@ repo = 'machakann/vim-sandwich'
 
 [[plugins]]
 repo = 'lambdalisue/guise.vim'
+
+[[plugins]]
+repo = 'vim-denops/denops.vim'
 # hook_add = '''
 # let g:denops#debug = 1
 # '''
 
 [[plugins]]
-repo = 'vim-denops/denops.vim'
+repo = "prabirshrestha/vim-lsp"
+if = '!has("nvim")'
 
-# [[plugins]]
-# repo = 'neoclide/coc.nvim'
-# merged = 0
-# rev = 'release'
-# hook_add = '''
-#   source ~/dotfiles/nvim/plugins/coc.rc.vim
-# '''
-
-# [[plugins]]
-# repo = 'tbodt/deoplete-tabnine'
-# build = './install.sh'
-
-# [[plugins]]
-# repo = 'Shougo/neosnippet-snippets'
-
-# [[plugins]]
-# repo = 'itchyny/lightline.vim'
-# hook_add = '''
-#   source ~/dotfiles/nvim/plugins/lightline.rc.vim
-# '''
-
+[[plugins]]
+repo = 'mattn/vim-lsp-settings'
+if = '!has("nvim")'
