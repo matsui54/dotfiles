@@ -23,6 +23,7 @@ call ddc#custom#patch_global('sourceOptions', {
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
       \ 'nvimlsp': {'useIcon': v:true},
+      \ 'dictionary': {'smartCase': v:true},
       \ })
 call ddc#custom#patch_global('filterParams', {
       \ 'matcher_fuzzy': {'camelcase': v:true},
@@ -42,3 +43,16 @@ call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
       \ })
 
 call ddc#enable()
+
+let g:ddc_nvim_lsp_doc_config = {
+      \ 'documentation': {
+      \   'enable': v:true,
+      \   'border': 'double',
+      \   'maxWidth': 60,
+      \   'maxHeight': 30,
+      \ },
+      \ 'signature': {
+      \   'border': 'double',
+      \   'maxHeight': 5,
+      \ },
+      \ }
