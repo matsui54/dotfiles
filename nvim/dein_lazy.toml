@@ -252,6 +252,16 @@ hook_source = '''
 	      \ ':<C-u>Gina commit<CR>',
 	      \ {'noremap': 1, 'silent': 1},
 	      \)
+	call gina#custom#mapping#nmap(
+	      \ 'branch', 'o',
+	      \ ':call gina#action#call(''new'')<CR>',
+	      \ {'noremap': 1, 'silent': 1},
+	      \)
+	call gina#custom#mapping#nmap(
+	      \ 'branch', 'dd',
+	      \ ':call gina#action#call(''delete'')<CR>',
+	      \ {'noremap': 1, 'silent': 1},
+	      \)
 '''
  
 [[plugins]]
