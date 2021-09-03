@@ -133,13 +133,31 @@ hook_add = '''
 [[plugins]]
 repo = 'SirVer/ultisnips'
 depends = 'vim-snippets'
-on_source = 'denite.nvim'
+on_event = 'InsertEnter'
 hook_source = '''
   let g:UltiSnipsExpandTrigger='<C-l>'
   let g:UltiSnipsJumpForwardTrigger='<C-f>'
   let g:UltiSnipsJumpBackwardTrigger='<C-b>'
 '''
-on_event = 'InsertCharPre'
+
+[[plugins]]
+repo = 'hrsh7th/vim-vsnip'
+on_event = 'InsertEnter'
+# hook_add = '''
+# " Expand
+# " imap <silent> <expr> <C-l> vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-r>=UltiSnips#ExpandSnippet()<CR>'
+# " smap <silent> <expr> <C-l> vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-r>=UltiSnips#ExpandSnippet()<CR>'
+# 
+# " Jump forward or backward
+# imap <silent> <expr> <C-f> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-r>=UltiSnips#JumpForwards()<CR>'
+# smap <silent> <expr> <C-f> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-r>=UltiSnips#JumpForwards()<CR>'
+# imap <silent> <expr> <C-b> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-r>=UltiSnips#JumpBackwards()<CR>'
+# smap <silent> <expr> <C-b> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-r>=UltiSnips#JumpBackwards()<CR>'
+# '''
+
+[[plugins]]
+repo = 'hrsh7th/vim-vsnip-integ'
+on_source = 'vim-vsnip'
 
 [[plugins]]
 repo = 'honza/vim-snippets'
