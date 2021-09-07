@@ -5,14 +5,15 @@ inoremap <silent><expr> <TAB>
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 if has('nvim')
-  call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'ultisnips', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'vsnip', 'dictionary'])
 else
-  call ddc#custom#patch_global('sources', ['ddc-vim-lsp', 'buffer', 'ultisnips', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['ddc-vim-lsp', 'buffer', 'vsnip', 'dictionary'])
 endif
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
         \   'matchers': ['matcher_fuzzy'],
         \   'sorters': ['sorter_rank'],
+        \   'converters': ['converter_remove_overlap', 'converter_truncate'],
         \ },
         \ 'around': {'mark': 'A'},
         \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
@@ -48,13 +49,9 @@ call ddc#enable()
 
 let g:ddc_nvim_lsp_doc_config = {
       \ 'documentation': {
-      \   'enable': v:true,
-      \   'border': 'double',
-      \   'maxWidth': 60,
-      \   'maxHeight': 30,
+      \   'border': 'rounded',
       \ },
       \ 'signature': {
-      \   'border': 'double',
-      \   'maxHeight': 5,
+      \   'border': 'rounded',
       \ },
       \ }

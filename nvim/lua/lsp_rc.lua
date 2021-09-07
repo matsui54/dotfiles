@@ -34,11 +34,28 @@ local on_attach = function(client)
   false)
 end
 
-require'lspconfig'.clangd.setup{on_attach = on_attach}
-require'lspconfig'.pylsp.setup{on_attach = on_attach}
-require'lspconfig'.rls.setup{on_attach = on_attach}
-require'lspconfig'.texlab.setup{on_attach = on_attach}
-require'lspconfig'.denols.setup{on_attach = on_attach}
+-- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.textDocument.completion.completionItem.preselectSupport = true
+capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
+capabilities.textDocument.completion.completionItem.labelDetailsSupport = true
+capabilities.textDocument.completion.completionItem.deprecatedSupport = true
+capabilities.textDocument.completion.completionItem.commitCharactersSupport = true
+capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
+capabilities.textDocument.completion.completionItem.resolveSupport = {
+  properties = {
+    'documentation',
+    'detail',
+    'additionalTextEdits',
+  }
+}
+
+require'lspconfig'.clangd.setup{on_attach = on_attach, capabilities = capabilities}
+require'lspconfig'.pylsp.setup{on_attach = on_attach, capabilities = capabilities}
+require'lspconfig'.rls.setup{on_attach = on_attach, capabilities = capabilities}
+require'lspconfig'.texlab.setup{on_attach = on_attach, capabilities = capabilities}
+require'lspconfig'.denols.setup{on_attach = on_attach, capabilities = capabilities}
 -- /home/denjo/.local/share/nvim/lspinstall/lua/sumneko-lua-language-server
 local sumneko_root_path = vim.fn.stdpath('cache')..'/lspinstall/sumneko_lua/lua-language-server'
 local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"

@@ -19,6 +19,10 @@ repo = 'Shougo/ddc-matcher_head'
 on_source = 'ddc.vim'
 
 [[plugins]]
+repo = 'Shougo/ddc-converter_remove_overlap'
+on_source = 'ddc.vim'
+
+[[plugins]]
 repo = 'Shougo/ddc-sorter_rank'
 on_source = 'ddc.vim'
 
@@ -45,6 +49,10 @@ on_source = 'ddc.vim'
 
 [[plugins]]
 repo = 'matsui54/ddc-filter_editdistance'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'matsui54/ddc-converter_truncate'
 on_source = 'ddc.vim'
 
 [[plugins]]
