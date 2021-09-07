@@ -1,5 +1,7 @@
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" : "\<TAB>"
+      \ pumvisible() ? '<C-n>' :
+      \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
+      \ '<TAB>' : ddc#manual_complete()
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 if has('nvim')
