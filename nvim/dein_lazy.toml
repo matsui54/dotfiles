@@ -130,37 +130,40 @@ hook_add = '''
   omap <Space><Space> <Plug>(easymotion-s2)
 '''
 
+# [[plugins]]
+# repo = 'SirVer/ultisnips'
+# depends = 'vim-snippets'
+# on_event = 'InsertEnter'
+# hook_source = '''
+#   let g:UltiSnipsExpandTrigger='<C-l>'
+#   let g:UltiSnipsJumpForwardTrigger='<C-f>'
+#   let g:UltiSnipsJumpBackwardTrigger='<C-b>'
+# '''
+# 
 [[plugins]]
-repo = 'SirVer/ultisnips'
-depends = 'vim-snippets'
+repo = 'hrsh7th/vim-vsnip'
+depends = ['vim-vsnip-integ', 'friendly-snippets']
 on_event = 'InsertEnter'
-hook_source = '''
-  let g:UltiSnipsExpandTrigger='<C-l>'
-  let g:UltiSnipsJumpForwardTrigger='<C-f>'
-  let g:UltiSnipsJumpBackwardTrigger='<C-b>'
+hook_add = '''
+" Expand
+imap <expr> <C-l> vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-l>'
+smap <expr> <C-l> vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-l>'
+
+" Jump forward or backward
+imap <expr> <C-f> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-f>'
+smap <expr> <C-f> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-f>'
+imap <expr> <C-b> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-b>'
+smap <expr> <C-b> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-b>'
 '''
 
 [[plugins]]
-repo = 'hrsh7th/vim-vsnip'
-on_event = 'InsertEnter'
-# hook_add = '''
-# " Expand
-# " imap <silent> <expr> <C-l> vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-r>=UltiSnips#ExpandSnippet()<CR>'
-# " smap <silent> <expr> <C-l> vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-r>=UltiSnips#ExpandSnippet()<CR>'
-# 
-# " Jump forward or backward
-# imap <silent> <expr> <C-f> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-r>=UltiSnips#JumpForwards()<CR>'
-# smap <silent> <expr> <C-f> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-r>=UltiSnips#JumpForwards()<CR>'
-# imap <silent> <expr> <C-b> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-r>=UltiSnips#JumpBackwards()<CR>'
-# smap <silent> <expr> <C-b> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-r>=UltiSnips#JumpBackwards()<CR>'
-# '''
+repo = 'matsui54/vim-vsnip-integ'
 
 [[plugins]]
-repo = 'hrsh7th/vim-vsnip-integ'
-on_source = 'vim-vsnip'
+repo = 'rafamadriz/friendly-snippets'
 
-[[plugins]]
-repo = 'honza/vim-snippets'
+# [[plugins]]
+# repo = 'honza/vim-snippets'
 
 [[plugins]]
 repo = 'tyru/open-browser.vim'
@@ -229,7 +232,7 @@ hook_source = '''
     call t.add_map('z,', '，')
     call eskk#register_mode_table('hira', t)
   endfunction
-  call ddc#custom#patch_global('sources', ['nvimlsp', 'eskk', 'buffer', 'ultisnips', 'dictionary'])
+  call ddc#custom#patch_global('sources', add(ddc#custom#get_global()['sources'], 'eskk'))
 '''
 
 [[plugins]]
@@ -251,7 +254,6 @@ on_source = 'context_filetype.vim'
 
 [[plugins]]
 repo = 'lambdalisue/gina.vim'
-on_event = 'CmdlineEnter'
 on_source = 'denite.nvim'
 hook_add = '''
   nnoremap gs <cmd>Gina status<CR>
