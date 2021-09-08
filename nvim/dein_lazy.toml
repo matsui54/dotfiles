@@ -157,7 +157,7 @@ smap <expr> <C-b> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-b>'
 '''
 
 [[plugins]]
-repo = 'matsui54/vim-vsnip-integ'
+repo = 'hrsh7th/vim-vsnip-integ'
 
 [[plugins]]
 repo = 'rafamadriz/friendly-snippets'
