@@ -29,27 +29,7 @@ if has('nvim')
   tnoremap <A-j> <C-\><C-N><C-w>j
   tnoremap <A-k> <C-\><C-N><C-w>k
   tnoremap <A-l> <C-\><C-N><C-w>l
-  command! Fterm :call <SID>floating_terminal()
-  command! Vterm :vsplit | :terminal
-  command! Tterm :tabnew | :terminal
 endif
-
-function! s:floating_terminal() abort
-  call nvim_open_win(
-        \ nvim_create_buf(v:false, v:true), 1,
-        \ {'relative':'win',
-        \ 'width':100,
-        \ 'height':28,
-        \ 'col':20,
-        \ 'row':3}
-        \ )
-  terminal
-  hi MyFWin ctermbg=0, guibg=#000000
-  call nvim_win_set_option(0, 'winhl', 'Normal:MyFWin')
-  setlocal nonumber
-  setlocal winblend=15
-  nnoremap <buffer> q :q<CR>
-endfunction
 
 nnoremap <Leader>m <cmd>wa <Bar> make<CR>
 
