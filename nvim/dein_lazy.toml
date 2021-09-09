@@ -113,20 +113,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'easymotion/vim-easymotion'
-on_map = '<plug>(easymotion-'
-hook_add = '''
-  let g:EasyMotion_do_mapping = 0
-  let g:EasyMotion_smartcase = 1
-  map <Space>j <Plug>(easymotion-j)
-  map <Space>k <Plug>(easymotion-k)
-  nmap <Space>j <Plug>(easymotion-overwin-line)
-  nmap <Space><Space> <Plug>(easymotion-overwin-f2)
-  xmap <Space><Space> <Plug>(easymotion-s2)
-  omap <Space><Space> <Plug>(easymotion-s2)
-'''
-
-[[plugins]]
 repo = 'hrsh7th/vim-vsnip'
 depends = ['vim-vsnip-integ', 'friendly-snippets']
 on_event = 'InsertEnter'
@@ -143,7 +129,7 @@ smap <expr> <C-b> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-b>'
 '''
 
 [[plugins]]
-repo = 'matsui54/vim-vsnip-integ'
+repo = 'hrsh7th/vim-vsnip-integ'
 
 [[plugins]]
 repo = 'rafamadriz/friendly-snippets'
@@ -216,6 +202,14 @@ hook_source = '''
     call eskk#register_mode_table('hira', t)
   endfunction
   call ddc#custom#patch_global('sources', add(ddc#custom#get_global()['sources'], 'eskk'))
+'''
+
+[[plugins]]
+repo = 'kuuote/denops-skkeleton.vim'
+on_map = {ic = '<Plug>(skkeleton'}
+hook_add = '''
+  " imap <C-j> <Plug>(skkeleton-enable)
+  " cmap <C-j> <Plug>(skkeleton-enable)
 '''
 
 [[plugins]]
