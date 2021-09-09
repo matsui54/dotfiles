@@ -1,16 +1,19 @@
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" : "\<TAB>"
+      \ pumvisible() ? '<C-n>' :
+      \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
+      \ '<TAB>' : ddc#manual_complete()
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 if has('nvim')
-  call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'ultisnips', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'around', 'vsnip', 'dictionary'])
 else
-  call ddc#custom#patch_global('sources', ['ddc-vim-lsp', 'buffer', 'ultisnips', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['ddc-vim-lsp', 'buffer', 'around', 'vsnip', 'dictionary'])
 endif
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
         \   'matchers': ['matcher_fuzzy'],
         \   'sorters': ['sorter_rank'],
+        \   'converters': ['converter_remove_overlap', 'converter_truncate'],
         \ },
         \ 'around': {'mark': 'A'},
         \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
@@ -18,14 +21,15 @@ call ddc#custom#patch_global('sourceOptions', {
         \ 'necovim': {'mark': 'neco'},
         \ 'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
         \ 'buffer': {'mark': 'B'},
-        \ 'ultisnips': {'mark': 'US'},
         \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
       \ 'nvimlsp': {'useIcon': v:true},
+      \ 'dictionary': {'smartCase': v:true},
       \ })
 call ddc#custom#patch_global('filterParams', {
       \ 'matcher_fuzzy': {'camelcase': v:true},
+      \ 'converter_truncate': {'maxAbbrWidth': 60, 'maxInfo': 500, 'ellipsis': '...'},
       \ })
 call ddc#custom#patch_global('specialBufferCompletionFiletypes', [
       \ 'gina-commit',
@@ -42,3 +46,12 @@ call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
       \ })
 
 call ddc#enable()
+
+let g:ddc_nvim_lsp_doc_config = {
+      \ 'documentation': {
+      \   'border': 'rounded',
+      \ },
+      \ 'signature': {
+      \   'border': 'rounded',
+      \ },
+      \ }

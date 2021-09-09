@@ -7,6 +7,14 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = 'Shougo/context_filetype.vim'
+on_event = 'BufRead'
+
+[[plugins]]
+repo = 'Shougo/neco-vim'
+on_source = 'ddc.vim'
+
+[[plugins]]
 repo = 'Shougo/ddc-around'
 on_source = 'ddc.vim'
 
@@ -16,6 +24,10 @@ on_source = 'ddc.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc-matcher_head'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'Shougo/ddc-converter_remove_overlap'
 on_source = 'ddc.vim'
 
 [[plugins]]
@@ -45,6 +57,10 @@ on_source = 'ddc.vim'
 
 [[plugins]]
 repo = 'matsui54/ddc-filter_editdistance'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'matsui54/ddc-converter_truncate'
 on_source = 'ddc.vim'
 
 [[plugins]]
