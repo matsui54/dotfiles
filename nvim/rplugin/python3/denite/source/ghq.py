@@ -25,7 +25,7 @@ class Source(Base):
     def gather_candidates(self, context: UserContext) -> Candidates:
         candidates: Candidates = []
         if not self.vim.call('executable', 'ghq'):
-            return
+            return []
         root = _check_output(['ghq', 'root'])[0]
         items= _check_output(['ghq', 'list'])
         if not items:

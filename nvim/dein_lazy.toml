@@ -80,6 +80,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'matsui54/defx-sftp'
+if = '!vimrc#is_windows()'
 
 [[plugins]]
 repo = 'Shougo/deol.nvim'
