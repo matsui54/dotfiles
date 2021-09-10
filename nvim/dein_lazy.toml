@@ -61,10 +61,6 @@ hook_source = '''
 '''
 
 [[plugins]]
-repo = 'simplenote-vim/simplenote.vim'
-on_event = 'CmdlineEnter'
-
-[[plugins]]
 repo = 'Shougo/defx.nvim'
 depends = ['defx-icons', 'defx-sftp']
 hook_source = '''
@@ -84,6 +80,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'matsui54/defx-sftp'
+if = '!vimrc#is_windows()'
 
 [[plugins]]
 repo = 'Shougo/deol.nvim'
@@ -117,30 +114,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'easymotion/vim-easymotion'
-on_map = '<plug>(easymotion-'
-hook_add = '''
-  let g:EasyMotion_do_mapping = 0
-  let g:EasyMotion_smartcase = 1
-  map <Space>j <Plug>(easymotion-j)
-  map <Space>k <Plug>(easymotion-k)
-  nmap <Space>j <Plug>(easymotion-overwin-line)
-  nmap <Space><Space> <Plug>(easymotion-overwin-f2)
-  xmap <Space><Space> <Plug>(easymotion-s2)
-  omap <Space><Space> <Plug>(easymotion-s2)
-'''
-
-# [[plugins]]
-# repo = 'SirVer/ultisnips'
-# depends = 'vim-snippets'
-# on_event = 'InsertEnter'
-# hook_source = '''
-#   let g:UltiSnipsExpandTrigger='<C-l>'
-#   let g:UltiSnipsJumpForwardTrigger='<C-f>'
-#   let g:UltiSnipsJumpBackwardTrigger='<C-b>'
-# '''
-# 
-[[plugins]]
 repo = 'hrsh7th/vim-vsnip'
 depends = ['vim-vsnip-integ', 'friendly-snippets']
 on_event = 'InsertEnter'
@@ -161,9 +134,6 @@ repo = 'hrsh7th/vim-vsnip-integ'
 
 [[plugins]]
 repo = 'rafamadriz/friendly-snippets'
-
-# [[plugins]]
-# repo = 'honza/vim-snippets'
 
 [[plugins]]
 repo = 'tyru/open-browser.vim'
@@ -236,6 +206,14 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = 'kuuote/denops-skkeleton.vim'
+on_map = {ic = '<Plug>(skkeleton'}
+hook_add = '''
+  " imap <C-j> <Plug>(skkeleton-toggle)
+  " cmap <C-j> <Plug>(skkeleton-toggle)
+'''
+
+[[plugins]]
 repo = 'tyru/caw.vim'
 on_map = {nx = '<Plug>'}
 hook_add = '''
@@ -244,13 +222,6 @@ hook_add = '''
   nmap gcc <Plug>(caw:hatpos:toggle)
   xmap gcc <Plug>(caw:hatpos:toggle)
 '''
-
-[[plugins]]
-repo = 'Shougo/context_filetype.vim'
-
-[[plugins]]
-repo = 'Shougo/neco-vim'
-on_source = 'context_filetype.vim'
 
 [[plugins]]
 repo = 'lambdalisue/gina.vim'
@@ -349,9 +320,6 @@ hook_source = '''
   lua require'colorizer'.setup()
 '''
 
-# [[plugins]]
-# repo = 'zchee/deoplete-zsh'
-
 [[plugins]]
 repo = 'mattn/emmet-vim'
 on_ft = ['html', 'css']
@@ -361,55 +329,9 @@ repo = 'lambdalisue/suda.vim'
 on_event = 'BufRead'
 
 [[plugins]]
-repo = 'neoclide/denite-git'
-on_source = 'denite.nvim'
-
-[[plugins]]
 repo = 'matsui54/denite-nvim-lsp'
 if = 'has("nvim")'
 on_source = 'denite.nvim'
-
-[[plugins]]
-repo = 'mfussenegger/nvim-dap'
-if = 'has("nvim")'
-on_ft = ["python", "cpp", "c"]
-depends = ['DAPInstall.nvim']
-hook_source = '''
-nnoremap <silent> <F5> :lua require'dap'.continue()<CR>
-nnoremap <silent> <F7> lua require'dap'.step_over()<CR>
-nnoremap <silent> <F8> :lua require'dap'.step_into()<CR>
-nnoremap <silent> <F9> :lua require'dap'.step_out()<CR>
-nnoremap <silent> <leader>b :lua require'dap'.toggle_breakpoint()<CR>
-nnoremap <silent> <leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
-nnoremap <silent> <leader>lp :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
-nnoremap <silent> <leader>dr :lua require'dap'.repl.open()<CR>
-nnoremap <silent> <leader>dl :lua require'dap'.run_last()<CR>
-lua <<EOF
-local dap = require 'dap'
-dap.adapters.cpp = {
-  type = 'executable',
-  attach = {
-    pidProperty = "pid",
-    pidSelect = "ask"
-  },
-  command = 'lldb-vscode-10', -- my binary was called 'lldb-vscode-11'
-  env = {
-    LLDB_LAUNCH_FLAG_LAUNCH_IN_TTY = "YES"
-  },
-  name = "lldb"
-}
-EOF
-'''
-
-[[plugins]]
-repo = 'Pocco81/DAPInstall.nvim'
-if = 'has("nvim")'
-hook_source = '''
-lua <<EOF
-  local dap_install = require("dap-install")
-  dap_install.config("ccppr_lldb_dbg", {})
-EOF
-'''
 
 [[plugins]]
 repo = 'machakann/vim-swap'

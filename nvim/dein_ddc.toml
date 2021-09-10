@@ -7,6 +7,14 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = 'Shougo/context_filetype.vim'
+on_event = 'BufRead'
+
+[[plugins]]
+repo = 'Shougo/neco-vim'
+on_source = 'ddc.vim'
+
+[[plugins]]
 repo = 'Shougo/ddc-around'
 on_source = 'ddc.vim'
 
