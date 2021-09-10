@@ -50,6 +50,7 @@ call ddc#enable()
 let g:ddc_nvim_lsp_doc_config = {
       \ 'documentation': {
       \   'border': 'rounded',
+      \   'maxWidth': 100,
       \ },
       \ 'signature': {
       \   'border': 'rounded',
