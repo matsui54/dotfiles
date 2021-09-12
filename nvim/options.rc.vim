@@ -18,15 +18,15 @@ if vimrc#is_wsl()
   let g:clipboard = {
         \   'name': 'myClipboard',
         \   'copy': {
-          \      '+': s:clp_cmd . ' -i',
-          \      '*': s:clp_cmd . ' -i',
-          \    },
-          \   'paste': {
-            \      '*': s:clp_cmd . ' -o --lf',
-            \      '+': s:clp_cmd . ' -o --lf',
-            \   },
-            \   'cache_enabled': 1,
-            \ }
+        \      '+': s:clp_cmd . ' -i',
+        \      '*': s:clp_cmd . ' -i',
+        \    },
+        \   'paste': {
+        \      '*': s:clp_cmd . ' -o --lf',
+        \      '+': s:clp_cmd . ' -o --lf',
+        \   },
+        \   'cache_enabled': 1,
+        \ }
 endif
 
 if !has('nvim')

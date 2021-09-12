@@ -36,7 +36,7 @@ call ddc#custom#patch_global('specialBufferCompletionFiletypes', [
       \ ])
 
 call ddc#custom#patch_filetype(['vim', 'toml'], {
-      \ 'sources': ['necovim', 'buffer'],
+      \ 'sources': ['necovim', 'buffer', 'around', 'vsnip', 'dictionary'],
       \ })
 call ddc#custom#patch_filetype(
       \ ['zsh'], 'sources', ['zsh']
@@ -48,11 +48,11 @@ call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
 call ddc#enable()
 
 let g:ddc_nvim_lsp_doc_config = {
-      \ 'documentation': {
-      \   'border': 'rounded',
-      \   'maxWidth': 100,
-      \ },
-      \ 'signature': {
-      \   'border': 'rounded',
-      \ },
+      \   'documentation': {
+      \     'border': 'rounded',
+      \     'maxWidth': 100,
+      \   },
+      \   'signature': {
+      \     'border': 'rounded',
+      \   },
       \ }
