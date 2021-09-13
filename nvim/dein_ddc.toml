@@ -68,6 +68,15 @@ repo = 'matsui54/ddc-nvim-lsp-doc'
 if = "has('nvim')"
 on_source = 'ddc.vim'
 hook_source = '''
+  let g:ddc_nvim_lsp_doc_config = {
+        \ 'documentation': {
+        \   'border': 'rounded',
+        \   'maxWidth': 100,
+        \ },
+        \ 'signature': {
+        \   'border': 'rounded',
+        \ },
+        \ }
   call ddc_nvim_lsp_doc#enable()
 '''
 
@@ -82,3 +91,7 @@ hook_add = '''
 repo = 'shun/ddc-vim-lsp'
 on_source = 'ddc.vim'
 if = "!has('nvim')"
+
+[[plugins]]
+repo = 'LumaKernel/ddc-file'
+on_source = 'ddc.vim'

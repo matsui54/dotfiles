@@ -5,9 +5,9 @@ inoremap <silent><expr> <TAB>
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 if has('nvim')
-  call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'around', 'vsnip', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 else
-  call ddc#custom#patch_global('sources', ['ddc-vim-lsp', 'buffer', 'around', 'vsnip', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['ddc-vim-lsp', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 endif
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
@@ -21,9 +21,11 @@ call ddc#custom#patch_global('sourceOptions', {
         \ 'necovim': {'mark': 'neco'},
         \ 'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
         \ 'buffer': {'mark': 'B'},
+        \ 'file': {'mark': 'F', 'forceCompletionPattern': "/"},
         \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
+      \ 'buffer': {'forceCollect': v:true},
       \ 'nvimlsp': {'useIcon': v:true},
       \ 'dictionary': {'smartCase': v:true},
       \ })
@@ -46,13 +48,3 @@ call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
       \ })
 
 call ddc#enable()
-
-let g:ddc_nvim_lsp_doc_config = {
-      \ 'documentation': {
-      \   'border': 'rounded',
-      \   'maxWidth': 100,
-      \ },
-      \ 'signature': {
-      \   'border': 'rounded',
-      \ },
-      \ }

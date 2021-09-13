@@ -113,6 +113,18 @@ hook_add = '''
   omap T <Plug>(clever-f-T)
 '''
 
+# [[plugins]]
+# repo = 'SirVer/ultisnips'
+# depends = 'vim-snippets'
+# on_event = 'InsertEnter'
+# hook_source = '''
+#   let g:UltiSnipsExpandTrigger='<C-l>'
+#   let g:UltiSnipsJumpForwardTrigger='<C-f>'
+#   let g:UltiSnipsJumpBackwardTrigger='<C-b>'
+# '''
+# [[plugins]]
+# repo = 'honza/vim-snippets'
+
 [[plugins]]
 repo = 'hrsh7th/vim-vsnip'
 depends = ['vim-vsnip-integ', 'friendly-snippets']
