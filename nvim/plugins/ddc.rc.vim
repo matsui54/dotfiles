@@ -38,7 +38,7 @@ call ddc#custom#patch_global('specialBufferCompletionFiletypes', [
       \ ])
 
 call ddc#custom#patch_filetype(['vim', 'toml'], {
-      \ 'sources': ['necovim', 'buffer'],
+      \ 'sources': ['necovim', 'buffer', 'around', 'vsnip', 'dictionary'],
       \ })
 call ddc#custom#patch_filetype(
       \ ['zsh'], 'sources', ['zsh']

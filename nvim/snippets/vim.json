@@ -1,0 +1,18 @@
+{
+  "fn": {
+    "prefix": "fn",
+    "body": [
+      "function! ${1:function_name}($2) abort",
+      "\t${3: code}",
+      "endfunction"
+    ],
+    "description": "function"
+  },
+  "sfile": {
+    "prefix": "sfile",
+    "body": [
+      "fnamemodify(expand('<sfile>'), ':h') . '/'"
+    ],
+    "description": "Get parent of sfile"
+  }
+}
