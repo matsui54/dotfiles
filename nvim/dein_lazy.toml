@@ -41,6 +41,14 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = 'vim-jp/vital.vim'
+on_cmd = 'Vitalize'
+
+[[plugins]]
+repo = 'hrsh7th/vim-vital-vs'
+on_source = 'vital.vim'
+
+[[plugins]]
 repo = 'statiolake/vim-quickrun-runner-nvimterm'
 if = 'has("nvim")'
 
