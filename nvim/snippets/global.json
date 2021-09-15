@@ -1,0 +1,67 @@
+{
+  "paren": {
+    "prefix": "(",
+    "body": [
+      "(",
+      "\t$1",
+      ")$2"
+    ],
+    "description": ""
+  },
+  "paren2": {
+    "prefix": "()",
+    "body": [
+      "($1)$2"
+    ],
+    "description": ""
+  },
+  "sparen": {
+    "prefix": "[",
+    "body": [
+      "[",
+      "\t$1",
+      "]$2"
+    ],
+    "description": ""
+  },
+  "sparen2": {
+    "prefix": "[]",
+    "body": [
+      "[$1]$2"
+    ],
+    "description": ""
+  },
+  "aparen": {
+    "prefix": "<",
+    "body": [
+      "<",
+      "\t$1",
+      ">$2"
+    ],
+    "description": ""
+  },
+  "aparen2": {
+    "prefix": "<>",
+    "body": [
+      "<$1>$2"
+    ],
+    "description": ""
+  },
+  "cparen": {
+    "prefix": "{",
+    "body": [
+      "{",
+      "\t$1",
+      "}$2"
+    ],
+    "description": ""
+  },
+  "cparen2": {
+    "prefix": "{}",
+    "body": [
+      "{$1}$2"
+    ],
+    "description": ""
+  }
+}
+

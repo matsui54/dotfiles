@@ -1,0 +1,45 @@
+{
+  "zu": {
+    "prefix": "zu",
+    "body": "図\\ref{$1}",
+    "description": "picture"
+  },
+  "minipage": {
+    "prefix": "minipage",
+    "body": [
+      "\\begin{figure}[h]",
+      "\t\\centering",
+      "\t\\begin{minipage}{0.4\\columnwidth}",
+      "\t\t\\centering",
+      "\t\t\\includegraphics[width=\\columnwidth]{$1}",
+      "\t\t\\caption{$2}",
+      "\t\t\\label{$3}",
+      "\t\\end{minipage}",
+      "\t\\begin{minipage}{0.4\\columnwidth}",
+      "\t\t\\centering",
+      "\t\t\\includegraphics[width=\\columnwidth]{$4}",
+      "\t\t\\caption{$5}",
+      "\t\t\\label{$6}",
+      "\t\\end{minipage}",
+      "\\end{figure}"
+    ],
+    "description": "minipage"
+  },
+  "fig": {
+    "prefix": "fig",
+    "body": [
+      "\\begin{figure}[h]",
+      "\t\\centering",
+      "\t\\includegraphics[width=$1\\columnwidth]{$2}",
+      "\t\\caption{$3}",
+      "\t\\label{$4}",
+      "\\end{figure}"
+    ],
+    "description": "figure"
+  },
+  "dollar": {
+    "prefix": "$",
+    "body": "\\$ $1 \\$ $2",
+    "description": "dollar"
+  }
+}
