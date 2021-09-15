@@ -22,10 +22,11 @@ call ddc#custom#patch_global('sourceOptions', {
         \ 'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
         \ 'buffer': {'mark': 'B'},
         \ 'file': {'mark': 'F', 'forceCompletionPattern': "/"},
+        \ 'vsnip': {'dup': v:true},
         \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
-      \ 'buffer': {'forceCollect': v:true},
+      \ 'buffer': {'forceCollect': v:true, 'fromAltBuf': v:true},
       \ 'nvimlsp': {'useIcon': v:true},
       \ 'dictionary': {'smartCase': v:true},
       \ })
@@ -33,9 +34,9 @@ call ddc#custom#patch_global('filterParams', {
       \ 'matcher_fuzzy': {'camelcase': v:true},
       \ 'converter_truncate': {'maxAbbrWidth': 60, 'maxInfo': 500, 'ellipsis': '...'},
       \ })
-call ddc#custom#patch_global('specialBufferCompletionFiletypes', [
-      \ 'gina-commit',
-      \ ])
+call ddc#custom#patch_filetype(
+      \ ['gina-commit'], 'specialBufferCompletion', v:true
+      \ )
 
 call ddc#custom#patch_filetype(['vim', 'toml'], {
       \ 'sources': ['necovim', 'buffer', 'around', 'vsnip', 'dictionary'],
