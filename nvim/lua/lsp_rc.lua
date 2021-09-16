@@ -23,6 +23,7 @@ local on_attach = function(client)
       virtual_text = false,
     }
   )
+  -- require "lsp_signature".on_attach()  -- Note: add in lsp client on-attach
 
   vim.api.nvim_exec(
   [[
@@ -57,11 +58,11 @@ require'lspconfig'.rls.setup{on_attach = on_attach, capabilities = capabilities}
 require'lspconfig'.texlab.setup{on_attach = on_attach, capabilities = capabilities}
 require'lspconfig'.denols.setup{on_attach = on_attach, capabilities = capabilities}
 -- /home/denjo/.local/share/nvim/lspinstall/lua/sumneko-lua-language-server
-local sumneko_root_path = vim.fn.stdpath('cache')..'/lspinstall/sumneko_lua/lua-language-server'
+local sumneko_root_path = vim.fn.stdpath('cache')..'/lspconfig/sumneko_lua/lua-language-server'
 local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"
 
 require'lspconfig'.sumneko_lua.setup {
-  cmd = {'/home/denjo/.local/share/nvim/lspinstall/lua/sumneko-lua-language-server'};
+  cmd = {sumneko_binary};
   settings = {
     Lua = {
       runtime = {
