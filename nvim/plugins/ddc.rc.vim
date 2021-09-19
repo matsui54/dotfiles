@@ -11,19 +11,24 @@ else
 endif
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
-        \   'matchers': ['matcher_fuzzy'],
-        \   'sorters': ['sorter_rank'],
-        \   'converters': ['converter_remove_overlap', 'converter_truncate'],
-        \ },
-        \ 'around': {'mark': 'A'},
-        \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
-        \ 'eskk': {'mark': 'eskk', 'matchers': [], 'sorters': []},
-        \ 'necovim': {'mark': 'neco'},
-        \ 'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
-        \ 'buffer': {'mark': 'B'},
-        \ 'file': {'mark': 'F', 'forceCompletionPattern': "/"},
-        \ 'vsnip': {'dup': v:true},
-        \ })
+      \   'matchers': ['matcher_fuzzy'],
+      \   'sorters': ['sorter_rank'],
+      \   'converters': ['converter_remove_overlap', 'converter_truncate'],
+      \ },
+      \ 'around': {'mark': 'A'},
+      \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
+      \ 'necovim': {'mark': 'neco'},
+      \ 'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
+      \ 'buffer': {'mark': 'B'},
+      \ 'file': {'mark': 'F', 'forceCompletionPattern': "/"},
+      \ 'vsnip': {'dup': v:true},
+      \ 'skkeleton': {
+      \   'mark': 'skk',
+      \   'matchers': ['skkeleton'],
+      \   'sorters': [],
+      \   'minAutoCompleteLength': 2,
+      \ },
+      \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
       \ 'buffer': {'forceCollect': v:true, 'fromAltBuf': v:true},
