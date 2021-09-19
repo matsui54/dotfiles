@@ -70,14 +70,25 @@ on_source = 'ddc.vim'
 hook_source = '''
   let g:ddc_nvim_lsp_doc_config = {
         \ 'documentation': {
+        \   'enable': v:false,
         \   'border': 'rounded',
         \   'maxWidth': 100,
+        \   'winblend': 0,
         \ },
         \ 'signature': {
         \   'border': 'rounded',
         \ },
         \ }
   call ddc_nvim_lsp_doc#enable()
+  let g:markdown_fenced_languages = ['ts=typescript']
+'''
+
+[[plugins]]
+repo = '~/ghq/github.com/matsui54/denops-popup-preview.vim'
+on_source = 'ddc.vim'
+# if = "!has('nvim')"
+hook_source = '''
+  call popup_preview#enable()
 '''
 
 [[plugins]]
