@@ -84,7 +84,7 @@ hook_source = '''
 '''
 
 [[plugins]]
-repo = '~/ghq/github.com/matsui54/denops-popup-preview.vim'
+repo = 'matsui54/denops-popup-preview.vim'
 on_source = 'ddc.vim'
 # if = "!has('nvim')"
 hook_source = '''
