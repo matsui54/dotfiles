@@ -5,25 +5,34 @@ inoremap <silent><expr> <TAB>
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 if has('nvim')
-  call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'around', 'vsnip', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 else
-  call ddc#custom#patch_global('sources', ['ddc-vim-lsp', 'buffer', 'around', 'vsnip', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['ddc-vim-lsp', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 endif
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
-        \   'matchers': ['matcher_fuzzy'],
-        \   'sorters': ['sorter_rank'],
-        \   'converters': ['converter_remove_overlap', 'converter_truncate'],
-        \ },
-        \ 'around': {'mark': 'A'},
-        \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
-        \ 'eskk': {'mark': 'eskk', 'matchers': [], 'sorters': []},
-        \ 'necovim': {'mark': 'neco'},
-        \ 'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
-        \ 'buffer': {'mark': 'B'},
-        \ })
+      \   'matchers': ['matcher_fuzzy'],
+      \   'sorters': ['sorter_rank'],
+      \   'converters': ['converter_remove_overlap', 'converter_truncate'],
+      \ },
+      \ 'around': {'mark': 'A'},
+      \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
+      \ 'necovim': {'mark': 'neco'},
+      \ 'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
+      \ 'ddc-vim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
+      \ 'buffer': {'mark': 'B'},
+      \ 'file': {'mark': 'F', 'forceCompletionPattern': "/"},
+      \ 'vsnip': {'dup': v:true},
+      \ 'skkeleton': {
+      \   'mark': 'skk',
+      \   'matchers': ['skkeleton'],
+      \   'sorters': [],
+      \   'minAutoCompleteLength': 2,
+      \ },
+      \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
+      \ 'buffer': {'forceCollect': v:true, 'fromAltBuf': v:true},
       \ 'nvimlsp': {'useIcon': v:true},
       \ 'dictionary': {'smartCase': v:true},
       \ })
@@ -31,12 +40,12 @@ call ddc#custom#patch_global('filterParams', {
       \ 'matcher_fuzzy': {'camelcase': v:true},
       \ 'converter_truncate': {'maxAbbrWidth': 60, 'maxInfo': 500, 'ellipsis': '...'},
       \ })
-call ddc#custom#patch_global('specialBufferCompletionFiletypes', [
-      \ 'gina-commit',
-      \ ])
+call ddc#custom#patch_filetype(
+      \ ['gina-commit'], 'specialBufferCompletion', v:true
+      \ )
 
 call ddc#custom#patch_filetype(['vim', 'toml'], {
-      \ 'sources': ['necovim', 'buffer'],
+      \ 'sources': ['necovim', 'buffer', 'around', 'vsnip', 'dictionary'],
       \ })
 call ddc#custom#patch_filetype(
       \ ['zsh'], 'sources', ['zsh']
@@ -46,13 +55,3 @@ call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
       \ })
 
 call ddc#enable()
-
-let g:ddc_nvim_lsp_doc_config = {
-      \ 'documentation': {
-      \   'border': 'rounded',
-      \   'maxWidth': 100,
-      \ },
-      \ 'signature': {
-      \   'border': 'rounded',
-      \ },
-      \ }

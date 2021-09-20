@@ -13,6 +13,6 @@
     "body": [
       "fnamemodify(expand('<sfile>'), ':h') . '/'"
     ],
-    "description": "Get parent of sfile"
+    "description": "get parent of sfile"
   }
 }

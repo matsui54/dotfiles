@@ -41,6 +41,14 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = 'vim-jp/vital.vim'
+on_cmd = 'Vitalize'
+
+[[plugins]]
+repo = 'hrsh7th/vim-vital-vs'
+on_source = 'vital.vim'
+
+[[plugins]]
 repo = 'statiolake/vim-quickrun-runner-nvimterm'
 if = 'has("nvim")'
 
@@ -113,6 +121,18 @@ hook_add = '''
   omap T <Plug>(clever-f-T)
 '''
 
+# [[plugins]]
+# repo = 'SirVer/ultisnips'
+# depends = 'vim-snippets'
+# on_event = 'InsertEnter'
+# hook_source = '''
+#   let g:UltiSnipsExpandTrigger='<C-l>'
+#   let g:UltiSnipsJumpForwardTrigger='<C-f>'
+#   let g:UltiSnipsJumpBackwardTrigger='<C-b>'
+# '''
+# [[plugins]]
+# repo = 'honza/vim-snippets'
+
 [[plugins]]
 repo = 'hrsh7th/vim-vsnip'
 depends = ['vim-vsnip-integ', 'friendly-snippets']
@@ -167,52 +187,68 @@ hook_source = '''
 depends = 'open-browser.vim'
 
 [[plugins]]
-repo = 'tyru/eskk.vim'
-on_map = {ic = '<Plug>'}
-hook_add = '''
-  imap <C-j>     <Plug>(eskk:toggle)
-  cmap <C-j>     <Plug>(eskk:toggle)
-'''
-hook_source = '''
-  let g:eskk#enable_completion=1
-  let g:eskk#directory = expand('~/.cache/eskk')
-  let g:eskk#start_completion_length=2
-  let g:eskk#tab_select_completion=1
-  let g:eskk#dictionary = {
-        \   'path': expand('~/.cache/skk-jisyo'),
-        \   'sorted': 0,
-        \   'encoding': 'utf-8',
-        \}
-  if has('win32') || has('win64')
-    let g:eskk#large_dictionary = {
-    \	'path': expand('~/AppData/Local/skk/SKK-JISYO.L'),
-    \	'sorted': 1,
-    \	'encoding': 'euc-jp',
-    \}
-  endif
-
-  autocmd MyAutoCmd User eskk-initialize-pre call s:eskk_initial_pre()
-  function! s:eskk_initial_pre() abort
-    let t = eskk#table#new('rom_to_hira*', 'rom_to_hira')
-    call t.add_map('z ', '　')
-    call t.add_map('~', '〜')
-    call t.add_map('zc', '©')
-    call t.add_map('zr', '®')
-    call t.add_map('z9', '（')
-    call t.add_map('z0', '）')
-    call t.add_map('z,', '，')
-    call eskk#register_mode_table('hira', t)
-  endfunction
-  call ddc#custom#patch_global('sources', add(ddc#custom#get_global()['sources'], 'eskk'))
-'''
-
-[[plugins]]
 repo = 'kuuote/denops-skkeleton.vim'
 on_map = {ic = '<Plug>(skkeleton'}
 hook_add = '''
-  " imap <C-j> <Plug>(skkeleton-toggle)
-  " cmap <C-j> <Plug>(skkeleton-toggle)
+  imap <C-j> <Plug>(skkeleton-toggle)
+  cmap <C-j> <Plug>(skkeleton-toggle)
+  function! s:skkeleton_init() abort
+    call skkeleton#config({
+      \ 'userJisyo': expand('~/.cache/skkeleton')
+      \ })
+    call skkeleton#register_kanatable('rom', {
+      \ "z\<Space>": ["\u3000", ''],
+      \ 'jj': 'escape',
+      \ 'z,': ['，', ''],
+      \ 'z9': ['（', ''],
+      \ 'z0': ['）', ''],
+      \ })
+  endfunction
+  autocmd User skkeleton-initialize-pre call s:skkeleton_init()
 '''
+hook_source = '''
+  call ddc#custom#patch_global('sources', add(ddc#custom#get_global()['sources'], 'skkeleton'))
+'''
+
+# [[plugins]]
+# repo = 'tyru/eskk.vim'
+# on_map = {ic = '<Plug>'}
+# hook_add = '''
+#   " imap <C-j>     <Plug>(eskk:toggle)
+#   " cmap <C-j>     <Plug>(eskk:toggle)
+# '''
+# hook_source = '''
+#   let g:eskk#enable_completion=1
+#   let g:eskk#directory = expand('~/.cache/eskk')
+#   let g:eskk#start_completion_length=2
+#   let g:eskk#tab_select_completion=1
+#   let g:eskk#dictionary = {
+#         \   'path': expand('~/.cache/skk-jisyo'),
+#         \   'sorted': 0,
+#         \   'encoding': 'utf-8',
+#         \}
+#   if has('win32') || has('win64')
+#     let g:eskk#large_dictionary = {
+#     \	'path': expand('~/AppData/Local/skk/SKK-JISYO.L'),
+#     \	'sorted': 1,
+#     \	'encoding': 'euc-jp',
+#     \}
+#   endif
+# 
+#   autocmd MyAutoCmd User eskk-initialize-pre call s:eskk_initial_pre()
+#   function! s:eskk_initial_pre() abort
+#     let t = eskk#table#new('rom_to_hira*', 'rom_to_hira')
+#     call t.add_map('z ', '　')
+#     call t.add_map('~', '〜')
+#     call t.add_map('zc', '©')
+#     call t.add_map('zr', '®')
+#     call t.add_map('z9', '（')
+#     call t.add_map('z0', '）')
+#     call t.add_map('z,', '，')
+#     call eskk#register_mode_table('hira', t)
+#   endfunction
+#   call ddc#custom#patch_global('sources', add(ddc#custom#get_global()['sources'], 'eskk'))
+# '''
 
 [[plugins]]
 repo = 'tyru/caw.vim'

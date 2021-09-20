@@ -70,5 +70,7 @@ function! vimrc#color_settings() abort
   highlight LspReferenceRead gui = underline
   highlight LspReferenceText gui = underline
   highlight LspReferenceWrite gui=underline
-  highlight FloatBorder blend=30 guifg=#c6c8d1 guibg=#3d425b
+  if has('nvim')
+    highlight DdcNvimLspDocBorder blend=30 guifg=#c6c8d1 guibg=#3d425b
+  endif
 endfunction
