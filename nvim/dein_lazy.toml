@@ -75,7 +75,7 @@ hook_source = '''
   source ~/dotfiles/nvim/plugins/defx.rc.vim
 '''
 hook_add = '''
-  nnoremap <silent><C-f> <cmd>Defx -buffer-name=`'defx' . t:defx_index`<CR>
+  nnoremap <silent> <C-f> <cmd>Defx -buffer-name=`'defx' . t:defx_index`<CR>
   nnoremap <silent> <Space>w <cmd>Defx -buffer-name=`'defx' . t:defx_index` ~/work<CR>
   nnoremap <silent> <Space>p <cmd>Defx -buffer-name=`'defx' . t:defx_index` ~/.cache/dein/repos/github.com<CR>
 '''
@@ -262,6 +262,10 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 '''
+
+[[plugins]]
+repo = 'nvim-treesitter/playground'
+on_source = 'nvim-treesitter'
 
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
