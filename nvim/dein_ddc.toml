@@ -149,7 +149,7 @@ repo = 'rafamadriz/friendly-snippets'
 
 [[plugins]]
 repo = 'kuuote/denops-skkeleton.vim'
-on_map = {ic = '<Plug>(skkeleton'}
+on_source = 'ddc.vim'
 hook_add = '''
   imap <C-j> <Plug>(skkeleton-toggle)
   cmap <C-j> <Plug>(skkeleton-toggle)
@@ -166,7 +166,4 @@ hook_add = '''
       \ })
   endfunction
   autocmd User skkeleton-initialize-pre call s:skkeleton_init()
-'''
-hook_source = '''
-  call ddc#custom#patch_global('sources', add(ddc#custom#get_global()['sources'], 'skkeleton'))
 '''
