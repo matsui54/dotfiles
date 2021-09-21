@@ -1,17 +1,18 @@
 ((pair
   (bare_key) @_key
-  (string) @vim)
+  (string) @none)
  (#vim-match? @_key "^hook_\w*")
- (#offset! @vim 0 3 0 -3))
+ (#offset! @none 0 3 0 -3))
 ((table
   (bare_key) @_key
   (pair
-   (string) @vim))
+   (string) @none))
  (#eq? @_key "ftplugin")
- (#offset! @vim 0 3 0 -3))
+ (#offset! @none 0 3 0 -3))
 ((table
   (dotted_key) @_key
   (pair
-   (string) @vim))
+   (string) @none))
  (#eq? @_key "plugins.ftplugin")
- (#offset! @vim 0 3 0 -3))
+ (#offset! @none 0 3 0 -3))
+
