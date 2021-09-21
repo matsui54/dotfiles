@@ -4,8 +4,8 @@ repo = 'Shougo/dein.vim'
 [[plugins]]
 repo = 'rcmdnk/vim-markdown'
 hook_add = '''
-let g:vim_markdown_conceal=0
-let g:vim_markdown_folding_disabled = 1
+  let g:vim_markdown_conceal=0
+  let g:vim_markdown_folding_disabled = 1
 '''
 
 [[plugins]]
@@ -14,9 +14,12 @@ repo = 'cocopon/iceberg.vim'
 [[plugins]]
 repo = 'Yggdroot/indentLine'
 hook_add = '''
-let g:indentLine_char_list = ['|', '¦', '┆', '┊']
-let g:indentLine_fileTypeExclude = ['help', 'calendar', 'denite']
+  let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+  let g:indentLine_fileTypeExclude = ['help', 'calendar', 'denite']
 '''
+
+[[plugins]]
+repo = 'sainnhe/edge'
 
 [[plugins]]
 repo = 'kana/vim-operator-user'
@@ -24,7 +27,7 @@ repo = 'kana/vim-operator-user'
 [[plugins]]
 repo = 'vim-jp/vimdoc-ja'
 hook_add = '''
-set helplang=ja
+  set helplang=ja
 '''
 
 [[plugins]]
