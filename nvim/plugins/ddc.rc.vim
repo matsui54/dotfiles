@@ -5,9 +5,9 @@ inoremap <silent><expr> <TAB>
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 if has('nvim')
-  call ddc#custom#patch_global('sources', ['nvimlsp', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['nvimlsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 else
-  call ddc#custom#patch_global('sources', ['ddc-vim-lsp', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['ddc-vim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 endif
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
@@ -40,12 +40,14 @@ call ddc#custom#patch_global('filterParams', {
       \ 'matcher_fuzzy': {'camelcase': v:true},
       \ 'converter_truncate': {'maxAbbrWidth': 60, 'maxInfo': 500, 'ellipsis': '...'},
       \ })
+
+call ddc#custom#patch_global('specialBufferCompletion', v:true)
 call ddc#custom#patch_filetype(
-      \ ['gina-commit'], 'specialBufferCompletion', v:true
+      \ ['denite-filter', 'TelescopePrompt'], 'specialBufferCompletion', v:false
       \ )
 
 call ddc#custom#patch_filetype(['vim', 'toml'], {
-      \ 'sources': ['necovim', 'buffer', 'around', 'vsnip', 'dictionary'],
+      \ 'sources': ['necovim', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'],
       \ })
 call ddc#custom#patch_filetype(
       \ ['zsh'], 'sources', ['zsh']

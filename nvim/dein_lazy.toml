@@ -75,7 +75,7 @@ hook_source = '''
   source ~/dotfiles/nvim/plugins/defx.rc.vim
 '''
 hook_add = '''
-  nnoremap <silent><C-f> <cmd>Defx -buffer-name=`'defx' . t:defx_index`<CR>
+  nnoremap <silent> <C-f> <cmd>Defx -buffer-name=`'defx' . t:defx_index`<CR>
   nnoremap <silent> <Space>w <cmd>Defx -buffer-name=`'defx' . t:defx_index` ~/work<CR>
   nnoremap <silent> <Space>p <cmd>Defx -buffer-name=`'defx' . t:defx_index` ~/.cache/dein/repos/github.com<CR>
 '''
@@ -121,41 +121,6 @@ hook_add = '''
   omap T <Plug>(clever-f-T)
 '''
 
-# [[plugins]]
-# repo = 'SirVer/ultisnips'
-# depends = 'vim-snippets'
-# on_event = 'InsertEnter'
-# hook_source = '''
-#   let g:UltiSnipsExpandTrigger='<C-l>'
-#   let g:UltiSnipsJumpForwardTrigger='<C-f>'
-#   let g:UltiSnipsJumpBackwardTrigger='<C-b>'
-# '''
-# [[plugins]]
-# repo = 'honza/vim-snippets'
-
-[[plugins]]
-repo = 'hrsh7th/vim-vsnip'
-depends = ['vim-vsnip-integ', 'friendly-snippets']
-on_event = 'InsertEnter'
-hook_add = '''
-" Expand
-imap <expr> <C-l> vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-l>'
-smap <expr> <C-l> vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-l>'
-
-" Jump forward or backward
-imap <expr> <C-f> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-f>'
-smap <expr> <C-f> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-f>'
-imap <expr> <C-b> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-b>'
-smap <expr> <C-b> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-b>'
-let g:vsnip_snippet_dir = expand('~/dotfiles/nvim/snippets')
-'''
-
-[[plugins]]
-repo = 'hrsh7th/vim-vsnip-integ'
-
-[[plugins]]
-repo = 'rafamadriz/friendly-snippets'
-
 [[plugins]]
 repo = 'tyru/open-browser.vim'
 on_map = '<Plug>(openbrowser'
@@ -185,30 +150,6 @@ hook_source = '''
   endif
 '''
 depends = 'open-browser.vim'
-
-[[plugins]]
-repo = 'kuuote/denops-skkeleton.vim'
-on_map = {ic = '<Plug>(skkeleton'}
-hook_add = '''
-  imap <C-j> <Plug>(skkeleton-toggle)
-  cmap <C-j> <Plug>(skkeleton-toggle)
-  function! s:skkeleton_init() abort
-    call skkeleton#config({
-      \ 'userJisyo': expand('~/.cache/skkeleton')
-      \ })
-    call skkeleton#register_kanatable('rom', {
-      \ "z\<Space>": ["\u3000", ''],
-      \ 'jj': 'escape',
-      \ 'z,': ['，', ''],
-      \ 'z9': ['（', ''],
-      \ 'z0': ['）', ''],
-      \ })
-  endfunction
-  autocmd User skkeleton-initialize-pre call s:skkeleton_init()
-'''
-hook_source = '''
-  call ddc#custom#patch_global('sources', add(ddc#custom#get_global()['sources'], 'skkeleton'))
-'''
 
 # [[plugins]]
 # repo = 'tyru/eskk.vim'
@@ -323,6 +264,10 @@ EOF
 '''
 
 [[plugins]]
+repo = 'nvim-treesitter/playground'
+on_source = 'nvim-treesitter'
+
+[[plugins]]
 repo = 'neovim/nvim-lspconfig'
 if = 'has("nvim")'
 on_event = 'BufRead'
@@ -385,3 +330,8 @@ hook_add = '''
 [[plugins]]
 repo = 'editorconfig/editorconfig-vim'
 on_cmd = 'EditorConfigEnable'
+
+[[plugins]]
+repo = 'gamoutatsumi/dps-ghosttext.vim'
+depends = 'denops.vim'
+on_cmd = 'GhostStart'

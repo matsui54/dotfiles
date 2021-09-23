@@ -88,6 +88,11 @@ repo = 'matsui54/denops-popup-preview.vim'
 on_source = 'ddc.vim'
 # if = "!has('nvim')"
 hook_source = '''
+	let g:popup_preview_config = {
+	      \ 'enable': v:true,
+	      \ 'border': 'double',
+	      \ 'delay': 30,
+	      \ }
   call popup_preview#enable()
 '''
 
@@ -106,3 +111,59 @@ if = "!has('nvim')"
 [[plugins]]
 repo = 'LumaKernel/ddc-file'
 on_source = 'ddc.vim'
+
+# [[plugins]]
+# repo = 'SirVer/ultisnips'
+# depends = 'vim-snippets'
+# on_event = 'InsertEnter'
+# hook_source = '''
+#   let g:UltiSnipsExpandTrigger='<C-l>'
+#   let g:UltiSnipsJumpForwardTrigger='<C-f>'
+#   let g:UltiSnipsJumpBackwardTrigger='<C-b>'
+# '''
+# [[plugins]]
+# repo = 'honza/vim-snippets'
+
+[[plugins]]
+repo = 'hrsh7th/vim-vsnip'
+depends = ['vim-vsnip-integ', 'friendly-snippets']
+on_event = 'InsertEnter'
+hook_add = '''
+" Expand
+imap <expr> <C-l> vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-l>'
+smap <expr> <C-l> vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-l>'
+
+" Jump forward or backward
+imap <expr> <C-f> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-f>'
+smap <expr> <C-f> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-f>'
+imap <expr> <C-b> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-b>'
+smap <expr> <C-b> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-b>'
+let g:vsnip_snippet_dir = expand('~/dotfiles/nvim/snippets')
+'''
+
+[[plugins]]
+repo = 'hrsh7th/vim-vsnip-integ'
+
+[[plugins]]
+repo = 'rafamadriz/friendly-snippets'
+
+[[plugins]]
+repo = 'kuuote/denops-skkeleton.vim'
+on_source = 'ddc.vim'
+hook_add = '''
+  imap <C-j> <Plug>(skkeleton-toggle)
+  cmap <C-j> <Plug>(skkeleton-toggle)
+  function! s:skkeleton_init() abort
+    call skkeleton#config({
+      \ 'userJisyo': expand('~/.cache/skkeleton')
+      \ })
+    call skkeleton#register_kanatable('rom', {
+      \ "z\<Space>": ["\u3000", ''],
+      \ 'jj': 'escape',
+      \ 'z,': ['，', ''],
+      \ 'z9': ['（', ''],
+      \ 'z0': ['）', ''],
+      \ })
+  endfunction
+  autocmd User skkeleton-initialize-pre call s:skkeleton_init()
+'''

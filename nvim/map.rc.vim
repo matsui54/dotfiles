@@ -1,27 +1,5 @@
 inoremap jj <Esc>
 
-" add bracket automatically
-inoremap <silent><expr> <CR> <SID>smart_bracket()
-function! s:smart_bracket()
-  let char = getline('.')[col('.') - 2]
-  let brackets = {'{':'}', '(':')', '[':']', '<':'>'}
-  let c_bracket = get(brackets, char, '')
-  let ope = ''
-  if c_bracket !=# ''
-    if searchpair(char, '', c_bracket, 'n') != line('.')
-      if getline('.')[col('.') -1] !=# c_bracket
-        let ope = "\<End>" . c_bracket . "\<Esc>%a"
-      endif
-      let ope .= "\<CR>\<Esc>\<S-o>"
-    else
-      let ope = "\<CR>"
-    endif
-  else
-    let ope = "\<CR>"
-  endif
-  return ope
-endfunction
-
 inoremap <silent> <C-r> <cmd>call show_register#show()<CR><C-r>
 
 if has('nvim')
@@ -167,7 +145,7 @@ command! -nargs=1 -complete=customlist,s:find_sessions
 command! MyUpdateRemotePlugins :call s:update_rplugins()
 
 function! s:update_rplugins() abort
-  call dein#source(['defx.nvim', 'deoplete.nvim', 'denite.nvim'])
+  call dein#source(['defx.nvim', 'denite.nvim'])
   UpdateRemotePlugins
 endfunction
 
