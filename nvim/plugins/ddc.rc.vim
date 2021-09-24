@@ -7,7 +7,7 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 if has('nvim')
   call ddc#custom#patch_global('sources', ['nvimlsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 else
-  call ddc#custom#patch_global('sources', ['ddc-vim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['vim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 endif
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
