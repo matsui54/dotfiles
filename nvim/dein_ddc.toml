@@ -164,6 +164,11 @@ hook_add = '''
       \ 'z9': ['（', ''],
       \ 'z0': ['）', ''],
       \ })
+    if has('win32') || has('win64')
+      call skkeleton#config({
+        \ 'globalJisyo': expand('~/AppData/Local/skk/SKK-JISYO.L')
+        \ })
+    endif
   endfunction
   autocmd User skkeleton-initialize-pre call s:skkeleton_init()
 '''
