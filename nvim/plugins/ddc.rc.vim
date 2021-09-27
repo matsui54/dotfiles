@@ -5,7 +5,7 @@ inoremap <silent><expr> <TAB>
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 if has('nvim')
-  call ddc#custom#patch_global('sources', ['nvimlsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['nvim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 else
   call ddc#custom#patch_global('sources', ['ddc-vim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 endif
@@ -18,7 +18,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \ 'around': {'mark': 'A'},
       \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
       \ 'necovim': {'mark': 'neco'},
-      \ 'nvimlsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
+      \ 'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
       \ 'ddc-vim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
       \ 'buffer': {'mark': 'B'},
       \ 'file': {'mark': 'F', 'forceCompletionPattern': "/"},
@@ -33,7 +33,7 @@ call ddc#custom#patch_global('sourceOptions', {
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
       \ 'buffer': {'forceCollect': v:true, 'fromAltBuf': v:true},
-      \ 'nvimlsp': {'useIcon': v:true},
+      \ 'nvim-lsp': {'useIcon': v:true},
       \ 'dictionary': {'smartCase': v:true},
       \ })
 call ddc#custom#patch_global('filterParams', {
