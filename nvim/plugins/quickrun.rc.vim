@@ -1,6 +1,8 @@
 let g:quickrun_config = {}
 let g:quickrun_config._ = {}
-let g:quickrun_config._['runner'] = 'nvimterm'
+if has('nvim')
+  let g:quickrun_config._['runner'] = 'nvimterm'
+endif
 
 let g:quickrun_config['cpp'] = {
       \  'command': 'g++',

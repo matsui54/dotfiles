@@ -25,7 +25,6 @@ hook_add = '''
 [[plugins]]
 repo = 'thinca/vim-quickrun'
 on_cmd = 'QuickRun'
-depends = ['vim-quickrun-runner-nvimterm']
 hook_add = '''
   function! My_quickrun_redirect() abort
     let input_file = expand('%:h') . '/in.txt'
@@ -51,6 +50,7 @@ on_source = 'vital.vim'
 [[plugins]]
 repo = 'statiolake/vim-quickrun-runner-nvimterm'
 if = 'has("nvim")'
+on_source = 'vim-quickrun'
 
 [[plugins]]
 repo = 'itchyny/calendar.vim'
