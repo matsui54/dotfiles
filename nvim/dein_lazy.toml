@@ -344,5 +344,23 @@ hook_add = '''
 let g:indentLine_fileTypeExclude = ['help', 'calendar', 'denite']
 let g:indent_blankline_use_treesitter = v:true
 let g:indent_blankline_show_current_context = v:true
-let g:indent_blankline_context_patterns = ['if', 'class', 'function', 'method', 'for', 'while']
+let g:indent_blankline_context_patterns = [
+  \ "class",
+  \ "function",
+  \ "method",
+  \ "^if",
+  \ "while",
+  \ "for",
+  \ "with",
+  \ "func_literal",
+  \ "block",
+  \ "try",
+  \ "except",
+  \ "argument_list",
+  \ "object",
+  \ "dictionary",
+  \ "element",
+  \ "call",
+  \ "import",
+  \ ]
 '''
