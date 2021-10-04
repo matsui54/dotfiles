@@ -19,7 +19,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
       \ 'necovim': {'mark': 'neco'},
       \ 'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
-      \ 'ddc-vim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
+      \ 'vim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
       \ 'buffer': {'mark': 'B'},
       \ 'file': {'mark': 'F', 'forceCompletionPattern': "/"},
       \ 'vsnip': {'dup': v:true},

@@ -56,6 +56,8 @@ require'lspconfig'.clangd.setup{on_attach = on_attach, capabilities = capabiliti
 require'lspconfig'.pylsp.setup{on_attach = on_attach, capabilities = capabilities}
 require'lspconfig'.rls.setup{on_attach = on_attach, capabilities = capabilities}
 require'lspconfig'.texlab.setup{on_attach = on_attach, capabilities = capabilities}
+require'lspconfig'.gopls.setup{on_attach = on_attach, capabilities = capabilities}
+require'lspconfig'.vimls.setup{on_attach = on_attach, capabilities = capabilities}
 require'lspconfig'.denols.setup{
   on_attach = on_attach,
   capabilities = capabilities,
@@ -64,6 +66,7 @@ require'lspconfig'.denols.setup{
     unstable = true,
   },
 }
+
 -- /home/denjo/.local/share/nvim/lspinstall/lua/sumneko-lua-language-server
 local sumneko_root_path = vim.fn.stdpath('cache')..'/lspconfig/sumneko_lua/lua-language-server'
 local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"
