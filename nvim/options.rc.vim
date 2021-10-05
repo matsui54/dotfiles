@@ -40,6 +40,7 @@ if !has('nvim')
   endif
   set wildmenu
   set incsearch
+  set hlsearch
 endif
 
 set clipboard=unnamedplus
