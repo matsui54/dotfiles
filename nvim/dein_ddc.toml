@@ -39,7 +39,7 @@ repo = 'matsui54/ddc-dictionary'
 on_source = 'ddc.vim'
 
 [[plugins]]
-repo = 'matsui54/ddc-matcher_fuzzy'
+repo = 'tani/ddc-fuzzy'
 on_source = 'ddc.vim'
 
 [[plugins]]
