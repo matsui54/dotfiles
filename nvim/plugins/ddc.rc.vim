@@ -45,6 +45,7 @@ call ddc#custom#patch_global('sourceParams', {
 call ddc#custom#patch_global('filterParams', {
       \ 'matcher_fuzzy': {'camelcase': v:true},
       \ 'converter_truncate': {'maxAbbrWidth': 60, 'maxInfo': 500, 'ellipsis': '...'},
+      \ 'converter_fuzzy': {'hlGroup': 'Title'},
       \ })
 
 call ddc#custom#patch_global('specialBufferCompletion', v:true)
