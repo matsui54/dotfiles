@@ -37,7 +37,7 @@ repo = 'cespare/vim-toml'
 [[plugins]]
 repo = 'lervag/vimtex'
 hook_add = '''
-  let g:vimtex_syntax_conceal_default = 0
+  let g:vimtex_syntax_conceal_disable = 1
   let g:vimtex_view_method = 'zathura'
   let g:vimtex_view_general_options = "-x \"nvr +%{line} %{input}\" --synctex-forward @line:0:@tex @pdf"
 '''
