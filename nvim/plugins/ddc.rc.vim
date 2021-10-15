@@ -1,8 +1,14 @@
+call ddc#custom#patch_global('completionMenu', 'pum.vim')
+
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? '<C-n>' :
+      \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
       \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
       \ '<TAB>' : ddc#manual_complete()
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
+inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
+inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
+inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 
 if has('nvim')
   call ddc#custom#patch_global('sources', ['nvim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
@@ -18,10 +24,14 @@ call ddc#custom#patch_global('sourceOptions', {
       \ 'around': {'mark': 'A'},
       \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
       \ 'necovim': {'mark': 'neco'},
-      \ 'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
-      \ 'vim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->"},
-      \ 'buffer': {'mark': 'B'},
-      \ 'file': {'mark': 'F', 'forceCompletionPattern': "/"},
+      \ 'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->", 'ignoreCase': v:true},
+      \ 'ddc-vim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->", 'ignoreCase': v:true},
+      \ 'buffer': {'mark': 'B', 'ignoreCase': v:true},
+	    \ 'file': {
+	    \   'mark': 'F',
+	    \   'isVolatile': v:true,
+	    \   'forceCompletionPattern': '\S/\S*',
+      \ },
       \ 'vsnip': {'dup': v:true},
       \ 'skkeleton': {
       \   'mark': 'skk',
@@ -33,8 +43,7 @@ call ddc#custom#patch_global('sourceOptions', {
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
       \ 'buffer': {'forceCollect': v:true, 'fromAltBuf': v:true},
-      \ 'nvim-lsp': {'useIcon': v:true},
-      \ 'dictionary': {'smartCase': v:true},
+      \ 'dictionary': {'smartCase': v:true, 'showMenu': v:false},
       \ })
 call ddc#custom#patch_global('filterParams', {
       \ 'matcher_fuzzy': {'camelcase': v:true},
@@ -55,5 +64,7 @@ call ddc#custom#patch_filetype(
 call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
       \ 'zsh': {'mark': 'Z'},
       \ })
+
+autocmd User PumCompleteDone call vsnip_integ#on_complete_done(g:pum#completed_item)
 
 call ddc#enable()
