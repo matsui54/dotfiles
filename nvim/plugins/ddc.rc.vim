@@ -18,8 +18,8 @@ endif
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
       \   'matchers': ['matcher_fuzzy'],
-      \   'sorters': ['sorter_rank'],
-      \   'converters': ['converter_remove_overlap', 'converter_truncate'],
+      \   'sorters': ['sorter_fuzzy'],
+      \   'converters': ['converter_remove_overlap', 'converter_truncate', 'converter_fuzzy'],
       \ },
       \ 'around': {'mark': 'A'},
       \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
@@ -46,8 +46,8 @@ call ddc#custom#patch_global('sourceParams', {
       \ 'dictionary': {'smartCase': v:true, 'showMenu': v:false},
       \ })
 call ddc#custom#patch_global('filterParams', {
-      \ 'matcher_fuzzy': {'camelcase': v:true},
       \ 'converter_truncate': {'maxAbbrWidth': 60, 'maxInfo': 500, 'ellipsis': '...'},
+      \ 'converter_fuzzy': {'hlGroup': 'Title'},
       \ })
 
 call ddc#custom#patch_global('specialBufferCompletion', v:true)
