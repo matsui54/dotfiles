@@ -24,8 +24,8 @@
 (require 'helm-config)
 (helm-mode 1)
 
-(require 'evil)
-(evil-mode 1)
+;;(require 'evil)
+;;(evil-mode 1)
 
 (require 'smooth-scroll)
 (smooth-scroll-mode t)
