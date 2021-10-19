@@ -151,46 +151,6 @@ hook_source = '''
 '''
 depends = 'open-browser.vim'
 
-# [[plugins]]
-# repo = 'tyru/eskk.vim'
-# on_map = {ic = '<Plug>'}
-# hook_add = '''
-#   " imap <C-j>     <Plug>(eskk:toggle)
-#   " cmap <C-j>     <Plug>(eskk:toggle)
-# '''
-# hook_source = '''
-#   let g:eskk#enable_completion=1
-#   let g:eskk#directory = expand('~/.cache/eskk')
-#   let g:eskk#start_completion_length=2
-#   let g:eskk#tab_select_completion=1
-#   let g:eskk#dictionary = {
-#         \   'path': expand('~/.cache/skk-jisyo'),
-#         \   'sorted': 0,
-#         \   'encoding': 'utf-8',
-#         \}
-#   if has('win32') || has('win64')
-#     let g:eskk#large_dictionary = {
-#     \	'path': expand('~/AppData/Local/skk/SKK-JISYO.L'),
-#     \	'sorted': 1,
-#     \	'encoding': 'euc-jp',
-#     \}
-#   endif
-# 
-#   autocmd MyAutoCmd User eskk-initialize-pre call s:eskk_initial_pre()
-#   function! s:eskk_initial_pre() abort
-#     let t = eskk#table#new('rom_to_hira*', 'rom_to_hira')
-#     call t.add_map('z ', '　')
-#     call t.add_map('~', '〜')
-#     call t.add_map('zc', '©')
-#     call t.add_map('zr', '®')
-#     call t.add_map('z9', '（')
-#     call t.add_map('z0', '）')
-#     call t.add_map('z,', '，')
-#     call eskk#register_mode_table('hira', t)
-#   endfunction
-#   call ddc#custom#patch_global('sources', add(ddc#custom#get_global()['sources'], 'eskk'))
-# '''
-
 [[plugins]]
 repo = 'tyru/caw.vim'
 on_map = {nx = '<Plug>'}
@@ -342,25 +302,25 @@ on_event = 'BufRead'
 
 hook_add = '''
 let g:indentLine_fileTypeExclude = ['help', 'calendar', 'denite']
-let g:indent_blankline_use_treesitter = v:true
-let g:indent_blankline_show_current_context = v:true
-let g:indent_blankline_context_patterns = [
-  \ "class",
-  \ "function",
-  \ "method",
-  \ "^if",
-  \ "while",
-  \ "for",
-  \ "with",
-  \ "func_literal",
-  \ "block",
-  \ "try",
-  \ "except",
-  \ "argument_list",
-  \ "object",
-  \ "dictionary",
-  \ "element",
-  \ "call",
-  \ "import",
-  \ ]
+" let g:indent_blankline_use_treesitter = v:true
+" let g:indent_blankline_show_current_context = v:true
+" let g:indent_blankline_context_patterns = [
+"  \ "class",
+"  \ "function",
+"  \ "method",
+"  \ "^if",
+"  \ "while",
+"  \ "for",
+"  \ "with",
+"  \ "func_literal",
+"  \ "block",
+"  \ "try",
+"  \ "except",
+"  \ "argument_list",
+"  \ "object",
+"  \ "dictionary",
+"  \ "element",
+"  \ "call",
+"  \ "import",
+"  \ ]
 '''
