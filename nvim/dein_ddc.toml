@@ -79,7 +79,7 @@ hook_source = '''
         \   'border': 'rounded',
         \ },
         \ }
-  call ddc_nvim_lsp_doc#enable()
+  " call ddc_nvim_lsp_doc#enable()
 '''
 
 [[plugins]]
@@ -99,6 +99,7 @@ hook_source = '''
 [[plugins]]
 repo = 'ray-x/lsp_signature.nvim'
 if = "has('nvim')"
+  on_source = 'nvim-lspconfig'
 hook_add = '''
   command! LspSigEnable call ddc_nvim_lsp_doc#disable() | lua require("lsp_signature").setup()
 '''
