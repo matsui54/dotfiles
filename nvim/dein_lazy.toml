@@ -182,6 +182,11 @@ hook_source = '''
 	      \ {'noremap': 1, 'silent': 1},
 	      \)
 	call gina#custom#mapping#nmap(
+	      \ 'status', '<Space>gp',
+	      \ ':<C-u>Gina push<CR>',
+	      \ {'noremap': 1, 'silent': 1},
+	      \)
+	call gina#custom#mapping#nmap(
 	      \ 'branch', 'o',
 	      \ ':call gina#action#call(''new'')<CR>',
 	      \ {'noremap': 1, 'silent': 1},
