@@ -93,11 +93,31 @@ if = '!vimrc#is_windows()'
 [[plugins]]
 repo = 'Shougo/deol.nvim'
 hook_add = '''
-  tnoremap <C-\><C-\> <C-\><C-N><cmd>Deol -toggle<CR>
-  nnoremap <expr> <C-\><C-\> '<cmd>Deol -toggle -winwidth=' . &columns/2 . ' ' .
-  \ ((winnr('$') == 1 && bufname()=='') ? '<CR>' : '-split=vertical<CR>')
-  nnoremap <C-\>j <cmd>Deol -toggle -split=h<CR>
+  " tnoremap <C-\><C-\> <C-\><C-N><cmd>Deol -no-auto-cd -toggle<CR>
+  " nnoremap <expr> <C-\><C-\> '<cmd>Deol -no-auto-cd -toggle -winwidth=' . &columns/2 . ' ' .
+  "\ ((winnr('$') == 1 && bufname()=='') ? '<CR>' : '-split=vertical<CR>')
+  " nnoremap <C-\>j <cmd>Deol -no-auto-cd -toggle -split=h<CR>
 '''
+
+[[plugins]]
+repo = 'voldikss/vim-floaterm'
+on_cmd = ['FloatermNew']
+hook_add = '''
+  tnoremap <C-\><C-\> <C-\><C-N><cmd>FloatermToggle --wintype=vsplit<CR>
+  nnoremap <C-\><C-\> <cmd>FloatermToggle --wintype=vsplit<CR>
+  nnoremap <F7>    :FloatermNew<CR>
+  tnoremap <F7>    <C-\><C-n>:FloatermNew<CR>
+  nnoremap <F8>    :FloatermPrev<CR>
+  tnoremap <F8>    <C-\><C-n>:FloatermPrev<CR>
+  nnoremap <F9>    :FloatermNext<CR>
+  tnoremap <F9>    <C-\><C-n>:FloatermNext<CR>
+  nnoremap <F12>   :FloatermToggle<CR>
+  tnoremap <F12>   <C-\><C-n>:FloatermToggle<CR>
+'''
+
+[[plugins]]
+repo = 'delphinus/denite-floaterm'
+on_source = 'denite.nvim'
 
 [[plugins]]
 repo = 'rhysd/clever-f.vim'
@@ -341,26 +361,26 @@ repo = 'lukas-reineke/indent-blankline.nvim'
 on_event = 'BufRead'
 
 hook_add = '''
-let g:indentLine_fileTypeExclude = ['help', 'calendar', 'denite']
-let g:indent_blankline_use_treesitter = v:true
-let g:indent_blankline_show_current_context = v:true
-let g:indent_blankline_context_patterns = [
-  \ "class",
-  \ "function",
-  \ "method",
-  \ "^if",
-  \ "while",
-  \ "for",
-  \ "with",
-  \ "func_literal",
-  \ "block",
-  \ "try",
-  \ "except",
-  \ "argument_list",
-  \ "object",
-  \ "dictionary",
-  \ "element",
-  \ "call",
-  \ "import",
-  \ ]
+let g:indentLine_fileTypeExclude = ['floaterm', 'help', 'calendar', 'denite']
+" let g:indent_blankline_use_treesitter = v:true
+" let g:indent_blankline_show_current_context = v:true
+" let g:indent_blankline_context_patterns = [
+"  \ "class",
+"  \ "function",
+"  \ "method",
+"  \ "^if",
+"  \ "while",
+"  \ "for",
+"  \ "with",
+"  \ "func_literal",
+"  \ "block",
+"  \ "try",
+"  \ "except",
+"  \ "argument_list",
+"  \ "object",
+"  \ "dictionary",
+"  \ "element",
+"  \ "call",
+"  \ "import",
+"  \ ]
 '''
