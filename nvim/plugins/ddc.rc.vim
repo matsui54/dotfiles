@@ -70,8 +70,9 @@ call ddc#custom#patch_filetype(
 call ddc#custom#patch_filetype(['vim', 'toml'], {
       \ 'sources': ['necovim', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'],
       \ })
+" include @ for snippet
 call ddc#custom#patch_filetype(
-      \ ['zsh'], 'sources', ['zsh']
+      \ ['tex'], 'keywordPattern', '[a-zA-Z0-9_@]*'
       \ )
 call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
       \ 'zsh': {'mark': 'Z'},

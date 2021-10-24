@@ -23,7 +23,7 @@ local on_attach = function(client)
       virtual_text = false,
     }
   )
-  -- require "lsp_signature".on_attach()  -- Note: add in lsp client on-attach
+  require "lsp_signature".on_attach()  -- Note: add in lsp client on-attach
 
   vim.api.nvim_exec(
   [[
