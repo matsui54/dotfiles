@@ -13,6 +13,7 @@ if v:false
 
   call pum#set_option('setline_insert', v:true)
 else
+  call ddc#custom#patch_global('completionMenu', 'native')
   inoremap <silent><expr> <TAB>
         \ pumvisible() ? '<C-n>' :
         \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?

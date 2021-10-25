@@ -184,7 +184,7 @@ hook_source = '''
 	call gina#custom#mapping#nmap(
 	      \ 'status', '<Space>gp',
 	      \ ':<C-u>Gina push<CR>',
-	      \ {'noremap': 1, 'silent': 1},
+	      \ {'noremap': 1},
 	      \)
 	call gina#custom#mapping#nmap(
 	      \ 'branch', 'o',
@@ -241,10 +241,10 @@ hook_source = '''
 '''
 
 [[plugins]]
-repo = 'kabouzeid/nvim-lspinstall'
+repo = 'williamboman/nvim-lsp-installer'
 on_source = 'nvim-lspconfig'
 hook_source = '''
-  lua require'lspinstall'.setup()
+  "lua require'lspinstall'.setup()
 '''
 
 [[plugins]]
