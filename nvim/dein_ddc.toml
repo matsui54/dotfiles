@@ -174,3 +174,10 @@ hook_add = '''
   endfunction
   autocmd User skkeleton-initialize-pre call s:skkeleton_init()
 '''
+
+# [[plugins]]
+# repo = 'delphinus/skkeleton_indicator.nvim'
+# on_source = 'denops-skkeleton.vim'
+# hook_source = '''
+#   lua require'skkeleton_indicator'.setup{}
+# '''

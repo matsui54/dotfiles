@@ -12,6 +12,7 @@ if v:false
   inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 
   call pum#set_option('setline_insert', v:true)
+  " autocmd User PumCompleteDone call vsnip_integ#on_complete_done(g:pum#completed_item)
 else
   call ddc#custom#patch_global('completionMenu', 'native')
   inoremap <silent><expr> <TAB>
@@ -77,7 +78,5 @@ call ddc#custom#patch_filetype(
 call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
       \ 'zsh': {'mark': 'Z'},
       \ })
-
-autocmd User PumCompleteDone call vsnip_integ#on_complete_done(g:pum#completed_item)
 
 call ddc#enable()
