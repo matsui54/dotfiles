@@ -1,4 +1,4 @@
-if v:false
+if v:true
   call ddc#custom#patch_global('completionMenu', 'pum.vim')
 
   inoremap <silent><expr> <TAB>
@@ -11,7 +11,7 @@ if v:false
   inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
   inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 
-  call pum#set_option('setline_insert', v:true)
+  call pum#set_option('setline_insert', v:false)
   " autocmd User PumCompleteDone call vsnip_integ#on_complete_done(g:pum#completed_item)
 else
   call ddc#custom#patch_global('completionMenu', 'native')
@@ -35,7 +35,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'ignoreCase': v:true,
       \ },
       \ 'around': {'mark': 'A'},
-      \ 'dictionary': {'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
+      \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
       \ 'necovim': {'mark': 'neco', 'maxCandidates': 6},
       \ 'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->", 'ignoreCase': v:true},
       \ 'vim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->", 'ignoreCase': v:true},
