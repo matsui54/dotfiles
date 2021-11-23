@@ -11,6 +11,18 @@ let g:quickrun_config['cpp'] = {
       \  'outputter/message/log' : 1
       \ }
 
+let g:quickrun_config['vim'] = {
+      \   'command': ':source',
+      \   'exec': '%C %S',
+      \   'hook/eval/template': 'echo %s',
+      \   'runner': 'vimscript',
+      \ }
+let g:quickrun_config['lua'] = {
+      \   'command': ':luafile',
+      \   'exec': '%C %S',
+      \   'runner': 'vimscript',
+      \ }
+
 let g:quickrun_config['typescript'] = {
       \   'type': 'typescript/deno'
       \ }

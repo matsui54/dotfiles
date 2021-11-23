@@ -64,6 +64,9 @@ else
   let $PATH = s:py3_dir . 'bin:' . $PATH
 endif
 
+" make chdir() change tab local directory
+call execute('tcd ' . getcwd())
+
 source ~/dotfiles/nvim/map.rc.vim
 
 source ~/dotfiles/nvim/options.rc.vim
