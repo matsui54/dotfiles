@@ -55,7 +55,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
-      \ 'buffer': {'forceCollect': v:true, 'fromAltBuf': v:true},
+      \ 'buffer': {'forceCollect': v:true, 'fromAltBuf': v:true, 'showBufName': v:true},
       \ 'dictionary': {'smartCase': v:true, 'showMenu': v:false},
       \ })
 call ddc#custom#patch_global('filterParams', {
