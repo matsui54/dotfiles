@@ -329,29 +329,13 @@ repo = 'kat0h/bufpreview.vim'
 on_cmd = 'PreviewMarkdown'
 
 [[plugins]]
-repo = 'lukas-reineke/indent-blankline.nvim'
+repo = 'rhysd/git-messenger.vim'
+on_cmd = 'GitMessenger'
+
+[[plugins]]
+repo = 'Yggdroot/indentLine'
 on_event = 'BufRead'
 hook_add = '''
-let g:indentLine_fileTypeExclude = ['floaterm', 'help', 'calendar', 'denite']
-" let g:indent_blankline_use_treesitter = v:true
-" let g:indent_blankline_show_current_context = v:true
-" let g:indent_blankline_context_patterns = [
-"  \ "class",
-"  \ "function",
-"  \ "method",
-"  \ "^if",
-"  \ "while",
-"  \ "for",
-"  \ "with",
-"  \ "func_literal",
-"  \ "block",
-"  \ "try",
-"  \ "except",
-"  \ "argument_list",
-"  \ "object",
-"  \ "dictionary",
-"  \ "element",
-"  \ "call",
-"  \ "import",
-"  \ ]
+  let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+  let g:indentLine_fileTypeExclude = ['help', 'calendar', 'denite']
 '''
