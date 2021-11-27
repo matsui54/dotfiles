@@ -52,6 +52,13 @@ set showmatch
 set matchpairs+=<:>
 
 set undofile
+if !has('nvim')
+  let undodir = expand('~/.vim/undo')
+  if !isdirectory(undodir)
+    call mkdir(undodir)
+  endif
+  execute 'set undodir='.undodir
+endif
 
 set termguicolors
 
