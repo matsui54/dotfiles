@@ -230,7 +230,7 @@ lua <<EOF
 require'nvim-treesitter.configs'.setup {
     highlight = {
         enable = true,
-        disable = {},
+        disable = {'latex'},
     },
     refactor = {
       highlight_defintions = {
