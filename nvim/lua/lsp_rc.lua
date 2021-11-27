@@ -66,12 +66,8 @@ require'lspconfig'.denols.setup{
   },
 }
 
--- /home/denjo/.local/share/nvim/lspinstall/lua/sumneko-lua-language-server
-local sumneko_root_path = vim.fn.stdpath('cache')..'/lspconfig/sumneko_lua/lua-language-server'
-local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"
-
 require'lspconfig'.sumneko_lua.setup {
-  cmd = {sumneko_binary};
+  cmd = {vim.fn.stdpath('data')..'/lspinstall/lua/sumneko-lua-language-server'};
   settings = {
     Lua = {
       runtime = {
