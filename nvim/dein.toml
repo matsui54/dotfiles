@@ -32,9 +32,6 @@ repo = 'roxma/nvim-yarp'
 if = '!has("nvim")'
 
 [[plugins]]
-repo = 'cespare/vim-toml'
-
-[[plugins]]
 repo = 'lervag/vimtex'
 hook_add = '''
   let g:vimtex_syntax_conceal_disable = 1

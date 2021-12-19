@@ -168,7 +168,7 @@ repo = 'hrsh7th/vim-vsnip-integ'
 repo = 'rafamadriz/friendly-snippets'
 
 [[plugins]]
-repo = 'kuuote/denops-skkeleton.vim'
+repo = 'vim-skk/denops-skkeleton.vim'
 on_source = 'ddc.vim'
 on_map = {ic = '<plug>(skkeleton-'}
 hook_add = '''
