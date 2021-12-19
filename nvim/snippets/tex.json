@@ -4,6 +4,11 @@
     "body": "図\\ref{$1}",
     "description": "picture"
   },
+  "siki": {
+    "prefix": "siki",
+    "body": "式\\ref{$1}",
+    "description": "equation"
+  },
   "minipage": {
     "prefix": "minipage",
     "body": [
