@@ -7,7 +7,7 @@ fi
 
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=5000
-SAVEHIST=10000
+SAVEHIST=100000
 HISTFILE=~/.zsh_history
 
 EDITOR='nvim'
