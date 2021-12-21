@@ -354,3 +354,19 @@ hook_add = '''
 # [[plugins]]
 # repo = 'jupyter-vim/jupyter-vim'
 # on_source = 'jupytext.vim'
+
+[[plugins]]
+repo = 'skanehira/denops-gh.vim'
+on_event = 'BufReadPre'
+
+[[plugins]]
+repo = 'thinca/vim-qfreplace'
+on_cmd = 'Qfreplace'
+
+[[plugins]]
+repo = 'tyru/capture.vim'
+on_cmd = 'Capture'
+
+[[plugins]]
+repo = 'thinca/vim-prettyprint'
+on_cmd = ['PrettyPrint', 'PP']

@@ -13,6 +13,40 @@ if v:true
 
   call pum#set_option('setline_insert', v:false)
   autocmd User PumCompleteDone call vsnip_integ#on_complete_done(g:pum#completed_item)
+
+  call ddc#custom#patch_global('autoCompleteEvents',
+      \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
+  cnoremap <Tab>   <Cmd>call pum#map#insert_relative(+1)<CR>
+  cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
+  " cnoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
+  " cnoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
+  cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+  cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
+  nnoremap ;       <Cmd>call CommandlinePre()<CR>:
+  nnoremap :       <Cmd>call CommandlinePre()<CR>:
+  " autocmd MyAutoCmd CmdlineEnter * call CommandlinePre()
+
+  function! CommandlinePre() abort
+    if getcmdtype() == '@' || getcmdtype() == '/'
+      return
+    end
+    " Overwrite sources
+    let s:prev_buffer_config = ddc#custom#get_buffer()
+    if getcmdtype() == '/'
+      call ddc#custom#patch_buffer('sources', ['cmdline-history', 'buffer'])
+    else
+      call ddc#custom#patch_buffer('sources', ['cmdline', 'cmdline-history', 'buffer'])
+    endif
+
+    autocmd User DDCCmdlineLeave ++once call CommandlinePost()
+
+    " Enable command line completion
+    call ddc#enable_cmdline_completion()
+  endfunction
+  function! CommandlinePost() abort
+    " Restore sources
+    call ddc#custom#set_buffer(s:prev_buffer_config)
+  endfunction
 else
   call ddc#custom#patch_global('completionMenu', 'native')
   inoremap <silent><expr> <TAB>
@@ -35,6 +69,8 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'ignoreCase': v:true,
       \ },
       \ 'around': {'mark': 'A'},
+      \ 'cmdline': {'mark': 'cmd'},
+      \ 'cmdline-history': {'mark': 'hist', 'maxCandidates': 3},
       \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
       \ 'necovim': {'mark': 'neco', 'maxCandidates': 6},
       \ 'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->", 'ignoreCase': v:true},
@@ -80,3 +116,17 @@ call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
       \ })
 
 call ddc#enable()
+
+augroup gh_autocmd
+  au!
+  autocmd User gh_open_issue call EnableAutoCompletion()
+augroup END
+
+function! EnableAutoCompletion() abort
+  " Enable source 'gh_issues' to current buffer.
+  call ddc#custom#patch_buffer('sources', ['gh_issues'])
+  call ddc#custom#patch_buffer('sourceOptions', {
+        \ 'gh_issues': {
+          \  'matcherKey': 'menu'
+        \ }})
+endfunction
