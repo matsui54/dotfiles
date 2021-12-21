@@ -59,9 +59,9 @@ if vimrc#is_windows()
   set shell=cmd.exe
 else
   " use virtualenv
-  let s:py3_dir = expand('~/.vim/python3/')
-  let g:python3_host_prog = s:py3_dir . 'bin/python3'
-  let $PATH = s:py3_dir . 'bin:' . $PATH
+  " let s:py3_dir = expand('~/.vim/python3/')
+  " let g:python3_host_prog = s:py3_dir . 'bin/python3'
+  " let $PATH = s:py3_dir . 'bin:' . $PATH
 endif
 
 " make chdir() change tab local directory

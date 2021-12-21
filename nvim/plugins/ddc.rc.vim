@@ -12,7 +12,7 @@ if v:true
   inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 
   call pum#set_option('setline_insert', v:false)
-  " autocmd User PumCompleteDone call vsnip_integ#on_complete_done(g:pum#completed_item)
+  autocmd User PumCompleteDone call vsnip_integ#on_complete_done(g:pum#completed_item)
 else
   call ddc#custom#patch_global('completionMenu', 'native')
   inoremap <silent><expr> <TAB>
