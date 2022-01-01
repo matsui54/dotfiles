@@ -10,7 +10,7 @@ local on_attach = function(client)
     {'n', '<Leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>'},
     {'n', '<Leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>'},
     {'n', 'gl',        '<cmd>lua vim.lsp.buf.document_highlight()<CR>'},
-    {'n', 'gm',        '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>'},
+    {'n', 'gm',        '<cmd>lua vim.diagnostic.open_float()<CR>'},
     {'n', 'g0',        '<cmd>Denite lsp/document_symbol -auto-action=highlight<CR>'},
     {'n', 'gr',        '<cmd>Denite lsp/references -auto-action=preview_bat<CR>'},
   }
@@ -23,7 +23,9 @@ local on_attach = function(client)
       virtual_text = false,
     }
   )
-  -- require "lsp_signature".on_attach()  -- Note: add in lsp client on-attach
+  -- require "lsp_signature".on_attach({
+  --   floating_window = false,
+  -- })  -- Note: add in lsp client on-attach
 
   vim.api.nvim_exec(
   [[
@@ -54,9 +56,8 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 require'lspconfig'.clangd.setup{on_attach = on_attach, capabilities = capabilities}
 require'lspconfig'.pylsp.setup{on_attach = on_attach, capabilities = capabilities}
 require'lspconfig'.rls.setup{on_attach = on_attach, capabilities = capabilities}
-require'lspconfig'.texlab.setup{on_attach = on_attach, capabilities = capabilities}
+-- require'lspconfig'.texlab.setup{on_attach = on_attach, capabilities = capabilities}
 require'lspconfig'.gopls.setup{on_attach = on_attach, capabilities = capabilities}
-require'lspconfig'.vimls.setup{on_attach = on_attach, capabilities = capabilities}
 require'lspconfig'.denols.setup{
   on_attach = on_attach,
   capabilities = capabilities,
@@ -66,28 +67,32 @@ require'lspconfig'.denols.setup{
   },
 }
 
-require'lspconfig'.sumneko_lua.setup {
-  cmd = {vim.fn.stdpath('data')..'/lspinstall/lua/sumneko-lua-language-server'};
-  settings = {
-    Lua = {
-      runtime = {
-        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-        version = 'LuaJIT',
-        -- Setup your lua path
-        path = vim.split(package.path, ';'),
-      },
-      diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = {'vim'},
-      },
-      workspace = {
-        -- Make the server aware of Neovim runtime files
-        library = {
-          [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-          [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+local lsp_installer = require("nvim-lsp-installer")
+
+lsp_installer.on_server_ready(function(server)
+  local opts = {}
+
+  if server.name == 'sumneko_lua' then
+    opts.settings = {
+      Lua = {
+        runtime = {
+          version = 'LuaJIT',
+          path = vim.split(package.path, ';'),
+        },
+        diagnostics = {
+          globals = {'vim'},
+        },
+        workspace = {
+          library = {
+            [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+            [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+          },
         },
       },
-    },
-  },
-  on_attach = on_attach,
-}
+    }
+  end
+
+  opts.on_attach = on_attach
+  opts.capabilities = capabilities
+  server:setup(opts)
+end)
