@@ -1,6 +1,6 @@
 {
   "zu": {
-    "prefix": "zu",
+    "prefix": ["zu", "ず"],
     "body": "図\\ref{$1}",
     "description": "picture"
   },

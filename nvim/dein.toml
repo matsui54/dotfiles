@@ -15,6 +15,9 @@ repo = 'cocopon/iceberg.vim'
 repo = 'sainnhe/edge'
 
 [[plugins]]
+repo = 'endel/vim-github-colorscheme'
+
+[[plugins]]
 repo = 'kana/vim-operator-user'
 
 [[plugins]]
