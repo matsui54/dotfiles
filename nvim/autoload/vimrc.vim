@@ -48,28 +48,18 @@ endfunction
 
 " additional settings for iceberg theme
 function! vimrc#color_settings() abort
-  highlight TabLineSel guifg=#ffffff
-  highlight clear TabLineFill
-  highlight TabLineFill guifg=#525252 guibg=#161821
-  highlight clear MatchParen
-  highlight MatchParen cterm=underline gui=underline
-  highlight EndOfBuffer guifg=#454545
-  highlight! link SignColumn Normal
-  highlight! link LspDiagnosticsDefaultError ErrorMsg
-  highlight! link LspDiagnosticsFloatingError ErrorMsg
-  highlight! link LspDiagnosticsDefaultWarning ALEVirtualTextWarning
-  highlight! link LspDiagnosticsSignWarning ALEWarningSign
-  highlight! link LspDiagnosticsFloatingWarning ALEVirtualTextWarning
-  highlight! link LspDiagnosticsDefaultInformation ALEVirtualTextWarning
-  highlight! link LspDiagnosticsSignInformation ALEWarningSign
-  highlight! link LspDiagnosticsFloatingInformation ALEVirtualTextWarning
-  highlight! link LspDiagnosticsDefaultHint ALEVirtualTextWarning
-  highlight! link LspDiagnosticsSignHint ALEWarningSign
-  highlight! link LspDiagnosticsFloatingHint ALEVirtualTextWarning
-  highlight LspSignatureActiveParameter gui=underline
-  highlight LspReferenceRead gui = underline
-  highlight LspReferenceText gui = underline
-  highlight LspReferenceWrite gui=underline
+  hi TabLineSel guifg=#ffffff
+  hi clear TabLineFill
+  hi TabLineFill guifg=#525252 guibg=#161821
+  hi clear MatchParen
+  hi MatchParen cterm=underline gui=underline
+  hi EndOfBuffer guifg=#454545
+  hi! link SignColumn Normal
+  hi LspSignatureActiveParameter gui=underline
+  hi LspReferenceRead gui = underline
+  hi LspReferenceText gui = underline
+  hi LspReferenceWrite gui=underline
+  hi! link TSProperty Statement
   if has('nvim')
     highlight DdcNvimLspDocBorder blend=30 guifg=#c6c8d1 guibg=#3d425b
   endif
