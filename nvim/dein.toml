@@ -18,6 +18,8 @@ repo = 'sainnhe/edge'
 repo = 'itchyny/lightline.vim'
 hook_add = '''
   source ~/dotfiles/nvim/plugins/lightline.rc.vim
+  " for preview bat
+  let $BAT_THEME='GitHub'
 '''
 
 [[plugins]]
