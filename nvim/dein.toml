@@ -15,6 +15,15 @@ repo = 'cocopon/iceberg.vim'
 repo = 'sainnhe/edge'
 
 [[plugins]]
+repo = 'itchyny/lightline.vim'
+hook_add = '''
+  source ~/dotfiles/nvim/plugins/lightline.rc.vim
+'''
+
+[[plugins]]
+repo = 'yasukotelin/shirotelin'
+
+[[plugins]]
 repo = 'kana/vim-operator-user'
 
 [[plugins]]

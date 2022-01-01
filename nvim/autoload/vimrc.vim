@@ -48,19 +48,26 @@ endfunction
 
 " additional settings for iceberg theme
 function! vimrc#color_settings() abort
-  hi TabLineSel guifg=#ffffff
-  hi clear TabLineFill
-  hi TabLineFill guifg=#525252 guibg=#161821
-  hi clear MatchParen
-  hi MatchParen cterm=underline gui=underline
-  hi EndOfBuffer guifg=#454545
-  hi! link SignColumn Normal
-  hi LspSignatureActiveParameter gui=underline
-  hi LspReferenceRead gui = underline
-  hi LspReferenceText gui = underline
-  hi LspReferenceWrite gui=underline
-  hi! link TSProperty Statement
-  if has('nvim')
-    highlight DdcNvimLspDocBorder blend=30 guifg=#c6c8d1 guibg=#3d425b
+  let cs = execute('colorscheme')
+  if cs =~# 'iceberg'
+    hi TabLineSel guifg=#ffffff
+    hi clear TabLineFill
+    hi TabLineFill guifg=#525252 guibg=#161821
+    hi clear MatchParen
+    hi MatchParen cterm=underline gui=underline
+    hi EndOfBuffer guifg=#454545
+    hi! link SignColumn Normal
+    hi LspSignatureActiveParameter gui=underline
+    hi LspReferenceRead gui = underline
+    hi LspReferenceText gui = underline
+    hi LspReferenceWrite gui=underline
+    hi! link TSProperty Statement
+    if has('nvim')
+      highlight DdcNvimLspDocBorder blend=30 guifg=#c6c8d1 guibg=#3d425b
+    endif
+  elseif cs =~# 'shirotelin'
+    hi clear TabLineFill
+    hi TabLineFill guifg=#999999
+    hi! link Pmenu FloatWindow
   endif
 endfunction
