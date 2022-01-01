@@ -18,6 +18,19 @@ repo = 'sainnhe/edge'
 repo = 'endel/vim-github-colorscheme'
 
 [[plugins]]
+repo = 'itchyny/lightline.vim'
+hook_add = '''
+  source ~/dotfiles/nvim/plugins/lightline.rc.vim
+'''
+
+[[plugins]]
+repo = 'yasukotelin/shirotelin'
+hook_add = '''
+  " for preview bat
+  let $BAT_THEME='GitHub'
+'''
+
+[[plugins]]
 repo = 'kana/vim-operator-user'
 
 [[plugins]]
@@ -59,6 +72,7 @@ repo = "prabirshrestha/vim-lsp"
 if = '!has("nvim")'
 hook_add = '''
 	let g:lsp_completion_documentation_enabled = 0
+	let g:lsp_signature_help_enabled = 0
 '''
 
 [[plugins]]

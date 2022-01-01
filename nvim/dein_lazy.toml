@@ -99,26 +99,6 @@ hook_add = '''
   nnoremap <C-\>j <cmd>Deol -no-auto-cd -toggle -split=h<CR>
 '''
 
-# [[plugins]]
-# repo = 'voldikss/vim-floaterm'
-# on_cmd = ['FloatermNew']
-# hook_add = '''
-#   tnoremap <C-\><C-\> <C-\><C-N><cmd>FloatermToggle --wintype=vsplit<CR>
-#   nnoremap <C-\><C-\> <cmd>FloatermToggle --wintype=vsplit<CR>
-#   nnoremap <F7>    :FloatermNew<CR>
-#   tnoremap <F7>    <C-\><C-n>:FloatermNew<CR>
-#   nnoremap <F8>    :FloatermPrev<CR>
-#   tnoremap <F8>    <C-\><C-n>:FloatermPrev<CR>
-#   nnoremap <F9>    :FloatermNext<CR>
-#   tnoremap <F9>    <C-\><C-n>:FloatermNext<CR>
-#   nnoremap <F12>   :FloatermToggle<CR>
-#   tnoremap <F12>   <C-\><C-n>:FloatermToggle<CR>
-# '''
-# 
-# [[plugins]]
-# repo = 'delphinus/denite-floaterm'
-# on_source = 'denite.nvim'
-
 [[plugins]]
 repo = 'rhysd/clever-f.vim'
 on_map = '<Plug>'
@@ -331,6 +311,11 @@ on_cmd = 'PreviewMarkdown'
 [[plugins]]
 repo = 'rhysd/git-messenger.vim'
 on_cmd = 'GitMessenger'
+on_map = '<Plug>(git-messenger)'
+hook_add = '''
+  let g:git_messenger_no_default_mappings = v:true
+  nmap <Leader>gm <Plug>(git-messenger)
+'''
 
 [[plugins]]
 repo = 'Yggdroot/indentLine'

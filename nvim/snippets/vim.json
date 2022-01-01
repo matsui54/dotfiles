@@ -14,5 +14,19 @@
       "fnamemodify(expand('<sfile>'), ':h') . '/'"
     ],
     "description": "get parent of sfile"
+  },
+  "redir": {
+    "prefix": "redir",
+    "body": [
+      "redir >> ${1:~/vimlog}",
+      "silent echo $2",
+      "redir END"
+    ],
+    "description": "echo variables to file"
+  },
+  "em": {
+    "prefix": "em",
+    "body": "echomsg \"$1\" $1",
+    "description": ""
   }
 }

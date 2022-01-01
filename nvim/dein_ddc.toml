@@ -94,7 +94,7 @@ on_source = 'ddc.vim'
 # if = "has('nvim')"
 hook_source = '''
 	let g:signature_help_config = {
-        \ 'style': 'currentLabelOnly',
+        \ 'style': 'virtual',
         \ 'border': v:false,
         \ }
   call signature_help#enable()

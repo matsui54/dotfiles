@@ -5,7 +5,7 @@ endif
 set title
 set updatetime=500
 set hidden
-set laststatus=0
+set laststatus=2
 set signcolumn=yes
 
 set expandtab
@@ -87,7 +87,7 @@ endif
 
 autocmd MyAutoCmd ColorScheme * call vimrc#color_settings()
 set background=dark
-colorscheme iceberg
+colorscheme shirotelin
 
 augroup MyAutoCmd
   autocmd VimEnter * let t:defx_index = 1 | let g:tab_idx = 1
