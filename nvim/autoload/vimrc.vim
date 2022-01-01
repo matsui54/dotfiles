@@ -46,7 +46,7 @@ function! vimrc#on_filetype() abort
   endif
 endfunction
 
-" additional settings for iceberg theme
+" additional settings for colorscheme
 function! vimrc#color_settings() abort
   let cs = execute('colorscheme')
   if cs =~# 'iceberg'
@@ -69,5 +69,9 @@ function! vimrc#color_settings() abort
     hi clear TabLineFill
     hi TabLineFill guifg=#999999
     hi! link Pmenu FloatWindow
+    hi DiffAdd term=NONE cterm=NONE ctermbg=194 guibg=#C8FFC8
+    hi DiffRemoved term=NONE cterm=NONE ctermbg=224 gui=NONE guibg=#FFC8C8
+    hi! link diffAdded DiffAdd
+    hi! link diffRemoved DiffRemoved
   endif
 endfunction
