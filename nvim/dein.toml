@@ -20,6 +20,8 @@ hook_add = '''
   source ~/dotfiles/nvim/plugins/lightline.rc.vim
   " for preview bat
   let $BAT_THEME='GitHub'
+  " for fzf color theme
+  let $FZF_DEFAULT_OPTS="--color=light"
 '''
 
 [[plugins]]
