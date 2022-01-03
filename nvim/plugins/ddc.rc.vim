@@ -16,11 +16,9 @@ if v:true
 
   if v:false
     call ddc#custom#patch_global('autoCompleteEvents',
-        \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
+          \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
     cnoremap <Tab>   <Cmd>call pum#map#insert_relative(+1)<CR>
     cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
-    " cnoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
-    " cnoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
     cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
     cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
     nnoremap ;       <Cmd>call CommandlinePre()<CR>:
@@ -32,7 +30,10 @@ if v:true
         return
       end
       " Overwrite sources
-      let s:prev_buffer_config = ddc#custom#get_buffer()
+      let sources = ddc#custom#get_current().sources
+      if index(sources, 'cmdline-history') == -1
+        let s:prev_buffer_sources = sources
+      endif
       if getcmdtype() == '/'
         call ddc#custom#patch_buffer('sources', ['cmdline-history', 'buffer'])
       else
@@ -40,13 +41,14 @@ if v:true
       endif
 
       autocmd User DDCCmdlineLeave ++once call CommandlinePost()
+      autocmd InsertEnter ++once call CommandlinePost()
 
       " Enable command line completion
       call ddc#enable_cmdline_completion()
     endfunction
     function! CommandlinePost() abort
       " Restore sources
-      call ddc#custom#set_buffer(s:prev_buffer_config)
+      call ddc#custom#set_buffer({'sources': s:prev_buffer_sources})
     endfunction
   endif
 else

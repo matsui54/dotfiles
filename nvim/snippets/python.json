@@ -1,0 +1,35 @@
+{
+  "plt": {
+    "prefix": "plt",
+    "body": [
+      "import matplotlib.pyplot as plt",
+      "import numpy as np",
+      "\n",
+      "plt.rcParams.update(plt.rcParamsDefault)",
+      "plt.rcParams.update({",
+      "\t\"figure.facecolor\":  (1.0, 1.0, 1.0, 1.0),  # red   with alpha = 30%",
+      "\t\"axes.facecolor\":    (1.0, 1.0, 1.0, 1.0),  # green with alpha = 50%",
+      "\t\"savefig.facecolor\": (1.0, 1.0, 1.0, 1.0),  # blue  with alpha = 20%",
+      "\t\"text.usetex\": True,",
+      "\t\"font.family\": \"Helvetica\",",
+      "\t\"font.size\": 17,",
+      "\t\"figure.subplot.bottom\": 0.15,",
+      "})",
+      "plt.rc('text', usetex=True)",
+      "plt.rc('text.latex', preamble=r'\\usepackage{siunitx}')",
+      "",
+      "data = np.genfromtxt(\"$1\", skip_header=$2)",
+      "",
+      "plt.plot(data[:, ${3:0}], data[:, ${4:1}], label=r\"\\$ $5 \\$\")",
+      "plt.xlabel(r\"\\$$6 [\\si{$7}]\\$\")",
+      "plt.ylabel(r\"\\$$8 [\\si{$9}]\\$\")",
+      "# plt.xlim((0, 100))",
+      "# plt.ylim((0, 100))",
+      "",
+      "plt.legend()",
+      "plt.savefig(\"${10:hoge}\")",
+      "plt.clf()"
+    ],
+    "description": "matplotlib template"
+  }
+}

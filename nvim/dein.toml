@@ -15,6 +15,9 @@ repo = 'cocopon/iceberg.vim'
 repo = 'sainnhe/edge'
 
 [[plugins]]
+repo = 'endel/vim-github-colorscheme'
+
+[[plugins]]
 repo = 'itchyny/lightline.vim'
 hook_add = '''
   source ~/dotfiles/nvim/plugins/lightline.rc.vim
@@ -26,6 +29,10 @@ hook_add = '''
 
 [[plugins]]
 repo = 'yasukotelin/shirotelin'
+hook_add = '''
+  " for preview bat
+  let $BAT_THEME='GitHub'
+'''
 
 [[plugins]]
 repo = 'kana/vim-operator-user'
