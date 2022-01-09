@@ -1,6 +1,9 @@
 {
   "zu": {
-    "prefix": ["zu", "ず"],
+    "prefix": [
+      "zu",
+      "ず"
+    ],
     "body": "図\\ref{$1}",
     "description": "picture"
   },
@@ -8,6 +11,21 @@
     "prefix": "siki",
     "body": "式\\ref{$1}",
     "description": "equation"
+  },
+  "si": {
+    "prefix": "si",
+    "body": "\\si{$1}",
+    "description": ""
+  },
+  "SI": {
+    "prefix": "SI",
+    "body": "\\SI{$1}{$2}",
+    "description": ""
+  },
+  "slash": {
+    "prefix": "\\",
+    "body": "\\\\$1{$2}$3",
+    "description": ""
   },
   "minipage": {
     "prefix": "minipage",
@@ -26,6 +44,29 @@
       "\t\t\\caption{$5}",
       "\t\t\\label{$6}",
       "\t\\end{minipage}",
+      "\\end{figure}"
+    ],
+    "description": "minipage"
+  },
+  "subfigure": {
+    "prefix": "subfigure",
+    "body": [
+      "\\begin{figure}[ht]",
+      "\t\\centering",
+      "\t\\caption{$1}",
+      "\t\\label{fig:$2}",
+      "\t\\begin{subfigure}{0.45\\columnwidth}",
+      "\t\t\\centering",
+      "\t\t\\includegraphics[width=0.95\\textwidth]{$3}",
+      "\t\t\\caption{$4}",
+      "\t\t\\label{fig:$2:$5}",
+      "\t\\end{subfigure}",
+      "\t\\begin{subfigure}{0.45\\columnwidth}",
+      "\t\t\\centering",
+      "\t\t\\includegraphics[width=0.95\\textwidth]{$6}",
+      "\t\t\\caption{$7}",
+      "\t\t\\label{fig:$2:$8}",
+      "\t\\end{subfigure}",
       "\\end{figure}"
     ],
     "description": "minipage"
