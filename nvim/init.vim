@@ -46,6 +46,11 @@ endif
 
 " end dein settings---------------------------------------
 
+let g:do_filetype_lua = 1
+let g:did_load_filetypes = 0
+
+filetype on
+
 if has('vim_starting') && !empty(argv())
   call vimrc#on_filetype()
 endif
