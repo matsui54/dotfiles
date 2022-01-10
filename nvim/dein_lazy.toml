@@ -276,6 +276,7 @@ on_ft = ['html', 'css']
 
 [[plugins]]
 repo = 'lambdalisue/suda.vim'
+on_cmd = ['SudaRead', 'SudaWrite']
 on_event = 'BufRead'
 
 [[plugins]]
