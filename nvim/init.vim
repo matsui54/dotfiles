@@ -50,8 +50,8 @@ if has('vim_starting') && !empty(argv())
   call vimrc#on_filetype()
 endif
 
-if filereadable(expand('~/.config/secret.vim'))
-  source ~/.config/secret.vim
+if filereadable(expand('~/.vim/secret.vim'))
+  source ~/.vim/secret.vim
 endif
 
 if vimrc#is_windows()
