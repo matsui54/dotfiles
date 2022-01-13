@@ -19,60 +19,59 @@ on_source = 'ddc.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc-cmdline'
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-cmdline-history'
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-around'
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-zsh'
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-matcher_head'
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-converter_remove_overlap'
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-sorter_rank'
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'matsui54/ddc-dictionary'
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'tani/ddc-fuzzy'
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-nvim-lsp'
-if = "has('nvim')"
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'matsui54/ddc-buffer'
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'matsui54/ddc-ultisnips'
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'matsui54/ddc-filter_editdistance'
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'matsui54/ddc-converter_truncate'
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'matsui54/denops-popup-preview.vim'
@@ -108,12 +107,11 @@ on_source = 'nvim-lspconfig'
 
 [[plugins]]
 repo = 'shun/ddc-vim-lsp'
-on_source = 'ddc.vim'
-if = "!has('nvim')"
+lazy = 0
 
 [[plugins]]
 repo = 'LumaKernel/ddc-file'
-on_source = 'ddc.vim'
+lazy = 0
 
 # [[plugins]]
 # repo = 'SirVer/ultisnips'
