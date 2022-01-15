@@ -3,5 +3,14 @@
     "prefix": "cl",
     "body": "console.log($1)$2",
     "description": ""
+  },
+  "debug": {
+    "prefix": "debug",
+    "body": [
+      "await Deno.writeTextFile(\"${VIM:expand(\"~\")}/vimlog\", JSON.stringify($1) + \"\\n\",",
+      "\t{ append: true, },",
+      ");"
+    ],
+    "description": ""
   }
 }
