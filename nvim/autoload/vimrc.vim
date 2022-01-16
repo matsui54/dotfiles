@@ -44,9 +44,10 @@ function! vimrc#color_settings() abort
   elseif cs =~# 'shirotelin'
     hi clear TabLineFill
     hi TabLineFill guifg=#999999
-    hi! link Pmenu FloatWindow
+    " hi! link Pmenu FloatWindow
     hi DiffAdd term=NONE cterm=NONE ctermbg=194 guibg=#C8FFC8
     hi DiffRemoved term=NONE cterm=NONE ctermbg=224 gui=NONE guibg=#FFC8C8
+    hi LspSignatureActiveParameter gui=underline
     hi! link diffAdded DiffAdd
     hi! link diffRemoved DiffRemoved
   endif
