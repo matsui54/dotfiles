@@ -1,3 +1,4 @@
+" pum.vim
 if v:true
   call ddc#custom#patch_global('completionMenu', 'pum.vim')
 
@@ -12,43 +13,47 @@ if v:true
   inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 
   call pum#set_option('setline_insert', v:false)
+  call pum#set_option('highlight_normal_menu', 'FloatWindow')
   autocmd User PumCompleteDone call vsnip_integ#on_complete_done(g:pum#completed_item)
 
-  if v:false
+  " command line completion
+  if v:true
     call ddc#custom#patch_global('autoCompleteEvents',
           \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
-    cnoremap <Tab>   <Cmd>call pum#map#insert_relative(+1)<CR>
+    cnoremap <silent><expr> <TAB>
+          \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
+          \ ddc#manual_complete()
     cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
     cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
     cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
-    nnoremap ;       <Cmd>call CommandlinePre()<CR>:
-    nnoremap :       <Cmd>call CommandlinePre()<CR>:
-    " autocmd MyAutoCmd CmdlineEnter * call CommandlinePre()
+    autocmd MyAutoCmd CmdlineEnter * call CommandlinePre()
+    autocmd MyAutoCmd CmdlineLeave * call CommandlinePost()
 
     function! CommandlinePre() abort
-      if getcmdtype() == '@' || getcmdtype() == '/'
-        return
-      end
+      call denops#plugin#wait('ddc')
+      " if getcmdtype() == '@'
+      "   return
+      " end
+
       " Overwrite sources
-      let sources = ddc#custom#get_current().sources
-      if index(sources, 'cmdline-history') == -1
-        let s:prev_buffer_sources = sources
+      let current = ddc#custom#get_current()
+      if index(current.sources, 'cmdline-history') == -1
+        let s:prev_buffer_sources = current
       endif
       if getcmdtype() == '/'
         call ddc#custom#patch_buffer('sources', ['cmdline-history', 'buffer'])
+      elseif getcmdtype() == '@'
+        call ddc#custom#patch_buffer('sources', ['buffer'])
       else
         call ddc#custom#patch_buffer('sources', ['cmdline', 'cmdline-history', 'buffer'])
       endif
-
-      autocmd User DDCCmdlineLeave ++once call CommandlinePost()
-      autocmd InsertEnter ++once call CommandlinePost()
 
       " Enable command line completion
       call ddc#enable_cmdline_completion()
     endfunction
     function! CommandlinePost() abort
       " Restore sources
-      call ddc#custom#set_buffer({'sources': s:prev_buffer_sources})
+      call ddc#custom#set_buffer(s:prev_buffer_sources)
     endfunction
   endif
 else
@@ -73,12 +78,34 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'ignoreCase': v:true,
       \ },
       \ 'around': {'mark': 'A'},
-      \ 'cmdline': {'mark': 'cmd'},
-      \ 'cmdline-history': {'mark': 'hist', 'maxCandidates': 3},
-      \ 'dictionary': {'matchers': ['matcher_editdistance'], 'sorters': [], 'maxCandidates': 6, 'mark': 'D', 'minAutoCompleteLength': 3},
+      \ 'cmdline': {
+      \   'mark': 'cmd',
+      \   'forceCompletionPattern': "\\s|/", 
+      \   'minAutoCompleteLength': 1,
+      \ },
+      \ 'cmdline-history': {
+      \   'mark': 'hist',
+      \   'minAutoCompleteLength': 1,
+      \   'maxCandidates': 3,
+      \ },
+      \ 'dictionary': {
+      \   'matchers': ['matcher_editdistance'], 
+      \   'sorters': [], 
+      \   'maxCandidates': 6,
+      \   'mark': 'D', 
+      \   'minAutoCompleteLength': 3,
+      \ },
       \ 'necovim': {'mark': 'neco', 'maxCandidates': 6},
-      \ 'nvim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->", 'ignoreCase': v:true},
-      \ 'vim-lsp': {'mark': 'lsp', 'forceCompletionPattern': "\\.|:\\s*|->", 'ignoreCase': v:true},
+      \ 'nvim-lsp': {
+      \   'mark': 'lsp', 
+      \   'forceCompletionPattern': "\\.|:\\s*|->", 
+      \   'ignoreCase': v:true
+      \ },
+      \ 'vim-lsp': {
+      \   'mark': 'lsp', 
+      \   'forceCompletionPattern': "\\.|:\\s*|->", 
+      \   'ignoreCase': v:true
+      \ },
       \ 'buffer': {'mark': 'B', 'maxCandidates': 10, 'ignoreCase': v:true},
 	    \ 'file': {
 	    \   'mark': 'F',
