@@ -53,21 +53,29 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
   }
 }
 
-require'lspconfig'.clangd.setup{on_attach = on_attach, capabilities = capabilities}
-require'lspconfig'.pylsp.setup{on_attach = on_attach, capabilities = capabilities}
-require'lspconfig'.rls.setup{on_attach = on_attach, capabilities = capabilities}
--- require'lspconfig'.texlab.setup{on_attach = on_attach, capabilities = capabilities}
-require'lspconfig'.gopls.setup{on_attach = on_attach, capabilities = capabilities}
-require'lspconfig'.denols.setup{
+local lsp_installer = require("nvim-lsp-installer")
+local nvim_lsp = require('lspconfig')
+
+local node_root_dir = nvim_lsp.util.root_pattern("package.json", "node_modules")
+local buf_name = vim.api.nvim_buf_get_name(0)
+local current_buf = vim.api.nvim_get_current_buf()
+local is_node_repo = node_root_dir(buf_name, current_buf) ~= nil
+
+nvim_lsp.clangd.setup{on_attach = on_attach, capabilities = capabilities}
+nvim_lsp.pylsp.setup{on_attach = on_attach, capabilities = capabilities}
+nvim_lsp.rls.setup{on_attach = on_attach, capabilities = capabilities}
+-- nvim_lsp.texlab.setup{on_attach = on_attach, capabilities = capabilities}
+nvim_lsp.gopls.setup{on_attach = on_attach, capabilities = capabilities}
+nvim_lsp.denols.setup{
   on_attach = on_attach,
   capabilities = capabilities,
   init_options = {
     lint = true,
     unstable = true,
   },
+  autostart = not(is_node_repo),
 }
-
-local lsp_installer = require("nvim-lsp-installer")
+nvim_lsp.vimls.setup{}
 
 lsp_installer.on_server_ready(function(server)
   local opts = {}
@@ -90,6 +98,10 @@ lsp_installer.on_server_ready(function(server)
         },
       },
     }
+  elseif server.name == "tsserver" or server.name == "eslint" then
+    opts.autostart = is_node_repo
+  elseif server.name == "vimls" then
+    return
   end
 
   opts.on_attach = on_attach
