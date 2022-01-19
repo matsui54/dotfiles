@@ -14,7 +14,7 @@ if v:true
 
   call pum#set_option('setline_insert', v:false)
   call pum#set_option('highlight_normal_menu', 'FloatWindow')
-  autocmd User PumCompleteDone call vsnip_integ#on_complete_done(g:pum#completed_item)
+  " autocmd User PumCompleteDone call vsnip_integ#on_complete_done(g:pum#completed_item)
 
   " command line completion
   if v:true
