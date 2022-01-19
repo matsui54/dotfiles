@@ -70,6 +70,7 @@ if has('nvim')
 else
   call ddc#custom#patch_global('sources', ['vim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 endif
+call ddc#custom#patch_global('keywordPattern', "[-\\w]+")
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
       \   'matchers': ['matcher_fuzzy'],
@@ -84,6 +85,8 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'minAutoCompleteLength': 1,
       \ },
       \ 'cmdline-history': {
+      \   'matchers': ['matcher_head'], 
+      \   'sorters': [], 
       \   'mark': 'hist',
       \   'minAutoCompleteLength': 1,
       \   'maxCandidates': 3,
