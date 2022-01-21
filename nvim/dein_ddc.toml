@@ -128,7 +128,7 @@ lazy = 0
 [[plugins]]
 repo = 'hrsh7th/vim-vsnip'
 depends = ['vim-vsnip-integ', 'friendly-snippets']
-on_event = 'InsertEnter'
+on_source = 'ddc.vim'
 hook_add = '''
 " Expand
 imap <expr> <C-l> vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-l>'
