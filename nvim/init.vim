@@ -17,6 +17,7 @@ let s:toml_dir = expand('~/dotfiles/nvim')
 let s:dein_toml = s:toml_dir . 'dein.toml'
 let s:dein_lazy_toml = s:toml_dir . 'dein_lazy.toml'
 let s:dein_ddc_toml = s:toml_dir . 'ddc.toml'
+let s:dein_ddu_toml = s:toml_dir . 'ddu.toml'
 let s:dein_ft_toml = s:toml_dir . 'dein_ft.toml'
 
 if !isdirectory(s:dein_repo_dir)
@@ -27,11 +28,13 @@ execute 'set runtimepath+=' . s:dein_repo_dir
 " dein settings
 if dein#load_state(s:dein_dir)
   call dein#begin(s:dein_dir, [
-        \ expand('<sfile>'), s:dein_toml, s:dein_lazy_toml, s:dein_ft_toml
+        \ expand('<sfile>'), s:dein_toml, s:dein_lazy_toml, s:dein_ft_toml,
+        \ s:dein_ddc_toml, s:dein_ddu_toml,
         \ ])
   call dein#load_toml(s:toml_dir . '/dein.toml', {'lazy': 0})
   call dein#load_toml(s:toml_dir . '/dein_lazy.toml', {'lazy': 1})
   call dein#load_toml(s:toml_dir . '/dein_ddc.toml', {'lazy': 1})
+  call dein#load_toml(s:toml_dir . '/dein_ddu.toml', {'lazy': 1})
   call dein#load_toml(s:toml_dir . '/dein_ft.toml')
 
   "finalize

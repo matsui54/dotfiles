@@ -41,7 +41,7 @@ if v:true
         let s:prev_buffer_sources = current
       endif
       if getcmdtype() == '/'
-        call ddc#custom#patch_buffer('sources', ['cmdline-history', 'buffer'])
+        call ddc#custom#patch_buffer('sources', ['buffer', 'cmdline-history'])
       elseif getcmdtype() == '@'
         call ddc#custom#patch_buffer('sources', ['buffer'])
       else
@@ -135,7 +135,7 @@ call ddc#custom#patch_global('filterParams', {
 
 call ddc#custom#patch_global('specialBufferCompletion', v:true)
 call ddc#custom#patch_filetype(
-      \ ['denite-filter', 'TelescopePrompt'], 'specialBufferCompletion', v:false
+      \ ['denite-filter', 'ddu-std-filter',  'TelescopePrompt'], 'specialBufferCompletion', v:false
       \ )
 
 call ddc#custom#patch_filetype(['toml'], {
