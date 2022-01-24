@@ -25,6 +25,8 @@ function! s:denite_my_settings() abort
         \ denite#do_map('do_action', 'vsplit')
   nnoremap <silent><buffer><expr> e
         \ denite#do_map('do_action', 'edit')
+  nnoremap <silent><buffer><expr> <C-q>
+        \ denite#do_map('do_action', 'qfreplace')
 
   nnoremap <silent><buffer><expr> <C-n>
         \ denite#do_map('do_action', 'scroll_down')
@@ -111,3 +113,22 @@ call denite#custom#source('directory_rec', 'default_action', 'cd')
 call denite#custom#alias('source', 'file/rec/git', 'file/rec')
 call denite#custom#var('file/rec/git', 'command',
       \ ['git', 'ls-files', '-co', '--exclude-standard'])
+
+" from https://qiita.com/hrsh7th@github/items/303d46ba13532c502828
+function! MyDeniteReplace(context)
+  let qflist = []
+  for target in a:context['targets']
+    if !has_key(target, 'action__path') | continue | endif
+    if !has_key(target, 'action__line') | continue | endif
+    if !has_key(target, 'action__text') | continue | endif
+
+    call add(qflist, {
+          \ 'filename': target['action__path'],
+          \ 'lnum': target['action__line'],
+          \ 'text': target['action__text']
+          \ })
+  endfor
+  call setqflist(qflist)
+  call qfreplace#start('')
+endfunction
+call denite#custom#action('file', 'qfreplace', function('MyDeniteReplace'))
