@@ -75,7 +75,7 @@ nvim_lsp.denols.setup{
   },
   autostart = not(is_node_repo),
 }
-nvim_lsp.vimls.setup{}
+nvim_lsp.vimls.setup{on_attach = on_attach, capabilities = capabilities}
 
 lsp_installer.on_server_ready(function(server)
   local opts = {}
