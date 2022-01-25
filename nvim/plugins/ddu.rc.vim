@@ -1,5 +1,5 @@
 nnoremap <silent> <Space>a <cmd>Ddu find<CR>
-nnoremap <silent> <Space>f <cmd>Ddu find -source-param-path=/home/denjo/dotfiles
+nnoremap <silent> <Space>f <cmd>Ddu find -source-param-path=~/dotfiles
       \ -ui-param-startFilter=v:true<CR>
 
 function! Ddu_setup() abort
