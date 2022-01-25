@@ -226,6 +226,7 @@ require'nvim-treesitter.configs'.setup {
         list_definitions = 'gnD'
       }
     },
+    ignore_install = { "phpdoc" },
     ensure_installed = 'all'
 }
 EOF
