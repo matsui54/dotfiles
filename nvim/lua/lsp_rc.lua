@@ -62,7 +62,7 @@ local current_buf = vim.api.nvim_get_current_buf()
 local is_node_repo = node_root_dir(buf_name, current_buf) ~= nil
 
 nvim_lsp.clangd.setup{on_attach = on_attach, capabilities = capabilities}
-nvim_lsp.pylsp.setup{on_attach = on_attach, capabilities = capabilities}
+-- nvim_lsp.pylsp.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.rls.setup{on_attach = on_attach, capabilities = capabilities}
 -- nvim_lsp.texlab.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.gopls.setup{on_attach = on_attach, capabilities = capabilities}
