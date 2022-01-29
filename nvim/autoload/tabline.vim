@@ -46,9 +46,9 @@ function tabline#MyTabLine()
   let s = ''
   for i in range(num_tab)
     let tab = tabs[i]
-    let s .= tab.hi . tab.pre . tab.name . tab.post
+    let s .= '%' . string(i+1) . 'T' . tab.hi . tab.pre . tab.name . tab.post . '%T'
   endfor
-  let s .= '%T%=%#Normal#' . time . ' ' . dir
+  let s .= '%=%#Normal#' . time . ' ' . dir
   return s
 endfunction
 

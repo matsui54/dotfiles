@@ -107,3 +107,5 @@ endfunction
 " tabline setting
 set showtabline=2
 set tabline=%!tabline#MyTabLine()
+
+set mouse=nv
