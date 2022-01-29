@@ -43,3 +43,7 @@ lazy = 0
 [[plugins]]
 repo = 'matsui54/ddu-source-find'
 on_source = 'ddu.vim'
+
+[[plugins]]
+repo = 'shun/ddu-source-rg'
+lazy = 0
