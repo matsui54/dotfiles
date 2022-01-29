@@ -1,6 +1,7 @@
-nnoremap <silent> <Space>a <cmd>Ddu find<CR>
-nnoremap <silent> <Space>f <cmd>Ddu find -source-param-path=~/dotfiles
+nnoremap <silent> <Space>a <cmd>Ddu file_external<CR>
+nnoremap <silent> <Space>f <cmd>Ddu file_external -source-param-path=~/dotfiles
       \ -ui-param-startFilter=v:true<CR>
+nnoremap <silent> <Space>h <cmd>Ddu help -ui-param-startFilter=v:true<CR>
 
 function! Ddu_setup() abort
   call ddu#custom#patch_global({
@@ -19,7 +20,7 @@ function! Ddu_setup() abort
 
   " Set default sources
   call ddu#custom#patch_global('sourceParams', {
-        \ 'find': {'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', '-t', 'f']}
+        \ 'file_external': {'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', '-t', 'f']}
         \ })
 
 
@@ -42,17 +43,20 @@ function! Ddu_setup() abort
   "\ {'name': 'fd', 'params': {'cmd': ['rg', '--files', '--glob', '!.git', '--color', 'never']}}
   "\ ])
 
-  autocmd MyAutoCmd FileType ddu-std call s:ddu_my_settings()
-  autocmd MyAutoCmd FileType ddu-std-filter call s:ddu_filter_my_settings()
+  augroup MyDduSetup
+    autocmd!
+    autocmd FileType ddu-std call s:ddu_my_settings()
+    autocmd FileType ddu-std-filter call s:ddu_filter_my_settings()
+  augroup END
   function! s:ddu_my_settings() abort
     nnoremap <buffer><silent> <CR>
-    \ <Cmd>call ddu#ui#std#do_map('doAction', {'name' : 'default'})<CR>
-    nnoremap <buffer><silent> <Space>
-    \ <Cmd>call ddu#ui#std#do_map('toggleSelectItem')<CR>
+    \ <Cmd>call ddu#ui#std#do_action('itemAction')<CR>
+    nnoremap <buffer><silent> ,
+    \ <Cmd>call ddu#ui#std#do_action('toggleSelectItem')<CR>j
     nnoremap <buffer><silent> i
-    \ <Cmd>call ddu#ui#std#do_map('openFilterWindow')<CR>
+    \ <Cmd>call ddu#ui#std#do_action('openFilterWindow')<CR>
     nnoremap <buffer><silent> q
-    \ <Cmd>call ddu#ui#std#do_map('quit')<CR>
+    \ <Cmd>call ddu#ui#std#do_action('quit')<CR>
   endfunction
 
   function! s:ddu_filter_my_settings() abort
