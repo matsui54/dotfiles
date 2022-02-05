@@ -1,0 +1,51 @@
+{
+  "cout": {
+    "prefix": "<<",
+    "body": "cout << $1 ${2:<< endl;}",
+    "description": ""
+  },
+  "at": {
+    "prefix": "at",
+    "body": "at($1)",
+    "description": ""
+  },
+  "yn": {
+    "prefix": "yn",
+    "body": "($1 ? \"Yes\" : \"No\")",
+    "description": ""
+  },
+  "for2": {
+    "prefix": "for2",
+    "body": [
+      "for (${1:size_t} i = 0; i < $2; i++) {",
+      "\tfor ($1 j = 0; j < $3; j++) {",
+      "\t\t$4",
+      "\t}",
+      "\t$5",
+      "}"
+    ],
+    "description": ""
+  },
+  "for2r": {
+    "prefix": "for2r",
+    "body": [
+      "for (${1:size_t} i = $2 - 1; i >= 0; i++) {",
+      "\tfor ($1 j = $3 - 1; j >= 0; j++) {",
+      "\t\t$4",
+      "\t}",
+      "\t$5",
+      "}"
+    ],
+    "description": ""
+  },
+  "vec": {
+    "prefix": "vec",
+    "body": "vector<$1> $2($3);",
+    "description": ""
+  },
+  "vec2": {
+    "prefix": "vec2",
+    "body": "vector<vector<$1>> $2($3, vector<$1>($4));",
+    "description": ""
+  }
+}

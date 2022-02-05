@@ -1,0 +1,13 @@
+{
+  "vsnip": {
+    "prefix": "vs",
+    "body": [
+      "\"$1\": {",
+      "\t\"prefix\": \"$1\",",
+      "\t\"body\": \"$2\",",
+      "\t\"description\": \"$3\"",
+      "},"
+    ],
+    "description": ""
+  }
+}

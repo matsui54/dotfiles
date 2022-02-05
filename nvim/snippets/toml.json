@@ -1,0 +1,10 @@
+{
+  "plugins": {
+    "prefix": "pl",
+    "body": [
+      "[[plugins]]",
+      "repo = \"$1\""
+    ],
+    "description": "dein toml"
+  }
+}
