@@ -82,7 +82,7 @@ if exists('&pumblend')
 endif
 
 if exists('&winblend')
-  set winblend=30
+  set winblend=10
 endif
 
 autocmd MyAutoCmd ColorScheme * call vimrc#color_settings()
