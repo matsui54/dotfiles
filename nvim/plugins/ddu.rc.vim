@@ -2,6 +2,7 @@ nnoremap <silent> <Space>a <cmd>Ddu file_external<CR>
 nnoremap <silent> <Space>f <cmd>Ddu file_external -source-param-path=~/dotfiles
       \ -ui-param-startFilter=v:true<CR>
 nnoremap <silent> <Space>h <cmd>Ddu help -ui-param-startFilter=v:true<CR>
+nnoremap <silent> <Space>o <cmd>Ddu file_old<CR>
 
 function! Ddu_setup() abort
   call ddu#custom#patch_global({
@@ -12,15 +13,29 @@ function! Ddu_setup() abort
       \       'matchers': ['matcher_fzf'],
       \     }
       \   },
+	    \   'kindOptions': {
+	    \     'file': {
+	    \       'defaultAction': 'open',
+	    \     },
+	    \     'file_external': {
+	    \       'defaultAction': 'open',
+	    \     },
+	    \     'help': {
+	    \       'defaultAction': 'open',
+	    \     },
+	    \   },
       \   'uiParams': {
       \     'std': {
+      \       'filterSplitDirection': 'floating',
+      \       'autoResize': v:true,
       \     }
       \   },
       \ })
 
   " Set default sources
   call ddu#custom#patch_global('sourceParams', {
-        \ 'file_external': {'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', '-t', 'f']}
+        \ 'file_external': {'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', '-t', 'f']},
+        \ 'ghq': {'display': "basename"}
         \ })
 
 

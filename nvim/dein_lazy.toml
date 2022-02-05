@@ -12,7 +12,7 @@ hook_add = '''
   " nnoremap <silent> <Space>a <cmd>Denite file/rec<CR>
   nnoremap <silent> <Space>s <cmd>Denite directory_rec<CR>
   " nnoremap <silent> <Space>f <cmd>Denite file/rec:~/dotfiles<CR>
-  nnoremap <silent> <Space>o <cmd>Denite file/old<CR>
+  " nnoremap <silent> <Space>o <cmd>Denite file/old<CR>
   " nnoremap <silent> <Space>h <cmd>Denite help<CR>
   nnoremap <silent> <Space>n <cmd>Denite dein ghq<CR>
   nnoremap <silent> <Space>/ <cmd>Denite line<CR>
