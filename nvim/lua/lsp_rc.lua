@@ -27,6 +27,33 @@ local on_attach = function(client)
   --   floating_window = false,
   -- })  -- Note: add in lsp client on-attach
 
+  local triggers = client.server_capabilities.completionProvider.triggerCharacters
+  local search = function(arr, item)
+    for i, a in pairs(arr) do
+      if a == item then
+        return true
+      end
+    end
+    return false
+  end
+  if #triggers > 0 then
+    -- convert lsp triggerCharacters to js regexp
+    for i, c in pairs(triggers) do
+      local ch_list = {'[', '\\', '^', '$', '.', '|', '?', '*', '+', '(', ')'}
+      if search(ch_list, c) then
+        triggers[i] = '\\' .. c
+      end
+    end
+    -- override ddc setting of lsp buffer
+    vim.fn['ddc#custom#patch_buffer'] {
+      sourceOptions = {
+        ["nvim-lsp"] = {
+          forceCompletionPattern = table.concat(triggers, '|'),
+        }
+      },
+    }
+  end
+
   vim.api.nvim_exec(
   [[
     augroup MyLspSettings
