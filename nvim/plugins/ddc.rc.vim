@@ -102,6 +102,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \ 'nvim-lsp': {
       \   'mark': 'lsp', 
       \   'forceCompletionPattern': "\\.|:\\s*|->", 
+      \   'minAutoCompleteLength': 1,
       \   'ignoreCase': v:true
       \ },
       \ 'vim-lsp': {
@@ -170,8 +171,12 @@ call ddc#custom#patch_filetype(['toml'], {
       \ })
 " include @ for snippet
 call ddc#custom#patch_filetype(
-      \ ['tex'], 'keywordPattern', '[a-zA-Z0-9_@]*'
-      \ )
+      \ ['tex'], {
+      \ 'keywordPattern': '[a-zA-Z0-9_@]*',
+      \ 'sourceOptions': {
+      \   'vsnip': {'forceCompletionPattern': '@'},
+      \ },
+      \ })
 call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
       \ 'zsh': {'mark': 'Z'},
       \ })

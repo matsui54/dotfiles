@@ -143,11 +143,9 @@ let g:vsnip_snippet_dir = expand('~/dotfiles/nvim/snippets')
 
 function s:trigger_completedone()
   let info = pum#complete_info()
-  let s:complete_item = info.items[info.selected]
-  doautocmd User MyCompleteDone
-  return "\<Ignore>"
+  let complete_item = info.items[info.selected]
+  return vsnip_integ#on_complete_done(complete_item)
 endfunction
-autocmd User MyCompleteDone call vsnip_integ#on_complete_done(s:complete_item)
 imap <expr> <C-v> <SID>trigger_completedone()
 '''
 
