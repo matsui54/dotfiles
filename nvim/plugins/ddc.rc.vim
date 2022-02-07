@@ -163,7 +163,7 @@ call ddc#custom#patch_global('filterParams', {
 
 call ddc#custom#patch_global('specialBufferCompletion', v:true)
 call ddc#custom#patch_filetype(
-      \ ['denite-filter', 'ddu-std-filter',  'TelescopePrompt'], 'specialBufferCompletion', v:false
+      \ ['denite-filter', 'ddu-ff-filter',  'TelescopePrompt'], 'specialBufferCompletion', v:false
       \ )
 
 call ddc#custom#patch_filetype(['toml'], {
