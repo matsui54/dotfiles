@@ -85,6 +85,9 @@ if exists('&winblend')
   set winblend=10
 endif
 
+" Don't show too many items
+set pumheight=15
+
 autocmd MyAutoCmd ColorScheme * call vimrc#color_settings()
 set background=dark
 colorscheme shirotelin
