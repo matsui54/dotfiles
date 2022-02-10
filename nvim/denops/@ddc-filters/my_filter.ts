@@ -8,6 +8,8 @@ import {
 } from "https://deno.land/x/ddc_vim@v1.2.0/base/filter.ts#^";
 import { Fzf } from "https://esm.sh/fzf@0.4.1";
 
+// TODO: add ignore => default base score: about 50
+// add sourceWeight => ex. vsnip += 10
 type Params = { sourceIdxWeight: number; hlGroup: string };
 
 export class Filter extends BaseFilter<Params> {
@@ -43,6 +45,7 @@ export class Filter extends BaseFilter<Params> {
           "hl_group": filterParams.hlGroup,
           width: 1,
         }));
+        e.item.menu = `${e.item.menu ?? ""} ${e.score}`;
         return e;
       }).sort((a, b) => b.score - a.score).map((e) => e.item),
     );
