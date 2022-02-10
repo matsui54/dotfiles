@@ -360,3 +360,7 @@ on_cmd = 'Capture'
 [[plugins]]
 repo = 'thinca/vim-prettyprint'
 on_cmd = ['PrettyPrint', 'PP']
+
+[[plugins]]
+repo = "mbbill/undotree"
+on_cmd = 'UndotreeToggle'
