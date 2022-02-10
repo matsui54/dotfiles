@@ -69,12 +69,13 @@ if has('nvim')
 else
   call ddc#custom#patch_global('sources', ['vim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 endif
+call ddc#custom#patch_global('postFilters', ["my_filter"])
 call ddc#custom#patch_global('keywordPattern', "[-\\w]+")
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
       \   'matchers': ['matcher_fuzzy'],
       \   'sorters': ['sorter_fuzzy'],
-      \   'converters': ['converter_remove_overlap', 'converter_truncate', 'converter_fuzzy'],
+      \   'converters': ['converter_remove_overlap', 'converter_truncate'],
       \   'ignoreCase': v:true,
       \ },
       \ 'around': {'mark': 'A'},
@@ -100,6 +101,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \ 'necovim': {'mark': 'neco', 'maxCandidates': 6},
       \ 'nvim-lsp': {
       \   'mark': 'lsp', 
+      \   'dup': v:true, 
       \   'forceCompletionPattern': "\\.|:\\s*|->", 
       \   'minAutoCompleteLength': 1,
       \   'ignoreCase': v:true
