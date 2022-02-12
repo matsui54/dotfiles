@@ -94,6 +94,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \ 'dictionary': {
       \   'matchers': ['matcher_editdistance'], 
       \   'sorters': [], 
+      \   'converters': ['converter_fuzzy'],
       \   'maxCandidates': 6,
       \   'mark': 'D', 
       \   'minAutoCompleteLength': 3,
@@ -160,6 +161,7 @@ call ddc#custom#patch_global('sourceParams', {
 call ddc#custom#patch_global('filterParams', {
       \ 'converter_truncate': {'maxAbbrWidth': 60, 'maxInfo': 500, 'ellipsis': '...'},
       \ 'converter_fuzzy': {'hlGroup': 'Title'},
+      \ 'my_filter': {'excludeSources': ["dictionary", "skkeleton"]},
       \ })
 
 call ddc#custom#patch_global('specialBufferCompletion', v:true)
