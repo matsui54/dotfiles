@@ -127,7 +127,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
-      \ 'buffer': {'forceCollect': v:true, 'fromAltBuf': v:true, 'showBufName': v:true},
+      \ 'buffer': {'forceCollect': v:true, 'fromAltBuf': v:true, 'bufNameStyle': "basename"},
       \ 'dictionary': {'smartCase': v:true, 'showMenu': v:false},
       \ 'nvim-lsp': {'kindLabels': {
       \    "Text": " Text",
