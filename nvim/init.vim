@@ -34,7 +34,7 @@ if dein#load_state(s:dein_dir)
   call dein#load_toml(s:toml_dir . '/dein.toml', {'lazy': 0})
   call dein#load_toml(s:toml_dir . '/dein_lazy.toml', {'lazy': 1})
   call dein#load_toml(s:toml_dir . '/dein_ddc.toml', {'lazy': 1})
-  call dein#load_toml(s:toml_dir . '/dein_ddu.toml', {'lazy': 1})
+  call dein#load_toml(s:toml_dir . '/dein_ddu.toml')
   call dein#load_toml(s:toml_dir . '/dein_ft.toml')
 
   "finalize

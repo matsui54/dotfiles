@@ -2,68 +2,54 @@
 repo = 'Shougo/ddu.vim'
 hook_add = '''
   source ~/dotfiles/nvim/plugins/ddu.rc.vim
-'''
-hook_source = '''
   call Ddu_setup()
 '''
 
 [[plugins]]
 repo = 'Shougo/ddu-commands.vim'
-depends = 'ddu.vim'
 on_cmd = 'Ddu'
 
 [[plugins]]
 repo = 'Shougo/ddu-ui-ff'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddu-source-file_old'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddu-source-line'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddu-source-file'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddu-source-file_rec'
-lazy = 0
 
 [[plugins]]
 repo = 'yuki-yano/ddu-filter-fzf'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddu-kind-file'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddu-filter-matcher_substring'
-lazy = 0
 
 [[plugins]]
 repo = 'matsui54/ddu-source-file_external'
-on_source = 'ddu.vim'
 
 [[plugins]]
 repo = 'matsui54/ddu-source-help'
-on_source = 'ddu.vim'
+
+[[plugins]]
+repo = 'matsui54/ddu-source-highlight'
 
 [[plugins]]
 repo = 'shun/ddu-source-buffer'
-lazy = 0
 
 [[plugins]]
 repo = 'shun/ddu-source-rg'
-lazy = 0
 
 [[plugins]]
 repo = "4513ECHO/ddu-source-ghq"
-lazy = 0
 
 [[plugins]]
 repo = "gamoutatsumi/ddu-source-nvim-lsp"
-lazy = 0
