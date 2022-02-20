@@ -4,5 +4,8 @@ map <C-p> navigate previous
 set scroll-step 80
 set incremental-search
 
+# for opening browser
+set sandbox none
+
 # copy selection to system clipboard
 set selection-clipboard clipboard
