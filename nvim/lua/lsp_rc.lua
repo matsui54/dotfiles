@@ -28,27 +28,21 @@ local on_attach = function(client)
   -- })  -- Note: add in lsp client on-attach
 
   local triggers = client.server_capabilities.completionProvider.triggerCharacters
-  local search = function(arr, item)
-    for i, a in pairs(arr) do
-      if a == item then
-        return true
-      end
-    end
-    return false
-  end
+  local escaped = {}
   if triggers and #triggers > 0 then
     -- convert lsp triggerCharacters to js regexp
     for i, c in pairs(triggers) do
       local ch_list = {'[', '\\', '^', '$', '.', '|', '?', '*', '+', '(', ')'}
-      if search(ch_list, c) then
-        triggers[i] = '\\' .. c
+      if vim.tbl_contains(ch_list, c) then
+        table.insert(escaped, '\\'..c)
+      else table.insert(escaped, c)
       end
     end
     -- override ddc setting of lsp buffer
     vim.fn['ddc#custom#patch_buffer'] {
       sourceOptions = {
         ["nvim-lsp"] = {
-          forceCompletionPattern = table.concat(triggers, '|'),
+          forceCompletionPattern = table.concat(escaped, '|'),
         }
       },
     }

@@ -102,14 +102,13 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'dup': v:true, 
       \   'forceCompletionPattern': "\\.|:\\s*|->", 
       \   'minAutoCompleteLength': 1,
-      \   'ignoreCase': v:true
       \ },
       \ 'vim-lsp': {
       \   'mark': 'lsp', 
+      \   'dup': v:true, 
       \   'forceCompletionPattern': "\\.|:\\s*|->", 
-      \   'ignoreCase': v:true
       \ },
-      \ 'buffer': {'mark': 'B', 'maxCandidates': 10, 'ignoreCase': v:true},
+      \ 'buffer': {'mark': 'B', 'maxCandidates': 10},
 	    \ 'file': {
 	    \   'mark': 'F',
 	    \   'isVolatile': v:true,
