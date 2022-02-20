@@ -52,6 +52,8 @@ local on_attach = function(client)
   [[
     augroup MyLspSettings
       autocmd!
+      autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
+      autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
       autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
     augroup END
   ]],
@@ -97,7 +99,6 @@ nvim_lsp.denols.setup{
   },
   autostart = not(is_node_repo),
 }
-nvim_lsp.vimls.setup{on_attach = on_attach, capabilities = capabilities}
 
 lsp_installer.on_server_ready(function(server)
   local opts = {}
@@ -122,8 +123,6 @@ lsp_installer.on_server_ready(function(server)
     }
   elseif server.name == "tsserver" or server.name == "eslint" then
     opts.autostart = is_node_repo
-  elseif server.name == "vimls" then
-    return
   end
 
   opts.on_attach = on_attach

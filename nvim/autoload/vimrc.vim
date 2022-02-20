@@ -50,5 +50,8 @@ function! vimrc#color_settings() abort
     hi LspSignatureActiveParameter gui=underline
     hi! link diffAdded DiffAdd
     hi! link diffRemoved DiffRemoved
+    hi! link LspReferenceRead ReferenceHighlight
+    hi! link LspReferenceText ReferenceHighlight
+    hi! link LspReferenceWrite ReferenceHighlight
   endif
 endfunction
