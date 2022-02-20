@@ -36,7 +36,7 @@ local on_attach = function(client)
     end
     return false
   end
-  if #triggers > 0 then
+  if triggers and #triggers > 0 then
     -- convert lsp triggerCharacters to js regexp
     for i, c in pairs(triggers) do
       local ch_list = {'[', '\\', '^', '$', '.', '|', '?', '*', '+', '(', ')'}

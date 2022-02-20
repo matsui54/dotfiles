@@ -74,6 +74,10 @@ repo = 'matsui54/ddc-converter_truncate'
 lazy = 0
 
 [[plugins]]
+repo = "gamoutatsumi/ddc-emoji"
+lazy = 0
+
+[[plugins]]
 repo = 'matsui54/denops-popup-preview.vim'
 on_source = 'ddc.vim'
 # if = "!has('nvim')"

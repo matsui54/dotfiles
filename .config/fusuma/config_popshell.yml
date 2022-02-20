@@ -1,0 +1,33 @@
+swipe:
+  3:
+    down:
+      command: "xdotool key Super+ctrl+Up" # Switch to next workspace
+    up:
+      command: "xdotool key Super+ctrl+Down" # Switch to previous workspace
+    # up:
+    #   command: 'xdotool key Super+s'
+    # down:
+    #   command: 'xdotool key Super+d'
+  # 4:
+  #   up:
+  #     command: "xdotool key ctrl+alt+Down" # Switch to next workspace
+  #   down:
+  #     command: "xdotool key ctrl+alt+Up" # Switch to previous workspace
+pinch:
+  in:
+    command: 'xdotool key Ctrl+Super+Up'
+    threshold: 0.75
+  out:
+     command: 'xdotool key ctrl+Super+Down'
+     threshold: 0.75
+hold:
+  4:
+    command: "xdotool key super" # Activity
+
+# threshold:
+#   swipe: 0.4
+#   pinch: 0.4
+# 
+# interval:
+#   swipe: 0.8
+#   pinch: 0.1

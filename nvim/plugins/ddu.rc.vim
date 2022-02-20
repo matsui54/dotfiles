@@ -33,6 +33,9 @@ function! Ddu_setup() abort
       \     'action': {
       \       'defaultAction': 'do',
       \     },
+	    \     'highlight': {
+	    \       'defaultAction': 'edit',
+	    \     },
 	    \   },
       \   'uiParams': {
       \     'ff': {

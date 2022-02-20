@@ -13,8 +13,6 @@ if v:true
   inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 
   call pum#set_option('setline_insert', v:false)
-  call pum#set_option('highlight_normal_menu', 'FloatWindow')
-  " autocmd User PumCompleteDone call vsnip_integ#on_complete_done(g:pum#completed_item)
 
   " command line completion
   call ddc#custom#patch_global('autoCompleteEvents',
@@ -70,7 +68,6 @@ else
   call ddc#custom#patch_global('sources', ['vim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 endif
 call ddc#custom#patch_global('postFilters', ["my_filter"])
-call ddc#custom#patch_global('keywordPattern', "[-\\w]+")
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
       \   'matchers': ['matcher_fuzzy'],
@@ -185,17 +182,3 @@ call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
       \ })
 
 call ddc#enable()
-
-augroup gh_autocmd
-  au!
-  autocmd User gh_open_issue call EnableAutoCompletion()
-augroup END
-
-function! EnableAutoCompletion() abort
-  " Enable source 'gh_issues' to current buffer.
-  call ddc#custom#patch_buffer('sources', ['gh_issues'])
-  call ddc#custom#patch_buffer('sourceOptions', {
-        \ 'gh_issues': {
-          \  'matcherKey': 'menu'
-        \ }})
-endfunction

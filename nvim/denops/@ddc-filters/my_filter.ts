@@ -72,7 +72,7 @@ export class Filter extends BaseFilter<Params> {
   }
   params(): Params {
     return {
-      sourceIdxWeight: 20,
+      sourceIdxWeight: 5,
       hlGroup: "Title",
       excludeSources: [],
     };
