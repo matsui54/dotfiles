@@ -5,10 +5,15 @@ if has('nvim')
 endif
 
 let g:quickrun_config['cpp'] = {
-      \  'command': 'g++',
       \  'cmdopt' : '-std=c++2a -Wall',
       \  'outputter' : 'quickfix',
       \  'outputter/message/log' : 1
+      \ }
+
+let g:quickrun_config['cpp/compe'] = {
+      \   'type': 'cpp/g++',
+      \  'input' : 'in.dat',
+      \  'runner' : 'system'
       \ }
 
 let g:quickrun_config['vim'] = {
