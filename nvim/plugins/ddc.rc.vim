@@ -107,6 +107,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'mark': 'lsp', 
       \   'dup': v:true, 
       \   'forceCompletionPattern': "\\.|:\\s*|->", 
+      \   'minAutoCompleteLength': 1,
       \ },
       \ 'buffer': {'mark': 'B', 'maxCandidates': 10},
 	    \ 'file': {
