@@ -17,7 +17,6 @@ hook_add = '''
   nnoremap <silent> <Space>n <cmd>Denite dein ghq<CR>
   nnoremap <silent> <Space>/ <cmd>Denite line<CR>
   nnoremap <silent> <Space>r <cmd>Denite -resume<CR>
-  nnoremap <silent> gn <cmd>Denite gina/command<CR>
   cnoremap <expr><silent> <C-t>
       \ "<c-u>Denite command_history -start-filter -input='" . getcmdline() . "'<CR>"
 '''
@@ -169,6 +168,7 @@ hook_add = '''
   nnoremap gnb <cmd>Gina branch<CR>
   nnoremap gnl <cmd>Gina log<CR>
   nnoremap gnw <cmd>Gina browse<CR>
+  nnoremap gn<Space> :Gina<Space>
 '''
 hook_source = '''
 	call gina#custom#mapping#nmap(
@@ -200,6 +200,10 @@ hook_source = '''
 	      \ {'noremap': 1, 'silent': 1},
 	      \)
 '''
+
+[[plugins]]
+repo = 'lambdalisue/gin.vim'
+on_cmd = 'Gin'
  
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
