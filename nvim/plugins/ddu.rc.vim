@@ -12,10 +12,14 @@ function! Ddu_setup() abort
       \     '_' : {
       \       'ignoreCase': v:true,
       \       'matchers': ['matcher_fzf'],
-      \     }
-      \   },
-	    \   'kindOptions': {
-	    \     'file': {
+      \     },
+	    \     'dein': {
+	    \       'defaultAction': 'cd',
+	    \     },
+	    \     'highlight': {
+	    \       'defaultAction': 'edit',
+	    \     },
+	    \     'help': {
 	    \       'defaultAction': 'open',
 	    \     },
 	    \     'file_external': {
@@ -24,23 +28,20 @@ function! Ddu_setup() abort
 	    \     'directory_rec': {
       \       'defaultAction': 'cd',
 	    \     },
-	    \     'help': {
+      \   },
+	    \   'kindOptions': {
+	    \     'file': {
 	    \       'defaultAction': 'open',
-	    \     },
-	    \     'dein': {
-	    \       'defaultAction': 'cd',
 	    \     },
       \     'action': {
       \       'defaultAction': 'do',
       \     },
-	    \     'highlight': {
-	    \       'defaultAction': 'edit',
-	    \     },
 	    \   },
       \   'uiParams': {
       \     'ff': {
       \       'split': has('nvim') ? 'floating' : 'horizontal',
       \       'filterSplitDirection': 'floating',
+      \       'filterFloatingPosition': 'top',
       \       'autoResize': v:true,
       \     }
       \   },
