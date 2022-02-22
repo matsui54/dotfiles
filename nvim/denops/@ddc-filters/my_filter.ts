@@ -1,3 +1,4 @@
+import { fn } from "https://deno.land/x/ddc_vim@v1.3.0/deps.ts";
 import {
   BaseFilter,
   Candidate,
@@ -6,6 +7,9 @@ import {
   FilterArguments,
 } from "https://deno.land/x/ddc_vim@v1.2.0/base/filter.ts#^";
 import { Fzf } from "https://esm.sh/fzf@0.4.1";
+
+const LINES_MAX = 150;
+const SCORE_SAME_LINE = 5;
 
 // TODO: add sourceWeight => ex. vsnip += 10
 type Params = {
@@ -20,7 +24,43 @@ type sortItem = {
 };
 
 export class Filter extends BaseFilter<Params> {
-  filter({
+  events = ["InsertEnter"] as never[];
+
+  private cache: Record<string, number> = {};
+
+  async onEvent({
+    denops,
+    options,
+  }: FilterArguments<Params>): Promise<void> {
+    const maxSize = LINES_MAX;
+    const currentLine = (await denops.call("line", ".")) as number;
+    const minLines = Math.max(1, currentLine - maxSize);
+    const maxLines = Math.min(
+      await fn.line(denops, "$"),
+      currentLine + maxSize,
+    );
+
+    this.cache = {};
+    let linenr = minLines;
+    const pattern = new RegExp(options.keywordPattern, "gu");
+    for (const line of await fn.getline(denops, minLines, maxLines)) {
+      for (const match of line.matchAll(pattern)) {
+        const word = match[0];
+        if (
+          word in this.cache &&
+          Math.abs(this.cache[word] - currentLine) <=
+            Math.abs(linenr - currentLine)
+        ) {
+          continue;
+        }
+        this.cache[word] = linenr;
+      }
+      linenr += 1;
+    }
+  }
+
+  async filter({
+    denops,
     filterParams,
     completeStr,
     candidates,
@@ -62,11 +102,20 @@ export class Filter extends BaseFilter<Params> {
         "hl_group": filterParams.hlGroup,
         width: 1,
       }));
-      e.item.menu = `${e.item.menu ?? ""} ${e.score}`;
       return { item: e.item, score: e.score } as sortItem;
     });
+    const all = filtered.concat(excluded);
+    const linenr = await fn.line(denops, ".");
+    all.map((i) => {
+      const lWord = this.cache[i.item.word];
+      if (lWord && Math.abs(lWord - linenr) < LINES_MAX) {
+        i.score += (1 - Math.abs(lWord - linenr) / LINES_MAX) *
+          SCORE_SAME_LINE;
+      }
+      // i.item.menu = `${i.item.menu ?? ""} ${i.score}`;
+    });
     return Promise.resolve(
-      filtered.concat(excluded).sort((a, b) => b.score - a.score)
+      all.sort((a, b) => b.score - a.score)
         .map((e) => e.item),
     );
   }
