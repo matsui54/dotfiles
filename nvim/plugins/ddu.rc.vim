@@ -11,7 +11,7 @@ function! Ddu_setup() abort
       \   'sourceOptions' : {
       \     '_' : {
       \       'ignoreCase': v:true,
-      \       'matchers': ['matcher_fzf'],
+      \       'matchers': ['matcher_fzy'],
       \     },
 	    \     'dein': {
 	    \       'defaultAction': 'cd',
