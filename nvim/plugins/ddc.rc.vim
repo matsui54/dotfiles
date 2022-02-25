@@ -110,11 +110,21 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'minAutoCompleteLength': 1,
       \ },
       \ 'buffer': {'mark': 'B', 'maxItems': 10},
-	    \ 'file': {
-	    \   'mark': 'F',
-	    \   'isVolatile': v:true,
-	    \   'forceCompletionPattern': '\S/\S*',
+      \ 'file': {
+      \   'mark': 'F',
+      \   'isVolatile': v:true,
+      \   'forceCompletionPattern': '\S/\S*',
       \ },
+      \ 'file_rec': {
+      \   'mark': 'P',
+      \   'minAutoCompleteLength': 1,
+      \ },
+      \ 'emoji': {
+      \	  'mark': 'emoji',
+      \   'dup': v:true, 
+      \	  'matcherKey': 'kind',
+      \   'minAutoCompleteLength': 1,
+      \	},
       \ 'vsnip': {'dup': v:true},
       \ 'skkeleton': {
       \   'mark': 'skk',
@@ -125,6 +135,9 @@ call ddc#custom#patch_global('sourceOptions', {
       \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
+      \ 'file_rec': {
+      \   'cmd': ['fd', '--max-depth', '5'],
+      \ },
       \ 'buffer': {'forceCollect': v:true, 'fromAltBuf': v:true, 'bufNameStyle': "basename"},
       \ 'dictionary': {'smartCase': v:true, 'showMenu': v:false},
       \ 'nvim-lsp': {'kindLabels': {
@@ -158,7 +171,7 @@ call ddc#custom#patch_global('sourceParams', {
 call ddc#custom#patch_global('filterParams', {
       \ 'converter_truncate': {'maxAbbrWidth': 60, 'maxInfo': 500, 'ellipsis': '...'},
       \ 'converter_fuzzy': {'hlGroup': 'Title'},
-      \ 'my_filter': {'excludeSources': ["dictionary", "skkeleton"]},
+      \ 'my_filter': {'excludeSources': ["dictionary", "skkeleton", "emoji"]},
       \ })
 
 call ddc#custom#patch_global('specialBufferCompletion', v:true)
@@ -182,3 +195,35 @@ call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
       \ })
 
 call ddc#enable()
+
+function! s:patch_onetime(option) abort
+  if exists('s:in_onetime') && s:in_onetime
+    return
+  endif
+
+  let s:prev_buffer_option = ddc#custom#get_current()
+
+  call ddc#custom#patch_buffer(a:option)
+  let s:in_onetime = v:true
+  augroup DdcOnetime
+    autocmd!
+    autocmd User PumCompleteDone ++once call s:reset_onetime()
+    autocmd CompleteDone,InsertLeave <buffer> ++once call s:reset_onetime()
+  augroup END
+  return ddc#map#manual_complete()
+  " return "\<Ignore>"
+endfunction
+
+function! s:reset_onetime() abort
+  autocmd! DdcOnetime
+  call ddc#custom#set_buffer(s:prev_buffer_option)
+  let s:in_onetime = v:false
+endfunction
+
+inoremap <expr> <C-x><C-f> <SID>patch_onetime({
+      \ 'sources': ['file_rec'],
+      \ 'sourceParams': {
+      \   'file_rec': {'path': expand('%:h')},
+      \ },
+      \ })
+inoremap <expr> <C-x>; <SID>patch_onetime({'sources': ['emoji']})
