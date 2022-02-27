@@ -2,12 +2,17 @@ nnoremap <silent> <Space>a <cmd>Ddu file_external<CR>
 nnoremap <silent> <Space>f <cmd>Ddu file_external -source-param-path=~/dotfiles<CR>
 nnoremap <silent> <Space>h <cmd>Ddu help<CR>
 nnoremap <silent> <Space>o <cmd>Ddu file_old<CR>
-nnoremap <silent> <Space>s <cmd>Denite directory_rec<CR>
+nnoremap <silent> <Space>s <cmd>Ddu directory_rec<CR>
+nnoremap <silent> <Space>n <cmd>Ddu ghq<CR>
+cnoremap <expr><silent> <C-t>
+    \ "<C-u><ESC><cmd>Ddu command_history -ui-param-startFilter -input='" .
+    \ getcmdline() . "'<CR>"
 
 function! Ddu_setup() abort
   call ddu#custom#alias('source', 'directory_rec', 'file_external')
   call ddu#custom#patch_global({
       \   'ui': 'ff',
+      \   'profile': v:true,
       \   'sourceOptions' : {
       \     '_' : {
       \       'ignoreCase': v:true,
@@ -27,6 +32,12 @@ function! Ddu_setup() abort
 	    \     },
 	    \     'directory_rec': {
       \       'defaultAction': 'cd',
+	    \     },
+	    \     'ghq': {
+      \       'defaultAction': 'cd',
+	    \     },
+	    \     'command_history': {
+      \       'defaultAction': 'execute',
 	    \     },
       \   },
 	    \   'kindOptions': {
@@ -57,7 +68,7 @@ function! Ddu_setup() abort
         \    'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', 
         \             '-t', 'd']
         \  },
-        \  'ghq': {'display': "basename"}
+        \  'ghq': {'display': 'raw'}
         \ })
 
   augroup MyDduSetup

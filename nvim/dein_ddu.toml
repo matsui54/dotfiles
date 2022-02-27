@@ -40,6 +40,9 @@ repo = 'matsui54/ddu-source-file_external'
 repo = 'matsui54/ddu-source-help'
 
 [[plugins]]
+repo = 'matsui54/ddu-source-command_history'
+
+[[plugins]]
 repo = 'matsui54/ddu-source-highlight'
 
 [[plugins]]
