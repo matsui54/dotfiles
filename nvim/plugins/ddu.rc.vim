@@ -43,6 +43,7 @@ function! Ddu_setup() abort
       \       'filterSplitDirection': 'floating',
       \       'filterFloatingPosition': 'top',
       \       'autoResize': v:true,
+      \       'ignoreEmpty': v:true,
       \     }
       \   },
       \ })
