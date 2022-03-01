@@ -68,7 +68,8 @@ function! Ddu_setup() abort
         \    'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', 
         \             '-t', 'd']
         \  },
-        \  'ghq': {'display': 'raw'}
+        \  'rg': {'args': ['--json'], 'highlights': {'lineNr': 'Title', 'word': 'Search'}},
+        \  'ghq': {'display': 'raw'},
         \ })
 
   augroup MyDduSetup
