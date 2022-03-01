@@ -78,7 +78,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \ 'around': {'mark': 'A'},
       \ 'cmdline': {
       \   'mark': 'cmd',
-      \   'forceCompletionPattern': "\\s|/", 
+      \   'forceCompletionPattern': "\\s|/|-", 
       \   'minAutoCompleteLength': 1,
       \ },
       \ 'cmdline-history': {
