@@ -369,3 +369,11 @@ on_cmd = ['PrettyPrint', 'PP']
 [[plugins]]
 repo = "mbbill/undotree"
 on_cmd = 'UndotreeToggle'
+
+[[plugins]]
+repo = 'yuki-yano/fuzzy-motion.vim'
+depends = 'denops.vim'
+hook_add = '''
+nnoremap <Leader>/ <cmd>FuzzyMotion<CR>
+'''
+on_cmd = 'FuzzyMotion'
