@@ -1,6 +1,6 @@
 nnoremap <silent> <Space>a <cmd>Ddu file_external<CR>
 nnoremap <silent> <Space>f <cmd>Ddu file_external -source-param-path=~/dotfiles<CR>
-nnoremap <silent> <Space>h <cmd>Ddu help<CR>
+nnoremap <silent> <Space>h <cmd>Ddu help -name=help<CR>
 nnoremap <silent> <Space>o <cmd>Ddu file_old<CR>
 nnoremap <silent> <Space>s <cmd>Ddu directory_rec<CR>
 nnoremap <silent> <Space>n <cmd>Ddu ghq<CR>
@@ -10,6 +10,7 @@ cnoremap <expr><silent> <C-t>
 
 function! Ddu_setup() abort
   call ddu#custom#alias('source', 'directory_rec', 'file_external')
+  call ddu#custom#alias('source', 'ghq', 'file_external')
   call ddu#custom#patch_global({
       \   'ui': 'ff',
       \   'profile': v:true,
@@ -61,16 +62,23 @@ function! Ddu_setup() abort
 
   " Set default sources
   call ddu#custom#patch_global('sourceParams', {
-        \  'file_external': {
-        \    'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', 
-        \             '-t', 'f']
-        \  },
-        \  'directory_rec': {
-        \    'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', 
-        \             '-t', 'd']
-        \  },
-        \  'rg': {'args': ['--json'], 'highlights': {'lineNr': 'Title', 'word': 'Search'}},
-        \  'ghq': {'display': 'raw'},
+        \   'file_external': {
+        \     'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', 
+        \              '-t', 'f']
+        \   },
+        \   'directory_rec': {
+        \     'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', 
+        \              '-t', 'd']
+        \   },
+        \   'rg': {
+        \     'args': ['--json'], 
+        \     'highlights': {
+        \       'path': 'SpecialComment',
+        \       'lineNr': 'LineNr',
+        \       'word': 'Constant',
+        \     }
+        \   },
+        \   'ghq': {'cmd': ['ghq', 'list', '-p'], 'path': '~/'},
         \ })
 
   augroup MyDduSetup
@@ -87,36 +95,35 @@ function! Ddu_setup() abort
     \ <Cmd>call ddu#ui#ff#do_action('openFilterWindow')<CR>
     nnoremap <buffer><silent> q
     \ <Cmd>call ddu#ui#ff#do_action('quit')<CR>
-    nnoremap <buffer><silent> E
-    \ <Cmd>call ddu#ui#ff#do_action('itemAction',
-    \ {'name': 'open', 'params': {'command': 'vsplit'}})<CR>
-    nnoremap <buffer><silent> t
-    \ <Cmd>call ddu#ui#ff#do_action('itemAction',
-    \ {'name': 'open', 'params': {'command': 'tabedit'}})<CR>
-    nnoremap <buffer><silent> <C-l>
-    \ <Cmd>call ddu#ui#ff#do_action('refreshItems')<CR>
     nnoremap <buffer><silent> p
     \ <Cmd>call ddu#ui#ff#do_action('preview')<CR>
     nnoremap <buffer><silent> a
     \ <Cmd>call ddu#ui#ff#do_action('chooseAction')<CR>
-    " nnoremap <buffer><silent> c
-    "\ <Cmd>call ddu#ui#ff#do_action('itemAction', {'name': 'cd'})<CR>
+    nnoremap <buffer><silent> c
+    \ <Cmd>call ddu#ui#ff#do_action('itemAction', {'name': 'cd'})<CR>
     nnoremap <buffer><silent> d
     \ <Cmd>call ddu#ui#ff#do_action('itemAction', {'name': 'delete'})<CR>
     nnoremap <buffer><silent> e
     \ <Cmd>call ddu#ui#ff#do_action('itemAction', {'name': 'edit'})<CR>
-    nnoremap <buffer><silent> N
-    \ <Cmd>call ddu#ui#ff#do_action('itemAction', {'name': 'new'})<CR>
-    nnoremap <buffer><silent> r
-    \ <Cmd>call ddu#ui#ff#do_action('itemAction', {'name': 'quickfix'})<CR>
-    nnoremap <buffer><silent> u
-    \ <Cmd>call ddu#ui#ff#do_action('updateOptions', {
-    \   'sourceOptions': {
-    \     '_': {
-    \       'matchers': [],
-    \     },
-    \   },
-    \ })<CR>
+
+    if b:ddu_ui_name ==# 'help'
+      nnoremap <buffer><silent> E
+      \ <Cmd>call ddu#ui#ff#do_action('itemAction',
+      \ {'name': 'vsplit'})<CR>
+      nnoremap <buffer><silent> t
+      \ <Cmd>call ddu#ui#ff#do_action('itemAction',
+      \ {'name': 'tabopen'})<CR>
+    else
+      nnoremap <buffer><silent> E
+      \ <Cmd>call ddu#ui#ff#do_action('itemAction',
+      \ {'name': 'open', 'params': {'command': 'vsplit'}})<CR>
+      nnoremap <buffer><silent> t
+      \ <Cmd>call ddu#ui#ff#do_action('itemAction',
+      \ {'name': 'open', 'params': {'command': 'tabedit'}})<CR>
+      nnoremap <buffer><silent> S
+      \ <Cmd>call ddu#ui#ff#do_action('itemAction',
+      \ {'name': 'open', 'params': {'command': 'split'}})<CR>
+    endif
   endfunction
 
   function! s:ddu_filter_my_settings() abort

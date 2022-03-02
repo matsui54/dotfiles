@@ -56,7 +56,4 @@ repo = 'shun/ddu-source-buffer'
 repo = 'shun/ddu-source-rg'
 
 [[plugins]]
-repo = "4513ECHO/ddu-source-ghq"
-
-[[plugins]]
 repo = "gamoutatsumi/ddu-source-nvim-lsp"
