@@ -130,6 +130,8 @@ cnoremap <C-e> <End>
 cnoremap <C-n> <Down>
 cnoremap <C-p> <Up>
 cnoremap <C-y> <C-r>*
+cnoremap <C-f> <Right>
+cnoremap <C-b> <Left>
 
 " commands
 command! DeinClean :call map(dein#check_clean(), "delete(v:val, 'rf')") |
