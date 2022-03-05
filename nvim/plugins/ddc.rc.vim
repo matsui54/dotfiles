@@ -67,7 +67,7 @@ if has('nvim')
 else
   call ddc#custom#patch_global('sources', ['vim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 endif
-call ddc#custom#patch_global('postFilters', ["my_filter"])
+call ddc#custom#patch_global('postFilters', ['postfilter_score'])
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
       \   'matchers': ['matcher_fuzzy'],
@@ -171,7 +171,10 @@ call ddc#custom#patch_global('sourceParams', {
 call ddc#custom#patch_global('filterParams', {
       \ 'converter_truncate': {'maxAbbrWidth': 60, 'maxInfo': 500, 'ellipsis': '...'},
       \ 'converter_fuzzy': {'hlGroup': 'Title'},
-      \ 'my_filter': {'excludeSources': ["dictionary", "skkeleton", "emoji"]},
+      \ 'postfilter_score': {
+      \   'excludeSources': ["dictionary", "skkeleton", "emoji"],
+      \   'showScore': v:true,
+      \ },
       \ })
 
 call ddc#custom#patch_global('specialBufferCompletion', v:true)
