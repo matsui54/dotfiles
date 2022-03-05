@@ -1,12 +1,47 @@
-nnoremap <silent> <Space>a <cmd>Ddu file_external<CR>
-nnoremap <silent> <Space>f <cmd>Ddu file_external -source-param-path=~/dotfiles<CR>
-nnoremap <silent> <Space>h <cmd>Ddu help -name=help<CR>
-nnoremap <silent> <Space>o <cmd>Ddu file_old<CR>
-nnoremap <silent> <Space>s <cmd>Ddu directory_rec<CR>
-nnoremap <silent> <Space>n <cmd>Ddu ghq<CR>
+nnoremap <Space>d :Ddu<Space>
+nnoremap <Space>a <cmd>Ddu file_external<CR>
+nnoremap <Space>f <cmd>Ddu file_external -source-param-path=~/dotfiles<CR>
+nnoremap <Space>h <cmd>Ddu help -name=help<CR>
+nnoremap <Space>o <cmd>Ddu file_old<CR>
+nnoremap <Space>s <cmd>Ddu directory_rec<CR>
+nnoremap <Space>n <cmd>Ddu ghq<CR>
+nnoremap <Space>b <cmd>Ddu buffer<CR>
+nnoremap <Space>r <cmd>Ddu -resume<CR>
+
 cnoremap <expr><silent> <C-t>
     \ "<C-u><ESC><cmd>Ddu command_history -ui-param-startFilter -input='" .
     \ getcmdline() . "'<CR>"
+
+command! DduPreview call <SID>open_preview_ddu()
+
+function! s:open_preview_ddu() abort
+  let column = &columns
+  let line = &lines
+  let win_height = min([line - 10, 45])
+  let win_row = (line - win_height)/2
+
+  let win_width = min([column/2 - 5, 80])
+  let win_col = column/2 - win_width
+  call ddu#start({
+        \ 'sources': [{'name': 'file_external'}],
+        \ 'name': 'preview',
+        \ 'uiParams': {'ff': {
+        \   'split': 'floating',
+        \   'filterSplitDirection': 'floating',
+        \   'filterFloatingPosition': 'top',
+        \   'previewFloating': v:true,
+        \   'previewHeight': win_height,
+        \   'previewVertical': v:true,
+        \   'previewWidth': win_width,
+        \   'ignoreEmpty': v:true,
+        \   'autoResize': v:false,
+        \   'winCol': win_col,
+        \   'winRow': win_row,
+        \   'winWidth': win_width,
+        \   'winHeight': win_height,
+        \ }},
+        \ })
+endfunction
 
 function! Ddu_setup() abort
   call ddu#custom#alias('source', 'directory_rec', 'file_external')
@@ -54,8 +89,8 @@ function! Ddu_setup() abort
       \       'split': has('nvim') ? 'floating' : 'horizontal',
       \       'filterSplitDirection': 'floating',
       \       'filterFloatingPosition': 'top',
-      \       'autoResize': v:true,
       \       'ignoreEmpty': v:true,
+      \       'autoResize': v:true,
       \     }
       \   },
       \ })
@@ -123,6 +158,10 @@ function! Ddu_setup() abort
       nnoremap <buffer><silent> S
       \ <Cmd>call ddu#ui#ff#do_action('itemAction',
       \ {'name': 'open', 'params': {'command': 'split'}})<CR>
+    endif
+
+    if b:ddu_ui_name ==# 'preview'
+      autocmd CursorMoved <buffer> call ddu#ui#ff#do_action('preview')
     endif
   endfunction
 

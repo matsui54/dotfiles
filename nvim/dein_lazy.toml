@@ -8,7 +8,7 @@ hook_add = '''
   nnoremap <Space>d :Denite<Space>
   nnoremap <silent> <Space>g <cmd>Denite grep
       \ -no-empty -auto-action=preview_bat -buffer-name=grep -no-auto-resize<CR>
-  nnoremap <silent> <Space>b <cmd>Denite buffer<CR>
+  " nnoremap <silent> <Space>b <cmd>Denite buffer<CR>
   " nnoremap <silent> <Space>a <cmd>Denite file/rec<CR>
   " nnoremap <silent> <Space>s <cmd>Denite directory_rec<CR>
   " nnoremap <silent> <Space>f <cmd>Denite file/rec:~/dotfiles<CR>
@@ -16,7 +16,7 @@ hook_add = '''
   " nnoremap <silent> <Space>h <cmd>Denite help<CR>
   " nnoremap <silent> <Space>n <cmd>Denite dein ghq<CR>
   " nnoremap <silent> <Space>/ <cmd>Denite line<CR>
-  nnoremap <silent> <Space>r <cmd>Denite -resume<CR>
+  " nnoremap <silent> <Space>r <cmd>Denite -resume<CR>
   " cnoremap <expr><silent> <C-t>
   "    \ "<c-u>Denite command_history -start-filter -input='" . getcmdline() . "'<CR>"
 '''
