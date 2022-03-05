@@ -70,6 +70,10 @@ repo = 'matsui54/ddc-filter_editdistance'
 lazy = 0
 
 [[plugins]]
+repo = "matsui54/ddc-postfilter_score"
+on_source = 'ddc.vim'
+
+[[plugins]]
 repo = 'matsui54/ddc-converter_truncate'
 lazy = 0
 
