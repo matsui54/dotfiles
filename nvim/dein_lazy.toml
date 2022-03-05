@@ -164,7 +164,6 @@ hook_add = '''
 repo = 'lambdalisue/gina.vim'
 on_source = 'denite.nvim'
 hook_add = '''
-  nnoremap gs <cmd>Gina status<CR>
   nnoremap gnb <cmd>Gina branch<CR>
   nnoremap gnl <cmd>Gina log<CR>
   nnoremap gnw <cmd>Gina browse<CR>
@@ -203,7 +202,18 @@ hook_source = '''
 
 [[plugins]]
 repo = 'lambdalisue/gin.vim'
-on_cmd = 'Gin'
+on_cmd = ['Gin', 'GinStatus']
+hook_add = '''
+  augroup MyGinSetup
+    autocmd!
+    autocmd FileType gin-status call s:gin_status_setup()
+  augroup END
+  function! s:gin_status_setup() abort
+    nnoremap <buffer> <Space>gc <cmd>Gin commit<CR>
+    nnoremap <buffer> <Space>gp <cmd>Gin push<CR>
+  endfunction
+  nnoremap gs <cmd>GinStatus<CR>
+'''
  
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
