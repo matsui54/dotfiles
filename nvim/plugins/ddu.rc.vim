@@ -13,7 +13,7 @@ function! Ddu_setup() abort
   call ddu#custom#alias('source', 'ghq', 'file_external')
   call ddu#custom#patch_global({
       \   'ui': 'ff',
-      \   'profile': v:true,
+      \   'profile': v:false,
       \   'sourceOptions' : {
       \     '_' : {
       \       'ignoreCase': v:true,
