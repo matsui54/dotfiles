@@ -210,7 +210,7 @@ hook_add = '''
   augroup END
   function! s:gin_status_setup() abort
     nnoremap <buffer> <Space>gc <cmd>Gin commit<CR>
-    nnoremap <buffer> <Space>gp <cmd>Gin push<CR>
+    nnoremap <buffer> <Space>gp :Gin push<CR>
   endfunction
   nnoremap gs <cmd>GinStatus<CR>
 '''

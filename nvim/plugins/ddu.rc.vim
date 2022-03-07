@@ -23,7 +23,7 @@ function! s:open_preview_ddu() abort
   let win_width = min([column/2 - 5, 80])
   let win_col = column/2 - win_width
   call ddu#start({
-        \ 'sources': [{'name': 'file_external'}],
+        \ 'sources': [{'name': 'rg', 'params': {'input': 'vim'}}],
         \ 'name': 'preview',
         \ 'uiParams': {'ff': {
         \   'split': 'floating',
@@ -161,7 +161,10 @@ function! Ddu_setup() abort
     endif
 
     if b:ddu_ui_name ==# 'preview'
-      autocmd CursorMoved <buffer> call ddu#ui#ff#do_action('preview')
+      augroup MyDduPreview
+        autocmd!
+        autocmd CursorMoved <buffer> call ddu#ui#ff#do_action('previewBat')
+      augroup END
     endif
   endfunction
 
