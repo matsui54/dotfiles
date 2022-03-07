@@ -68,9 +68,6 @@ repo = 'lambdalisue/guise.vim'
 
 [[plugins]]
 repo = 'vim-denops/denops.vim'
-# hook_add = '''
-# let g:denops#debug = 1
-# '''
 
 [[plugins]]
 repo = "prabirshrestha/vim-lsp"
