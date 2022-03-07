@@ -88,7 +88,7 @@ endif
 " Don't show too many items
 set pumheight=15
 
-autocmd MyAutoCmd ColorScheme * call vimrc#color_settings()
+autocmd MyAutoCmd ColorScheme * call vimrc#color_settings(expand('<amatch>'))
 set background=dark
 colorscheme shirotelin
 

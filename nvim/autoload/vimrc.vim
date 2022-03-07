@@ -23,9 +23,8 @@ function! vimrc#on_filetype() abort
 endfunction
 
 " additional settings for colorscheme
-function! vimrc#color_settings() abort
-  let cs = execute('colorscheme')
-  if cs =~# 'iceberg'
+function! vimrc#color_settings(cs) abort
+  if a:cs =~# 'iceberg'
     hi TabLineSel guifg=#ffffff
     hi clear TabLineFill
     hi TabLineFill guifg=#525252 guibg=#161821
@@ -41,7 +40,7 @@ function! vimrc#color_settings() abort
     if has('nvim')
       highlight DdcNvimLspDocBorder blend=30 guifg=#c6c8d1 guibg=#3d425b
     endif
-  elseif cs =~# 'shirotelin'
+  elseif a:cs =~# 'shirotelin'
     hi clear TabLineFill
     hi TabLineFill guifg=#999999
     " hi! link Pmenu FloatWindow
