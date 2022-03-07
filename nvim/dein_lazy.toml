@@ -69,7 +69,7 @@ hook_source = '''
 
 [[plugins]]
 repo = 'Shougo/defx.nvim'
-depends = ['defx-icons', 'defx-sftp']
+depends = ['defx-icons']
 hook_source = '''
   source ~/dotfiles/nvim/plugins/defx.rc.vim
 '''
@@ -84,10 +84,6 @@ repo = 'kristijanhusak/defx-icons'
 hook_add = '''
   let g:defx_icons_column_length = 2
 '''
-
-[[plugins]]
-repo = 'matsui54/defx-sftp'
-if = '!vimrc#is_windows()'
 
 [[plugins]]
 repo = 'Shougo/deol.nvim'
