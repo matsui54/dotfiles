@@ -12,6 +12,22 @@ cnoremap <expr><silent> <C-t>
     \ "<C-u><ESC><cmd>Ddu command_history -ui-param-startFilter -input='" .
     \ getcmdline() . "'<CR>"
 
+command! DduRgGlob call <SID>ddu_rg_with_glob()
+function! s:ddu_rg_with_glob() abort
+  let pattern = input('search pattern: ')
+  let glob = input('glob pattern: ')
+  let args = ['--json']
+  if glob != ''
+    let args += ['-g', glob]
+  endif
+  call ddu#start({
+        \ 'sources': [{
+        \   'name': 'rg', 
+        \   'params': {'input': pattern, 'args': args}
+        \ }],
+        \ })
+endfunction
+
 command! DduPreview call <SID>open_preview_ddu()
 
 function! s:open_preview_ddu() abort
@@ -163,7 +179,7 @@ function! Ddu_setup() abort
     if b:ddu_ui_name ==# 'preview'
       augroup MyDduPreview
         autocmd!
-        autocmd CursorMoved <buffer> call ddu#ui#ff#do_action('previewBat')
+        autocmd CursorMoved <buffer> call ddu#ui#ff#do_action('preview')
       augroup END
     endif
   endfunction
