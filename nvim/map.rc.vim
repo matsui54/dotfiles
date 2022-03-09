@@ -78,9 +78,9 @@ nnoremap <silent> <Leader>f <cmd>call <SID>format_viml()<CR>
 nnoremap gd <cmd>call godef#go_to_definition()<CR>
 
 " multiple search
-nnoremap <expr> <Space>/ multi_search#hl_last_match() . "/"
-nnoremap <expr> <Space>* multi_search#hl_last_match() . "*"
-nmap <expr> <Space>l "\<C-l>" . multi_search#delete_search_all()
+nnoremap <expr> <Leader>/ multi_search#hl_last_match() . "/"
+nnoremap <expr> <Leader>* multi_search#hl_last_match() . "*"
+nmap <expr> <Leader>l "\<C-l>" . multi_search#delete_search_all()
 
 nmap <silent> <C-u> <cmd>call smooth_scroll#up()<CR>
 nmap <silent> <C-d> <cmd>call smooth_scroll#down()<CR>
