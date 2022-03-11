@@ -5,20 +5,8 @@ hook_source = '''
   source ~/dotfiles/nvim/plugins/denite.rc.vim
 '''
 hook_add = '''
-  nnoremap <Space>d :Denite<Space>
   nnoremap <silent> <Space>g <cmd>Denite grep
       \ -no-empty -auto-action=preview_bat -buffer-name=grep -no-auto-resize<CR>
-  " nnoremap <silent> <Space>b <cmd>Denite buffer<CR>
-  " nnoremap <silent> <Space>a <cmd>Denite file/rec<CR>
-  " nnoremap <silent> <Space>s <cmd>Denite directory_rec<CR>
-  " nnoremap <silent> <Space>f <cmd>Denite file/rec:~/dotfiles<CR>
-  " nnoremap <silent> <Space>o <cmd>Denite file/old<CR>
-  " nnoremap <silent> <Space>h <cmd>Denite help<CR>
-  " nnoremap <silent> <Space>n <cmd>Denite dein ghq<CR>
-  " nnoremap <silent> <Space>/ <cmd>Denite line<CR>
-  " nnoremap <silent> <Space>r <cmd>Denite -resume<CR>
-  " cnoremap <expr><silent> <C-t>
-  "    \ "<c-u>Denite command_history -start-filter -input='" . getcmdline() . "'<CR>"
 '''
 
 [[plugins]]
@@ -261,9 +249,6 @@ on_source = 'nvim-lspconfig'
 [[plugins]]
 repo = 'williamboman/nvim-lsp-installer'
 on_source = 'nvim-lspconfig'
-hook_source = '''
-  "lua require'lspinstall'.setup()
-'''
 
 [[plugins]]
 repo = 'nvim-lua/popup.nvim'
@@ -276,18 +261,6 @@ repo = 'nvim-telescope/telescope.nvim'
 on_cmd = 'Telescope'
 if = 'has("nvim")'
 depends = ['popup.nvim', 'plenary.nvim']
-
-[[plugins]]
-repo = 'norcalli/nvim-colorizer.lua'
-if = 'has("nvim")'
-on_event = 'BufRead'
-hook_source = '''
-  lua require'colorizer'.setup()
-'''
-
-[[plugins]]
-repo = 'mattn/emmet-vim'
-on_ft = ['html', 'css']
 
 [[plugins]]
 repo = 'lambdalisue/suda.vim'
@@ -324,10 +297,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'kat0h/bufpreview.vim'
-on_cmd = 'PreviewMarkdown'
-
-[[plugins]]
 repo = 'rhysd/git-messenger.vim'
 on_cmd = 'GitMessenger'
 on_map = '<Plug>(git-messenger)'
@@ -344,25 +313,6 @@ hook_add = '''
   let g:indentLine_char_list = ['|', '¦', '┆', '┊']
   let g:indentLine_fileTypeExclude = ['help', 'calendar', 'denite']
 '''
-
-# [[plugins]]
-# repo = 'goerz/jupytext.vim'
-# on_event = 'BufReadPre'
-# hook_add = '''
-#   " セルの区切り文字をVSCode互換の # %% に指定する
-#   let g:jupytext_fmt = 'py:percent'
-# 
-#   " vimのPython向けシンタックスハイライトを有効にする
-#   let g:jupytext_filetype_map = {'py': 'python'}
-# '''
-# 
-# [[plugins]]
-# repo = 'jupyter-vim/jupyter-vim'
-# on_source = 'jupytext.vim'
-
-[[plugins]]
-repo = 'skanehira/denops-gh.vim'
-on_event = 'BufReadPre'
 
 [[plugins]]
 repo = 'thinca/vim-qfreplace'

@@ -132,6 +132,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'sorters': [],
       \   'minAutoCompleteLength': 2,
       \ },
+      \ 'zsh': {'mark': 'Z'},
       \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
@@ -185,6 +186,9 @@ call ddc#custom#patch_filetype(
 call ddc#custom#patch_filetype(['toml'], {
       \ 'sources': ['necovim', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'],
       \ })
+call ddc#custom#patch_filetype(['zsh'], {
+      \ 'sources': ['zsh', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'],
+      \ })
 " include @ for snippet
 call ddc#custom#patch_filetype(
       \ ['tex'], {
@@ -192,9 +196,6 @@ call ddc#custom#patch_filetype(
       \ 'sourceOptions': {
       \   'vsnip': {'forceCompletionPattern': '@'},
       \ },
-      \ })
-call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
-      \ 'zsh': {'mark': 'Z'},
       \ })
 
 call ddc#enable()
