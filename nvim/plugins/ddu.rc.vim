@@ -42,7 +42,7 @@ function! s:open_preview_ddu() abort
         \ 'sources': [{'name': 'rg', 'params': {'input': 'vim'}}],
         \ 'name': 'preview',
         \ 'uiParams': {'ff': {
-        \   'split': 'floating',
+        \   'split': has('nvim') ? 'floating' : 'horizontal',
         \   'filterSplitDirection': 'floating',
         \   'filterFloatingPosition': 'top',
         \   'previewFloating': v:true,
@@ -182,7 +182,7 @@ function! Ddu_setup() abort
     if b:ddu_ui_name ==# 'preview'
       augroup MyDduPreview
         autocmd!
-        autocmd CursorMoved <buffer> call ddu#ui#ff#do_action('preview')
+        autocmd CursorMoved <buffer> call ddu#ui#ff#do_action('previewBat')
       augroup END
     endif
   endfunction
