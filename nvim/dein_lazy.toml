@@ -255,6 +255,10 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = "liuchengxu/vista.vim"
+on_source = 'nvim-lspconfig'
+
+[[plugins]]
 repo = 'williamboman/nvim-lsp-installer'
 on_source = 'nvim-lspconfig'
 hook_source = '''
