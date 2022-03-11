@@ -9,7 +9,7 @@ nnoremap <Space>b <cmd>Ddu buffer<CR>
 nnoremap <Space>r <cmd>Ddu -resume<CR>
 
 cnoremap <expr><silent> <C-t>
-    \ "<C-u><ESC><cmd>Ddu command_history -ui-param-startFilter -input='" .
+    \ "<C-u><ESC><cmd>Ddu command_history -input='" .
     \ getcmdline() . "'<CR>"
 
 command! DduRgGlob call <SID>ddu_rg_with_glob()
@@ -70,36 +70,60 @@ function! Ddu_setup() abort
       \       'ignoreCase': v:true,
       \       'matchers': ['matcher_fzy'],
       \     },
-	    \     'dein': {
-	    \       'defaultAction': 'cd',
-	    \     },
-	    \     'highlight': {
-	    \       'defaultAction': 'edit',
-	    \     },
-	    \     'help': {
-	    \       'defaultAction': 'open',
-	    \     },
-	    \     'file_external': {
-	    \       'defaultAction': 'open',
-	    \     },
-	    \     'directory_rec': {
+      \     'dein': {
       \       'defaultAction': 'cd',
-	    \     },
-	    \     'ghq': {
+      \     },
+      \     'highlight': {
+      \       'defaultAction': 'edit',
+      \     },
+      \     'help': {
+      \       'defaultAction': 'open',
+      \     },
+      \     'file_external': {
+      \       'defaultAction': 'open',
+      \     },
+      \     'directory_rec': {
       \       'defaultAction': 'cd',
-	    \     },
-	    \     'command_history': {
+      \     },
+      \     'ghq': {
+      \       'defaultAction': 'cd',
+      \     },
+      \     'command_history': {
       \       'defaultAction': 'execute',
-	    \     },
+      \     },
       \   },
-	    \   'kindOptions': {
-	    \     'file': {
-	    \       'defaultAction': 'open',
-	    \     },
+      \   'kindOptions': {
+      \     'file': {
+      \       'defaultAction': 'open',
+      \     },
       \     'action': {
       \       'defaultAction': 'do',
       \     },
-	    \   },
+      \   },
+      \   'filterParams': {
+      \     'matcher_fzy': {
+      \       'hlGroup': 'Special',
+      \     },
+      \   },
+      \   'sourceParams': {
+      \     'file_external': {
+      \       'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', 
+      \                '-t', 'f']
+      \     },
+      \     'directory_rec': {
+      \       'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', 
+      \                '-t', 'd']
+      \     },
+      \     'rg': {
+      \       'args': ['--json'], 
+      \       'highlights': {
+      \         'path': 'SpecialComment',
+      \         'lineNr': 'LineNr',
+      \         'word': 'Constant',
+      \       }
+      \     },
+      \     'ghq': {'cmd': ['ghq', 'list', '-p'], 'path': '~/'},
+      \   },
       \   'uiParams': {
       \     'ff': {
       \       'split': has('nvim') ? 'floating' : 'horizontal',
@@ -110,27 +134,6 @@ function! Ddu_setup() abort
       \     }
       \   },
       \ })
-
-  " Set default sources
-  call ddu#custom#patch_global('sourceParams', {
-        \   'file_external': {
-        \     'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', 
-        \              '-t', 'f']
-        \   },
-        \   'directory_rec': {
-        \     'cmd': ['fd', '.', '-H', '-E', '.git', '-E', '__pycache__', 
-        \              '-t', 'd']
-        \   },
-        \   'rg': {
-        \     'args': ['--json'], 
-        \     'highlights': {
-        \       'path': 'SpecialComment',
-        \       'lineNr': 'LineNr',
-        \       'word': 'Constant',
-        \     }
-        \   },
-        \   'ghq': {'cmd': ['ghq', 'list', '-p'], 'path': '~/'},
-        \ })
 
   augroup MyDduSetup
     autocmd!
