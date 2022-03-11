@@ -88,6 +88,9 @@ function! Ddu_setup() abort
 	    \     'ghq': {
       \       'defaultAction': 'cd',
 	    \     },
+	    \     'man': {
+      \       'defaultAction': 'open',
+	    \     },
 	    \     'command_history': {
       \       'defaultAction': 'execute',
 	    \     },

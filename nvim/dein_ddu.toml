@@ -40,6 +40,9 @@ repo = 'matsui54/ddu-source-file_external'
 repo = 'matsui54/ddu-source-help'
 
 [[plugins]]
+repo = 'matsui54/ddu-source-man'
+
+[[plugins]]
 repo = 'matsui54/ddu-filter-fzy'
 merge = 0
 
