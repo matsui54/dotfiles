@@ -22,6 +22,9 @@ repo = 'Shougo/ddu-source-line'
 repo = 'Shougo/ddu-source-file'
 
 [[plugins]]
+repo = 'Shougo/ddu-source-action'
+
+[[plugins]]
 repo = 'Shougo/ddu-source-file_rec'
 
 [[plugins]]
