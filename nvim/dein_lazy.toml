@@ -341,3 +341,7 @@ hook_add = '''
 nnoremap <Space>/ <cmd>FuzzyMotion<CR>
 '''
 on_cmd = 'FuzzyMotion'
+
+[[plugins]]
+repo = 'mhinz/vim-signify'
+on_event = 'BufRead'
