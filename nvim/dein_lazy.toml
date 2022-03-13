@@ -148,7 +148,6 @@ hook_add = '''
 repo = 'lambdalisue/gina.vim'
 on_source = 'denite.nvim'
 hook_add = '''
-  nnoremap gnb <cmd>Gina branch<CR>
   nnoremap gnl <cmd>Gina log<CR>
   nnoremap gnw <cmd>Gina browse<CR>
   nnoremap gn<Space> :Gina<Space>
@@ -186,17 +185,19 @@ hook_source = '''
 
 [[plugins]]
 repo = 'lambdalisue/gin.vim'
-on_cmd = ['Gin', 'GinStatus']
+on_event = 'CmdlineEnter'
 hook_add = '''
-  augroup MyGinSetup
-    autocmd!
-    autocmd FileType gin-status call s:gin_status_setup()
-  augroup END
-  function! s:gin_status_setup() abort
-    nnoremap <buffer> <Space>gc <cmd>Gin commit<CR>
-    nnoremap <buffer> <Space>gp :Gin push<CR>
-  endfunction
   nnoremap gs <cmd>GinStatus<CR>
+  nnoremap gnb <cmd>GinBranch<CR>
+'''
+[plugins.ftplugin]
+gin-status = '''
+  nnoremap <buffer> <Space>gc <cmd>Gin commit<CR>
+  nnoremap <buffer> <Space>gp :Gin push<CR>
+'''
+gin-branch = '''
+  nmap <buffer> o <Plug>(gin-action-new)
+  nmap <buffer> dd <Plug>(gin-action-delete)
 '''
  
 [[plugins]]
