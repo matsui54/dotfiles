@@ -199,6 +199,9 @@ gin-branch = '''
   nmap <buffer> o <Plug>(gin-action-new)
   nmap <buffer> dd <Plug>(gin-action-delete)
 '''
+gitcommit = '''
+  setlocal spell
+'''
  
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
