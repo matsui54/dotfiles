@@ -28,6 +28,21 @@ function! s:ddu_rg_with_glob() abort
         \ })
 endfunction
 
+command! DduRgLive call <SID>ddu_rg_live()
+function! s:ddu_rg_live() abort
+  call ddu#start({
+        \ 'volatile': v:true,
+        \ 'sources': [{
+        \   'name': 'rg', 
+        \   'options': {'matchers': []},
+        \ }],
+        \ 'uiParams': {'ff': {
+        \   'ignoreEmpty': v:false,
+        \   'autoResize': v:false,
+        \ }},
+        \ })
+endfunction
+
 command! DduPreview call <SID>open_preview_ddu()
 
 function! s:open_preview_ddu() abort
