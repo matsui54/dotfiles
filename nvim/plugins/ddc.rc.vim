@@ -170,11 +170,15 @@ call ddc#custom#patch_global('sourceParams', {
       \ }},
       \ })
 call ddc#custom#patch_global('filterParams', {
-      \ 'converter_truncate': {'maxAbbrWidth': 60, 'maxInfo': 500, 'ellipsis': '...'},
+      \ 'converter_truncate': {
+      \   'maxAbbrWidth': 60, 
+      \   'maxInfo': 500, 
+      \   'maxMenuWidth': 0, 
+      \   'ellipsis': '...'
+      \ },
       \ 'converter_fuzzy': {'hlGroup': 'Title'},
       \ 'postfilter_score': {
       \   'excludeSources': ["dictionary", "skkeleton", "emoji"],
-      \   'showScore': v:true,
       \ },
       \ })
 
