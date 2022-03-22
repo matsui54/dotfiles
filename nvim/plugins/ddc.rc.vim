@@ -125,7 +125,10 @@ call ddc#custom#patch_global('sourceOptions', {
       \	  'matcherKey': 'kind',
       \   'minAutoCompleteLength': 1,
       \	},
-      \ 'vsnip': {'dup': v:true},
+      \ 'vsnip': {
+      \	  'mark': 'V',
+      \   'dup': v:true, 
+      \	},
       \ 'skkeleton': {
       \   'mark': 'skk',
       \   'matchers': ['skkeleton'],

@@ -52,5 +52,6 @@ function! vimrc#color_settings(cs) abort
     hi! link LspReferenceRead ReferenceHighlight
     hi! link LspReferenceText ReferenceHighlight
     hi! link LspReferenceWrite ReferenceHighlight
+    hi! link FloatBorder NormalFloat
   endif
 endfunction

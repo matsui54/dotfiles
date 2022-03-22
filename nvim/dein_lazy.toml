@@ -5,8 +5,6 @@ hook_source = '''
   source ~/dotfiles/nvim/plugins/denite.rc.vim
 '''
 hook_add = '''
-  nnoremap <silent> <Space>g <cmd>Denite grep
-      \ -no-empty -auto-action=preview_bat -buffer-name=grep -no-auto-resize<CR>
 '''
 
 [[plugins]]

@@ -7,6 +7,7 @@ nnoremap <Space>s <cmd>Ddu directory_rec<CR>
 nnoremap <Space>n <cmd>Ddu ghq<CR>
 nnoremap <Space>b <cmd>Ddu buffer<CR>
 nnoremap <Space>r <cmd>Ddu -resume<CR>
+nnoremap <Space>g <cmd>DduRg<CR>
 
 cnoremap <expr><silent> <C-t>
     \ "<C-u><ESC><cmd>Ddu command_history -input='" .
@@ -31,15 +32,15 @@ endfunction
 command! DduRgLive call <SID>ddu_rg_live()
 function! s:ddu_rg_live() abort
   call ddu#start({
-        \ 'volatile': v:true,
-        \ 'sources': [{
-        \   'name': 'rg', 
-        \   'options': {'matchers': []},
-        \ }],
-        \ 'uiParams': {'ff': {
-        \   'ignoreEmpty': v:false,
-        \   'autoResize': v:false,
-        \ }},
+        \   'volatile': v:true,
+        \   'sources': [{
+        \     'name': 'rg', 
+        \     'options': {'matchers': []},
+        \   }],
+        \   'uiParams': {'ff': {
+        \     'ignoreEmpty': v:false,
+        \     'autoResize': v:false,
+        \   }},
         \ })
 endfunction
 
@@ -109,6 +110,9 @@ function! Ddu_setup() abort
       \     'command_history': {
       \       'defaultAction': 'execute',
       \     },
+      \     'dein_update': {
+      \       'matchers': ['matcher_dein_update'],
+      \     },
       \   },
       \   'kindOptions': {
       \     'file': {
@@ -116,6 +120,17 @@ function! Ddu_setup() abort
       \     },
       \     'action': {
       \       'defaultAction': 'do',
+      \     },
+      \     'dein_update': {
+      \       'defaultAction': 'echo',
+      \     },
+      \   },
+      \   'actionOptions': {
+      \     'echo': {
+      \       'quit': v:false,
+      \     },
+      \     'echoDiff': {
+      \       'quit': v:false,
       \     },
       \   },
       \   'filterParams': {
