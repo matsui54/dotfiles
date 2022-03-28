@@ -56,7 +56,7 @@ repo = 'matsui54/ddu-source-command_history'
 repo = 'matsui54/ddu-source-highlight'
 
 [[plugins]]
-repo = 'matsui54/ddu-source-buffer'
+repo = 'shun/ddu-source-buffer'
 
 [[plugins]]
 repo = 'shun/ddu-source-rg'
