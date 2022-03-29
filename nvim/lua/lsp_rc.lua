@@ -64,18 +64,18 @@ end
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.preselectSupport = true
-capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
-capabilities.textDocument.completion.completionItem.labelDetailsSupport = true
+capabilities.textDocument.completion.completionItem.preselectSupport = false
+capabilities.textDocument.completion.completionItem.insertReplaceSupport = false
+capabilities.textDocument.completion.completionItem.labelDetailsSupport = false
 capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities.textDocument.completion.completionItem.deprecatedSupport = true
-capabilities.textDocument.completion.completionItem.commitCharactersSupport = true
-capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
+capabilities.textDocument.completion.completionItem.deprecatedSupport = false
+capabilities.textDocument.completion.completionItem.commitCharactersSupport = false
+-- capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
 capabilities.textDocument.completion.completionItem.resolveSupport = {
   properties = {
     'documentation',
     'detail',
-    'additionalTextEdits',
+    -- 'additionalTextEdits',
   }
 }
 
@@ -89,7 +89,7 @@ local is_node_repo = node_root_dir(buf_name, current_buf) ~= nil
 
 nvim_lsp.clangd.setup{on_attach = on_attach, capabilities = capabilities}
 -- nvim_lsp.pylsp.setup{on_attach = on_attach, capabilities = capabilities}
-nvim_lsp.rls.setup{on_attach = on_attach, capabilities = capabilities}
+-- nvim_lsp.rls.setup{on_attach = on_attach, capabilities = capabilities}
 -- nvim_lsp.texlab.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.gopls.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.denols.setup{
