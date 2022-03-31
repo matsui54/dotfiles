@@ -157,9 +157,16 @@ on_map = {ic = '<plug>(skkeleton-'}
 hook_add = '''
   imap <C-j> <Plug>(skkeleton-toggle)
   cmap <C-j> <Plug>(skkeleton-toggle)
+
   function! s:skkeleton_init() abort
+    " <BS>/<C-h>で変換候補を戻す
+    call skkeleton#register_keymap('henkan', "\<BS>", 'henkanBackward')
+    call skkeleton#register_keymap('henkan', "\<C-h>", 'henkanBackward')
+    call skkeleton#register_keymap('henkan', "x", '')
+
     call skkeleton#config({
-      \ 'userJisyo': expand('~/.cache/skkeleton')
+      \ 'userJisyo': expand('~/.cache/skkeleton/skkeleton'),
+      \ 'completionRankFile': expand('~/.cache/skkeleton/rank.json'),
       \ })
     call skkeleton#register_kanatable('rom', {
       \ "z\<Space>": ["\u3000", ''],
