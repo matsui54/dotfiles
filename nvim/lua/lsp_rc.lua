@@ -7,6 +7,7 @@ local on_attach = function(client)
     {'n', '1gD',       '<cmd>lua vim.lsp.buf.type_definition()<CR>'},
     {'n', 'gW',        '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>'},
     {'n', 'gd',        '<cmd>lua vim.lsp.buf.declaration()<CR>'},
+    {'n', 'ga',        '<cmd>lua vim.lsp.buf.code_action()<CR>'},
     {'n', '<Leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>'},
     {'n', '<Leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>'},
     {'n', 'gl',        '<cmd>lua vim.lsp.buf.document_highlight()<CR>'},
@@ -89,7 +90,7 @@ local is_node_repo = node_root_dir(buf_name, current_buf) ~= nil
 
 nvim_lsp.clangd.setup{on_attach = on_attach, capabilities = capabilities}
 -- nvim_lsp.pylsp.setup{on_attach = on_attach, capabilities = capabilities}
--- nvim_lsp.rls.setup{on_attach = on_attach, capabilities = capabilities}
+nvim_lsp.rust_analyzer.setup{on_attach = on_attach, capabilities = capabilities}
 -- nvim_lsp.texlab.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.gopls.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.denols.setup{
