@@ -71,7 +71,7 @@ lazy = 0
 
 [[plugins]]
 repo = "matsui54/ddc-postfilter_score"
-on_source = 'ddc.vim'
+lazy = 0
 
 [[plugins]]
 repo = 'matsui54/ddc-converter_truncate'
@@ -84,7 +84,6 @@ lazy = 0
 [[plugins]]
 repo = 'matsui54/denops-popup-preview.vim'
 on_source = 'ddc.vim'
-# if = "!has('nvim')"
 hook_source = '''
 	let g:popup_preview_config = {
 	      \ 'delay': 30,
@@ -98,7 +97,6 @@ hook_source = '''
 [[plugins]]
 repo = 'matsui54/denops-signature_help'
 on_source = 'ddc.vim'
-# if = "has('nvim')"
 hook_source = '''
 	let g:signature_help_config = {
         \ 'style': 'virtual',
@@ -120,18 +118,6 @@ lazy = 0
 [[plugins]]
 repo = 'LumaKernel/ddc-file'
 lazy = 0
-
-# [[plugins]]
-# repo = 'SirVer/ultisnips'
-# depends = 'vim-snippets'
-# on_event = 'InsertEnter'
-# hook_source = '''
-#   let g:UltiSnipsExpandTrigger='<C-l>'
-#   let g:UltiSnipsJumpForwardTrigger='<C-f>'
-#   let g:UltiSnipsJumpBackwardTrigger='<C-b>'
-# '''
-# [[plugins]]
-# repo = 'honza/vim-snippets'
 
 [[plugins]]
 repo = 'hrsh7th/vim-vsnip'
@@ -171,9 +157,16 @@ on_map = {ic = '<plug>(skkeleton-'}
 hook_add = '''
   imap <C-j> <Plug>(skkeleton-toggle)
   cmap <C-j> <Plug>(skkeleton-toggle)
+
   function! s:skkeleton_init() abort
+    " <BS>/<C-h>で変換候補を戻す
+    call skkeleton#register_keymap('henkan', "\<BS>", 'henkanBackward')
+    call skkeleton#register_keymap('henkan', "\<C-h>", 'henkanBackward')
+    call skkeleton#register_keymap('henkan', "x", '')
+
     call skkeleton#config({
-      \ 'userJisyo': expand('~/.cache/skkeleton')
+      \ 'userJisyo': expand('~/.cache/skkeleton/skkeleton'),
+      \ 'completionRankFile': expand('~/.cache/skkeleton/rank.json'),
       \ })
     call skkeleton#register_kanatable('rom', {
       \ "z\<Space>": ["\u3000", ''],
@@ -190,10 +183,3 @@ hook_add = '''
   endfunction
   autocmd User skkeleton-initialize-pre call s:skkeleton_init()
 '''
-
-# [[plugins]]
-# repo = 'delphinus/skkeleton_indicator.nvim'
-# on_source = 'denops-skkeleton.vim'
-# hook_source = '''
-#   lua require'skkeleton_indicator'.setup{}
-# '''

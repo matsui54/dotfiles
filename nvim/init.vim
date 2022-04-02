@@ -1,10 +1,7 @@
-augroup MyAutoCmd
-  autocmd!
-augroup END
-
 " dein settings--------------------------------------------
 let g:dein#lazy_rplugins = v:true
 let g:dein#auto_recache = !has('win32')
+let g:dein#install_progress_type = 'floating'
 if !vimrc#is_windows()
   let g:dein#types#git#default_protocol = 'ssh'
 endif

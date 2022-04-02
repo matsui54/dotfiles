@@ -65,6 +65,9 @@ repo = 'machakann/vim-sandwich'
 
 [[plugins]]
 repo = 'lambdalisue/guise.vim'
+hook_add = '''
+  let g:guise_edit_opener='vsplit'
+'''
 
 [[plugins]]
 repo = 'vim-denops/denops.vim'

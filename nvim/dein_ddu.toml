@@ -22,6 +22,9 @@ repo = 'Shougo/ddu-source-line'
 repo = 'Shougo/ddu-source-file'
 
 [[plugins]]
+repo = 'Shougo/ddu-source-action'
+
+[[plugins]]
 repo = 'Shougo/ddu-source-file_rec'
 
 [[plugins]]
@@ -38,6 +41,9 @@ repo = 'matsui54/ddu-source-file_external'
 
 [[plugins]]
 repo = 'matsui54/ddu-source-help'
+
+[[plugins]]
+repo = 'matsui54/ddu-source-man'
 
 [[plugins]]
 repo = 'matsui54/ddu-filter-fzy'
@@ -57,3 +63,6 @@ repo = 'shun/ddu-source-rg'
 
 [[plugins]]
 repo = "gamoutatsumi/ddu-source-nvim-lsp"
+
+[[plugins]]
+repo = "4513ECHO/ddu-source-source"

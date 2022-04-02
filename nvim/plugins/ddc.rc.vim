@@ -23,8 +23,11 @@ if v:true
   cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
   cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
   cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
-  autocmd MyAutoCmd CmdlineEnter * call CommandlinePre()
-  autocmd MyAutoCmd CmdlineLeave * call CommandlinePost()
+  augroup MyDdcCmdLine
+    autocmd!
+    autocmd CmdlineEnter * call CommandlinePre()
+    autocmd CmdlineLeave * call CommandlinePost()
+  augroup END
 
   function! CommandlinePre() abort
     call denops#plugin#wait('ddc')
@@ -63,9 +66,9 @@ else
 endif
 
 if has('nvim')
-  call ddc#custom#patch_global('sources', ['nvim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['buffer', 'around', 'vsnip', 'file', 'dictionary'])
 else
-  call ddc#custom#patch_global('sources', ['vim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['vim-lsp', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 endif
 call ddc#custom#patch_global('postFilters', ['postfilter_score'])
 call ddc#custom#patch_global('sourceOptions', {
@@ -125,13 +128,17 @@ call ddc#custom#patch_global('sourceOptions', {
       \	  'matcherKey': 'kind',
       \   'minAutoCompleteLength': 1,
       \	},
-      \ 'vsnip': {'dup': v:true},
+      \ 'vsnip': {
+      \	  'mark': 'V',
+      \   'dup': v:true, 
+      \	},
       \ 'skkeleton': {
       \   'mark': 'skk',
       \   'matchers': ['skkeleton'],
       \   'sorters': [],
       \   'minAutoCompleteLength': 2,
       \ },
+      \ 'zsh': {'mark': 'Z'},
       \ })
 call ddc#custom#patch_global('sourceParams', {
       \ 'around': {'maxSize': 500},
@@ -169,11 +176,15 @@ call ddc#custom#patch_global('sourceParams', {
       \ }},
       \ })
 call ddc#custom#patch_global('filterParams', {
-      \ 'converter_truncate': {'maxAbbrWidth': 60, 'maxInfo': 500, 'ellipsis': '...'},
+      \ 'converter_truncate': {
+      \   'maxAbbrWidth': 60, 
+      \   'maxInfo': 500, 
+      \   'maxMenuWidth': 0, 
+      \   'ellipsis': '...'
+      \ },
       \ 'converter_fuzzy': {'hlGroup': 'Title'},
       \ 'postfilter_score': {
       \   'excludeSources': ["dictionary", "skkeleton", "emoji"],
-      \   'showScore': v:true,
       \ },
       \ })
 
@@ -185,6 +196,9 @@ call ddc#custom#patch_filetype(
 call ddc#custom#patch_filetype(['toml'], {
       \ 'sources': ['necovim', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'],
       \ })
+call ddc#custom#patch_filetype(['zsh'], {
+      \ 'sources': ['zsh', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'],
+      \ })
 " include @ for snippet
 call ddc#custom#patch_filetype(
       \ ['tex'], {
@@ -192,9 +206,6 @@ call ddc#custom#patch_filetype(
       \ 'sourceOptions': {
       \   'vsnip': {'forceCompletionPattern': '@'},
       \ },
-      \ })
-call ddc#custom#patch_filetype(['zsh'], 'sourceOptions', {
-      \ 'zsh': {'mark': 'Z'},
       \ })
 
 call ddc#enable()
@@ -230,3 +241,18 @@ inoremap <expr> <C-x><C-f> <SID>patch_onetime({
       \ },
       \ })
 inoremap <expr> <C-x>; <SID>patch_onetime({'sources': ['emoji']})
+
+augroup MyDdcSkkeleton
+  autocmd!
+  autocmd User skkeleton-enable-pre call s:skkeleton_pre()
+  autocmd User skkeleton-disable-pre call s:skkeleton_post()
+augroup END
+function! s:skkeleton_pre() abort
+  " Overwrite sources
+  let s:prev_buffer_config = ddc#custom#get_buffer()
+  call ddc#custom#patch_buffer('sources', ['skkeleton'])
+endfunction
+function! s:skkeleton_post() abort
+  " Restore sources
+  call ddc#custom#set_buffer(s:prev_buffer_config)
+endfunction
