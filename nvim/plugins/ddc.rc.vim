@@ -66,9 +66,9 @@ else
 endif
 
 if has('nvim')
-  call ddc#custom#patch_global('sources', ['nvim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['buffer', 'around', 'vsnip', 'file', 'dictionary'])
 else
-  call ddc#custom#patch_global('sources', ['vim-lsp', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['vim-lsp', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
 endif
 call ddc#custom#patch_global('postFilters', ['postfilter_score'])
 call ddc#custom#patch_global('sourceOptions', {
@@ -241,3 +241,18 @@ inoremap <expr> <C-x><C-f> <SID>patch_onetime({
       \ },
       \ })
 inoremap <expr> <C-x>; <SID>patch_onetime({'sources': ['emoji']})
+
+augroup MyDdcSkkeleton
+  autocmd!
+  autocmd User skkeleton-enable-pre call s:skkeleton_pre()
+  autocmd User skkeleton-disable-pre call s:skkeleton_post()
+augroup END
+function! s:skkeleton_pre() abort
+  " Overwrite sources
+  let s:prev_buffer_config = ddc#custom#get_buffer()
+  call ddc#custom#patch_buffer('sources', ['skkeleton'])
+endfunction
+function! s:skkeleton_post() abort
+  " Restore sources
+  call ddc#custom#set_buffer(s:prev_buffer_config)
+endfunction
