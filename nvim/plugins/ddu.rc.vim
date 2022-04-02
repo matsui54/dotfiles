@@ -1,4 +1,4 @@
-nnoremap <Space>d :Ddu<Space>
+nnoremap <Space>d <cmd>Ddu source<CR>
 nnoremap <Space>a <cmd>Ddu file_external<CR>
 nnoremap <Space>f <cmd>Ddu file_external -source-param-path=~/dotfiles<CR>
 nnoremap <Space>h <cmd>Ddu help -name=help<CR>
@@ -124,6 +124,9 @@ function! Ddu_setup() abort
       \     'dein_update': {
       \       'defaultAction': 'echo',
       \     },
+	    \     'source': {
+	    \       'defaultAction': 'execute',
+	    \     },
       \   },
       \   'actionOptions': {
       \     'echo': {

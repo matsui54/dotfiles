@@ -63,3 +63,6 @@ repo = 'shun/ddu-source-rg'
 
 [[plugins]]
 repo = "gamoutatsumi/ddu-source-nvim-lsp"
+
+[[plugins]]
+repo = "4513ECHO/ddu-source-source"
