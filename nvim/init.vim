@@ -1,7 +1,3 @@
-augroup MyAutoCmd
-  autocmd!
-augroup END
-
 " dein settings--------------------------------------------
 let g:dein#lazy_rplugins = v:true
 let g:dein#auto_recache = !has('win32')

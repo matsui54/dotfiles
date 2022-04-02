@@ -23,8 +23,11 @@ if v:true
   cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
   cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
   cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
-  autocmd MyAutoCmd CmdlineEnter * call CommandlinePre()
-  autocmd MyAutoCmd CmdlineLeave * call CommandlinePost()
+  augroup MyDdcCmdLine
+    autocmd!
+    autocmd CmdlineEnter * call CommandlinePre()
+    autocmd CmdlineLeave * call CommandlinePost()
+  augroup END
 
   function! CommandlinePre() abort
     call denops#plugin#wait('ddc')

@@ -1,4 +1,4 @@
-autocmd MyAutoCmd FileType defx call s:defx_my_settings()
+autocmd MyDefxConf FileType defx call s:defx_my_settings()
 
 call defx#custom#column('mark', {
       \ 'readonly_icon': '✗',
