@@ -22,7 +22,6 @@ if v:true
         \ ddc#manual_complete()
   cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
   cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
-  cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
   autocmd MyAutoCmd CmdlineEnter * call CommandlinePre()
   autocmd MyAutoCmd CmdlineLeave * call CommandlinePost()
 

@@ -17,7 +17,7 @@ command! DduRgGlob call <SID>ddu_rg_with_glob()
 function! s:ddu_rg_with_glob() abort
   let pattern = input('search pattern: ')
   let glob = input('glob pattern: ')
-  let args = ['--json']
+  let args = ['--json', '--ignore-case']
   if glob != ''
     let args += ['-g', glob]
   endif
@@ -151,7 +151,7 @@ function! Ddu_setup() abort
       \                '-t', 'd']
       \     },
       \     'rg': {
-      \       'args': ['--json'], 
+      \       'args': ['--json', '--ignore-case'], 
       \       'highlights': {
       \         'path': 'SpecialComment',
       \         'lineNr': 'LineNr',
