@@ -29,7 +29,7 @@ return {
     -- { key = "K", mods = "CTRL|SHIFT", action = wezterm.action({ ClearScrollback="ScrollbackOnly" }) },
     { key = "q", mods = "CTRL|SHIFT", action = "QuickSelect" },
     { key = "F", mods = "CTRL|SHIFT", action = wezterm.action({ Search={CaseSensitiveString=""} }) },
-    { key = "v", mods = "CTRL|SHIFT", action = "ActivateCopyMode" },
+    { key = "x", mods = "CTRL|SHIFT", action = "ActivateCopyMode" },
     { key = "PageUp", mods = "ALT", action = wezterm.action({ ScrollByPage = -1 }) },
     { key = "PageDown", mods = "ALT", action = wezterm.action({ ScrollByPage = 1 }) },
     { key = "r", mods = "CTRL|SHIFT", action = "ReloadConfiguration" },
