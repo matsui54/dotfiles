@@ -63,3 +63,7 @@ repo = 'shun/ddu-source-rg'
 
 [[plugins]]
 repo = "gamoutatsumi/ddu-source-nvim-lsp"
+
+[[plugins]]
+repo = 'matsui54/ddu-source-dein_update'
+merge = 0

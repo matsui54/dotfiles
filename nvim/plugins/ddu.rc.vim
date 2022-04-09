@@ -122,7 +122,10 @@ function! Ddu_setup() abort
       \       'defaultAction': 'do',
       \     },
       \     'dein_update': {
-      \       'defaultAction': 'echo',
+      \       'defaultAction': 'viewDiff',
+      \     },
+      \     'gin_action': {
+      \       'defaultAction': 'execute',
       \     },
       \   },
       \   'actionOptions': {
