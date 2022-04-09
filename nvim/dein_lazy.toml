@@ -343,3 +343,7 @@ on_cmd = 'FuzzyMotion'
 [[plugins]]
 repo = 'mhinz/vim-signify'
 on_event = 'BufRead'
+
+[[plugins]]
+repo = 'tweekmonster/helpful.vim'
+on_cmd = ['HelpfulVersion']
