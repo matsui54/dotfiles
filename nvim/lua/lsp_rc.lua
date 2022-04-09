@@ -32,7 +32,7 @@ local on_attach = function(client)
   local escaped = {}
   if triggers and #triggers > 0 then
     -- convert lsp triggerCharacters to js regexp
-    for i, c in pairs(triggers) do
+    for _, c in pairs(triggers) do
       local ch_list = {'[', '\\', '^', '$', '.', '|', '?', '*', '+', '(', ')'}
       if vim.tbl_contains(ch_list, c) then
         table.insert(escaped, '\\'..c)
@@ -40,14 +40,20 @@ local on_attach = function(client)
       end
     end
     -- override ddc setting of lsp buffer
-    vim.fn['ddc#custom#patch_buffer'] {
+    vim.fn['ddc#custom#patch_buffer']({
       sourceOptions = {
         ["nvim-lsp"] = {
           forceCompletionPattern = table.concat(escaped, '|'),
         }
       },
-    }
+    })
   end
+  -- add nvim-lsp source for ddc.vim
+  local sources = vim.fn['ddc#custom#get_current']()['sources']
+  table.insert(sources, 1, 'nvim-lsp')
+  vim.fn['ddc#custom#patch_buffer']({
+    sources = sources,
+  })
 
   if client.server_capabilities.documentHighlightProvider then
     vim.api.nvim_exec(
@@ -89,9 +95,7 @@ local current_buf = vim.api.nvim_get_current_buf()
 local is_node_repo = node_root_dir(buf_name, current_buf) ~= nil
 
 nvim_lsp.clangd.setup{on_attach = on_attach, capabilities = capabilities}
--- nvim_lsp.pylsp.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.rust_analyzer.setup{on_attach = on_attach, capabilities = capabilities}
--- nvim_lsp.texlab.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.gopls.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.denols.setup{
   on_attach = on_attach,

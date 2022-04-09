@@ -1,5 +1,9 @@
 " Define mappings
-autocmd MyAutoCmd FileType denite call s:denite_my_settings()
+augroup MyDeniteConf
+  autocmd!
+  autocmd FileType denite call s:denite_my_settings()
+  autocmd FileType denite-filter call s:denite_filter_my_settings()
+augroup END
 function! s:denite_my_settings() abort
   nnoremap <silent><buffer><expr> <CR>
         \ denite#do_map('do_action')
@@ -37,7 +41,6 @@ function! s:denite_my_settings() abort
   nnoremap <buffer> <C-i> <Nop>
 endfunction
 
-autocmd MyAutoCmd FileType denite-filter call s:denite_filter_my_settings()
 function! s:denite_filter_my_settings() abort
   imap <silent><buffer> <C-o> <Plug>(denite_filter_update)
   imap <silent><buffer> <C-c> <Plug>(denite_filter_quit)

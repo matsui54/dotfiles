@@ -14,7 +14,7 @@ set shiftwidth=0
 set smartindent
 
 if vimrc#is_wsl()
-  let s:clp_cmd = '/mnt/c/Users/harum/bin/win32yank.exe'
+  let s:clp_cmd = 'win32yank'
   let g:clipboard = {
         \   'name': 'myClipboard',
         \   'copy': {
@@ -88,11 +88,9 @@ endif
 " Don't show too many items
 set pumheight=15
 
-autocmd MyAutoCmd ColorScheme * call vimrc#color_settings(expand('<amatch>'))
-set background=dark
-colorscheme shirotelin
-
 augroup MyAutoCmd
+  autocmd!
+  autocmd ColorScheme * call vimrc#color_settings(expand('<amatch>'))
   autocmd VimEnter * let t:defx_index = 1 | let g:tab_idx = 1
   autocmd TabNew * let t:defx_index = s:get_defx_idx()
   autocmd CmdwinEnter [:>] iunmap <buffer> <Tab>
@@ -101,6 +99,8 @@ augroup MyAutoCmd
   " autocmd FileType,Syntax,BufNewFile,BufNew,BufRead *?
   "      \ call vimrc#on_filetype()
 augroup END
+
+colorscheme shirotelin
 
 function! s:get_defx_idx()
   let g:tab_idx += 1
