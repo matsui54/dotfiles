@@ -75,6 +75,21 @@ function! s:open_preview_ddu() abort
         \ })
 endfunction
 
+command! DduFiler call <SID>ddu_filer()
+function! s:ddu_filer() abort
+  call ddu#start({
+        \   'ui': 'filer',
+        \   'sources': [{
+        \     'name': 'file', 
+        \   }],
+        \   'actionOptions': {
+        \     'narrow': {
+        \       'quit': v:false,
+        \     },
+        \   },
+        \ })
+endfunction
+
 function! Ddu_setup() abort
   call ddu#custom#alias('source', 'directory_rec', 'file_external')
   call ddu#custom#alias('source', 'ghq', 'file_external')
@@ -178,6 +193,7 @@ function! Ddu_setup() abort
     autocmd!
     autocmd FileType ddu-ff call s:ddu_my_settings()
     autocmd FileType ddu-ff-filter call s:ddu_filter_my_settings()
+    autocmd FileType ddu-filer call s:ddu_filer_my_settings()
   augroup END
   function! s:ddu_my_settings() abort
     nnoremap <buffer><silent> <CR>
@@ -231,4 +247,11 @@ function! Ddu_setup() abort
     inoremap <buffer><silent> <CR> <Esc><Cmd>close<CR>
     inoremap <buffer><silent> <C-o> <Esc><Cmd>close<CR>
   endfunction
+
+	function! s:ddu_filer_my_settings() abort
+	  nnoremap <buffer> <CR>
+	  \ <Cmd>call ddu#ui#filer#do_action('itemAction')<CR>
+	  nnoremap <buffer> o
+	  \ <Cmd>call ddu#ui#filer#do_action('expandItem')<CR>
+	endfunction
 endfunction
