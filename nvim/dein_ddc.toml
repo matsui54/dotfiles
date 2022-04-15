@@ -3,7 +3,9 @@ repo = 'Shougo/ddc.vim'
 depends = ['context_filetype.vim', 'pum.vim']
 on_event = ['InsertEnter', 'CmdlineEnter']
 hook_source = '''
-  source ~/dotfiles/nvim/plugins/ddc.rc.vim
+  if v:false
+    source ~/dotfiles/nvim/plugins/ddc.rc.vim
+  endif
 '''
 
 [[plugins]]

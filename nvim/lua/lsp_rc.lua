@@ -28,33 +28,6 @@ local on_attach = function(client)
   --   floating_window = false,
   -- })  -- Note: add in lsp client on-attach
 
-  local triggers = client.server_capabilities.completionProvider.triggerCharacters
-  local escaped = {}
-  if triggers and #triggers > 0 then
-    -- convert lsp triggerCharacters to js regexp
-    for _, c in pairs(triggers) do
-      local ch_list = {'[', '\\', '^', '$', '.', '|', '?', '*', '+', '(', ')'}
-      if vim.tbl_contains(ch_list, c) then
-        table.insert(escaped, '\\'..c)
-      else table.insert(escaped, c)
-      end
-    end
-    -- override ddc setting of lsp buffer
-    vim.fn['ddc#custom#patch_buffer']({
-      sourceOptions = {
-        ["nvim-lsp"] = {
-          forceCompletionPattern = table.concat(escaped, '|'),
-        }
-      },
-    })
-  end
-  -- add nvim-lsp source for ddc.vim
-  local sources = vim.fn['ddc#custom#get_current']()['sources']
-  table.insert(sources, 1, 'nvim-lsp')
-  vim.fn['ddc#custom#patch_buffer']({
-    sources = sources,
-  })
-
   if client.server_capabilities.documentHighlightProvider then
     vim.api.nvim_exec(
     [[
@@ -70,21 +43,7 @@ local on_attach = function(client)
 end
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.preselectSupport = false
-capabilities.textDocument.completion.completionItem.insertReplaceSupport = false
-capabilities.textDocument.completion.completionItem.labelDetailsSupport = false
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities.textDocument.completion.completionItem.deprecatedSupport = false
-capabilities.textDocument.completion.completionItem.commitCharactersSupport = false
--- capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
-capabilities.textDocument.completion.completionItem.resolveSupport = {
-  properties = {
-    'documentation',
-    'detail',
-    -- 'additionalTextEdits',
-  }
-}
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 local lsp_installer = require("nvim-lsp-installer")
 local nvim_lsp = require('lspconfig')
