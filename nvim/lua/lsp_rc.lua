@@ -95,7 +95,17 @@ local current_buf = vim.api.nvim_get_current_buf()
 local is_node_repo = node_root_dir(buf_name, current_buf) ~= nil
 
 nvim_lsp.clangd.setup{on_attach = on_attach, capabilities = capabilities}
-nvim_lsp.rust_analyzer.setup{on_attach = on_attach, capabilities = capabilities}
+nvim_lsp.rust_analyzer.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    ['rust-analyzer'] = {
+      cargo = {
+        features = {'exercises'},
+      },
+    },
+  }
+}
 nvim_lsp.gopls.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.denols.setup{
   on_attach = on_attach,
@@ -125,6 +135,14 @@ lsp_installer.on_server_ready(function(server)
             [vim.fn.expand('$VIMRUNTIME/lua')] = true,
             [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
           },
+        },
+      },
+    }
+  elseif server.name == 'rust_analyzer' then
+    opts.settings = {
+      ['rust-analyzer'] = {
+        cargo = {
+          features = {'exercises'},
         },
       },
     }

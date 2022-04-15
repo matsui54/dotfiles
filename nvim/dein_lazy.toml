@@ -210,7 +210,7 @@ lua <<EOF
 require'nvim-treesitter.configs'.setup {
     highlight = {
         enable = true,
-        disable = {'latex'},
+        disable = {'latex', 'help'},
     },
     refactor = {
       highlight_defintions = {
@@ -226,7 +226,7 @@ require'nvim-treesitter.configs'.setup {
         list_definitions = 'gnD'
       }
     },
-    ignore_install = { "phpdoc" },
+    ignore_install = { "phpdoc", "help" },
     ensure_installed = 'all'
 }
 EOF
@@ -347,3 +347,10 @@ on_event = 'BufRead'
 [[plugins]]
 repo = 'tweekmonster/helpful.vim'
 on_cmd = ['HelpfulVersion']
+
+[[plugins]]
+repo = "j-hui/fidget.nvim"
+on_source = 'nvim-lspconfig'
+hook_source = '''
+lua require"fidget".setup{}
+'''
