@@ -1,5 +1,2 @@
 pynvim
 send2trash
-python-lsp-server[all]
-requests
-ueberzug
