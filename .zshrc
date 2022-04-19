@@ -89,8 +89,6 @@ fi
 # Use emacs keybindings even if our EDITOR is set to vi
 bindkey -e
 
-export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/texlive/2021/bin/x86_64-linux:$PATH
-
 #visual editor
 autoload -Uz edit-command-line; zle -N edit-command-line
 bindkey "\C-x\C-e" edit-command-line
