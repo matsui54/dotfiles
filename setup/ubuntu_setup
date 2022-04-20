@@ -1,0 +1,109 @@
+#!/bin/bash
+
+sudo apt install zsh fd-find unzip python3-pip fzf
+
+if [[ -x $(which zsh) && $SHELL != "/usr/bin/zsh" ]]; then
+  read -n1 -p "change sh? (y/N): " yn
+  if [[ $yn = [yY] ]]; then
+    chsh -s $(which zsh)
+  else
+    echo "skip"
+  fi
+fi
+
+if [[ ! -x $(which deno) ]]; then
+  read -n1 -p "install deno? (y/N): " yn
+  if [[ $yn = [yY] ]]; then
+    curl -fsSL https://deno.land/install.sh | sh
+  else
+    echo "skip installing deno"
+  fi
+fi
+
+if [[ ! -x $(which deno) ]]; then
+  read -n1 -p "install go? (y/N): " yn
+  if [[ $yn = [yY] ]]; then
+    wget https://go.dev/dl/go1.18.1.linux-amd64.tar.gz
+    sudo rm -rf /usr/local/go
+    sudo tar -C /usr/local -xzf go1.18.1.linux-amd64.tar.gz
+  else
+    echo "skip installing go"
+  fi
+fi
+
+read -n1 -p "set git config username and email? (y/N): " yn
+if [[ $yn = [yY] ]]; then
+  git config --global user.name "matsui54"
+  git config --global user.email "haru.matu9168@gmail.com"
+else
+  echo "skip git config"
+fi
+
+if [[ ! -x $(which gh) ]]; then
+  read -n1 -p "install gh? (y/N): " yn
+  if [[ $yn = [yY] ]]; then
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+    sudo apt update
+    sudo apt install gh
+  else
+    echo "skip installing gh"
+  fi
+fi
+
+if [[ ! -d ~/.ssh ]]; then
+  read -n1 -p "setup ssh key? (y/N): " yn
+  if [[ $yn = [yY] ]]; then
+    ssh-keygen -t ed25519 -C "haru-matu9168@g.ecc.u-tokyo.ac.jp"
+    eval "$(ssh-agent -s)"
+    ssh-add ~/.ssh/id_ed25519
+    gh auth login
+  else
+    echo "skip ssh key config"
+  fi
+fi
+
+if [ ! -d ~/dotfiles ]; then
+  read -n1 -p "git clone dotfiles? (y/N): " yn
+  if [[ $yn = [yY] ]]; then
+    git clone git@github.com:matsui54/dotfiles.git ~/dotfiles
+  else
+    echo "skip clone"
+  fi
+fi
+
+read -n1 -p "link dotfiles? (y/N): " yn
+if [[ $yn = [yY] ]]; then
+  ln -s ~/dotfiles/nvim ~/.config/nvim
+  ln -s ~/dotfiles/min_rc.vim ~/.vimrc
+  ln -s ~/dotfiles/.zshrc ~/.zshrc
+  ln -s ~/dotfiles/.zshenv ~/.zshenv
+else
+  echo "skip link"
+fi
+
+if [ ! -d ~/.zsh ]; then
+  mkdir ~/.zsh
+fi
+
+if [ ! -f ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme ]; then
+  read -n1 -p "install p10k? (y/N): " yn
+  if [[ $yn = [yY] ]]; then
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.zsh/powerlevel10k
+  else
+    echo "skip"
+  fi
+fi
+
+if [ ! -d ~/.zsh/zsh-syntax-highlighting ]; then
+  read -n1 -p "install zsh-syntax-highlighting? (y/N): " yn
+  if [[ $yn = [yY] ]]; then
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
+  else
+    echo "skip"
+  fi
+fi
+
+if [[ ! -x $(which fd) && -x $(which fdfind) ]]; then
+  ln -s $(which fdfind) ~/.local/bin/fd
+fi
