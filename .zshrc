@@ -113,10 +113,11 @@ zle -N ghq-fzf
 bindkey '^]' ghq-fzf
 
 if [ -d /usr/share/doc/fzf/examples ]; then
-  # Append this line to ~/.zshrc to enable fzf keybindings for Zsh:
   source /usr/share/doc/fzf/examples/key-bindings.zsh
-  # Append this line to ~/.zshrc to enable fuzzy auto-completion for Zsh:
   source /usr/share/doc/fzf/examples/completion.zsh
+elif [ -d /usr/share/fzf ]; then
+  source /usr/share/fzf/completion.zsh
+  source /usr/share/fzf/key-bindings.zsh
 fi
 
 if [ -d ~/.zsh/zsh-syntax-highlighting ]; then
