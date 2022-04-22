@@ -12,21 +12,10 @@ HISTFILE=~/.zsh_history
 
 EDITOR='nvim'
 
-# enable color support of ls and also add handy aliases
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-
 # ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-
-# git alias
-alias ga='git add'
-alias gc='git commit'
-alias gp='git push'
 
 DIRSTACKSIZE=100
 setopt auto_pushd
@@ -68,11 +57,6 @@ zstyle ':completion:*:cd:*' ignore-parents parent pwd
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-# load xkb config
-# if [ -f $HOME/.xkb/keymap/mykbd ]; then
-#   xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mykbd $DISPLAY 2> /dev/null
-# fi
-
 export LESS_TERMCAP_mb=$'\e[1;32m'
 export LESS_TERMCAP_md=$'\e[1;32m'
 export LESS_TERMCAP_me=$'\e[0m'
@@ -81,10 +65,9 @@ export LESS_TERMCAP_so=$'\e[01;33m'
 export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
 
-# if wsl
-if [ -d /mnt/c/Users/harum ]; then
-  export WIN_HOME=/mnt/c/Users/harum
-fi
+# color settings (light)
+export BAT_THEME='GitHub'
+export FZF_DEFAULT_OPTS='--color=light'
 
 # Use emacs keybindings even if our EDITOR is set to vi
 bindkey -e
