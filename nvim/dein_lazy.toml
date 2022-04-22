@@ -354,3 +354,7 @@ on_source = 'nvim-lspconfig'
 hook_source = '''
 lua require"fidget".setup{}
 '''
+
+[[plugins]]
+repo = 'cohama/lexima.vim'
+on_event = 'InsertEnter'
