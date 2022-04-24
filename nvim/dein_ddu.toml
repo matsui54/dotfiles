@@ -1,5 +1,6 @@
 [[plugins]]
 repo = 'Shougo/ddu.vim'
+merged = 0
 hook_add = '''
   source ~/dotfiles/nvim/plugins/ddu.rc.vim
   call Ddu_setup()
@@ -12,6 +13,7 @@ on_cmd = 'Ddu'
 
 [[plugins]]
 repo = 'Shougo/ddu-ui-ff'
+merged = 0
 
 [[plugins]]
 repo = 'Shougo/ddu-ui-filer'
@@ -36,6 +38,7 @@ repo = 'yuki-yano/ddu-filter-fzf'
 
 [[plugins]]
 repo = 'Shougo/ddu-kind-file'
+merged = 0
 
 [[plugins]]
 repo = 'Shougo/ddu-filter-matcher_substring'
@@ -51,7 +54,6 @@ repo = 'matsui54/ddu-source-man'
 
 [[plugins]]
 repo = 'matsui54/ddu-filter-fzy'
-merge = 0
 
 [[plugins]]
 repo = 'matsui54/ddu-source-command_history'
@@ -73,4 +75,3 @@ repo = "4513ECHO/ddu-source-source"
 
 [[plugins]]
 repo = 'matsui54/ddu-source-dein_update'
-merge = 0

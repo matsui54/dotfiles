@@ -237,7 +237,7 @@ function! Ddu_setup() abort
     if b:ddu_ui_name ==# 'preview'
       augroup MyDduPreview
         autocmd!
-        autocmd CursorMoved <buffer> call ddu#ui#ff#do_action('previewBat')
+        autocmd CursorMoved <buffer> call ddu#ui#ff#do_action('preview')
       augroup END
     endif
   endfunction
