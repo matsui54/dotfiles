@@ -357,4 +357,7 @@ lua require"fidget".setup{}
 
 [[plugins]]
 repo = 'cohama/lexima.vim'
+hook_add = '''
+  let g:lexima_ctrlh_as_backspace = 1
+'''
 on_event = 'InsertEnter'
