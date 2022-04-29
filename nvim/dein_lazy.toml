@@ -82,7 +82,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'rhysd/clever-f.vim'
-on_map = '<Plug>'
+on_map = {nxo = '<Plug>'}
 hook_add = '''
   let g:clever_f_not_overwrites_standard_mappings = 1
   let g:clever_f_mark_direct = 1
