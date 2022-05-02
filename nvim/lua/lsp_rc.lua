@@ -51,10 +51,12 @@ local on_attach = function(client)
   end
   -- add nvim-lsp source for ddc.vim
   local sources = vim.fn['ddc#custom#get_current']()['sources']
-  table.insert(sources, 1, 'nvim-lsp')
-  vim.fn['ddc#custom#patch_buffer']({
-    sources = sources,
-  })
+  if not vim.tbl_contains(sources, 'nvim-lsp') then
+    table.insert(sources, 1, 'nvim-lsp')
+    vim.fn['ddc#custom#patch_buffer']({
+      sources = sources,
+    })
+  end
 
   if client.server_capabilities.documentHighlightProvider then
     vim.api.nvim_exec(
