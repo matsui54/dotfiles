@@ -39,11 +39,11 @@ if v:true
 
     let s:prev_buffer_sources = current
     if getcmdtype() == '/'
-      call ddc#custom#patch_buffer('sources', ['buffer', 'cmdline-history'])
+      call ddc#custom#patch_buffer('cmdlineSources', ['buffer', 'cmdline-history'])
     elseif getcmdtype() == '@'
-      call ddc#custom#patch_buffer('sources', ['buffer'])
+      call ddc#custom#patch_buffer('cmdlineSources', ['buffer'])
     else
-      call ddc#custom#patch_buffer('sources', ['cmdline', 'buffer'])
+      call ddc#custom#patch_buffer('cmdlineSources', ['cmdline', 'buffer'])
     endif
     let s:in_cmdline = v:true
 
