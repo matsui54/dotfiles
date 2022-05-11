@@ -56,9 +56,9 @@ function! s:open_preview_ddu() abort
   let win_col = column/2 - win_width
   call ddu#start({
         \ 'sources': [{'name': 'rg', 'params': {'input': 'vim'}}],
-        \ 'name': 'preview',
         \ 'uiParams': {'ff': {
         \   'split': has('nvim') ? 'floating' : 'horizontal',
+        \   'autoAction': {'name': 'preview'},
         \   'filterSplitDirection': 'floating',
         \   'filterFloatingPosition': 'top',
         \   'previewFloating': v:true,
@@ -232,13 +232,6 @@ function! Ddu_setup() abort
       nnoremap <buffer><silent> S
       \ <Cmd>call ddu#ui#ff#do_action('itemAction',
       \ {'name': 'open', 'params': {'command': 'split'}})<CR>
-    endif
-
-    if b:ddu_ui_name ==# 'preview'
-      augroup MyDduPreview
-        autocmd!
-        autocmd CursorMoved <buffer> call ddu#ui#ff#do_action('preview')
-      augroup END
     endif
   endfunction
 
