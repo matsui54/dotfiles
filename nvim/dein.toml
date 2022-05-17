@@ -29,6 +29,9 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = "itchyny/vim-gitbranch"
+
+[[plugins]]
 repo = 'yasukotelin/shirotelin'
 hook_add = '''
   " for preview bat
@@ -89,3 +92,10 @@ hook_add = '''
 [[plugins]]
 repo = 'mattn/vim-lsp-settings'
 if = '!has("nvim")'
+
+[[plugins]]
+repo = 'hrsh7th/vim-vital-vs'
+
+[[plugins]]
+repo = 'statiolake/vim-quickrun-runner-nvimterm'
+if = 'has("nvim")'

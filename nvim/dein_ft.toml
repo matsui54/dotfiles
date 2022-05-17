@@ -9,3 +9,7 @@ _ = '''
 c = '''
 packadd termdebug
 '''
+
+go = '''
+set expandtab
+'''
