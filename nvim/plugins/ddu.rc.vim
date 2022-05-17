@@ -7,7 +7,7 @@ nnoremap <Space>s <cmd>Ddu directory_rec<CR>
 nnoremap <Space>n <cmd>Ddu ghq<CR>
 nnoremap <Space>b <cmd>Ddu buffer<CR>
 nnoremap <Space>r <cmd>Ddu -resume<CR>
-nnoremap <Space>g <cmd>DduRg<CR>
+nnoremap <Space>g <cmd>DduPreview<CR>
 
 cnoremap <expr><silent> <C-t>
     \ "<C-u><ESC><cmd>Ddu command_history -input='" .
@@ -55,7 +55,7 @@ function! s:open_preview_ddu() abort
   let win_width = min([column/2 - 5, 80])
   let win_col = column/2 - win_width
   call ddu#start({
-        \ 'sources': [{'name': 'rg', 'params': {'input': 'vim'}}],
+        \ 'sources': [{'name': 'rg', 'params': {'input': input('Pattern: ')}}],
         \ 'uiParams': {'ff': {
         \   'split': has('nvim') ? 'floating' : 'horizontal',
         \   'autoAction': {'name': 'preview'},
