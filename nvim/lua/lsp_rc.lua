@@ -8,7 +8,7 @@ local on_attach = function(client)
     {'n', 'gW',        '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>'},
     {'n', 'gd',        '<cmd>lua vim.lsp.buf.declaration()<CR>'},
     {'n', 'ga',        '<cmd>lua vim.lsp.buf.code_action()<CR>'},
-    {'n', '<Leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>'},
+    {'n', '<Leader>f', '<cmd>lua vim.lsp.buf.format({ async = true })<CR>'},
     {'n', '<Leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>'},
     {'n', 'gl',        '<cmd>lua vim.lsp.buf.document_highlight()<CR>'},
     {'n', 'gm',        '<cmd>lua vim.diagnostic.open_float()<CR>'},
