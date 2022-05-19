@@ -186,7 +186,7 @@ repo = 'lambdalisue/gin.vim'
 on_event = 'CmdlineEnter'
 hook_add = '''
   nnoremap gs <cmd>GinStatus<CR>
-  nnoremap gnb <cmd>GinBranch<CR>
+  nnoremap gnb <cmd>GinBranch -a<CR>
 '''
 [plugins.ftplugin]
 gin-status = '''
