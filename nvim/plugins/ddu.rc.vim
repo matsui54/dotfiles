@@ -7,7 +7,8 @@ nnoremap <Space>s <cmd>Ddu directory_rec<CR>
 nnoremap <Space>n <cmd>Ddu ghq<CR>
 nnoremap <Space>b <cmd>Ddu buffer<CR>
 nnoremap <Space>r <cmd>Ddu -resume<CR>
-nnoremap <Space>g <cmd>DduRg<CR>
+nnoremap <Space>g <cmd>DduPreview<CR>
+nnoremap <Space>m <cmd>Ddu man<CR>
 
 cnoremap <expr><silent> <C-t>
     \ "<C-u><ESC><cmd>Ddu command_history -input='" .
@@ -55,10 +56,10 @@ function! s:open_preview_ddu() abort
   let win_width = min([column/2 - 5, 80])
   let win_col = column/2 - win_width
   call ddu#start({
-        \ 'sources': [{'name': 'rg', 'params': {'input': 'vim'}}],
-        \ 'name': 'preview',
+        \ 'sources': [{'name': 'rg', 'params': {'input': input('Pattern: ')}}],
         \ 'uiParams': {'ff': {
         \   'split': has('nvim') ? 'floating' : 'horizontal',
+        \   'autoAction': {'name': 'preview'},
         \   'filterSplitDirection': 'floating',
         \   'filterFloatingPosition': 'top',
         \   'previewFloating': v:true,
@@ -232,13 +233,6 @@ function! Ddu_setup() abort
       nnoremap <buffer><silent> S
       \ <Cmd>call ddu#ui#ff#do_action('itemAction',
       \ {'name': 'open', 'params': {'command': 'split'}})<CR>
-    endif
-
-    if b:ddu_ui_name ==# 'preview'
-      augroup MyDduPreview
-        autocmd!
-        autocmd CursorMoved <buffer> call ddu#ui#ff#do_action('preview')
-      augroup END
     endif
   endfunction
 

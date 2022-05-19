@@ -8,7 +8,7 @@ local on_attach = function(client)
     {'n', 'gW',        '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>'},
     {'n', 'gd',        '<cmd>lua vim.lsp.buf.declaration()<CR>'},
     {'n', 'ga',        '<cmd>lua vim.lsp.buf.code_action()<CR>'},
-    {'n', '<Leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>'},
+    {'n', '<Leader>f', '<cmd>lua vim.lsp.buf.format({ async = true })<CR>'},
     {'n', '<Leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>'},
     {'n', 'gl',        '<cmd>lua vim.lsp.buf.document_highlight()<CR>'},
     {'n', 'gm',        '<cmd>lua vim.diagnostic.open_float()<CR>'},
@@ -89,7 +89,9 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
   }
 }
 
-local lsp_installer = require("nvim-lsp-installer")
+require("nvim-lsp-installer").setup({
+  ensure_installed = { "rust_analyzer", "sumneko_lua" },
+})
 local nvim_lsp = require('lspconfig')
 
 local node_root_dir = nvim_lsp.util.root_pattern("package.json", "node_modules")
@@ -98,17 +100,6 @@ local current_buf = vim.api.nvim_get_current_buf()
 local is_node_repo = node_root_dir(buf_name, current_buf) ~= nil
 
 nvim_lsp.clangd.setup{on_attach = on_attach, capabilities = capabilities}
--- nvim_lsp.rust_analyzer.setup{
---   on_attach = on_attach,
---   capabilities = capabilities,
---   settings = {
---     ['rust-analyzer'] = {
---       cargo = {
---         features = {'exercises'},
---       },
---     },
---   }
--- }
 nvim_lsp.gopls.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.denols.setup{
   on_attach = on_attach,
@@ -119,12 +110,10 @@ nvim_lsp.denols.setup{
   },
   autostart = not(is_node_repo),
 }
-
-lsp_installer.on_server_ready(function(server)
-  local opts = {}
-
-  if server.name == 'sumneko_lua' then
-    opts.settings = {
+nvim_lsp.sumneko_lua.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
       Lua = {
         runtime = {
           version = 'LuaJIT',
@@ -141,19 +130,20 @@ lsp_installer.on_server_ready(function(server)
         },
       },
     }
-  elseif server.name == 'rust_analyzer' then
-    -- opts.settings = {
-    --   ['rust-analyzer'] = {
-    --     cargo = {
-    --       features = {'exercises'},
-    --     },
-    --   },
-    -- }
-  elseif server.name == "tsserver" or server.name == "eslint" then
-    opts.autostart = is_node_repo
-  end
-
-  opts.on_attach = on_attach
-  opts.capabilities = capabilities
-  server:setup(opts)
-end)
+}
+nvim_lsp.rust_analyzer.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  -- settings = {
+  --   ['rust-analyzer'] = {
+  --     cargo = {
+  --       features = {'exercises'},
+  --     },
+  --   },
+  -- }
+}
+nvim_lsp.tsserver.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  autostart = is_node_repo,
+}
