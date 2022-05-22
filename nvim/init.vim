@@ -54,10 +54,6 @@ let g:did_load_filetypes = 0
 
 filetype on
 
-if has('vim_starting') && !empty(argv())
-  call vimrc#on_filetype()
-endif
-
 if filereadable(expand('~/.vim/secret.vim'))
   source ~/.vim/secret.vim
 endif
@@ -65,11 +61,6 @@ endif
 if vimrc#is_windows()
   let g:python3_host_prog = $USERPROFILE . '\AppData\Local\Programs\Python\Python39\python.EXE'
   set shell=cmd.exe
-else
-  " use virtualenv
-  " let s:py3_dir = expand('~/.vim/python3/')
-  " let g:python3_host_prog = s:py3_dir . 'bin/python3'
-  " let $PATH = s:py3_dir . 'bin:' . $PATH
 endif
 
 " make chdir() change tab local directory
