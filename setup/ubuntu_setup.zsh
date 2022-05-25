@@ -26,7 +26,7 @@ if [[ ! -x $(which nvim) && -x $(which ghq) ]]; then
   echo "install nvim? (y/N): "
   if read -q; then
     sudo apt-get install ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen
-    ghq get -l git@github.com:neovim/neovim.git
+    ghq get git@github.com:neovim/neovim.git
     make CMAKE_BUILD_TYPE=Release
     sudo make install
   else
