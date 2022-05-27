@@ -35,9 +35,20 @@ if [[ ! -x $(which nvim) && -x $(which ghq) ]]; then
 fi
 
 if [[ ! -s "$NVM_DIR/nvm.sh" ]]; then
-  echo "install nvim? (y/N): "
+  echo "install nvm? (y/N): "
   if read -q; then
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    source ~/.zshenv
+    nvm install node
+  else
+    echo "skip"
+  fi
+fi
+
+if [[ ! -x $(which cargo) && ! -x $(which rustup) ]]; then
+  echo "install rust? (y/N): "
+  if read -q; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     source ~/.zshenv
   else
     echo "skip"
