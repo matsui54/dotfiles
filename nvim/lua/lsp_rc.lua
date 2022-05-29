@@ -101,6 +101,7 @@ local is_node_repo = node_root_dir(buf_name, current_buf) ~= nil
 
 nvim_lsp.clangd.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.gopls.setup{on_attach = on_attach, capabilities = capabilities}
+nvim_lsp.vimls.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.denols.setup{
   on_attach = on_attach,
   capabilities = capabilities,
