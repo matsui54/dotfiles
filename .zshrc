@@ -83,6 +83,13 @@ bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 
+function configure-vim() {
+  ./configure --with-features=huge --enable-gui=gtk3 \
+    --enable-python3interp \
+    --enable-luainterp --with-luajit \
+    --enable-fail-if-missing
+}
+
 function ghq-fzf() {
   local src=$(ghq list -p | fzf)
   if [ -n "$src" ]; then
