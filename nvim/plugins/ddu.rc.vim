@@ -146,6 +146,9 @@ function! Ddu_setup() abort
 	    \     'source': {
 	    \       'defaultAction': 'execute',
 	    \     },
+	    \     'ui_select': {
+	    \       'defaultAction': 'select',
+	    \     },
       \   },
       \   'actionOptions': {
       \     'echo': {
