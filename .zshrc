@@ -12,6 +12,9 @@ HISTFILE=~/.zsh_history
 
 EDITOR='nvim'
 
+eval "$(dircolors -b)"
+alias ls='ls --color=auto'
+
 # ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
@@ -43,7 +46,6 @@ zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select interactive
-eval "$(dircolors -b)"
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
