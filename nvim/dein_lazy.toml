@@ -9,14 +9,7 @@ hook_source = '''
 repo = 'thinca/vim-quickrun'
 on_cmd = 'QuickRun'
 hook_add = '''
-  function! My_quickrun_redirect() abort
-    let input_file = expand('%:h') . '/in.txt'
-    if filereadable(input_file)
-      execute 'QuickRun <' . input_file
-    else
-      QuickRun
-    endif
-  endfunction
+  nnoremap <silent><Leader>d <cmd>QuickRun<CR>
 '''
 hook_source = '''
   source ~/dotfiles/nvim/plugins/quickrun.rc.vim
