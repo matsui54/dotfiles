@@ -89,6 +89,7 @@ hook_source = '''
 	      \ 'delay': 30,
         \ 'maxWidth': 100,
         \ 'winblend': 0,
+        \ 'debug': v:false,
 	      \ }
   call popup_preview#enable()
   let g:markdown_fenced_languages = ['ts=typescript']

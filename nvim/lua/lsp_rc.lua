@@ -90,7 +90,7 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 }
 
 require("nvim-lsp-installer").setup({
-  ensure_installed = { "rust_analyzer", "sumneko_lua" },
+  ensure_installed = { "rust_analyzer", "sumneko_lua", "texlab", "vimls", "pyright" },
 })
 local nvim_lsp = require('lspconfig')
 
@@ -102,6 +102,7 @@ local is_node_repo = node_root_dir(buf_name, current_buf) ~= nil
 nvim_lsp.clangd.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.gopls.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.vimls.setup{on_attach = on_attach, capabilities = capabilities}
+nvim_lsp.pyright.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.denols.setup{
   on_attach = on_attach,
   capabilities = capabilities,
