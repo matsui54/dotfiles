@@ -11,7 +11,7 @@ let g:quickrun_config['cpp'] = {
       \ }
 
 let g:quickrun_config['cpp/compe'] = {
-      \   'type': 'cpp/g++',
+      \  'type': 'cpp/g++',
       \  'input' : 'in.dat',
       \  'runner' : 'system'
       \ }
@@ -30,6 +30,11 @@ let g:quickrun_config['lua'] = {
 
 let g:quickrun_config['typescript'] = {
       \   'type': 'typescript/deno'
+      \ }
+
+let g:quickrun_config['gnuplot'] = {
+      \   'command': 'gnuplot',
+      \   'exec': '%C %S',
       \ }
 
 if has('unix')
