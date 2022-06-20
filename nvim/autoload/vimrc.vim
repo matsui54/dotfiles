@@ -5,6 +5,10 @@ function! vimrc#is_wsl() abort
   return g:vimrc_is_wsl
 endfunction
 
+function! vimrc#denops_log(arg) abort
+  call denops#notify('my_echo', 'echo', [a:arg])
+endfunction
+
 function! vimrc#is_windows() abort
   if !exists('g:vimrc_is_windows')
     let g:vimrc_is_windows = has('win32') || has('win64')
