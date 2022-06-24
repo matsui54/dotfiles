@@ -7,7 +7,8 @@ nnoremap <Space>s <cmd>Ddu directory_rec<CR>
 nnoremap <Space>n <cmd>Ddu ghq<CR>
 nnoremap <Space>b <cmd>Ddu buffer<CR>
 nnoremap <Space>r <cmd>Ddu -resume<CR>
-nnoremap <Space>g <cmd>DduRg<CR>
+nnoremap <Space>g <cmd>DduPreview<CR>
+nnoremap <Space>m <cmd>Ddu man<CR>
 
 cnoremap <expr><silent> <C-t>
     \ "<C-u><ESC><cmd>Ddu command_history -input='" .
@@ -55,10 +56,10 @@ function! s:open_preview_ddu() abort
   let win_width = min([column/2 - 5, 80])
   let win_col = column/2 - win_width
   call ddu#start({
-        \ 'sources': [{'name': 'rg', 'params': {'input': 'vim'}}],
-        \ 'name': 'preview',
+        \ 'sources': [{'name': 'rg', 'params': {'input': input('Pattern: ')}}],
         \ 'uiParams': {'ff': {
         \   'split': has('nvim') ? 'floating' : 'horizontal',
+        \   'autoAction': {'name': 'preview'},
         \   'filterSplitDirection': 'floating',
         \   'filterFloatingPosition': 'top',
         \   'previewFloating': v:true,
@@ -72,6 +73,21 @@ function! s:open_preview_ddu() abort
         \   'winWidth': win_width,
         \   'winHeight': win_height,
         \ }},
+        \ })
+endfunction
+
+command! DduFiler call <SID>ddu_filer()
+function! s:ddu_filer() abort
+  call ddu#start({
+        \   'ui': 'filer',
+        \   'sources': [{
+        \     'name': 'file', 
+        \   }],
+        \   'actionOptions': {
+        \     'narrow': {
+        \       'quit': v:false,
+        \     },
+        \   },
         \ })
 endfunction
 
@@ -130,6 +146,9 @@ function! Ddu_setup() abort
 	    \     'source': {
 	    \       'defaultAction': 'execute',
 	    \     },
+	    \     'ui_select': {
+	    \       'defaultAction': 'select',
+	    \     },
       \   },
       \   'actionOptions': {
       \     'echo': {
@@ -178,6 +197,7 @@ function! Ddu_setup() abort
     autocmd!
     autocmd FileType ddu-ff call s:ddu_my_settings()
     autocmd FileType ddu-ff-filter call s:ddu_filter_my_settings()
+    autocmd FileType ddu-filer call s:ddu_filer_my_settings()
   augroup END
   function! s:ddu_my_settings() abort
     nnoremap <buffer><silent> <CR>
@@ -217,13 +237,6 @@ function! Ddu_setup() abort
       \ <Cmd>call ddu#ui#ff#do_action('itemAction',
       \ {'name': 'open', 'params': {'command': 'split'}})<CR>
     endif
-
-    if b:ddu_ui_name ==# 'preview'
-      augroup MyDduPreview
-        autocmd!
-        autocmd CursorMoved <buffer> call ddu#ui#ff#do_action('previewBat')
-      augroup END
-    endif
   endfunction
 
   function! s:ddu_filter_my_settings() abort
@@ -231,4 +244,11 @@ function! Ddu_setup() abort
     inoremap <buffer><silent> <CR> <Esc><Cmd>close<CR>
     inoremap <buffer><silent> <C-o> <Esc><Cmd>close<CR>
   endfunction
+
+	function! s:ddu_filer_my_settings() abort
+	  nnoremap <buffer> <CR>
+	  \ <Cmd>call ddu#ui#filer#do_action('itemAction')<CR>
+	  nnoremap <buffer> o
+	  \ <Cmd>call ddu#ui#filer#do_action('expandItem')<CR>
+	endfunction
 endfunction

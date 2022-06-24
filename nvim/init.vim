@@ -2,9 +2,6 @@
 let g:dein#lazy_rplugins = v:true
 let g:dein#auto_recache = !has('win32')
 let g:dein#install_progress_type = 'floating'
-if !vimrc#is_windows()
-  let g:dein#types#git#default_protocol = 'ssh'
-endif
 let g:dein#install_check_diff = v:true
 
 let s:dein_dir = expand('~/.cache/dein')
@@ -32,8 +29,8 @@ if dein#load_state(s:dein_dir)
   call dein#load_toml(s:dein_toml, {'lazy': 0})
   call dein#load_toml(s:dein_lazy_toml, {'lazy': 1})
   call dein#load_toml(s:dein_ddc_toml, {'lazy': 1})
-  call dein#load_toml(s:dein_ddu_toml)
   call dein#load_toml(s:dein_cmp_toml)
+  call dein#load_toml(s:dein_ddu_toml, {'lazy': 0})
   call dein#load_toml(s:dein_ft_toml)
 
   "finalize
@@ -59,10 +56,6 @@ let g:did_load_filetypes = 0
 
 filetype on
 
-if has('vim_starting') && !empty(argv())
-  call vimrc#on_filetype()
-endif
-
 if filereadable(expand('~/.vim/secret.vim'))
   source ~/.vim/secret.vim
 endif
@@ -70,11 +63,6 @@ endif
 if vimrc#is_windows()
   let g:python3_host_prog = $USERPROFILE . '\AppData\Local\Programs\Python\Python39\python.EXE'
   set shell=cmd.exe
-else
-  " use virtualenv
-  " let s:py3_dir = expand('~/.vim/python3/')
-  " let g:python3_host_prog = s:py3_dir . 'bin/python3'
-  " let $PATH = s:py3_dir . 'bin:' . $PATH
 endif
 
 " make chdir() change tab local directory

@@ -4,38 +4,20 @@ on_event = 'CmdlineEnter'
 hook_source = '''
   source ~/dotfiles/nvim/plugins/denite.rc.vim
 '''
-hook_add = '''
-'''
 
 [[plugins]]
 repo = 'thinca/vim-quickrun'
 on_cmd = 'QuickRun'
 hook_add = '''
-  function! My_quickrun_redirect() abort
-    let input_file = expand('%:h') . '/in.txt'
-    if filereadable(input_file)
-      execute 'QuickRun <' . input_file
-    else
-      QuickRun
-    endif
-  endfunction
+  nnoremap <silent><Leader>d <cmd>QuickRun<CR>
 '''
 hook_source = '''
   source ~/dotfiles/nvim/plugins/quickrun.rc.vim
 '''
 
 [[plugins]]
-repo = 'statiolake/vim-quickrun-runner-nvimterm'
-if = 'has("nvim")'
-on_source = 'vim-quickrun'
-
-[[plugins]]
 repo = 'vim-jp/vital.vim'
 on_cmd = 'Vitalize'
-
-[[plugins]]
-repo = 'hrsh7th/vim-vital-vs'
-on_source = 'vital.vim'
 
 [[plugins]]
 repo = 'itchyny/calendar.vim'
@@ -82,7 +64,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'rhysd/clever-f.vim'
-on_map = '<Plug>'
+on_map = {nxo = '<Plug>'}
 hook_add = '''
   let g:clever_f_not_overwrites_standard_mappings = 1
   let g:clever_f_mark_direct = 1
@@ -186,7 +168,7 @@ repo = 'lambdalisue/gin.vim'
 on_event = 'CmdlineEnter'
 hook_add = '''
   nnoremap gs <cmd>GinStatus<CR>
-  nnoremap gnb <cmd>GinBranch<CR>
+  nnoremap gnb <cmd>GinBranch -a<CR>
 '''
 [plugins.ftplugin]
 gin-status = '''
@@ -210,7 +192,7 @@ lua <<EOF
 require'nvim-treesitter.configs'.setup {
     highlight = {
         enable = true,
-        disable = {'latex'},
+        disable = {'latex', 'help'},
     },
     refactor = {
       highlight_defintions = {
@@ -226,7 +208,7 @@ require'nvim-treesitter.configs'.setup {
         list_definitions = 'gnD'
       }
     },
-    ignore_install = { "phpdoc" },
+    ignore_install = { "phpdoc", "help" },
     ensure_installed = 'all'
 }
 EOF
@@ -347,3 +329,21 @@ on_event = 'BufRead'
 [[plugins]]
 repo = 'tweekmonster/helpful.vim'
 on_cmd = ['HelpfulVersion']
+
+[[plugins]]
+repo = "j-hui/fidget.nvim"
+on_source = 'nvim-lspconfig'
+hook_source = '''
+lua require"fidget".setup{}
+'''
+
+[[plugins]]
+repo = 'cohama/lexima.vim'
+hook_add = '''
+  let g:lexima_ctrlh_as_backspace = 1
+'''
+on_event = 'InsertEnter'
+
+[[plugins]]
+repo = 'mattn/emmet-vim'
+on_ft = ['html', 'css']

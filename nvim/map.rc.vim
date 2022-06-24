@@ -11,17 +11,16 @@ endif
 
 nnoremap <Leader>m <cmd>wa <Bar> make<CR>
 
-nnoremap <silent><Leader>d <cmd>call <SID>run()<CR>
-
-function! s:run() abort
-  let cmd_table = {}
-  " let cmd_table.vim = 'w | source %'
-  let cmd_table.cpp = 'wa | wincmd t | call My_quickrun_redirect()'
-  let cmd_table.lua = 'w | luafile %'
-  let cmd_table.gnuplot = 'w | !gnuplot %'
-  let cmd = get(cmd_table, &filetype, 'w | QuickRun')
-  execute cmd
-endfunction
+" nnoremap <silent><Leader>d <cmd>call <SID>run()<CR>
+" function! s:run() abort
+"   let cmd_table = {}
+"   " let cmd_table.vim = 'w | source %'
+"   let cmd_table.cpp = 'wa | wincmd t | call My_quickrun_redirect()'
+"   let cmd_table.lua = 'w | luafile %'
+"   let cmd_table.gnuplot = 'w | !gnuplot %'
+"   let cmd = get(cmd_table, &filetype, 'w | QuickRun')
+"   execute cmd
+" endfunction
 
 nnoremap <A-h> <C-w>h
 nnoremap <A-j> <C-w>j

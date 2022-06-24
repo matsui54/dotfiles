@@ -22,6 +22,14 @@ repo = 'endel/vim-github-colorscheme'
 repo = 'itchyny/lightline.vim'
 hook_add = '''
   source ~/dotfiles/nvim/plugins/lightline.rc.vim
+'''
+
+[[plugins]]
+repo = "itchyny/vim-gitbranch"
+
+[[plugins]]
+repo = 'yasukotelin/shirotelin'
+hook_add = '''
   " for preview bat
   let $BAT_THEME='GitHub'
   " for fzf color theme
@@ -29,20 +37,16 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'yasukotelin/shirotelin'
-hook_add = '''
-  " for preview bat
-  let $BAT_THEME='GitHub'
-'''
-
-[[plugins]]
 repo = 'kana/vim-operator-user'
 
 [[plugins]]
+repo = 'kana/vim-textobj-user'
+
+[[plugins]]
+repo = "sgur/vim-textobj-parameter"
+
+[[plugins]]
 repo = 'vim-jp/vimdoc-ja'
-hook_add = '''
-  set helplang=ja
-'''
 
 [[plugins]]
 repo = 'roxma/vim-hug-neovim-rpc'
@@ -71,6 +75,9 @@ hook_add = '''
 
 [[plugins]]
 repo = 'vim-denops/denops.vim'
+hook_add = '''
+let g:denops_server_addr = '127.0.0.1:32123' 
+'''
 
 [[plugins]]
 repo = "prabirshrestha/vim-lsp"
@@ -83,3 +90,10 @@ hook_add = '''
 [[plugins]]
 repo = 'mattn/vim-lsp-settings'
 if = '!has("nvim")'
+
+[[plugins]]
+repo = 'hrsh7th/vim-vital-vs'
+
+[[plugins]]
+repo = 'statiolake/vim-quickrun-runner-nvimterm'
+if = 'has("nvim")'

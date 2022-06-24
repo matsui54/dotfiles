@@ -1,7 +1,3 @@
-" if has('nvim') && has('vim_starting') && empty(argv())
-"   syntax off
-" endif
-
 set title
 set updatetime=500
 set hidden
@@ -96,8 +92,6 @@ augroup MyAutoCmd
   autocmd CmdwinEnter [:>] iunmap <buffer> <Tab>
   autocmd CmdwinEnter [:>] nunmap <buffer> <Tab>
   autocmd CursorHold * redrawtabline
-  " autocmd FileType,Syntax,BufNewFile,BufNew,BufRead *?
-  "      \ call vimrc#on_filetype()
 augroup END
 
 colorscheme shirotelin
