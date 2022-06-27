@@ -7,7 +7,7 @@ if v:true
     function s:trigger_completedone()
       let info = pum#complete_info()
       let complete_item = info.items[info.selected]
-      call vsnip_integ#on_complete_done(complete_item)
+      call timer_start(0, { -> vsnip_integ#on_complete_done(complete_item) })
       return "\<Ignore>"
     endfunction
     " imap <expr> <C-v> <SID>trigger_completedone()
