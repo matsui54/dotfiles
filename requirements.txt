@@ -1,2 +1,4 @@
 pynvim
 send2trash
+pylint
+black
