@@ -227,6 +227,14 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = "jose-elias-alvarez/null-ls.nvim"
+on_source = 'nvim-lspconfig'
+depends = ['plenary.nvim']
+hook_source = '''
+  lua require('nullls_rc')
+'''
+
+[[plugins]]
 repo = "liuchengxu/vista.vim"
 on_source = 'nvim-lspconfig'
 
