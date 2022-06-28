@@ -15,14 +15,14 @@ cmp.setup {
     ['<S-Tab>'] = cmp.mapping.select_prev_item(),
   }),
 
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
-      { name = 'vsnip' },
-    }, {
-      { name = 'buffer' },
-      { name = 'dictionary' },
-      { name = 'skkeleton' },
-    })
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'vsnip' },
+  }, {
+    { name = 'buffer' },
+    { name = 'dictionary' },
+    { name = 'skkeleton' },
+  })
 }
 
 cmp.setup.filetype({ 'lua' }, {
@@ -34,6 +34,10 @@ cmp.setup.filetype({ 'lua' }, {
     { name = 'buffer' },
     { name = 'dictionary' },
   })
+})
+
+cmp.setup.filetype({ 'ddu-ff-filter', 'TelescopePrompt' }, {
+  sources = cmp.config.sources({})
 })
 
 cmp.setup.cmdline('/', {
@@ -51,18 +55,3 @@ cmp.setup.cmdline(':', {
     { name = 'cmdline' }
   })
 })
-
--- 動かないっぽい
-vim.cmd([[
-augroup MyCmpSkkeleton
-  autocmd!
-  autocmd User skkeleton-enable-pre call Cmp_skkeleton_pre()
-  autocmd User skkeleton-disable-pre call Cmp_skkeleton_post()
-augroup END
-function! Cmp_skkeleton_pre() abort
-  lua require "cmp".setup.view = { entries = 'native' }
-endfunction
-function! Cmp_skkeleton_post() abort
-  lua require "cmp".setup.view = { entries = 'custom' }
-endfunction
-]])
