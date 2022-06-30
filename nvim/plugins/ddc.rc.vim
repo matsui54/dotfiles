@@ -4,27 +4,31 @@ if v:true
   call pum#set_option('setline_insert', v:false)
 
   if v:true
-    function s:trigger_completedone()
+    function s:confirm()
       let info = pum#complete_info()
-      let complete_item = info.items[info.selected]
+      let index = info.selected
+      if info.selected == -1
+        call pum#map#select_relative(+1)
+        let index = 0
+      endif
+      call pum#map#confirm()
+      let complete_item = info.items[index]
+      " wait for the candidate is inserted
       call timer_start(0, { -> vsnip_integ#on_complete_done(complete_item) })
       return "\<Ignore>"
     endfunction
-    " imap <expr> <C-v> <SID>trigger_completedone()
-    set completeopt+=noinsert
     inoremap <silent><expr> <Tab>
-          \ pum#visible() ? "<Cmd>call pum#map#confirm() <Bar> call <SID>trigger_completedone()<CR>" :
+          \ pum#visible() ? <SID>confirm() :
           \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
           \ '<TAB>' : ddc#manual_complete()
-    " inoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
-    " inoremap <Tab>   <Cmd>call pum#map#confirm()<CR>
     inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
     inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
     inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
     inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
     cnoremap <silent><expr> <TAB>
-          \ pum#visible() ? '<Cmd>call pum#map#confirm()<CR>' :
+          \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
           \ ddc#manual_complete()
+    cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
     cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
   else
     inoremap <silent><expr> <TAB>
