@@ -355,3 +355,10 @@ on_event = 'InsertEnter'
 [[plugins]]
 repo = 'mattn/emmet-vim'
 on_ft = ['html', 'css']
+
+[[plugins]]
+repo = 'mattn/vim-sonictemplate'
+on_cmd = 'Template'
+hook_add = '''
+  let g:sonictemplate_vim_template_dir = '$HOME/dotfiles/nvim/template/'
+'''
