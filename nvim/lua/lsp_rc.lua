@@ -58,18 +58,7 @@ local on_attach = function(client)
     })
   end
 
-  if client.server_capabilities.documentHighlightProvider then
-    vim.api.nvim_exec(
-    [[
-      augroup MyLspSettings
-        autocmd!
-        autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    ]],
-    false)
-  end
+  require 'illuminate'.on_attach(client)
 end
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
