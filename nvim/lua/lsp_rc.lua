@@ -92,7 +92,11 @@ nvim_lsp.clangd.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.gopls.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.vimls.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.pyright.setup{on_attach = on_attach, capabilities = capabilities}
-nvim_lsp.zls.setup{on_attach = on_attach, capabilities = capabilities}
+nvim_lsp.zls.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  cmd = {vim.fn.expand('$HOME/ghq/github.com/zigtools/zls/zig-out/bin/zls')},
+}
 nvim_lsp.denols.setup{
   on_attach = on_attach,
   capabilities = capabilities,
