@@ -104,3 +104,9 @@ hook_add = '''
   let g:Illuminate_delay = 800
   let g:Illuminate_ftblacklist = ['nerdtree']
 '''
+
+[[plugins]]
+repo = 'williamboman/mason.nvim'
+hook_add = '''
+  lua require('mason').setup()
+'''

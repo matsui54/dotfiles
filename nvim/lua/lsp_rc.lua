@@ -78,7 +78,7 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
   }
 }
 
-require("nvim-lsp-installer").setup({
+require("mason-lspconfig").setup({
   ensure_installed = { "rust_analyzer", "sumneko_lua", "texlab", "vimls", "pyright" },
 })
 local nvim_lsp = require('lspconfig')
