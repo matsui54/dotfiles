@@ -2,6 +2,7 @@
 if v:true
   call ddc#custom#patch_global('completionMenu', 'pum.vim')
   call pum#set_option('setline_insert', v:false)
+  call pum#set_option('scrollbar_char', '')
 
   if v:true
     function s:confirm()
