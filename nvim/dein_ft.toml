@@ -18,3 +18,7 @@ zig = '''
 set tabstop=4
 let b:caw_oneline_comment = '//'
 '''
+
+markdown = '''
+setlocal conceallevel=0
+'''
