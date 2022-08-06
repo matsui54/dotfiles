@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+
+from pathlib import Path
+import json
+import urllib.request
+from subprocess import check_output
+import tarfile
+from tarfile import TarFile
+import io
+import shutil
+
+
+def untar(tar: TarFile):
+    extract_dir = Path.home().joinpath(".local", "zig")
+    print("extracting tarball...")
+    if extract_dir.exists():
+        shutil.rmtree(extract_dir)
+    extract_dir.mkdir()
+    for mem in tar:
+        dest = extract_dir.joinpath(*Path(mem.name).parts[1:])
+        if mem.isdir():
+            if not dest.exists():
+                dest.mkdir()
+        else:
+            print(str(dest))
+            f = tar.extractfile(mem)
+            if not f:
+                raise ValueError
+            dest.touch()
+            with open(dest, "wb") as d_file:
+                d_file.write(f.read())
+            dest.chmod(mem.mode)
+
+
+def check_update() -> str | None:
+    print("checking for update...")
+    with urllib.request.urlopen("https://ziglang.org/download/index.json") as f:
+        txt = f.read().decode("utf-8")
+
+    info = json.loads(txt)
+    new_version = info["master"]["version"]
+    try:
+        current_version = check_output(["zig", "version"]).decode("utf-8").strip()
+    except:
+        current_version = ""
+    if new_version != current_version:
+        print("found new version")
+        print(f"update {current_version} -> {new_version}")
+        linux_pack = info["master"]["x86_64-linux"]
+        [url, shasum] = [linux_pack["tarball"], linux_pack["shasum"]]
+        return url
+    else:
+        print("already latest version")
+        return None
+
+
+def main():
+    url = check_update()
+    if not url:
+        return
+    print("downloading tarball...")
+    print(url)
+    with urllib.request.urlopen(url) as f:
+        tar = tarfile.open(fileobj=io.BytesIO(f.read()), mode="r:xz")
+    untar(tar)
+
+
+if __name__ == "__main__":
+    main()
