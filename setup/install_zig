@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import json
+from typing import Tuple
 import urllib.request
 from subprocess import check_output
 import tarfile
@@ -22,7 +23,7 @@ def untar(tar: TarFile):
             if not dest.exists():
                 dest.mkdir()
         else:
-            print(str(dest))
+            print(f"\rextracting {str(mem.name)}", end="")
             f = tar.extractfile(mem)
             if not f:
                 raise ValueError
@@ -32,7 +33,7 @@ def untar(tar: TarFile):
             dest.chmod(mem.mode)
 
 
-def check_update() -> str | None:
+def check_update() -> Tuple[str, int] | None:
     print("checking for update...")
     with urllib.request.urlopen("https://ziglang.org/download/index.json") as f:
         txt = f.read().decode("utf-8")
@@ -47,21 +48,38 @@ def check_update() -> str | None:
         print("found new version")
         print(f"update {current_version} -> {new_version}")
         linux_pack = info["master"]["x86_64-linux"]
-        [url, shasum] = [linux_pack["tarball"], linux_pack["shasum"]]
-        return url
+        [url, size] = [linux_pack["tarball"], int(linux_pack["size"])]
+        return (url, size)
     else:
         print("already latest version")
         return None
 
 
+def download(url: str, size: int):
+    blocksize = max(4096, size // 100)
+    buf = io.BytesIO()
+    with urllib.request.urlopen(url) as resp:
+        total = 0
+        while True:
+            block = resp.read(blocksize)
+            if not block:
+                break
+            buf.write(block)
+            total += len(block)
+            print("\r{:.2f}% done".format((total / size)*100), end="")
+    buf.seek(0)
+    return buf
+
+
 def main():
-    url = check_update()
-    if not url:
+    maybe = check_update()
+    if not maybe:
         return
+    url, size = maybe
     print("downloading tarball...")
     print(url)
-    with urllib.request.urlopen(url) as f:
-        tar = tarfile.open(fileobj=io.BytesIO(f.read()), mode="r:xz")
+    buf = download(url, size)
+    tar = tarfile.open(fileobj=buf, mode="r:xz")
     untar(tar)
 
 
