@@ -241,8 +241,8 @@ function! Ddu_setup() abort
 
   function! s:ddu_filter_my_settings() abort
     nnoremap <buffer><silent> q <cmd>quit<CR>
-    inoremap <buffer><silent> <CR> <Esc><Cmd>close<CR>
-    inoremap <buffer><silent> <C-o> <Esc><Cmd>close<CR>
+    inoremap <buffer><silent> <CR> <Esc><Cmd>call ddu#ui#ff#close()<CR>
+    inoremap <buffer><silent> <C-o> <Esc><Cmd>call ddu#ui#ff#close()<CR>
   endfunction
 
 	function! s:ddu_filer_my_settings() abort

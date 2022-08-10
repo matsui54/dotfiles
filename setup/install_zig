@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+
+from pathlib import Path
+import json
+from typing import Tuple, Union
+import urllib.request
+from subprocess import check_output
+import tarfile
+from tarfile import TarFile
+import io
+import shutil
+
+
+def untar(tar: TarFile):
+    extract_dir = Path.home().joinpath(".local", "zig")
+    print("extracting tarball...")
+    if extract_dir.exists():
+        shutil.rmtree(extract_dir)
+    extract_dir.mkdir()
+    for mem in tar:
+        dest = extract_dir.joinpath(*Path(mem.name).parts[1:])
+        if mem.isdir():
+            if not dest.exists():
+                dest.mkdir()
+        else:
+            print(f"\rextracting {str(mem.name)}", end="")
+            f = tar.extractfile(mem)
+            if not f:
+                raise ValueError
+            dest.touch()
+            with open(dest, "wb") as d_file:
+                d_file.write(f.read())
+            dest.chmod(mem.mode)
+
+
+def check_update() -> Union[Tuple[str, int], None]:
+    print("checking for update...")
+    with urllib.request.urlopen("https://ziglang.org/download/index.json") as f:
+        txt = f.read().decode("utf-8")
+
+    info = json.loads(txt)
+    new_version = info["master"]["version"]
+    try:
+        current_version = check_output(["zig", "version"]).decode("utf-8").strip()
+    except:
+        current_version = ""
+    if new_version != current_version:
+        print("found new version")
+        print(f"update {current_version} -> {new_version}")
+        linux_pack = info["master"]["x86_64-linux"]
+        [url, size] = [linux_pack["tarball"], int(linux_pack["size"])]
+        return (url, size)
+    else:
+        print("already latest version")
+        return None
+
+
+def download(url: str, size: int):
+    blocksize = max(4096, size // 100)
+    buf = io.BytesIO()
+    with urllib.request.urlopen(url) as resp:
+        total = 0
+        while True:
+            block = resp.read(blocksize)
+            if not block:
+                break
+            buf.write(block)
+            total += len(block)
+            print("\r{:.2f}% done".format((total / size) * 100), end="")
+    buf.seek(0)
+    return buf
+
+
+def main():
+    maybe = check_update()
+    if not maybe:
+        return
+    url, size = maybe
+    print("downloading tarball...")
+    print(url)
+    buf = download(url, size)
+    tar = tarfile.open(fileobj=buf, mode="r:xz")
+    untar(tar)
+
+
+if __name__ == "__main__":
+    main()

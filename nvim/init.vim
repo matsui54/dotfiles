@@ -51,9 +51,6 @@ endif
 
 " end dein settings---------------------------------------
 
-let g:do_filetype_lua = 1
-let g:did_load_filetypes = 0
-
 filetype on
 
 if filereadable(expand('~/.vim/secret.vim'))

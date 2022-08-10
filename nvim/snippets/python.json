@@ -31,5 +31,19 @@
       "plt.clf()"
     ],
     "description": "matplotlib template"
+  },
+  "fread": {
+    "prefix": ["fread"],
+    "body": [
+      "with open(\"$1\", \"r\") as f:",
+      "    txt = f.read()"
+    ]
+  },
+  "fwrite": {
+    "prefix": ["fwrite"],
+    "body": [
+      "with open(\"$1\", \"w\") as f:",
+      "    f.write($2)"
+    ]
   }
 }

@@ -48,3 +48,9 @@ else
         \  'outputter' : 'quickfix',
         \ }
 endif
+
+let g:quickrun_config['python/compe'] = {
+      \  'type': 'python',
+      \  'input' : 'in.dat',
+      \  'runner' : 'system'
+      \ }

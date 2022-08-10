@@ -29,24 +29,13 @@ local on_attach = function(client)
   --   floating_window = false,
   -- })  -- Note: add in lsp client on-attach
 
-  if client.server_capabilities.documentHighlightProvider then
-    vim.api.nvim_exec(
-    [[
-      augroup MyLspSettings
-        autocmd!
-        autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    ]],
-    false)
-  end
+  require 'illuminate'.on_attach(client)
 end
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-require("nvim-lsp-installer").setup({
+require("mason-lspconfig").setup({
   ensure_installed = { "rust_analyzer", "sumneko_lua", "texlab", "vimls", "pyright" },
 })
 local nvim_lsp = require('lspconfig')
@@ -60,6 +49,11 @@ nvim_lsp.clangd.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.gopls.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.vimls.setup{on_attach = on_attach, capabilities = capabilities}
 nvim_lsp.pyright.setup{on_attach = on_attach, capabilities = capabilities}
+nvim_lsp.zls.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  cmd = {vim.fn.expand('$HOME/ghq/github.com/zigtools/zls/zig-out/bin/zls')},
+}
 nvim_lsp.denols.setup{
   on_attach = on_attach,
   capabilities = capabilities,
