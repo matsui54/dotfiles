@@ -7,8 +7,10 @@ local get_python_path = function()
     return cwd .. '/venv/bin/python'
   elseif vim.fn.executable(cwd .. '/.venv/bin/python') == 1 then
     return cwd .. '/.venv/bin/python'
-  elseif vim.fn.executable('/usr/bin/python3') == 1 then
-    return '/usr/bin/python3'
+  elseif vim.fn.executable('python3') == 1 then
+    return 'python3'
+  elseif vim.fn.executable('python') == 1 then
+    return 'python'
   else
     return '/usr/bin/python'
   end
