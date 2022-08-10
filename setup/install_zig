@@ -2,7 +2,7 @@
 
 from pathlib import Path
 import json
-from typing import Tuple
+from typing import Tuple, Union
 import urllib.request
 from subprocess import check_output
 import tarfile
@@ -33,7 +33,7 @@ def untar(tar: TarFile):
             dest.chmod(mem.mode)
 
 
-def check_update() -> Tuple[str, int] | None:
+def check_update() -> Union[Tuple[str, int], None]:
     print("checking for update...")
     with urllib.request.urlopen("https://ziglang.org/download/index.json") as f:
         txt = f.read().decode("utf-8")
@@ -66,7 +66,7 @@ def download(url: str, size: int):
                 break
             buf.write(block)
             total += len(block)
-            print("\r{:.2f}% done".format((total / size)*100), end="")
+            print("\r{:.2f}% done".format((total / size) * 100), end="")
     buf.seek(0)
     return buf
 
