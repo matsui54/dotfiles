@@ -23,7 +23,7 @@ def untar(tar: TarFile):
             if not dest.exists():
                 dest.mkdir()
         else:
-            print(f"\rextracting {str(mem.name)}", end="")
+            print(f"\33[2K\rextracting {str(mem.name)}", end="")
             f = tar.extractfile(mem)
             if not f:
                 raise ValueError
@@ -67,6 +67,7 @@ def download(url: str, size: int):
             buf.write(block)
             total += len(block)
             print("\r{:.2f}% done".format((total / size) * 100), end="")
+    print("")
     buf.seek(0)
     return buf
 
