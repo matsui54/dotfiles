@@ -101,8 +101,11 @@ if = 'has("nvim")'
 [[plugins]]
 repo = 'RRethy/vim-illuminate'
 hook_add = '''
-  let g:Illuminate_delay = 800
-  let g:Illuminate_ftblacklist = ['nerdtree']
+lua <<EOF
+require('illuminate').configure({
+    delay = 800,
+})
+EOF
 '''
 
 [[plugins]]
