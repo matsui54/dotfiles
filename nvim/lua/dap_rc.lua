@@ -22,6 +22,12 @@ dap.adapters.python = {
   args = { '-m', 'debugpy.adapter' };
 }
 
+dap.adapters.cppdbg = {
+  id = 'cppdbg',
+  type = 'executable',
+  command = 'OpenDebugAD7',
+}
+
 dap.configurations.python = {
   {
     -- The first three options are required by nvim-dap
@@ -35,6 +41,34 @@ dap.configurations.python = {
     pythonPath = get_python_path;
   },
 }
+
+local c_cpp_config = {
+  {
+    name = "Launch file",
+    type = "cppdbg",
+    request = "launch",
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = true,
+  },
+  {
+    name = 'Attach to gdbserver :1234',
+    type = 'cppdbg',
+    request = 'launch',
+    MIMode = 'gdb',
+    miDebuggerServerAddress = 'localhost:1234',
+    miDebuggerPath = '/usr/bin/gdb',
+    cwd = '${workspaceFolder}',
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+  },
+}
+
+dap.configurations.cpp = c_cpp_config
+dap.configurations.c = c_cpp_config
 
 dap.listeners.after.event_initialized["dapui_config"] = function()
   dapui.open()
