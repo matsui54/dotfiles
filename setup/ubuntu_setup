@@ -2,7 +2,7 @@
 
 sudo apt update
 sudo apt upgrade
-sudo apt install zsh fd-find unzip python3-pip fzf
+sudo apt install zsh fd-find unzip python3-pip fzf universal-ctags
 
 if [[ -x $(which zsh) && $SHELL != "/usr/bin/zsh" ]]; then
   read -n1 -p "change sh? (y/N): " yn
@@ -80,6 +80,7 @@ if [[ $yn = [yY] ]]; then
   ln -s ~/dotfiles/min_rc.vim ~/.vimrc
   ln -s ~/dotfiles/.zshrc ~/.zshrc
   ln -s ~/dotfiles/.zshenv ~/.zshenv
+  ln -s ~/dotfiles/.latexmkrc ~/.latexmkrc
 else
   echo "skip link"
 fi
