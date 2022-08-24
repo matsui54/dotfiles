@@ -170,6 +170,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'mark': '[skk]',
       \   'matchers': ['skkeleton'],
       \   'sorters': [],
+      \   'isVolatile': v:true,
       \   'minAutoCompleteLength': 2,
       \ },
       \ 'zsh': {
