@@ -1,8 +1,8 @@
 swipe:
   3:
-    down:
+    right:
       command: "xdotool key Super+ctrl+Up" # Switch to next workspace
-    up:
+    left:
       command: "xdotool key Super+ctrl+Down" # Switch to previous workspace
     # up:
     #   command: 'xdotool key Super+s'
