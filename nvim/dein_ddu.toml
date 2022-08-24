@@ -78,3 +78,6 @@ repo = 'matsui54/ddu-source-dein_update'
 
 [[plugins]]
 repo = 'matsui54/ddu-vim-ui-select'
+
+[[plugins]]
+repo = 'Shougo/ddu-column-filename'
