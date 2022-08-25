@@ -57,8 +57,6 @@ local on_attach = function(client)
       sources = sources,
     })
   end
-
-  require 'illuminate'.on_attach(client)
 end
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
