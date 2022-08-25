@@ -60,8 +60,17 @@ if = '!has("nvim")'
 repo = 'lervag/vimtex'
 hook_add = '''
   let g:vimtex_syntax_conceal_disable = 1
+'''
+[plugins.ftplugin]
+latex = '''
+if executable('SumatraPDF')
+  let g:vimtex_view_general_viewer = 'SumatraPDF'
+  let g:vimtex_view_general_options
+      \ = '-reuse-instance -forward-search @tex @line @pdf'
+else
   let g:vimtex_view_method = 'zathura'
   let g:vimtex_view_general_options = "-x \"nvr +%{line} %{input}\" --synctex-forward @line:0:@tex @pdf"
+endif
 '''
 
 [[plugins]]
