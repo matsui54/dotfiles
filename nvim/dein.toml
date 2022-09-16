@@ -109,16 +109,14 @@ if = 'has("nvim")'
 
 [[plugins]]
 repo = 'RRethy/vim-illuminate'
-hook_add = '''
-lua <<EOF
+lua_add = '''
 require('illuminate').configure({
     delay = 800,
 })
-EOF
 '''
 
 [[plugins]]
 repo = 'williamboman/mason.nvim'
-hook_add = '''
-  lua require('mason').setup()
+lua_add = '''
+  require('mason').setup()
 '''

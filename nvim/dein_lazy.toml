@@ -187,8 +187,7 @@ gitcommit = '''
 repo = 'nvim-treesitter/nvim-treesitter'
 if = 'has("nvim") && !vimrc#is_windows()'
 on_event = 'BufRead'
-hook_source = '''
-lua <<EOF
+lua_source = '''
 require'nvim-treesitter.configs'.setup {
     highlight = {
         enable = true,
@@ -211,7 +210,6 @@ require'nvim-treesitter.configs'.setup {
     ignore_install = { "phpdoc", "help" },
     ensure_installed = 'all'
 }
-EOF
 '''
 
 [[plugins]]
@@ -222,16 +220,16 @@ on_source = 'nvim-treesitter'
 repo = 'neovim/nvim-lspconfig'
 if = 'has("nvim")'
 on_event = 'BufRead'
-hook_source = '''
-  lua require('lsp_rc')
+lua_source = '''
+  require('lsp_rc')
 '''
 
 [[plugins]]
 repo = "jose-elias-alvarez/null-ls.nvim"
 on_source = 'nvim-lspconfig'
 depends = ['plenary.nvim']
-hook_source = '''
-  lua require('nullls_rc')
+lua_source = '''
+  require('nullls_rc')
 '''
 
 [[plugins]]
@@ -341,8 +339,8 @@ on_cmd = ['HelpfulVersion']
 [[plugins]]
 repo = "j-hui/fidget.nvim"
 on_source = 'nvim-lspconfig'
-hook_source = '''
-lua require"fidget".setup{}
+lua_source = '''
+  require"fidget".setup{}
 '''
 
 [[plugins]]
@@ -366,20 +364,20 @@ hook_add = '''
 [[plugins]]
 repo = "mfussenegger/nvim-dap"
 on_event = 'BufRead'
-hook_source = '''
-  lua require('dap_rc')
+lua_source = '''
+  require('dap_rc')
 '''
 
 [[plugins]]
 repo = "rcarriga/nvim-dap-ui"
 on_source = 'nvim-dap'
-hook_source = '''
-  lua require("dapui").setup()
+lua_source = '''
+  require("dapui").setup()
 '''
 
 [[plugins]]
 repo = "theHamsta/nvim-dap-virtual-text"
 on_source = 'nvim-dap'
-hook_source = '''
-  lua require("nvim-dap-virtual-text").setup()
+lua_source = '''
+  require("nvim-dap-virtual-text").setup()
 '''
