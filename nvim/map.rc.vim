@@ -86,6 +86,10 @@ nmap <silent> <C-d> <cmd>call smooth_scroll#down()<CR>
 vmap <silent> <C-u> <cmd>call smooth_scroll#up()<CR>
 vmap <silent> <C-d> <cmd>call smooth_scroll#down()<CR>
 
+" for sandwich.vim
+nmap s <Nop>
+xmap s <Nop>
+
 " from nelstrom/vim-visual-star-search
 function! s:VSetSearch(cmdtype)
   let temp = @"
