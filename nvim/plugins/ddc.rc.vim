@@ -8,6 +8,12 @@ if v:true
     function s:confirm()
       let info = pum#complete_info()
       let index = info.selected
+      if skkeleton#is_enabled()
+        if info.selected == -1
+          call pum#map#insert_relative(1)
+        endif
+        return "\<Ignore>"
+      endif
       if info.selected == -1
         call pum#map#select_relative(+1)
         let index = 0
@@ -288,10 +294,14 @@ augroup MyDdcSkkeleton
 augroup END
 function! s:skkeleton_pre() abort
   " Overwrite sources
+  inoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
+  inoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
   let s:prev_buffer_config = ddc#custom#get_buffer()
   call ddc#custom#patch_buffer('sources', ['skkeleton'])
 endfunction
 function! s:skkeleton_post() abort
   " Restore sources
+  inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
+  inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
   call ddc#custom#set_buffer(s:prev_buffer_config)
 endfunction
