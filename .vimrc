@@ -1,2 +1,4 @@
-execute 'set runtimepath+=' . expand('~/dotfiles/nvim')
-source ~/dotfiles/nvim/init.vim
+" execute 'set runtimepath+=' . expand('~/dotfiles/nvim')
+" source ~/dotfiles/nvim/init.vim
+
+source ~/dotfiles/min_rc.vim
