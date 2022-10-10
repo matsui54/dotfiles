@@ -1,29 +1,29 @@
 local on_attach = function(client)
   vim.wo.signcolumn = 'yes'
   local maps = {
-    {'n', '<c-]>',     '<cmd>lua vim.lsp.buf.definition()<CR>'},
-    {'n', 'K',         '<cmd>lua vim.lsp.buf.hover()<CR>'},
-    {'n', 'gD',        '<cmd>lua vim.lsp.buf.implementation()<CR>'},
-    {'n', '1gD',       '<cmd>lua vim.lsp.buf.type_definition()<CR>'},
-    {'n', 'gW',        '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>'},
-    {'n', 'gd',        '<cmd>lua vim.lsp.buf.declaration()<CR>'},
-    {'n', 'ga',        '<cmd>lua vim.lsp.buf.code_action()<CR>'},
-    {'n', '<Leader>f', '<cmd>lua vim.lsp.buf.format({ async = true })<CR>'},
-    {'n', '<Leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>'},
-    {'n', 'gl',        '<cmd>lua vim.lsp.buf.document_highlight()<CR>'},
-    {'n', 'gm',        '<cmd>lua vim.diagnostic.open_float()<CR>'},
-    {'n', 'g0',        '<cmd>Denite lsp/document_symbol -auto-action=highlight<CR>'},
-    {'n', 'gr',        '<cmd>Denite lsp/references -auto-action=preview_bat<CR>'},
+    { 'n', '<c-]>', '<cmd>lua vim.lsp.buf.definition()<CR>' },
+    { 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>' },
+    { 'n', 'gD', '<cmd>lua vim.lsp.buf.implementation()<CR>' },
+    { 'n', '1gD', '<cmd>lua vim.lsp.buf.type_definition()<CR>' },
+    { 'n', 'gW', '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>' },
+    { 'n', 'gd', '<cmd>lua vim.lsp.buf.declaration()<CR>' },
+    { 'n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>' },
+    { 'n', '<Leader>f', '<cmd>lua vim.lsp.buf.format({ async = true })<CR>' },
+    { 'n', '<Leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>' },
+    { 'n', 'gl', '<cmd>lua vim.lsp.buf.document_highlight()<CR>' },
+    { 'n', 'gm', '<cmd>lua vim.diagnostic.open_float()<CR>' },
+    { 'n', 'g0', '<cmd>Denite lsp/document_symbol -auto-action=highlight<CR>' },
+    { 'n', 'gr', '<cmd>Denite lsp/references -auto-action=preview_bat<CR>' },
   }
   for _, map in ipairs(maps) do
-    vim.api.nvim_buf_set_keymap(0, map[1], map[2], map[3], {noremap = true})
+    vim.api.nvim_buf_set_keymap(0, map[1], map[2], map[3], { noremap = true })
   end
 
   vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics, {
-      virtual_text = false,
-      severity_sort = true,
-    }
+    virtual_text = false,
+    severity_sort = true,
+  }
   )
   -- require "lsp_signature".on_attach({
   --   floating_window = false,
@@ -34,9 +34,9 @@ local on_attach = function(client)
   if triggers and #triggers > 0 then
     -- convert lsp triggerCharacters to js regexp
     for _, c in pairs(triggers) do
-      local ch_list = {'[', '\\', '^', '$', '.', '|', '?', '*', '+', '(', ')'}
+      local ch_list = { '[', '\\', '^', '$', '.', '|', '?', '*', '+', '(', ')' }
       if vim.tbl_contains(ch_list, c) then
-        table.insert(escaped, '\\'..c)
+        table.insert(escaped, '\\' .. c)
       else table.insert(escaped, c)
       end
     end
@@ -86,47 +86,48 @@ local buf_name = vim.api.nvim_buf_get_name(0)
 local current_buf = vim.api.nvim_get_current_buf()
 local is_node_repo = node_root_dir(buf_name, current_buf) ~= nil
 
-nvim_lsp.clangd.setup{on_attach = on_attach, capabilities = capabilities}
-nvim_lsp.gopls.setup{on_attach = on_attach, capabilities = capabilities}
-nvim_lsp.vimls.setup{on_attach = on_attach, capabilities = capabilities}
-nvim_lsp.pyright.setup{on_attach = on_attach, capabilities = capabilities}
+nvim_lsp.clangd.setup { on_attach = on_attach, capabilities = capabilities }
+nvim_lsp.gopls.setup { on_attach = on_attach, capabilities = capabilities }
+nvim_lsp.vimls.setup { on_attach = on_attach, capabilities = capabilities }
+nvim_lsp.pyright.setup { on_attach = on_attach, capabilities = capabilities }
+nvim_lsp.julials.setup { on_attach = on_attach, capabilities = capabilities }
 nvim_lsp.texlab.setup{on_attach = on_attach, capabilities = capabilities}
-nvim_lsp.zls.setup{
+nvim_lsp.zls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
-  cmd = {vim.fn.expand('$HOME/ghq/github.com/zigtools/zls/zig-out/bin/zls')},
+  cmd = { vim.fn.expand('$HOME/ghq/github.com/zigtools/zls/zig-out/bin/zls') },
 }
-nvim_lsp.denols.setup{
+nvim_lsp.denols.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   init_options = {
     lint = true,
     unstable = true,
   },
-  autostart = not(is_node_repo),
+  autostart = not (is_node_repo),
 }
-nvim_lsp.sumneko_lua.setup{
+nvim_lsp.sumneko_lua.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
-      Lua = {
-        runtime = {
-          version = 'LuaJIT',
-          path = vim.split(package.path, ';'),
-        },
-        diagnostics = {
-          globals = {'vim'},
-        },
-        workspace = {
-          library = {
-            [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-            [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
-          },
+    Lua = {
+      runtime = {
+        version = 'LuaJIT',
+        path = vim.split(package.path, ';'),
+      },
+      diagnostics = {
+        globals = { 'vim' },
+      },
+      workspace = {
+        library = {
+          [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+          [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
         },
       },
-    }
+    },
+  }
 }
-nvim_lsp.rust_analyzer.setup{
+nvim_lsp.rust_analyzer.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   -- settings = {
@@ -137,7 +138,7 @@ nvim_lsp.rust_analyzer.setup{
   --   },
   -- }
 }
-nvim_lsp.tsserver.setup{
+nvim_lsp.tsserver.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   autostart = is_node_repo,
