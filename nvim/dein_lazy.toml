@@ -117,6 +117,7 @@ depends = 'open-browser.vim'
 [[plugins]]
 repo = 'tyru/caw.vim'
 on_map = {nx = '<Plug>'}
+if = '!has("nvim")'
 hook_add = '''
   nmap gc <Plug>(caw:prefix)
   xmap gc <Plug>(caw:prefix)
