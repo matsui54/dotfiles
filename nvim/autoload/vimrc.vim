@@ -45,6 +45,11 @@ function! vimrc#color_settings(cs) abort
       highlight DdcNvimLspDocBorder blend=30 guifg=#c6c8d1 guibg=#3d425b
     endif
   elseif a:cs =~# 'shirotelin'
+    hi Special term=bold cterm=bold ctermfg=127 gui=bold guifg=#9425a8
+    hi SpecialChar term=bold cterm=bold ctermfg=127 gui=bold guifg=#9425a8
+    hi Tag term=bold cterm=bold ctermfg=127 gui=bold guifg=#9425a8
+    hi Delimiter term=bold cterm=bold ctermfg=127 gui=bold guifg=#9425a8
+
     hi clear TabLineFill
     hi TabLineFill guifg=#999999
     " hi! link Pmenu FloatWindow

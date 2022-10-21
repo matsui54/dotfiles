@@ -5,6 +5,7 @@ export PATH=$HOME/go/bin:$PATH
 export PATH=/usr/local/go/bin:$PATH
 export PATH=$DENO_INSTALL/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/.local/julia/bin:$PATH
 
 export PATH=/usr/local/texlive/2021/bin/x86_64-linux:$PATH
 export PATH=/usr/local/texlive/2022/bin/x86_64-linux:$PATH
@@ -16,3 +17,5 @@ export NVM_DIR="$HOME/.nvm"
 if [[ -s "$HOME/.cargo/env" ]]; then
   source "$HOME/.cargo/env"
 fi
+
+systemctl --user import-environment PATH
