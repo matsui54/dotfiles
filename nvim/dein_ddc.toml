@@ -10,6 +10,10 @@ hook_source = '''
 repo = 'Shougo/pum.vim'
 
 [[plugins]]
+repo = 'Shougo/ddc-ui-pum'
+on_source = 'ddc.vim'
+
+[[plugins]]
 repo = 'Shougo/context_filetype.vim'
 on_event = 'BufRead'
 
