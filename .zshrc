@@ -120,9 +120,11 @@ if [ -f ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme ]; then
   source ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme
 fi
 
-export PYENV_ROOT="$HOME/.local/pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+if [ -d "$HOME/.local/pyenv" ]; then
+  export PYENV_ROOT="$HOME/.local/pyenv"
+  command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init -)"
+fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
