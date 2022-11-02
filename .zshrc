@@ -120,8 +120,8 @@ if [ -f ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme ]; then
   source ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme
 fi
 
-if [ -d "$HOME/.local/pyenv" ]; then
-  export PYENV_ROOT="$HOME/.local/pyenv"
+export PYENV_ROOT="$HOME/.local/pyenv"
+if [ -d $PYENV_ROOT ]; then
   command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
   eval "$(pyenv init -)"
 fi

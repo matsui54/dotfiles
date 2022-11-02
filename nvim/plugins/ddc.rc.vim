@@ -1,6 +1,6 @@
 " pum.vim
 if v:true
-  call ddc#custom#patch_global('completionMenu', 'pum.vim')
+  call ddc#custom#patch_global('ui', 'pum')
   call pum#set_option('setline_insert', v:false)
   call pum#set_option('scrollbar_char', '')
 
