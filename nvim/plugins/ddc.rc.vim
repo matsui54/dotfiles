@@ -1,109 +1,82 @@
-" pum.vim
-if v:true
-  call ddc#custom#patch_global('ui', 'pum')
-  call pum#set_option('setline_insert', v:false)
-  call pum#set_option('scrollbar_char', '')
+call ddc#custom#patch_global('ui', 'pum')
+call pum#set_option('setline_insert', v:false)
+call pum#set_option('scrollbar_char', '')
 
-  if v:true
-    function s:confirm()
-      let info = pum#complete_info()
-      let index = info.selected
-      if skkeleton#is_enabled()
-        if info.selected == -1
-          call pum#map#insert_relative(1)
-        endif
-        return "\<Ignore>"
-      endif
-      if info.selected == -1
-        call pum#map#select_relative(+1)
-        let index = 0
-      endif
-      call pum#map#confirm()
-      let complete_item = info.items[index]
-      " wait for the candidate is inserted
-      call timer_start(0, { -> vsnip_integ#on_complete_done(complete_item) })
-      return "\<Ignore>"
-    endfunction
-    inoremap <silent><expr> <Tab>
-          \ pum#visible() ? <SID>confirm() :
-          \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
-          \ '<TAB>' : ddc#manual_complete()
-    inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
-    inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
-    inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
-    inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
-    cnoremap <silent><expr> <TAB>
-          \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
-          \ ddc#manual_complete()
-    cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
-    cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
-  else
-    inoremap <silent><expr> <TAB>
-          \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
-          \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
-          \ '<TAB>' : ddc#manual_complete()
-    inoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
-    inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
-    inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
-    inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
-    inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
-    cnoremap <silent><expr> <TAB>
-          \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
-          \ ddc#manual_complete()
-    cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
-    cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+function s:confirm()
+  let info = pum#complete_info()
+  let index = info.selected
+  if skkeleton#is_enabled()
+    if info.selected == -1
+      call pum#map#insert_relative(1)
+    endif
+    return "\<Ignore>"
+  endif
+  if info.selected == -1
+    call pum#map#select_relative(+1)
+    let index = 0
+  endif
+  call pum#map#confirm()
+  let complete_item = info.items[index]
+  " wait for the candidate is inserted
+  call timer_start(0, { -> vsnip_integ#on_complete_done(complete_item) })
+  return "\<Ignore>"
+endfunction
+inoremap <silent><expr> <Tab>
+      \ pum#visible() ? <SID>confirm() :
+      \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
+      \ '<TAB>' : ddc#map#manual_complete()
+inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
+inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
+inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
+cnoremap <silent><expr> <TAB>
+      \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
+      \ ddc#map#manual_complete()
+cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
+cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+
+" command line completion
+call ddc#custom#patch_global('autoCompleteEvents',
+      \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
+augroup MyDdcCmdLine
+  autocmd!
+  autocmd CmdlineEnter * call CommandlinePre()
+  autocmd CmdlineLeave * call CommandlinePost()
+augroup END
+
+function! CommandlinePre() abort
+  call denops#plugin#wait('ddc')
+
+  " Overwrite sources
+  let current = ddc#custom#get_current()
+  if exists('s:in_cmdline') && s:in_cmdline
+    return
   endif
 
-  " command line completion
-  call ddc#custom#patch_global('autoCompleteEvents',
-        \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
-  augroup MyDdcCmdLine
-    autocmd!
-    autocmd CmdlineEnter * call CommandlinePre()
-    autocmd CmdlineLeave * call CommandlinePost()
-  augroup END
+  let s:prev_buffer_sources = current
+  if getcmdtype() == '/'
+    call ddc#custom#patch_buffer('cmdlineSources', ['buffer', 'cmdline-history'])
+  elseif getcmdtype() == '@'
+    call ddc#custom#patch_buffer('cmdlineSources', ['buffer'])
+  else
+    call ddc#custom#patch_buffer('cmdlineSources', ['cmdline', 'buffer', 'zsh'])
+    " call ddc#custom#patch_buffer('sourceOptions', {
+    "      \ 'zsh': {
+    "      \   'forceCompletionPattern': "!.*", 
+    "      \   'minAutoCompleteLength': 10000
+    "      \ },
+    "      \ })
+  endif
+  let s:in_cmdline = v:true
 
-  function! CommandlinePre() abort
-    call denops#plugin#wait('ddc')
-
-    " Overwrite sources
-    let current = ddc#custom#get_current()
-    if exists('s:in_cmdline') && s:in_cmdline
-      return
-    endif
-
-    let s:prev_buffer_sources = current
-    if getcmdtype() == '/'
-      call ddc#custom#patch_buffer('cmdlineSources', ['buffer', 'cmdline-history'])
-    elseif getcmdtype() == '@'
-      call ddc#custom#patch_buffer('cmdlineSources', ['buffer'])
-    else
-      call ddc#custom#patch_buffer('cmdlineSources', ['cmdline', 'buffer', 'zsh'])
-      " call ddc#custom#patch_buffer('sourceOptions', {
-      "      \ 'zsh': {
-      "      \   'forceCompletionPattern': "!.*", 
-      "      \   'minAutoCompleteLength': 10000
-      "      \ },
-      "      \ })
-    endif
-    let s:in_cmdline = v:true
-
-    " Enable command line completion
-    call ddc#enable_cmdline_completion()
-  endfunction
-  function! CommandlinePost() abort
-    " Restore sources
-    call ddc#custom#set_buffer(s:prev_buffer_sources)
-    let s:in_cmdline = v:false
-  endfunction
-else
-  call ddc#custom#patch_global('completionMenu', 'native')
-  inoremap <silent><expr> <TAB>
-        \ pumvisible() ? '<C-n>' :
-        \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
-        \ '<TAB>' : ddc#manual_complete()
-  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-endif
+  " Enable command line completion
+  call ddc#enable_cmdline_completion()
+endfunction
+function! CommandlinePost() abort
+  " Restore sources
+  call ddc#custom#set_buffer(s:prev_buffer_sources)
+  let s:in_cmdline = v:false
+endfunction
 
 if has('nvim')
   call ddc#custom#patch_global('sources', ['buffer', 'around', 'vsnip', 'file', 'dictionary'])
