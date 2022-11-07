@@ -1,6 +1,6 @@
 nnoremap <Space>d <cmd>Ddu source<CR>
 nnoremap <Space>a <cmd>Ddu file_external<CR>
-nnoremap <Space>f <cmd>Ddu file_external -source-param-path=~/dotfiles<CR>
+nnoremap <Space>f <cmd>Ddu file_external -source-option-path=~/dotfiles<CR>
 nnoremap <Space>h <cmd>Ddu help -name=help<CR>
 nnoremap <Space>o <cmd>Ddu file_old<CR>
 nnoremap <Space>s <cmd>Ddu directory_rec<CR>
