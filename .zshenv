@@ -17,5 +17,3 @@ export NVM_DIR="$HOME/.nvm"
 if [[ -s "$HOME/.cargo/env" ]]; then
   source "$HOME/.cargo/env"
 fi
-
-systemctl --user import-environment PATH
