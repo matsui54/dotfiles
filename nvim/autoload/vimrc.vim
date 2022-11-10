@@ -56,6 +56,8 @@ function! vimrc#color_settings(cs) abort
     hi DiffAdd term=NONE cterm=NONE ctermbg=194 guibg=#C8FFC8
     hi DiffRemoved term=NONE cterm=NONE ctermbg=224 gui=NONE guibg=#FFC8C8
     hi LspSignatureActiveParameter gui=underline
+    hi! link @text.diff.add DiffAdd
+    hi! link @text.diff.delete DiffRemoved
     hi! link diffAdded DiffAdd
     hi! link diffRemoved DiffRemoved
     hi! link LspReferenceRead ReferenceHighlight
