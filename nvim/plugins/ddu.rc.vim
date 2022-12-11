@@ -32,22 +32,6 @@ endfunction
 
 command! DduRgLive call <SID>ddu_rg_live()
 function! s:ddu_rg_live() abort
-  call ddu#start({
-        \   'volatile': v:true,
-        \   'sources': [{
-        \     'name': 'rg', 
-        \     'options': {'matchers': []},
-        \   }],
-        \   'uiParams': {'ff': {
-        \     'ignoreEmpty': v:false,
-        \     'autoResize': v:false,
-        \   }},
-        \ })
-endfunction
-
-command! DduPreview call <SID>open_preview_ddu()
-
-function! s:open_preview_ddu() abort
   let column = &columns
   let line = &lines
   let win_height = min([line - 10, 45])
@@ -56,7 +40,43 @@ function! s:open_preview_ddu() abort
   let win_width = min([column/2 - 5, 80])
   let win_col = column/2 - win_width
   call ddu#start({
-        \ 'sources': [{'name': 'rg', 'params': {'input': input('Pattern: ')}}],
+        \ 'sources': [{'name': 'rg', 'options': {'matchers': []}}],
+        \ 'volatile': v:true,
+        \ 'uiParams': {'ff': {
+        \   'split': has('nvim') ? 'floating' : 'horizontal',
+        \   'autoAction': {'name': 'preview'},
+        \   'filterSplitDirection': 'floating',
+        \   'filterFloatingPosition': 'top',
+        \   'previewFloating': v:true,
+        \   'previewHeight': win_height,
+        \   'previewVertical': v:true,
+        \   'previewWidth': win_width,
+        \   'winCol': win_col,
+        \   'winRow': win_row,
+        \   'winWidth': win_width,
+        \   'winHeight': win_height,
+        \   'ignoreEmpty': v:false,
+        \   'autoResize': v:false,
+        \ }},
+        \ })
+endfunction
+
+command! DduPreview call <SID>open_preview_ddu()
+
+function! s:open_preview_ddu() abort
+  let input = input("Pattern: ")
+  if input == ""
+    return
+  endif
+  let column = &columns
+  let line = &lines
+  let win_height = min([line - 10, 45])
+  let win_row = (line - win_height)/2
+
+  let win_width = min([column/2 - 5, 80])
+  let win_col = column/2 - win_width
+  call ddu#start({
+        \ 'sources': [{'name': 'rg', 'params': {'input': input}}],
         \ 'uiParams': {'ff': {
         \   'split': has('nvim') ? 'floating' : 'horizontal',
         \   'autoAction': {'name': 'preview'},
