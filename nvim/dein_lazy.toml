@@ -115,6 +115,10 @@ hook_source = '''
 depends = 'open-browser.vim'
 
 [[plugins]]
+repo = 'tani/glance-vim'
+on_cmd = 'Glance'
+
+[[plugins]]
 repo = 'tyru/caw.vim'
 on_map = {nx = '<Plug>'}
 if = '!has("nvim")'
