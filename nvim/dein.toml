@@ -128,3 +128,6 @@ repo = "numToStr/Comment.nvim"
 lua_add = '''
   require('Comment').setup()
 '''
+
+[[plugins]]
+repo = "lambdalisue/fern-hijack.vim"

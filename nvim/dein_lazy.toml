@@ -382,3 +382,32 @@ on_source = 'nvim-dap'
 lua_source = '''
   require("nvim-dap-virtual-text").setup()
 '''
+
+[[plugins]]
+repo = "lambdalisue/fern.vim"
+on_cmd = 'Fern'
+depends = ['nerdfont.vim', 'fern-renderer-nerdfont.vim', 'glyph-palette.vim']
+hook_add = """
+  " let g:fern#disable_default_mappings = 1
+"""
+[plugins.ftplugin]
+fern = '''
+'''
+
+[[plugins]]
+repo = "lambdalisue/nerdfont.vim"
+hook_add = """
+  let g:fern#renderer = "nerdfont"
+  let g:fern#renderer#nerdfont#padding = "  "
+  let g:fern#renderer#nerdfont#indent_markers=1
+"""
+
+[[plugins]]
+repo = "lambdalisue/fern-renderer-nerdfont.vim"
+
+[[plugins]]
+repo = "lambdalisue/glyph-palette.vim"
+[plugins.ftplugin]
+fern = '''
+  call glyph_palette#apply()
+'''
