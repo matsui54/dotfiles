@@ -117,6 +117,10 @@ depends = 'open-browser.vim'
 [[plugins]]
 repo = 'tani/glance-vim'
 on_cmd = 'Glance'
+hook_add = '''
+  let g:glance#server_open = v:false
+  let g:glance#markdown_plugins = ['https://esm.sh/markdown-it-mathjax3?bundle']
+'''
 
 [[plugins]]
 repo = 'tyru/caw.vim'
@@ -234,7 +238,27 @@ repo = "jose-elias-alvarez/null-ls.nvim"
 on_source = 'nvim-lspconfig'
 depends = ['plenary.nvim']
 lua_source = '''
-  require('nullls_rc')
+  local null_ls = require("null-ls")
+  vim.diagnostic.config({ 
+    virtual_text = false,
+    severity_sort = true,
+  })
+  null_ls.setup({
+    sources = {
+      null_ls.builtins.formatting.black,
+      null_ls.builtins.diagnostics.shellcheck,
+      null_ls.builtins.code_actions.shellcheck,
+      null_ls.builtins.diagnostics.markdownlint,
+      null_ls.builtins.formatting.deno_fmt.with({
+        filetypes = { "markdown" }, -- only runs `deno fmt` for markdown
+      }),
+    },
+  })
+'''
+[plugins.ftplugin]
+markdown = '''
+  nnoremap \f <cmd>lua vim.lsp.buf.format({ async = true })<CR>
+  nnoremap gm <cmd>lua vim.diagnostic.open_float()<CR>
 '''
 
 [[plugins]]
