@@ -145,6 +145,7 @@ function! Ddu_setup() abort
 	    \     },
       \     'ghq': {
       \       'defaultAction': 'cd',
+      \       'path': '~',
       \     },
       \     'command_history': {
       \       'defaultAction': 'execute',
@@ -203,7 +204,7 @@ function! Ddu_setup() abort
       \         'word': 'Constant',
       \       }
       \     },
-      \     'ghq': {'cmd': ['ghq', 'list', '-p'], 'path': '~/'},
+      \     'ghq': {'cmd': ['ghq', 'list', '-p']},
       \   },
       \   'uiParams': {
       \     'ff': {
