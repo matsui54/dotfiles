@@ -61,13 +61,18 @@ function! s:ddu_rg_live() abort
         \ })
 endfunction
 
-command! DduPreview call <SID>open_preview_ddu()
+command! DduPreview call <SID>ddu_rg_preview()
+command! DeinUpdate call <SID>open_preview_ddu([{'name': 'dein_update'}])
 
-function! s:open_preview_ddu() abort
+function! s:ddu_rg_preview() abort
   let input = input("Pattern: ")
   if input == ""
     return
   endif
+  call s:open_preview_ddu([{'name': 'rg', 'params': {'input': input}}])
+endfunction
+
+function! s:open_preview_ddu(sources) abort
   let column = &columns
   let line = &lines
   let win_height = min([line - 10, 45])
@@ -76,7 +81,7 @@ function! s:open_preview_ddu() abort
   let win_width = min([column/2 - 5, 80])
   let win_col = column/2 - win_width
   call ddu#start({
-        \ 'sources': [{'name': 'rg', 'params': {'input': input}}],
+        \ 'sources': a:sources,
         \ 'uiParams': {'ff': {
         \   'split': has('nvim') ? 'floating' : 'horizontal',
         \   'autoAction': {'name': 'preview'},
