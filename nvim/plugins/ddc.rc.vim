@@ -79,9 +79,9 @@ function! CommandlinePost() abort
 endfunction
 
 if has('nvim')
-  call ddc#custom#patch_global('sources', ['buffer', 'around', 'vsnip', 'file', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['buffer', 'around', 'vsnip', 'dictionary'])
 else
-  call ddc#custom#patch_global('sources', ['vim-lsp', 'buffer', 'around', 'vsnip', 'file', 'dictionary'])
+  call ddc#custom#patch_global('sources', ['vim-lsp', 'buffer', 'around', 'vsnip', 'dictionary'])
 endif
 call ddc#custom#patch_global('postFilters', ['postfilter_score'])
 call ddc#custom#patch_global('sourceOptions', {
@@ -130,6 +130,7 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'mark': '[F]',
       \   'isVolatile': v:true,
       \   'forceCompletionPattern': '\S/\S*',
+      \   'minAutoCompleteLength': 1,
       \ },
       \ 'file_rec': {
       \   'mark': '[P]',
@@ -228,37 +229,7 @@ call ddc#custom#patch_filetype(
 
 call ddc#enable()
 
-function! s:patch_onetime(option) abort
-  if exists('s:in_onetime') && s:in_onetime
-    return
-  endif
-
-  let s:prev_buffer_option = ddc#custom#get_current()
-
-  call ddc#custom#patch_buffer(a:option)
-  let s:in_onetime = v:true
-  augroup DdcOnetime
-    autocmd!
-    autocmd User PumCompleteDone ++once call s:reset_onetime()
-    autocmd CompleteDone,InsertLeave <buffer> ++once call s:reset_onetime()
-  augroup END
-  return ddc#map#manual_complete()
-  " return "\<Ignore>"
-endfunction
-
-function! s:reset_onetime() abort
-  autocmd! DdcOnetime
-  call ddc#custom#set_buffer(s:prev_buffer_option)
-  let s:in_onetime = v:false
-endfunction
-
-inoremap <expr> <C-x><C-f> <SID>patch_onetime({
-      \ 'sources': ['file_rec'],
-      \ 'sourceParams': {
-      \   'file_rec': {'path': expand('%:h')},
-      \ },
-      \ })
-inoremap <expr> <C-x>; <SID>patch_onetime({'sources': ['emoji']})
+inoremap <expr> <C-x><C-f> ddc#map#manual_complete(['file'])
 
 augroup MyDdcSkkeleton
   autocmd!
