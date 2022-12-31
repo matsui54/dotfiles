@@ -9,6 +9,7 @@ nnoremap <Space>b <cmd>Ddu buffer<CR>
 nnoremap <Space>r <cmd>Ddu -resume<CR>
 nnoremap <Space>g <cmd>DduPreview<CR>
 nnoremap <Space>m <cmd>Ddu man<CR>
+" nnoremap <silent> <C-f> <cmd>DduFiler<CR>
 
 cnoremap <expr><silent> <C-t>
     \ "<C-u><ESC><cmd>Ddu command_history -input='" .
@@ -105,6 +106,8 @@ command! DduFiler call <SID>ddu_filer()
 function! s:ddu_filer() abort
   call ddu#start({
         \   'ui': 'filer',
+        \   'name': 'filer',
+        \   'resume': v:true,
         \   'sources': [{
         \     'name': 'file', 
         \     'options': {
@@ -217,7 +220,10 @@ function! Ddu_setup() abort
       \       'filterFloatingPosition': 'top',
       \       'ignoreEmpty': v:true,
       \       'autoResize': v:true,
-      \     }
+      \     },
+      \     'filer': {
+      \       'split': "no",
+      \     },
       \   },
       \ })
 
