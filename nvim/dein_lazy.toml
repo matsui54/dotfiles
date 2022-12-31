@@ -482,3 +482,7 @@ repo = "lambdalisue/glyph-palette.vim"
 fern = '''
   call glyph_palette#apply()
 '''
+
+[[plugins]]
+repo = "thinca/vim-partedit"
+on_cmd = 'Partedit'
