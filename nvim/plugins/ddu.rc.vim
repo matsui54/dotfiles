@@ -9,6 +9,7 @@ nnoremap <Space>b <cmd>Ddu buffer<CR>
 nnoremap <Space>r <cmd>Ddu -resume<CR>
 nnoremap <Space>g <cmd>DduPreview<CR>
 nnoremap <Space>m <cmd>Ddu man<CR>
+" nnoremap <silent> <C-f> <cmd>DduFiler<CR>
 
 cnoremap <expr><silent> <C-t>
     \ "<C-u><ESC><cmd>Ddu command_history -input='" .
@@ -32,22 +33,6 @@ endfunction
 
 command! DduRgLive call <SID>ddu_rg_live()
 function! s:ddu_rg_live() abort
-  call ddu#start({
-        \   'volatile': v:true,
-        \   'sources': [{
-        \     'name': 'rg', 
-        \     'options': {'matchers': []},
-        \   }],
-        \   'uiParams': {'ff': {
-        \     'ignoreEmpty': v:false,
-        \     'autoResize': v:false,
-        \   }},
-        \ })
-endfunction
-
-command! DduPreview call <SID>open_preview_ddu()
-
-function! s:open_preview_ddu() abort
   let column = &columns
   let line = &lines
   let win_height = min([line - 10, 45])
@@ -56,7 +41,48 @@ function! s:open_preview_ddu() abort
   let win_width = min([column/2 - 5, 80])
   let win_col = column/2 - win_width
   call ddu#start({
-        \ 'sources': [{'name': 'rg', 'params': {'input': input('Pattern: ')}}],
+        \ 'sources': [{'name': 'rg', 'options': {'matchers': []}}],
+        \ 'volatile': v:true,
+        \ 'uiParams': {'ff': {
+        \   'split': has('nvim') ? 'floating' : 'horizontal',
+        \   'autoAction': {'name': 'preview'},
+        \   'filterSplitDirection': 'floating',
+        \   'filterFloatingPosition': 'top',
+        \   'previewFloating': v:true,
+        \   'previewHeight': win_height,
+        \   'previewVertical': v:true,
+        \   'previewWidth': win_width,
+        \   'winCol': win_col,
+        \   'winRow': win_row,
+        \   'winWidth': win_width,
+        \   'winHeight': win_height,
+        \   'ignoreEmpty': v:false,
+        \   'autoResize': v:false,
+        \ }},
+        \ })
+endfunction
+
+command! DduPreview call <SID>ddu_rg_preview()
+command! DeinUpdate call <SID>open_preview_ddu([{'name': 'dein_update'}])
+
+function! s:ddu_rg_preview() abort
+  let input = input("Pattern: ")
+  if input == ""
+    return
+  endif
+  call s:open_preview_ddu([{'name': 'rg', 'params': {'input': input}}])
+endfunction
+
+function! s:open_preview_ddu(sources) abort
+  let column = &columns
+  let line = &lines
+  let win_height = min([line - 10, 45])
+  let win_row = (line - win_height)/2
+
+  let win_width = min([column/2 - 5, 80])
+  let win_col = column/2 - win_width
+  call ddu#start({
+        \ 'sources': a:sources,
         \ 'uiParams': {'ff': {
         \   'split': has('nvim') ? 'floating' : 'horizontal',
         \   'autoAction': {'name': 'preview'},
@@ -80,6 +106,8 @@ command! DduFiler call <SID>ddu_filer()
 function! s:ddu_filer() abort
   call ddu#start({
         \   'ui': 'filer',
+        \   'name': 'filer',
+        \   'resume': v:true,
         \   'sources': [{
         \     'name': 'file', 
         \     'options': {
@@ -125,6 +153,7 @@ function! Ddu_setup() abort
 	    \     },
       \     'ghq': {
       \       'defaultAction': 'cd',
+      \       'path': '~',
       \     },
       \     'command_history': {
       \       'defaultAction': 'execute',
@@ -183,7 +212,7 @@ function! Ddu_setup() abort
       \         'word': 'Constant',
       \       }
       \     },
-      \     'ghq': {'cmd': ['ghq', 'list', '-p'], 'path': '~/'},
+      \     'ghq': {'cmd': ['ghq', 'list', '-p']},
       \   },
       \   'uiParams': {
       \     'ff': {
@@ -192,7 +221,10 @@ function! Ddu_setup() abort
       \       'filterFloatingPosition': 'top',
       \       'ignoreEmpty': v:true,
       \       'autoResize': v:true,
-      \     }
+      \     },
+      \     'filer': {
+      \       'split': "no",
+      \     },
       \   },
       \ })
 
@@ -315,11 +347,11 @@ function! Ddu_setup() abort
     nnoremap <buffer> <C-l>
     \ <Cmd>call ddu#ui#filer#do_action('checkItems')<CR>
     nnoremap <buffer><expr> <CR>
-    \ ddu#ui#filer#is_directory() ?
+    \ ddu#ui#filer#is_tree() ?
     \ "<Cmd>call ddu#ui#filer#do_action('itemAction', {'name': 'narrow'})<CR>" :
     \ "<Cmd>call ddu#ui#filer#do_action('itemAction', {'name': 'open'})<CR>"
     nnoremap <buffer><expr> l
-    \ ddu#ui#filer#is_directory() ?
+    \ ddu#ui#filer#is_tree() ?
     \ "<Cmd>call ddu#ui#filer#do_action('itemAction', {'name': 'narrow'})<CR>" :
     \ "<Cmd>call ddu#ui#filer#do_action('itemAction', {'name': 'open'})<CR>"
       endfunction

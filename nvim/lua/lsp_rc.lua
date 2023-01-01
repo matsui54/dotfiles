@@ -75,10 +75,6 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
     -- 'additionalTextEdits',
   }
 }
-
-require("mason-lspconfig").setup({
-  ensure_installed = { "rust_analyzer", "sumneko_lua", "texlab", "vimls", "pyright" },
-})
 local nvim_lsp = require('lspconfig')
 
 local node_root_dir = nvim_lsp.util.root_pattern("package.json", "node_modules")

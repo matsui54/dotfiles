@@ -1,0 +1,12 @@
+modmap:
+  - name: Global
+    remap:
+      # CapsLock: Ctrl_L
+      KatakanaHiragana: Win_R
+
+keymap:
+  - name: Global
+    remap:
+      KEY_GRAVE: KEY_KATAKANAHIRAGANA
+      KEY_YEN: KEY_BACKSLASH
+      KEY_BACKSLASH: KEY_GRAVE
