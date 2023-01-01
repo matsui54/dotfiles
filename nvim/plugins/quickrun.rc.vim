@@ -37,18 +37,6 @@ let g:quickrun_config['gnuplot'] = {
       \   'exec': '%C %S',
       \ }
 
-if has('unix')
-  let g:quickrun_config['python'] = {
-        \  'command': '/usr/bin/python3',
-        \  'outputter' : 'quickfix',
-        \ }
-else
-  let g:quickrun_config['python'] = {
-        \  'command': 'python',
-        \  'outputter' : 'quickfix',
-        \ }
-endif
-
 let g:quickrun_config['python/compe'] = {
       \  'type': 'python',
       \  'input' : 'in.dat',

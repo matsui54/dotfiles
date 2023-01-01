@@ -330,11 +330,10 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'Yggdroot/indentLine'
+repo = 'lukas-reineke/indent-blankline.nvim'
 on_event = 'BufRead'
 hook_add = '''
-  let g:indentLine_char_list = ['|', '¦', '┆', '┊']
-  let g:indentLine_fileTypeExclude = ['help', 'calendar', 'denite']
+let g:indentLine_fileTypeExclude = ['help', 'calendar', 'denite', 'ddu-ff']
 '''
 
 [[plugins]]
@@ -362,7 +361,52 @@ nnoremap <Space>/ <cmd>FuzzyMotion<CR>
 on_cmd = 'FuzzyMotion'
 
 [[plugins]]
-repo = 'mhinz/vim-signify'
+repo = "lewis6991/gitsigns.nvim"
+lua_source = '''
+require('gitsigns').setup {
+  signs = {
+    change = { hl = 'GitSignsChange', text = '!', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn' },
+  },
+  on_attach = function(bufnr)
+    local gs = package.loaded.gitsigns
+
+    local function map(mode, l, r, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
+    end
+
+    -- Navigation
+    map('n', ']c', function()
+      if vim.wo.diff then return ']c' end
+      vim.schedule(function() gs.next_hunk() end)
+      return '<Ignore>'
+    end, { expr = true })
+
+    map('n', '[c', function()
+      if vim.wo.diff then return '[c' end
+      vim.schedule(function() gs.prev_hunk() end)
+      return '<Ignore>'
+    end, { expr = true })
+
+    -- Actions
+    map({ 'n', 'v' }, '<leader>hs', ':Gitsigns stage_hunk<CR>')
+    map({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>')
+    map('n', '<leader>hS', gs.stage_buffer)
+    map('n', '<leader>hu', gs.undo_stage_hunk)
+    map('n', '<leader>hR', gs.reset_buffer)
+    map('n', '<leader>hp', gs.preview_hunk)
+    map('n', '<leader>hb', function() gs.blame_line { full = true } end)
+    map('n', '<leader>tb', gs.toggle_current_line_blame)
+    map('n', '<leader>hd', gs.diffthis)
+    map('n', '<leader>hD', function() gs.diffthis('~') end)
+    map('n', '<leader>td', gs.toggle_deleted)
+
+    -- Text object
+    map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+  end
+}
+'''
 on_event = 'BufRead'
 
 [[plugins]]
@@ -421,10 +465,59 @@ on_cmd = 'Fern'
 depends = ['nerdfont.vim', 'fern-renderer-nerdfont.vim', 'glyph-palette.vim']
 hook_add = """
   " let g:fern#disable_default_mappings = 1
+  " nnoremap <silent> <C-f> <cmd>Fern .<CR>
 """
 [plugins.ftplugin]
 fern = '''
+  nmap <silent> <buffer> p     <Plug>(fern-action-preview:toggle)
+  nmap <silent> <buffer> <C-p> <Plug>(fern-action-preview:auto:toggle)
+  nmap <silent> <buffer> <C-d> <Plug>(fern-action-preview:scroll:down:half)
+  nmap <silent> <buffer> <C-u> <Plug>(fern-action-preview:scroll:up:half)
+  nmap <silent><buffer> <CR> <Plug>(fern-action-open-or-enter)
+  " nmap <silent><buffer> + <Plug>(fern-action-add_session)
+  nmap <silent><buffer> c <Plug>(fern-action-clipboard-copy)
+  nmap <silent><buffer> m <Plug>(fern-action-clipboard-move)
+  nmap <silent><buffer> P <Plug>(fern-action-clipboard-paste)
+  nmap <silent><buffer> l <Plug>(fern-action-open-or-enter)
+  nmap <silent><buffer> E <Plug>(fern-action-open:side)
+  nmap <silent><buffer> t <Plug>(fern-action-open:tabedit)
+  nmap <silent><buffer> o <Plug>(fern-action-open-or-expand)
+  " nmap <silent><buffer> O defx#async_action('open_tree', 'recursive')
+  nmap <silent><buffer> K <Plug>(fern-action-new-dir)
+  nmap <silent><buffer> N <Plug>(fern-action-new-file)
+  " nmap <silent><buffer> S defx#do_action('multi', [['toggle_sort', 'time'], 'redraw'])
+  nmap <silent><buffer> d <Plug>(fern-action-trash)
+  nmap <silent><buffer> D <Plug>(fern-action-remove)
+  nmap <silent><buffer> r <Plug>(fern-action-rename)
+  nmap <silent><buffer> ! <Plug>(fern-action-ex)
+  nmap <silent><buffer> x <Plug>(fern-action-open:system)
+  nmap <silent><buffer> yy <Plug>(fern-action-yank)
+  nmap <silent><buffer> . <Plug>(fern-action-hidden)
+  nmap <silent><buffer> h <Plug>(fern-action-leave)
+  " nmap <silent><buffer> ~ <Plug>(fern-action-cd)
+  " nmap <silent><buffer> q ((&filetype =~# 'defx') && (bufname() =~# 'temp')) ?
+  "   \ <Plug>(fern-action-quit) : \ ':call <SID>quit_all_defx()<CR>'
+  " nmap <silent><buffer> <Esc> \ <Plug>(fern-action-quit)
+  " nmap <silent><buffer> , \ <Plug>(fern-action-toggle_select) . 'j'
+  " nmap <silent><buffer> * \ <Plug>(fern-action-toggle_select_all)
+  nmap <silent><buffer><expr> j line('.') == line('$') ? 'gg' : 'j'
+  nmap <silent><buffer><expr> k line('.') == 1 ? 'G' : 'k'
+  nmap <silent><buffer> <C-l> <Plug>(fern-action-reload):nohlsearch<CR>
+  " nmap <silent><buffer> <C-g> \ <Plug>(fern-action-print)
+  " nmap <silent><buffer> cd \ <Plug>(fern-action-change_vim_cwd)
+  " nmap <silent><buffer> ' \ defx#do_action('cd', [getcwd()])
+  " nmap <silent><buffer> <Tab> <cmd>call <SID>switch_defx_buf()<CR>
+  " nmap <silent><buffer><expr> L
+  "   \ <Plug>(fern-action-link)
+
+  " nmap <silent><buffer><expr> <Space>s \ ":Denite directory_rec:" . <SID>get_defx_cwd() . " -default-action=jump_defx<CR>"
+  " nmap <silent><buffer><expr> <Space>a \ ":Denite file/rec:" . <SID>get_defx_cwd() . "<CR>"
+  " nmap <silent><buffer><expr> <Space>g \ ":Denite grep:" . <SID>get_defx_cwd() . "<CR>"
 '''
+
+[[plugins]]
+repo = "yuki-yano/fern-preview.vim"
+on_source = 'fern.vim'
 
 [[plugins]]
 repo = "lambdalisue/nerdfont.vim"
@@ -443,3 +536,7 @@ repo = "lambdalisue/glyph-palette.vim"
 fern = '''
   call glyph_palette#apply()
 '''
+
+[[plugins]]
+repo = "thinca/vim-partedit"
+on_cmd = 'Partedit'
