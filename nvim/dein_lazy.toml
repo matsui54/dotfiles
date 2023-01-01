@@ -186,7 +186,7 @@ gitcommit = '''
  
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
-if = 'has("nvim") && !vimrc#is_windows()'
+if = 'has("nvim")'
 on_event = 'BufRead'
 lua_source = '''
 require'nvim-treesitter.configs'.setup {
