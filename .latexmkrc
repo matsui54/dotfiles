@@ -1,12 +1,17 @@
 #!/usr/bin/env perl
-$latex            = 'platex -synctex=1 -halt-on-error';
-$latex_silent     = 'platex -synctex=1 -halt-on-error -interaction=batchmode';
-$bibtex           = 'pbibtex';
-$biber            = 'biber --bblencoding=utf8 -u -U --output_safechars';
-$dvipdf           = 'dvipdfmx %O -o %D %S';
-$makeindex        = 'mendex %O -o %D %S';
-$max_repeat       = 5;
-$pdf_mode         = 3;
-$pdflatex = 'pdflatex --shell-escape %O %S';
-$pvc_view_file_via_temporary = 0;
-$pdf_previewer    = "zathura";
+$latex = 'uplatex %O -synctex=1 -interaction=nonstopmode %S';
+$pdflatex = 'pdflatex %O -synctex=1 -interaction=nonstopmode %S';
+$lualatex = 'lualatex %O -synctex=1 -interaction=nonstopmode %S';
+$xelatex = 'xelatex %O -synctex=1 -interaction=nonstopmode %S';
+$biber = 'biber %O --bblencoding=utf8 -u -U --output_safechars %B';
+$bibtex = 'upbibtex %O %B';
+$makeindex = 'upmendex %O -o %D %S';
+$dvipdf = 'dvipdfmx %O -o %D %S';
+$dvips = 'dvips %O -z -f %S | convbkmk -u > %D';
+$ps2pdf = 'ps2pdf %O %S %D';
+$pdf_mode = 3;
+if (-f '/home/matsui/.local/bin/SumatraPDF') {
+  $pdf_previewer = 'SumatraPDF -reuse-instance';
+} else {
+  $pdf_previewer = 'zathura';
+}
