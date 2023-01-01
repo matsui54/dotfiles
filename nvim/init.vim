@@ -56,8 +56,11 @@ if filereadable(expand('~/.vim/secret.vim'))
 endif
 
 if vimrc#is_windows()
-  let g:python3_host_prog = $USERPROFILE . '\AppData\Local\Programs\Python\Python39\python.EXE'
-  set shell=cmd.exe
+  let &shell = executable('pwsh') ? 'pwsh' : 'powershell'
+  let &shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
+  let &shellredir = '-RedirectStandardOutput %s -NoNewWindow -Wait'
+  let &shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+  set shellquote= shellxquote=
 endif
 
 " make chdir() change tab local directory
