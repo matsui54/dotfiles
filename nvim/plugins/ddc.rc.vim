@@ -131,6 +131,10 @@ call ddc#custom#patch_global('sourceOptions', {
       \   'isVolatile': v:true,
       \   'forceCompletionPattern': '\S/\S*',
       \ },
+      \ 'latex-symbols': {
+      \	  'mark': '[latex]',
+      \   'forceCompletionPattern': '\\',
+      \	},
       \ 'file_rec': {
       \   'mark': '[P]',
       \   'minAutoCompleteLength': 1,
@@ -212,10 +216,10 @@ call ddc#custom#patch_filetype(
       \ )
 
 call ddc#custom#patch_filetype(['toml'], {
-      \ 'sources': ['necovim', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'],
+      \ 'sources': ['necovim', 'buffer', 'around', 'vsnip', 'file', 'dictionary'],
       \ })
 call ddc#custom#patch_filetype(['zsh'], {
-      \ 'sources': ['zsh', 'skkeleton', 'buffer', 'around', 'vsnip', 'file', 'dictionary'],
+      \ 'sources': ['zsh', 'buffer', 'around', 'vsnip', 'file', 'dictionary'],
       \ })
 " include @ for snippet
 call ddc#custom#patch_filetype(
