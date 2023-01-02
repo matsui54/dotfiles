@@ -64,6 +64,8 @@ endfunction
 
 command! DduPreview call <SID>ddu_rg_preview()
 command! DeinUpdate call <SID>open_preview_ddu([{'name': 'dein_update'}])
+command! LspDocumentSymbols call <SID>open_preview_ddu([{'name': 'nvim_lsp_document_symbol'}])
+" command! LspDocumentSymbols call ddu#start({'sources': [{'name': 'nvim_lsp_document_symbol'}], 'ui': 'filer'})
 
 function! s:ddu_rg_preview() abort
   let input = input("Pattern: ")
@@ -253,6 +255,9 @@ function! Ddu_setup() abort
     \ <Cmd>call ddu#ui#ff#do_action('itemAction', {'name': 'delete'})<CR>
     nnoremap <buffer><silent> e
     \ <Cmd>call ddu#ui#ff#do_action('itemAction', {'name': 'edit'})<CR>
+    nnoremap <buffer> o
+    \ <Cmd>call ddu#ui#ff#do_action('expandItem',
+    \ {'mode': 'toggle'})<CR>
 
     if b:ddu_ui_name ==# 'help'
       nnoremap <buffer><silent> E
