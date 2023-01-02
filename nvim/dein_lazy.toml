@@ -540,3 +540,7 @@ fern = '''
 [[plugins]]
 repo = "thinca/vim-partedit"
 on_cmd = 'Partedit'
+
+[[plugins]]
+repo = "folke/neodev.nvim"
+on_source = 'nvim-lspconfig'
