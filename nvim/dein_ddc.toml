@@ -34,6 +34,10 @@ repo = 'Shougo/ddc-around'
 lazy = 0
 
 [[plugins]]
+repo = 'Shougo/ddc-source-input'
+lazy = 0
+
+[[plugins]]
 repo = 'Shougo/ddc-zsh'
 lazy = 0
 

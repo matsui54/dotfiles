@@ -43,39 +43,9 @@ augroup MyDdcCmdLine
   autocmd CmdlineEnter * call CommandlinePre()
   autocmd CmdlineLeave * call CommandlinePost()
 augroup END
-
 function! CommandlinePre() abort
   call denops#plugin#wait('ddc')
-
-  " Overwrite sources
-  let current = ddc#custom#get_current()
-  if exists('s:in_cmdline') && s:in_cmdline
-    return
-  endif
-
-  let s:prev_buffer_sources = current
-  if getcmdtype() == '/'
-    call ddc#custom#patch_buffer('cmdlineSources', ['buffer', 'cmdline-history'])
-  elseif getcmdtype() == '@'
-    call ddc#custom#patch_buffer('cmdlineSources', ['buffer'])
-  else
-    call ddc#custom#patch_buffer('cmdlineSources', ['cmdline', 'buffer', 'zsh'])
-    " call ddc#custom#patch_buffer('sourceOptions', {
-    "      \ 'zsh': {
-    "      \   'forceCompletionPattern': "!.*", 
-    "      \   'minAutoCompleteLength': 10000
-    "      \ },
-    "      \ })
-  endif
-  let s:in_cmdline = v:true
-
-  " Enable command line completion
   call ddc#enable_cmdline_completion()
-endfunction
-function! CommandlinePost() abort
-  " Restore sources
-  call ddc#custom#set_buffer(s:prev_buffer_sources)
-  let s:in_cmdline = v:false
 endfunction
 
 if has('nvim')
@@ -84,6 +54,12 @@ else
   call ddc#custom#patch_global('sources', ['vim-lsp', 'buffer', 'around', 'vsnip', 'dictionary'])
 endif
 call ddc#custom#patch_global('postFilters', ['postfilter_score'])
+call ddc#custom#patch_global('cmdlineSources', {
+      \   ':': ['cmdline', 'buffer'],
+      \   '@': ['buffer', 'input'],
+      \   '=': ['input'],
+      \   '/': [],
+      \ })
 call ddc#custom#patch_global('sourceOptions', {
       \ '_': {
       \   'matchers': ['matcher_fuzzy'],
