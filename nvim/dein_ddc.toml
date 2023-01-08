@@ -3,7 +3,53 @@ repo = 'Shougo/ddc.vim'
 depends = ['context_filetype.vim', 'pum.vim']
 on_event = ['InsertEnter', 'CmdlineEnter']
 hook_source = '''
-  source ~/dotfiles/nvim/plugins/ddc.rc.vim
+  function s:confirm()
+    let info = pum#complete_info()
+    let index = info.selected
+    if skkeleton#is_enabled()
+      if info.selected == -1
+        call pum#map#insert_relative(1)
+      endif
+      return "\<Ignore>"
+    endif
+    if info.selected == -1
+      call pum#map#select_relative(+1)
+      let index = 0
+    endif
+    call pum#map#confirm()
+    let complete_item = info.items[index]
+    " wait for the candidate is inserted
+    call timer_start(0, { -> vsnip_integ#on_complete_done(complete_item) })
+    return "\<Ignore>"
+  endfunction
+  inoremap <silent><expr> <Tab>
+        \ pum#visible() ? <SID>confirm() :
+        \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
+        \ '<TAB>' : ddc#map#manual_complete()
+  inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
+  inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
+  inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+  inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
+  inoremap <expr> <C-x><C-f> ddc#map#manual_complete(['file'])
+
+  cnoremap <silent><expr> <TAB>
+        \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
+        \ ddc#map#manual_complete()
+  cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
+  cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+
+  " command line completion
+  augroup MyDdcCmdLine
+    autocmd!
+    autocmd CmdlineEnter * call ddc#enable_cmdline_completion()
+  augroup END
+
+  call pum#set_option('setline_insert', v:false)
+  call pum#set_option('scrollbar_char', '')
+
+  call denops#request('vimrc', 'ddc_setup', [])
+
+  call ddc#enable()
 '''
 
 [[plugins]]
@@ -184,4 +230,22 @@ hook_add = '''
     endif
   endfunction
   autocmd User skkeleton-initialize-pre call s:skkeleton_init()
+  augroup MyDdcSkkeleton
+    autocmd!
+    autocmd User skkeleton-enable-pre call s:skkeleton_pre()
+    autocmd User skkeleton-disable-pre call s:skkeleton_post()
+  augroup END
+  function! s:skkeleton_pre() abort
+    " Overwrite sources
+    inoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
+    inoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
+    let s:prev_buffer_config = ddc#custom#get_buffer()
+    call ddc#custom#patch_buffer('sources', ['skkeleton'])
+  endfunction
+  function! s:skkeleton_post() abort
+    " Restore sources
+    inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
+    inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
+    call ddc#custom#set_buffer(s:prev_buffer_config)
+  endfunction
 '''
