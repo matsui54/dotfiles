@@ -40,13 +40,8 @@ call ddc#custom#patch_global('autoCompleteEvents',
       \ ['InsertEnter', 'TextChangedI', 'TextChangedP', 'CmdlineChanged'])
 augroup MyDdcCmdLine
   autocmd!
-  autocmd CmdlineEnter * call CommandlinePre()
-  autocmd CmdlineLeave * call CommandlinePost()
+  autocmd CmdlineEnter * call ddc#enable_cmdline_completion()
 augroup END
-function! CommandlinePre() abort
-  call denops#plugin#wait('ddc')
-  call ddc#enable_cmdline_completion()
-endfunction
 
 if has('nvim')
   call ddc#custom#patch_global('sources', ['buffer', 'around', 'vsnip', 'dictionary'])
