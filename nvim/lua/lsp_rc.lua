@@ -12,7 +12,7 @@ local on_attach = function(client)
     { 'n', '<Leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>' },
     { 'n', 'gl', '<cmd>lua vim.lsp.buf.document_highlight()<CR>' },
     { 'n', 'gm', '<cmd>lua vim.diagnostic.open_float()<CR>' },
-    { 'n', 'g0', '<cmd>Denite lsp/document_symbol -auto-action=highlight<CR>' },
+    -- { 'n', 'g0', '<cmd>Denite lsp/document_symbol -auto-action=highlight<CR>' },
     { 'n', 'gr', '<cmd>Denite lsp/references -auto-action=preview_bat<CR>' },
   }
   for _, map in ipairs(maps) do
@@ -31,6 +31,7 @@ local on_attach = function(client)
 
   local triggers = client.server_capabilities.completionProvider.triggerCharacters
   local escaped = {}
+  local forceCompletionPattern = "\\.|:\\s*|->"
   if triggers and #triggers > 0 then
     -- convert lsp triggerCharacters to js regexp
     for _, c in pairs(triggers) do
@@ -40,23 +41,18 @@ local on_attach = function(client)
       else table.insert(escaped, c)
       end
     end
-    -- override ddc setting of lsp buffer
-    vim.fn['ddc#custom#patch_buffer']({
-      sourceOptions = {
-        ["nvim-lsp"] = {
-          forceCompletionPattern = table.concat(escaped, '|'),
-        }
-      },
-    })
+    forceCompletionPattern = table.concat(escaped, '|')
   end
   -- add nvim-lsp source for ddc.vim
-  local sources = vim.fn['ddc#custom#get_current']()['sources']
-  if not vim.tbl_contains(sources, 'nvim-lsp') then
-    table.insert(sources, 1, 'nvim-lsp')
-    vim.fn['ddc#custom#patch_buffer']({
-      sources = sources,
-    })
-  end
+  -- override ddc setting of lsp buffer
+  vim.fn['ddc#custom#patch_buffer']({
+    sourceOptions = {
+      ["nvim-lsp"] = {
+        minAutoCompleteLength = 1,
+        forceCompletionPattern = forceCompletionPattern,
+      }
+    },
+  })
 end
 
 require("neodev").setup()
@@ -125,17 +121,7 @@ nvim_lsp.sumneko_lua.setup {
     },
   }
 }
-nvim_lsp.rust_analyzer.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  -- settings = {
-  --   ['rust-analyzer'] = {
-  --     cargo = {
-  --       features = {'exercises'},
-  --     },
-  --   },
-  -- }
-}
+nvim_lsp.rust_analyzer.setup { on_attach = on_attach, capabilities = capabilities }
 nvim_lsp.tsserver.setup {
   on_attach = on_attach,
   capabilities = capabilities,

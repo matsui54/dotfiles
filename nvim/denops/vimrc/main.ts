@@ -21,7 +21,7 @@ export function main(denops: Denops) {
         await patchGlobal({
           "ui": "pum",
           "sources": (denops.meta.host == "nvim"
-            ? ["buffer", "around", "vsnip", "dictionary"]
+            ? ["nvim-lsp", "buffer", "around", "vsnip", "dictionary"]
             : ["vim-lsp", "buffer", "around", "vsnip", "dictionary"]),
           "cmdlineSources": {
             ":": ["cmdline", "buffer"],
@@ -69,8 +69,7 @@ export function main(denops: Denops) {
             "nvim-lsp": {
               "mark": "[lsp]",
               "dup": true,
-              "forceCompletionPattern": "\\.|:\\s*|->",
-              "minAutoCompleteLength": 1,
+              "minAutoCompleteLength": 10000,
             },
             "vim-lsp": {
               "mark": "[lsp]",

@@ -1,55 +1,59 @@
 [[plugins]]
 repo = 'Shougo/ddc.vim'
-depends = ['context_filetype.vim', 'pum.vim']
-on_event = ['InsertEnter', 'CmdlineEnter']
-hook_source = '''
-  function s:confirm()
-    let info = pum#complete_info()
-    let index = info.selected
-    if skkeleton#is_enabled()
-      if info.selected == -1
-        call pum#map#insert_relative(1)
-      endif
-      return "\<Ignore>"
-    endif
-    if info.selected == -1
-      call pum#map#select_relative(+1)
-      let index = 0
-    endif
-    call pum#map#confirm()
-    let complete_item = info.items[index]
-    " wait for the candidate is inserted
-    call timer_start(0, { -> vsnip_integ#on_complete_done(complete_item) })
-    return "\<Ignore>"
-  endfunction
-  inoremap <silent><expr> <Tab>
-        \ pum#visible() ? <SID>confirm() :
-        \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
-        \ '<TAB>' : ddc#map#manual_complete()
-  inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
-  inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
-  inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
-  inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
-  inoremap <expr> <C-x><C-f> ddc#map#manual_complete(['file'])
-
-  cnoremap <silent><expr> <TAB>
-        \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
-        \ ddc#map#manual_complete()
-  cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
-  cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
-
-  " command line completion
+hook_add = '''
+  augroup StartDdc
+    autocmd!
+    autocmd InsertEnter,CmdlineEnter * ++once call s:ddc_setup()
+  augroup END
   augroup MyDdcCmdLine
     autocmd!
     autocmd CmdlineEnter * call ddc#enable_cmdline_completion()
   augroup END
 
-  call pum#set_option('setline_insert', v:false)
-  call pum#set_option('scrollbar_char', '')
+  function! s:ddc_setup() abort
+    autocmd! StartDdc
+    function s:confirm()
+      let info = pum#complete_info()
+      let index = info.selected
+      if skkeleton#is_enabled()
+        if info.selected == -1
+          call pum#map#insert_relative(1)
+        endif
+        return "\<Ignore>"
+      endif
+      if info.selected == -1
+        call pum#map#select_relative(+1)
+        let index = 0
+      endif
+      call pum#map#confirm()
+      let complete_item = info.items[index]
+      " wait for the candidate is inserted
+      call timer_start(0, { -> vsnip_integ#on_complete_done(complete_item) })
+      return "\<Ignore>"
+    endfunction
+    inoremap <silent><expr> <Tab>
+          \ pum#visible() ? <SID>confirm() :
+          \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
+          \ '<TAB>' : ddc#map#manual_complete()
+    inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
+    inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
+    inoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
+    inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
+    inoremap <C-x><C-f> <Cmd>call ddc#map#manual_complete(['file'])<CR>
 
-  call denops#request('vimrc', 'ddc_setup', [])
+    cnoremap <silent><expr> <TAB>
+          \ pum#visible() ? '<Cmd>call pum#map#insert_relative(+1)<CR>' :
+          \ ddc#map#manual_complete()
+    cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
+    cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
 
-  call ddc#enable()
+    call pum#set_option('setline_insert', v:false)
+    call pum#set_option('scrollbar_char', '')
+
+    call denops#request('vimrc', 'ddc_setup', [])
+
+    call ddc#enable()
+  endfunction
 '''
 
 [[plugins]]
@@ -57,87 +61,72 @@ repo = 'Shougo/pum.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc-ui-pum'
-on_source = 'ddc.vim'
 
 [[plugins]]
 repo = 'Shougo/context_filetype.vim'
 on_event = 'BufRead'
+lazy = 1
 
 [[plugins]]
 repo = 'Shougo/neco-vim'
-on_source = 'ddc.vim'
+on_ft = ['vim', 'toml']
+lazy = 1
 
 [[plugins]]
 repo = 'Shougo/ddc-cmdline'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-cmdline-history'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-around'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-source-input'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-zsh'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-matcher_head'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-converter_remove_overlap'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-sorter_rank'
-lazy = 0
 
 [[plugins]]
 repo = 'matsui54/ddc-dictionary'
-lazy = 0
 
 [[plugins]]
 repo = 'tani/ddc-fuzzy'
-lazy = 0
 
 [[plugins]]
 repo = 'Shougo/ddc-nvim-lsp'
-lazy = 0
 
 [[plugins]]
 repo = 'matsui54/ddc-buffer'
-lazy = 0
 
 [[plugins]]
 repo = 'matsui54/ddc-ultisnips'
-lazy = 0
 
 [[plugins]]
 repo = 'matsui54/ddc-filter_editdistance'
-lazy = 0
 
 [[plugins]]
 repo = "matsui54/ddc-postfilter_score"
-lazy = 0
 
 [[plugins]]
 repo = 'matsui54/ddc-converter_truncate'
-lazy = 0
 
 [[plugins]]
 repo = "gamoutatsumi/ddc-emoji"
-lazy = 0
 
 [[plugins]]
 repo = 'matsui54/denops-popup-preview.vim'
-on_source = 'ddc.vim'
+lazy = 1
+on_event = 'InsertEnter'
 hook_source = '''
 	let g:popup_preview_config = {
 	      \ 'delay': 30,
@@ -151,7 +140,8 @@ hook_source = '''
 
 [[plugins]]
 repo = 'matsui54/denops-signature_help'
-on_source = 'ddc.vim'
+lazy = 1
+on_event = 'InsertEnter'
 hook_source = '''
 	let g:signature_help_config = {
         \ 'contentsStyle': 'labels',
@@ -164,21 +154,21 @@ hook_source = '''
 
 [[plugins]]
 repo = 'ray-x/lsp_signature.nvim'
+lazy = 1
 if = "has('nvim')"
 on_source = 'nvim-lspconfig'
 
 [[plugins]]
 repo = 'shun/ddc-vim-lsp'
-lazy = 0
 
 [[plugins]]
 repo = 'LumaKernel/ddc-file'
-lazy = 0
 
 [[plugins]]
 repo = 'hrsh7th/vim-vsnip'
+lazy = 1
 depends = ['vim-vsnip-integ', 'friendly-snippets']
-on_source = 'ddc.vim'
+on_event = 'InsertEnter'
 hook_add = '''
 " Expand
 imap <expr> <C-l> vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-l>'
@@ -194,13 +184,15 @@ let g:vsnip_snippet_dir = expand('~/dotfiles/nvim/snippets')
 
 [[plugins]]
 repo = 'hrsh7th/vim-vsnip-integ'
+lazy = 1
 
 [[plugins]]
 repo = 'rafamadriz/friendly-snippets'
+lazy = 1
 
 [[plugins]]
 repo = 'vim-skk/denops-skkeleton.vim'
-on_source = 'ddc.vim'
+lazy = 1
 on_map = {ic = '<plug>(skkeleton-'}
 hook_add = '''
   imap <C-j> <Plug>(skkeleton-toggle)
