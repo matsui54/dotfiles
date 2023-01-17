@@ -81,7 +81,7 @@ export function main(denops: Denops) {
             "file": {
               "mark": "[F]",
               "isVolatile": true,
-              "forceCompletionPattern": "\S/\S*",
+              "forceCompletionPattern": "\\S\/\\S*",
               "minAutoCompleteLength": 1,
             },
             "latex-symbols": {
