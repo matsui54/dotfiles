@@ -139,6 +139,9 @@ function! Ddu_setup() abort
       \     'dein': {
       \       'defaultAction': 'cd',
       \     },
+      \     'line': {
+      \       'matchers': ['matcher_kensaku'],
+      \     },
       \     'highlight': {
       \       'defaultAction': 'edit',
       \     },
@@ -196,6 +199,9 @@ function! Ddu_setup() abort
       \   'filterParams': {
       \     'matcher_fzy': {
       \       'hlGroup': 'Special',
+      \     },
+      \     'matcher_kensaku': {
+      \       'highlightMatched': 'Search',
       \     },
       \   },
       \   'sourceParams': {

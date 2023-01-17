@@ -1,8 +1,9 @@
 function! vimrc#is_wsl() abort
-  if !exists('g:vimrc_is_wsl')
-    let g:vimrc_is_wsl = isdirectory('/mnt/c') && executable('/mnt/c/Windows/System32/cmd.exe')
+  if !exists('s:is_wsl')
+    let s:is_wsl = filereadable('/proc/version') &&
+    \ get(readfile('/proc/version', 'b', 1), 0, '') =~? 'microsoft'
   endif
-  return g:vimrc_is_wsl
+  return s:is_wsl
 endfunction
 
 function! vimrc#denops_log(arg) abort
@@ -10,10 +11,10 @@ function! vimrc#denops_log(arg) abort
 endfunction
 
 function! vimrc#is_windows() abort
-  if !exists('g:vimrc_is_windows')
-    let g:vimrc_is_windows = has('win32') || has('win64')
+  if !exists('s:is_windows')
+    let s:is_windows = has('win32') || has('win64')
   endif
-  return g:vimrc_is_windows
+  return s:is_windows
 endfunction
 
 function! vimrc#on_filetype() abort
