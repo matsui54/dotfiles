@@ -369,6 +369,7 @@ function! Ddu_setup() abort
     \ ddu#ui#filer#is_tree() ?
     \ "<Cmd>call ddu#ui#filer#do_action('itemAction', {'name': 'narrow'})<CR>" :
     \ "<Cmd>call ddu#ui#filer#do_action('itemAction', {'name': 'open'})<CR>"
+  endfunction
 
     function! ToggleHidden(name)
       let current = ddu#custom#get_current(b:ddu_ui_name)
