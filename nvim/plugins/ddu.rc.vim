@@ -7,8 +7,9 @@ nnoremap <Space>s <cmd>Ddu directory_rec<CR>
 nnoremap <Space>n <cmd>Ddu ghq<CR>
 nnoremap <Space>b <cmd>Ddu buffer<CR>
 nnoremap <Space>r <cmd>Ddu -resume<CR>
-nnoremap <Space>g <cmd>DduPreview<CR>
+nnoremap <Space>g <cmd>DduRgLive<CR>
 nnoremap <Space>m <cmd>Ddu man<CR>
+nnoremap g0 <cmd>LspDocumentSymbols<CR>
 " nnoremap <silent> <C-f> <cmd>DduFiler<CR>
 
 cnoremap <expr><silent> <C-t>
@@ -62,7 +63,7 @@ function! s:ddu_rg_live() abort
         \ })
 endfunction
 
-command! DduPreview call <SID>ddu_rg_preview()
+command! DduRgPreview call <SID>ddu_rg_preview()
 command! DeinUpdate call <SID>open_preview_ddu([{'name': 'dein_update'}])
 command! LspDocumentSymbols call <SID>open_preview_ddu([{'name': 'nvim_lsp_document_symbol'}])
 " command! LspDocumentSymbols call ddu#start({'sources': [{'name': 'nvim_lsp_document_symbol'}], 'ui': 'filer'})
@@ -258,6 +259,9 @@ function! Ddu_setup() abort
     nnoremap <buffer> o
     \ <Cmd>call ddu#ui#ff#do_action('expandItem',
     \ {'mode': 'toggle'})<CR>
+    nnoremap <buffer> O
+    \ <Cmd>call ddu#ui#ff#do_action('expandItem',
+    \ {'maxLevel': -1})<CR>
 
     if b:ddu_ui_name ==# 'help'
       nnoremap <buffer><silent> E
@@ -359,7 +363,6 @@ function! Ddu_setup() abort
     \ ddu#ui#filer#is_tree() ?
     \ "<Cmd>call ddu#ui#filer#do_action('itemAction', {'name': 'narrow'})<CR>" :
     \ "<Cmd>call ddu#ui#filer#do_action('itemAction', {'name': 'open'})<CR>"
-      endfunction
 
     function! ToggleHidden(name)
       let current = ddu#custom#get_current(b:ddu_ui_name)
