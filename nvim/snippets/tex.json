@@ -1,11 +1,19 @@
 {
-  "zu": {
+  "図": {
     "prefix": [
       "zu",
       "ず"
     ],
     "body": "図\\ref{$1}",
-    "description": "picture"
+    "description": "picture ref"
+  },
+  "表": {
+    "prefix": [
+      "hyou",
+      "表"
+    ],
+    "body": " 表\\ref{$1} ",
+    "description": "table ref"
   },
   "siki": {
     "prefix": "siki",
