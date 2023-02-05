@@ -49,7 +49,8 @@ endif
 
 " end dein settings---------------------------------------
 
-filetype on
+filetype plugin indent on
+syntax enable
 
 if filereadable(expand('~/.vim/secret.vim'))
   source ~/.vim/secret.vim
