@@ -12,6 +12,7 @@ hook_add = '''
 
   function! s:ddc_setup() abort
     autocmd! StartDdc
+    call dein#source(["vim-vsnip"])
     function s:confirm()
       let info = pum#complete_info()
       let index = info.selected
