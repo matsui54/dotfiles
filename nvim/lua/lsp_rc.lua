@@ -109,7 +109,7 @@ nvim_lsp.denols.setup {
   },
   autostart = not (is_node_repo),
 }
-nvim_lsp.sumneko_lua.setup {
+nvim_lsp.lua_ls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
