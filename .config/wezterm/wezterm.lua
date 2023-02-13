@@ -21,8 +21,8 @@ local function merge_tables(t1, t2)
 end
 
 local config = {
-  font = wezterm.font("Cica"),
-  font_size = 14.0,
+  font = wezterm.font("HackGenConsoleNF"),
+  font_size = 13.0,
   color_scheme = "Terminal Basic",
   use_ime = true,
   window_decorations = "RESIZE",
