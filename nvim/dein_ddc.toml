@@ -51,6 +51,7 @@ hook_add = '''
     call pum#set_option('setline_insert', v:false)
     call pum#set_option('scrollbar_char', '')
 
+    " ~/dotfiles/nvim/denops/vimrc/plugins/ddc.ts
     call denops#request('vimrc', 'ddc_setup', [])
 
     call ddc#enable()
