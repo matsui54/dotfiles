@@ -1,0 +1,8 @@
+[user]
+	name = matsui54
+	email = haru.matu9168@gmail.com
+[ghq]
+  root = ~/.cache/dein/repos/
+  root = ~/ghq/
+[core]
+	quotepath = false
