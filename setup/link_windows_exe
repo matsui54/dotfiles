@@ -1,0 +1,21 @@
+#!/bin/bash -eu
+
+if [[ ! -d ~/.local/bin ]]; then
+  mkdir -v ~/.local/bin
+fi
+
+if [[ ! -e ~/.local/bin/explorer.exe ]]; then
+  ln -sv /mnt/c/Windows/explorer.exe ~/.local/bin/explorer.exe
+fi
+
+if [[ ! -e ~/.local/bin/cmd.exe ]]; then
+  ln -sv /mnt/c/Windows/System32/cmd.exe ~/.local/bin/cmd.exe
+fi
+
+if [[ ! -e ~/.local/bin/clip.exe ]]; then
+  ln -sv /mnt/c/Windows/System32/clip.exe ~/.local/bin/clip.exe
+fi
+
+if [[ ! -e ~/.local/bin/pwsh.exe ]]; then
+  ln -sv "/mnt/c/Program Files/PowerShell/7/pwsh.exe" ~/.local/bin/pwsh.exe
+fi
