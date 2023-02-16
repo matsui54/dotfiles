@@ -124,15 +124,16 @@ if [ -d ~/.zsh/zsh-syntax-highlighting ]; then
   source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-if [ -f ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme ]; then
-  source ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme
-fi
-
 export PYENV_ROOT="$HOME/.local/pyenv"
 if [ -d $PYENV_ROOT ]; then
   command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
   eval "$(pyenv init -)"
 fi
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+if [ -f /usr/share/zsh/scripts/git-prompt.zsh ]; then
+  source /usr/share/zsh/scripts/git-prompt.zsh
+elif [ -f ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme ]; then
+  source ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme
+  # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+fi
