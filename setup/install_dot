@@ -1,0 +1,17 @@
+#!/bin/bash -eu
+
+echo "install files in $Dotdir"
+
+for f in .vimrc .gitconfig .latexmkrc .zshenv .zshrc
+do
+  if [[ ! -e $HOME/$f ]]; then
+    ln -sv "$Dotdir/$f" "$HOME/$f"
+  fi
+done
+
+if [[ ! -d $HOME/.config/nvim ]]; then
+  if [[ ! -d $HOME/.config ]]; then
+    mkdir "$HOME/.config"
+  fi
+  ln -sv "$Dotdir/nvim" "$HOME/.config/nvim"
+fi
