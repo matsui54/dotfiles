@@ -6,3 +6,6 @@
   root = ~/ghq/
 [core]
 	quotepath = false
+	editor = nvim
+[pull]
+	rebase = false
