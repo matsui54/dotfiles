@@ -1,0 +1,48 @@
+#!/bin/bash
+
+set -eu
+
+if [[ ! -x $(which paru) ]]; then
+  if [[ ! -d $HOME/.local ]]; then
+    mkdir $HOME/.local
+  fi
+  sudo pacman -S --needed base-devel git
+  git clone https://aur.archlinux.org/paru.git $HOME/.local/paru
+  pushd $HOME/.local/paru
+    makepkg -si
+  popd
+fi
+
+paru -S --needed zsh ripgrep bat go zip deno github-cli git-prompt.zsh \
+  zsh-syntax-highlighting words wget nodejs ghq neovim-nightly-bin fzf fd \
+  bottom htop dust duf npm man-db unzip openssh
+
+if [[ ! -d $HOME/dotfiles ]]; then
+  git clone https://github.com/matsui54/dotfiles.git ~/dotfiles
+fi
+Dotdir=$HOME/dotfiles $HOME/dotfiles/setup/install_dot
+Dotdir=$HOME/dotfiles $HOME/dotfiles/setup/link_windows_exe
+
+if [[ -x "/usr/bin/zsh" && $SHELL != "/usr/bin/zsh" ]]; then
+  echo "change shell to zsh"
+  chsh -s /usr/bin/zsh
+fi
+
+echo "check gh auth status"
+set +e
+gh auth status
+if [[ $? -ne 0 ]]; then
+  set -e
+  if [[ ! -f ~/.ssh/id_ed25519 ]]; then
+    ssh-keygen -t ed25519 -C "haru.matu9168@gmail.com"
+    eval "$(ssh-agent -s)"
+    ssh-add ~/.ssh/id_ed25519
+  fi
+  gh auth login
+else
+  set -e
+fi
+
+pushd $HOME/dotfiles
+  git remote set-url origin git@github.com:matsui54/dotfiles.git
+popd

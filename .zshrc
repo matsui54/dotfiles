@@ -120,7 +120,9 @@ elif [ -d /usr/share/fzf ]; then
   source /usr/share/fzf/key-bindings.zsh
 fi
 
-if [ -d ~/.zsh/zsh-syntax-highlighting ]; then
+if [ -d /usr/share/zsh/plugins/zsh-syntax-highlighting ]; then
+  source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+elif [ -d ~/.zsh/zsh-syntax-highlighting ]; then
   source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
