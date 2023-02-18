@@ -15,7 +15,7 @@ fi
 
 paru -S --needed zsh ripgrep bat go zip deno github-cli git-prompt.zsh \
   zsh-syntax-highlighting words wget nodejs ghq neovim-nightly-bin fzf fd \
-  bottom htop dust duf npm man-db unzip openssh
+  bottom htop dust duf npm man-db unzip openssh pyenv skk-jisyo
 
 if [[ ! -d $HOME/dotfiles ]]; then
   git clone https://github.com/matsui54/dotfiles.git ~/dotfiles
@@ -46,3 +46,10 @@ fi
 pushd $HOME/dotfiles
   git remote set-url origin git@github.com:matsui54/dotfiles.git
 popd
+
+if [[ $(pyenv version-name) == "system" ]]; then
+  paru -S --needed base-devel openssl zlib xz tk
+  set +e
+  pyenv install 3 && pyenv global $(pyenv latest 3)
+  set -e
+fi
