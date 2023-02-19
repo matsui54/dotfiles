@@ -15,8 +15,9 @@ fi
 
 paru -S --needed zsh ripgrep bat go zip deno github-cli git-prompt.zsh \
   zsh-syntax-highlighting words wget nodejs ghq neovim-nightly-bin fzf fd \
-  bottom htop dust duf npm man-db unzip openssh pyenv skk-jisyo \
-  poppler pandoc-cli pandoc-crossref texlive-langjapanese texlive-most
+  bottom htop dust duf npm man-db unzip openssh pyenv skk-jisyo words \
+  poppler pandoc-cli pandoc-crossref \
+  texlive-langjapanese texlive-most biber
 
 if [[ ! -d $HOME/dotfiles ]]; then
   git clone https://github.com/matsui54/dotfiles.git ~/dotfiles
