@@ -13,9 +13,11 @@ if [[ ! -x $(which paru) ]]; then
   popd
 fi
 
-paru -S --needed zsh ripgrep bat go zip deno github-cli git-prompt.zsh \
-  zsh-syntax-highlighting words wget nodejs ghq neovim-nightly-bin fzf fd \
-  bottom htop dust duf npm man-db unzip openssh pyenv skk-jisyo words \
+paru -S --needed zsh zsh-syntax-highlighting git-prompt.zsh \
+  ripgrep bat fzf fd github-cli bottom htop dust duf \
+  nodejs npm go zip deno zig rust julia \
+  wget ghq man-db unzip openssh pyenv \
+  neovim-nightly-bin words skk-jisyo words \
   poppler pandoc-cli pandoc-crossref \
   texlive-langjapanese texlive-most biber
 
