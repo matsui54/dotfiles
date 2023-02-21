@@ -14,7 +14,7 @@ if [[ ! -x $(which paru) ]]; then
 fi
 
 paru -S --needed zsh zsh-syntax-highlighting git-prompt.zsh \
-  ripgrep bat fzf fd github-cli bottom htop dust duf \
+  ripgrep bat fzf fd github-cli bottom htop dust duf rsync \
   nodejs npm go zip deno zig rust julia \
   wget ghq man-db unzip openssh pyenv \
   neovim-nightly-bin words skk-jisyo words \
