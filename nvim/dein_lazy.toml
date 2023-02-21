@@ -254,8 +254,7 @@ lua_source = '''
     },
   })
 '''
-[plugins.ftplugin]
-markdown = '''
+hook_add = '''
   nnoremap \f <cmd>lua vim.lsp.buf.format({ async = true })<CR>
   nnoremap gm <cmd>lua vim.diagnostic.open_float()<CR>
 '''

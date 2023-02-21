@@ -57,3 +57,16 @@ if [[ $(pyenv version-name) == "system" ]]; then
   pyenv install 3 && pyenv global $(pyenv latest 3)
   set -e
 fi
+
+set +e
+rg -q "appendWindowsPath = false" /etc/wsl.conf
+if [[ $? -ne 0 ]]; then
+  set -e
+  echo "Overwrite /etc/wsl.conf"
+  cat << EOF | sudo tee /etc/wsl.conf > /dev/null
+[interop]
+appendWindowsPath = false
+EOF
+else
+  set -e
+fi
