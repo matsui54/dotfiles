@@ -4,7 +4,7 @@ hook_add = '''
   nnoremap <Space>d <cmd>Ddu source<CR>
   nnoremap <Space>a <cmd>Ddu file_external<CR>
   nnoremap <Space>f <cmd>Ddu file_external -source-option-path=~/dotfiles<CR>
-  nnoremap <Space>h <cmd>Ddu help -name=help<CR>
+  nnoremap <Space>h <cmd>Ddu help<CR>
   nnoremap <Space>o <cmd>Ddu file_old<CR>
   nnoremap <Space>s <cmd>Ddu directory_rec<CR>
   nnoremap <Space>n <cmd>Ddu ghq<CR>
@@ -168,24 +168,15 @@ ddu-ff = '''
   \ <Cmd>call ddu#ui#ff#do_action('expandItem',
   \ {'maxLevel': -1})<CR>
 
-  if b:ddu_ui_name ==# 'help'
-    nnoremap <buffer><silent> E
-    \ <Cmd>call ddu#ui#ff#do_action('itemAction',
-    \ {'name': 'vsplit'})<CR>
-    nnoremap <buffer><silent> t
-    \ <Cmd>call ddu#ui#ff#do_action('itemAction',
-    \ {'name': 'tabopen'})<CR>
-  else
-    nnoremap <buffer><silent> E
-    \ <Cmd>call ddu#ui#ff#do_action('itemAction',
-    \ {'name': 'open', 'params': {'command': 'vsplit'}})<CR>
-    nnoremap <buffer><silent> t
-    \ <Cmd>call ddu#ui#ff#do_action('itemAction',
-    \ {'name': 'open', 'params': {'command': 'tabedit'}})<CR>
-    nnoremap <buffer><silent> S
-    \ <Cmd>call ddu#ui#ff#do_action('itemAction',
-    \ {'name': 'open', 'params': {'command': 'split'}})<CR>
-  endif
+  nnoremap <buffer><silent> E
+  \ <Cmd>call ddu#ui#ff#do_action('itemAction',
+  \ {'name': 'open', 'params': {'command': 'vsplit'}})<CR>
+  nnoremap <buffer><silent> t
+  \ <Cmd>call ddu#ui#ff#do_action('itemAction',
+  \ {'name': 'open', 'params': {'command': 'tabedit'}})<CR>
+  nnoremap <buffer><silent> S
+  \ <Cmd>call ddu#ui#ff#do_action('itemAction',
+  \ {'name': 'open', 'params': {'command': 'split'}})<CR>
 '''
 ddu-ff-filter = '''
   nnoremap <buffer><silent> q <cmd>quit<CR>

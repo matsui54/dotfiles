@@ -120,12 +120,10 @@ elif [ -d /usr/share/fzf ]; then
   source /usr/share/fzf/key-bindings.zsh
 fi
 
-if [ -d ~/.zsh/zsh-syntax-highlighting ]; then
+if [ -d /usr/share/zsh/plugins/zsh-syntax-highlighting ]; then
+  source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+elif [ -d ~/.zsh/zsh-syntax-highlighting ]; then
   source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
-
-if [ -f ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme ]; then
-  source ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme
 fi
 
 export PYENV_ROOT="$HOME/.local/pyenv"
@@ -134,5 +132,18 @@ if [ -d $PYENV_ROOT ]; then
   eval "$(pyenv init -)"
 fi
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+if [ -f /usr/share/zsh/scripts/git-prompt.zsh ]; then
+  source /usr/share/zsh/scripts/git-prompt.zsh
+  source /usr/share/git-prompt.zsh/examples/multiline.zsh
+  ZSH_THEME_GIT_PROMPT_BRANCH="%{$fg_bold[cyan]%} "
+  ZSH_THEME_GIT_PROMPT_UPSTREAM_PREFIX="%{$fg[yellow]%}  "
+  ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[red]%}x"
+  ZSH_THEME_GIT_PROMPT_STAGED="%{$fg[green]%}+"
+  ZSH_THEME_GIT_PROMPT_UNSTAGED="%{$fg[red]%}!"
+  ZSH_THEME_GIT_PROMPT_STASHED="%{$fg[blue]%}*"
+  ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg_bold[green]%}"
+elif [ -f ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme ]; then
+  source ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme
+  # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+fi
