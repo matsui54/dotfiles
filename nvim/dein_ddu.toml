@@ -54,7 +54,7 @@ hook_add = '''
           \ 'volatile': v:true,
           \ 'uiParams': {'ff': {
           \   'split': has('nvim') ? 'floating' : 'horizontal',
-          \   'autoAction': {'name': 'preview'},
+          \   'autoAction': {'name': 'preview', 'delay': 50},
           \   'filterSplitDirection': 'floating',
           \   'filterFloatingPosition': 'top',
           \   'previewFloating': v:true,
@@ -101,7 +101,7 @@ hook_add = '''
           \   'filterFloatingPosition': 'top',
           \   'previewFloating': v:true,
           \   'previewHeight': win_height,
-          \   'previewVertical': v:true,
+          \   'previewSplit': "vertical",
           \   'previewWidth': win_width,
           \   'ignoreEmpty': v:true,
           \   'autoResize': v:false,
@@ -188,8 +188,8 @@ ddu-ff-filter = '''
 repo = 'Shougo/ddu-ui-filer'
 [plugins.ftplugin]
 ddu-filer = '''
-  nnoremap <buffer> <Space>
-  \ <Cmd>call ddu#ui#filer#do_action('toggleSelectItem')<CR>
+  nnoremap <buffer> ,
+  \ <Cmd>call ddu#ui#filer#do_action('toggleSelectItem')<CR>j
   nnoremap <buffer> *
   \ <Cmd>call ddu#ui#filer#do_action('toggleAllItems')<CR>
   nnoremap <buffer> a
