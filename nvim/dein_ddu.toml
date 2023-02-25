@@ -1,24 +1,6 @@
 [[plugins]]
 repo = 'Shougo/ddu.vim'
 hook_add = '''
-  nnoremap <Space>d <cmd>Ddu source<CR>
-  nnoremap <Space>a <cmd>Ddu file_external<CR>
-  nnoremap <Space>f <cmd>Ddu file_external -source-option-path=~/dotfiles<CR>
-  nnoremap <Space>h <cmd>Ddu help<CR>
-  nnoremap <Space>o <cmd>Ddu file_old<CR>
-  nnoremap <Space>s <cmd>Ddu directory_rec<CR>
-  nnoremap <Space>n <cmd>Ddu ghq<CR>
-  nnoremap <Space>b <cmd>Ddu buffer<CR>
-  nnoremap <Space>r <cmd>Ddu -resume<CR>
-  nnoremap <Space>g <cmd>DduRgLive<CR>
-  nnoremap <Space>m <cmd>Ddu man<CR>
-  nnoremap g0 <cmd>LspDocumentSymbols<CR>
-  " nnoremap <silent> <C-f> <cmd>DduFiler<CR>
-
-  cnoremap <expr><silent> <C-t>
-      \ "<C-u><ESC><cmd>Ddu command_history -input='" .
-      \ getcmdline() . "'<CR>"
-
   augroup StartDdu
     autocmd!
     " ~/dotfiles/nvim/denops/vimrc/plugins/ddu.ts
@@ -110,26 +92,6 @@ hook_add = '''
           \   'winWidth': win_width,
           \   'winHeight': win_height,
           \ }},
-          \ })
-  endfunction
-
-  command! DduFiler call <SID>ddu_filer()
-  function! s:ddu_filer() abort
-    call ddu#start({
-          \   'ui': 'filer',
-          \   'name': 'filer',
-          \   'resume': v:true,
-          \   'sources': [{
-          \     'name': 'file', 
-          \     'options': {
-          \       'columns': ["filename"],
-          \     },
-          \   }],
-          \   'actionOptions': {
-          \     'narrow': {
-          \       'quit': v:false,
-          \     },
-          \   },
           \ })
   endfunction
 '''
