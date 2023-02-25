@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+path=$(wslpath "$2")
+nvim --headless -c "VimtexInverseSearch $1 $path"
