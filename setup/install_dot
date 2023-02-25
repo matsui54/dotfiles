@@ -15,3 +15,6 @@ if [[ ! -d $HOME/.config/nvim ]]; then
   fi
   ln -sv "$Dotdir/nvim" "$HOME/.config/nvim"
 fi
+
+LocalBin=$HOME/.local/bin
+[ -e $LocalBin/xdg-open ] || ln -sv $Dotdir/scripts/xdg-open $LocalBin/xdg-open

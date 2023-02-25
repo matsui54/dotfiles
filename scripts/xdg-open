@@ -21,7 +21,7 @@ if not parsed.scheme and not parsed.netloc:
     ).stdout.strip()
     path = "file:" + wslpath
 
-subprocess.Popen(
+subprocess.run(
     [
         "/mnt/c/Windows/System32/rundll32.exe",
         "url.dll,FileProtocolHandler",

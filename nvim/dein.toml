@@ -53,6 +53,11 @@ repo = 'lervag/vimtex'
 hook_add = '''
   let g:vimtex_syntax_conceal_disable = 1
   let g:vimtex_quickfix_ignore_filters=["Package caption Warning"]
+  let g:vimtex_compiler_latexmk = {
+      \ 'options' : [
+      \   '-shell-escape',
+      \ ],
+      \}
   if executable('SumatraPDF')
     let g:vimtex_view_general_viewer = 'SumatraPDF'
     let g:vimtex_view_general_options
