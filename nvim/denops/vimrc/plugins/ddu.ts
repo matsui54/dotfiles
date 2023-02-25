@@ -4,10 +4,13 @@ import {
   map,
   MapOptions,
 } from "https://deno.land/x/denops_std@v4.0.0/mapping/mod.ts";
-// import * as op from "https://deno.land/x/denops_std@v4.0.0/option/mod.ts";
-// import * as fn from "https://deno.land/x/denops_std@v4.0.0/function/mod.ts";
+import * as op from "https://deno.land/x/denops_std@v4.0.0/option/mod.ts";
+import * as helper from "https://deno.land/x/denops_std@v4.0.0/helper/mod.ts";
 import * as vars from "https://deno.land/x/denops_std@v4.0.0/variable/mod.ts";
-import { DduOptions } from "https://deno.land/x/ddu_vim@v2.2.0/types.ts";
+import {
+  DduOptions,
+  UserSource,
+} from "https://deno.land/x/ddu_vim@v2.2.0/types.ts";
 import {
   Fn,
   register,
@@ -178,10 +181,75 @@ export function main(denops: Denops) {
           `command! ${command} call denops#request('vimrc', '${id}', [])`,
         );
       };
+      const start = async (dict: Partial<DduOptions>) => {
+        await denops.call("ddu#start", dict);
+      };
+      const dduWithPreview = async (
+        sources: UserSource[],
+        volatile: boolean,
+      ) => {
+        const column = await op.columns.get(denops);
+        const line = await denops.eval("&lines") as number;
+        const winHeight = Math.min(line - 10, 45);
+        const winRow = (line - winHeight) / 2;
+
+        const winWidth = Math.min(column / 2 - 5, 80);
+        const winCol = column / 2 - winWidth;
+        await start({
+          sources: sources,
+          volatile: true,
+          uiParams: {
+            ff: {
+              split: denops.meta.host == "nvim" ? "floating" : "horizontal",
+              autoAction: { name: "preview", delay: 50 },
+              filterSplitDirection: "floating",
+              filterFloatingPosition: "top",
+              previewFloating: true,
+              previewSplit: "vertical",
+              previewHeight: winHeight,
+              previewWidth: winWidth,
+              winCol: winCol,
+              winRow: winRow,
+              winWidth: winWidth,
+              winHeight: winHeight,
+              ignoreEmpty: !volatile,
+              autoResize: false,
+            },
+          },
+        });
+      };
+      await registerCommand("DduRgLive", async () => {
+        await dduWithPreview([{ name: "rg", options: { matchers: [] } }], true);
+      });
+      await registerCommand("DeinUpdate", async () => {
+        await dduWithPreview([{ name: "dein_update" }], false);
+      });
+      await registerCommand("LspDocumentSymbols", async () => {
+        await dduWithPreview([{ name: "nvim_lsp_document_symbol" }], false);
+      });
+      await registerCommand("DduRgPreview", async () => {
+        const input = await helper.input(denops, { prompt: "Pattern: " });
+        if (input == null) return;
+        await dduWithPreview([{ name: "rg", params: { input: input } }], false);
+      });
+      await registerCommand("DduRgGlob", async () => {
+        const pattern = await helper.input(denops, {
+          prompt: "search pattern: ",
+        });
+        if (pattern == null) return;
+        const glob = await helper.input(denops, {
+          prompt: "glob pattern: ",
+        });
+        if (glob == null) return;
+        const args = ["--json", "--ignore-case"];
+        if (glob) {
+          args.push("-g", glob);
+        }
+        await start({
+          sources: [{ name: "rg", params: { input: pattern, args: args } }],
+        });
+      });
       await registerCommand("DduFiler", async () => {
-        const start = async (dict: Partial<DduOptions>) => {
-          await denops.call("ddu#start", dict);
-        };
         await start({
           ui: "filer",
           // name: 'filer-' + await fn.(),
@@ -203,7 +271,5 @@ export function main(denops: Denops) {
       });
       return Promise.resolve();
     },
-    // async ddu_filer(): Promise<void> {
-    // },
   };
 }
