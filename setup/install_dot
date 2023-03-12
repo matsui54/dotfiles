@@ -16,5 +16,8 @@ if [[ ! -d $HOME/.config/nvim ]]; then
   ln -sv "$Dotdir/nvim" "$HOME/.config/nvim"
 fi
 
-LocalBin=$HOME/.local/bin
-[ -e $LocalBin/xdg-open ] || ln -sv $Dotdir/scripts/xdg-open $LocalBin/xdg-open
+while read -r p; do
+  if [[ ! -e $HOME/.config/$p ]]; then
+    ln -sv "$Dotdir/.config/$p" "$HOME/.config/$p"
+  fi
+done < <(find "$Dotdir/.config" -mindepth 1 -maxdepth 1)
