@@ -37,7 +37,9 @@ install_packages ()
     base-devel cmake unzip ninja curl )
 
   if [[ -v DESKTOP ]]; then
-    PACKAGES+=(plasma-meta dolphin sddm i3-wm zathura)
+    PACKAGES+=(plasma-meta dolphin sddm i3-wm zathura alacritty \
+      ttf-hackgen noto-fonts-cjk noto-fonts-emoji \
+      xclip fcitx5-mozc)
   fi
 
   if [[ -v PANDOC ]]; then
@@ -124,11 +126,22 @@ install_nvim ()
 {
   if [[ ! -x $(which nvim) && ! -d "$(ghq root)/github.com/neovim/neovim" ]]; then
     ghq get neovim/neovim
+    if [[ ! -d $HOME/.local/bin ]]; then
+      mkdir "$HOME/.local/bin"
+    fi
     pushd "$(ghq root)/github.com/neovim/neovim"
       make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=$HOME/.local/nvim install
-      ln -s $HOME/.local/nvim/bin/nvim $HOME/.local/bin
+      ln -s $HOME/.local/nvim/bin/nvim $HOME/.local/bin/nvim
     popd
   fi
+}
+
+install_biz_font ()
+{
+  curl https://fonts.google.com/download?family=BIZ%20UDPGothic -o /tmp/BIZ_UDPGothic.zip
+  curl https://fonts.google.com/download?family=BIZ%20UDPMincho -o /tmp/BIZ_UDPMincho.zip
+  unzip /tmp/BIZ_UDPGothic.zip -d $HOME/.local/share/fonts *.ttf
+  unzip /tmp/BIZ_UDPMincho.zip -d $HOME/.local/share/fonts *.ttf
 }
 
 install_paru
@@ -139,4 +152,5 @@ chsh_to_zsh
 setup_gh
 install_pyenv
 install_nvim
+install_biz_font
 echo "done"
