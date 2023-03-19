@@ -9,6 +9,9 @@ set $mod Mod4
 font pango:BIZ UDPGothic 8
 
 exec --no-startup-id picom -bc
+exec --no-startup-id xremap ~/dotfiles/xremap_config.yml
+exec --no-startup-id ~/.local/share/gem/ruby/3.0.0/bin/fusuma -d
+exec --no-startup-id feh --bg-scale /usr/share/wallpapers/Next/contents/images/1920x1080.png
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8

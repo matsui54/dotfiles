@@ -37,9 +37,11 @@ install_packages ()
     base-devel cmake unzip ninja curl )
 
   if [[ -v DESKTOP ]]; then
-    PACKAGES+=(plasma-meta dolphin sddm i3-wm zathura alacritty \
+    PACKAGES+=(plasma-meta dolphin ark sddm i3-wm zathura alacritty \
       ttf-hackgen noto-fonts-cjk noto-fonts-emoji \
-      xclip fcitx5-mozc)
+      xclip fcitx5-mozc krdc freerdp kdeconnect rofi xremap-x11-bin \
+      zathura-pdf feh thunderbird libinput ruby \
+    )
   fi
 
   if [[ -v PANDOC ]]; then
