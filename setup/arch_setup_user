@@ -40,7 +40,7 @@ install_packages ()
     PACKAGES+=(plasma-meta dolphin ark sddm i3-wm zathura alacritty \
       ttf-hackgen noto-fonts-cjk noto-fonts-emoji \
       xclip fcitx5-mozc krdc freerdp kdeconnect rofi xremap-x11-bin \
-      zathura-pdf feh thunderbird libinput ruby \
+      zathura-pdf-mupdf feh thunderbird libinput ruby picom \
     )
   fi
 
@@ -90,9 +90,10 @@ EOF
 
 chsh_to_zsh ()
 {
-  if [[ -x "/usr/bin/zsh" && $SHELL != "/usr/bin/zsh" ]]; then
+  ZSH_BIN=/bin/zsh
+  if [[ -x "$ZSH_BIN" && $SHELL != "$ZSH_BIN" ]]; then
     echo "change shell to zsh"
-    chsh -s /usr/bin/zsh
+    chsh -s "$ZSH_BIN"
   fi
 }
 
@@ -126,8 +127,10 @@ install_pyenv ()
 
 install_nvim ()
 {
-  if [[ ! -x $(which nvim) && ! -d "$(ghq root)/github.com/neovim/neovim" ]]; then
-    ghq get neovim/neovim
+  if [[ ! -x $(which nvim) ]]; then
+    if [[ ! -d "$(ghq root)/github.com/neovim/neovim" ]]; then
+      ghq get neovim/neovim
+    fi
     if [[ ! -d $HOME/.local/bin ]]; then
       mkdir "$HOME/.local/bin"
     fi
@@ -142,8 +145,56 @@ install_biz_font ()
 {
   curl https://fonts.google.com/download?family=BIZ%20UDPGothic -o /tmp/BIZ_UDPGothic.zip
   curl https://fonts.google.com/download?family=BIZ%20UDPMincho -o /tmp/BIZ_UDPMincho.zip
+  if [[ ! -d $HOME/.local/share/fonts ]]; then
+    mkdir -p $HOME/.local/share/fonts
+  fi
   unzip /tmp/BIZ_UDPGothic.zip -d $HOME/.local/share/fonts *.ttf
   unzip /tmp/BIZ_UDPMincho.zip -d $HOME/.local/share/fonts *.ttf
+}
+
+setup_i3_in_plasma ()
+{
+  if [[ ! -d $HOME/.config/systemd/user ]]; then
+    mkdir -p $HOME/.config/systemd/user
+  fi
+  if [[ ! -f $HOME/.config/systemd/user/plasma-i3.service ]]; then
+    cat << EOF > $HOME/.config/systemd/user/plasma-i3.service
+[Unit]
+Description=Launch Plasma with i3
+Before=plasma-workspace.target
+
+[Service]
+ExecStart=/usr/bin/i3
+Restart=on-failure
+
+[Install]
+WantedBy=plasma-workspace.target
+EOF
+  fi
+  systemctl mask plasma-kwin_x11.service --user
+  systemctl enable plasma-i3 --user
+  sudo systemctl enable sddm.service
+}
+
+setup_for_laptop ()
+{
+  systemctl enable bluetooth.service
+  systemctl start bluetooth.service
+  if [[ ! -x ~/.local/share/gem/ruby/3.0.0/bin/fusuma ]]; then
+    sudo gpasswd -a $USER input
+    newgrp input
+    gem install fusuma
+    ~/.local/share/gem/ruby/3.0.0/bin/fusuma -d
+  fi
+  set +e
+  pgrep xremap
+  if [[ $? -ne 0 ]]; then
+    set -e
+    echo "uinput" | sudo tee /etc/modules-load.d/uinput.conf
+    echo 'KERNEL=="uinput", GROUP="input", MODE="0660"' | sudo tee /etc/udev/rules.d/99-input.rules
+  else
+    set -e
+  fi
 }
 
 install_paru
@@ -155,4 +206,6 @@ setup_gh
 install_pyenv
 install_nvim
 install_biz_font
+setup_i3_in_plasma
+setup_for_laptop
 echo "done"

@@ -9,13 +9,14 @@ do
   fi
 done
 
+if [[ ! -d $HOME/.config ]]; then
+  mkdir "$HOME/.config"
+fi
+
 if [[ ! -d $HOME/.config/nvim ]]; then
   ln -sv "$Dotdir/nvim" "$HOME/.config/nvim"
 fi
 
-if [[ ! -d $HOME/.config ]]; then
-  mkdir "$HOME/.config"
-fi
 while read -r p; do
   if [[ ! -e $HOME/.config/$p ]]; then
     ln -sv "$Dotdir/.config/$p" "$HOME/.config/$p"
