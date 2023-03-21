@@ -246,8 +246,6 @@ lua_source = '''
   null_ls.setup({
     sources = {
       null_ls.builtins.formatting.black,
-      null_ls.builtins.diagnostics.shellcheck,
-      null_ls.builtins.code_actions.shellcheck,
       null_ls.builtins.formatting.deno_fmt.with({
         filetypes = { "markdown" }, -- only runs `deno fmt` for markdown
       }),
@@ -268,7 +266,7 @@ repo = 'williamboman/mason-lspconfig.nvim'
 on_source = 'nvim-lspconfig'
 lua_source = '''
   require("mason-lspconfig").setup({
-    ensure_installed = { "rust_analyzer", "lua_ls", "texlab", "vimls", "pyright" },
+    ensure_installed = { "rust_analyzer", "lua_ls", "texlab", "vimls", "pyright", "bashls" },
   })
 '''
 

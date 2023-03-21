@@ -85,6 +85,7 @@ nvim_lsp.gopls.setup { on_attach = on_attach, capabilities = capabilities }
 nvim_lsp.vimls.setup { on_attach = on_attach, capabilities = capabilities }
 nvim_lsp.pyright.setup { on_attach = on_attach, capabilities = capabilities }
 nvim_lsp.julials.setup { on_attach = on_attach, capabilities = capabilities }
+nvim_lsp.bashls.setup { on_attach = on_attach, capabilities = capabilities }
 nvim_lsp.texlab.setup {
   on_attach = on_attach,
   capabilities = capabilities,
