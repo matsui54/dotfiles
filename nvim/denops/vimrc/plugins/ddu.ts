@@ -136,7 +136,7 @@ export function main(denops: Denops) {
               ignoreEmpty: true,
               autoResize: true,
             },
-            filer: { split: "no" },
+            filer: { split: "no", sortTreesFirst: true },
           },
           columnParams: {
             lsp_symbols: {
@@ -259,7 +259,7 @@ export function main(denops: Denops) {
             name: "file",
             options: {
               path: await vars.t.get(denops, "ddu_ui_filer_path", ""),
-              columns: ["filename"],
+              columns: ["icon_filename"],
             },
           }],
           actionOptions: {

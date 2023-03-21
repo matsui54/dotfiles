@@ -212,3 +212,6 @@ repo = "Milly/ddu-filter-kensaku"
 
 [[plugins]]
 repo = "lambdalisue/kensaku.vim"
+
+[[plugins]]
+repo = 'ryota2357/ddu-column-icon_filename'
