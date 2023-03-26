@@ -39,7 +39,7 @@ install_packages ()
   if [[ -v DESKTOP ]]; then
     PACKAGES+=(plasma-meta dolphin ark sddm i3-wm zathura alacritty \
       ttf-hackgen noto-fonts-cjk noto-fonts-emoji \
-      xclip fcitx5-mozc krdc freerdp kdeconnect rofi xremap-x11-bin \
+      xclip fcitx5-mozc fcitx5-im krdc freerdp kdeconnect rofi xremap-x11-bin \
       zathura-pdf-mupdf feh thunderbird libinput ruby picom \
     )
   fi
@@ -145,11 +145,15 @@ install_biz_font ()
 {
   curl https://fonts.google.com/download?family=BIZ%20UDPGothic -o /tmp/BIZ_UDPGothic.zip
   curl https://fonts.google.com/download?family=BIZ%20UDPMincho -o /tmp/BIZ_UDPMincho.zip
+  curl https://fonts.google.com/download?family=BIZ%20UDGothic -o /tmp/BIZ_UDGothic.zip
+  curl https://fonts.google.com/download?family=BIZ%20UDMincho -o /tmp/BIZ_UDMincho.zip
   if [[ ! -d $HOME/.local/share/fonts ]]; then
     mkdir -p $HOME/.local/share/fonts
   fi
   unzip /tmp/BIZ_UDPGothic.zip -d $HOME/.local/share/fonts *.ttf
   unzip /tmp/BIZ_UDPMincho.zip -d $HOME/.local/share/fonts *.ttf
+  unzip /tmp/BIZ_UDGothic.zip -d $HOME/.local/share/fonts *.ttf
+  unzip /tmp/BIZ_UDMincho.zip -d $HOME/.local/share/fonts *.ttf
 }
 
 setup_i3_in_plasma ()
