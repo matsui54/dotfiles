@@ -128,13 +128,13 @@ ddu-filer = '''
   nnoremap <buffer> <C-l>
   \ <Cmd>call ddu#ui#do_action('checkItems')<CR>
   nnoremap <buffer><expr> <CR>
-  \ ddu#ui#is_tree() ?
-  \ "<Cmd>call ddu#ui#do_action('itemAction', {'name': 'narrow'})<CR>" :
-  \ "<Cmd>call ddu#ui#do_action('itemAction', {'name': 'open'})<CR>"
+  \ get(ddu#ui#get_item(), 'isTree', v:false) ?
+  \ "<Cmd>call ddu#ui#do_action('itemAction', #{ name: 'narrow' })<CR>" :
+  \ "<Cmd>call ddu#ui#do_action('itemAction', #{ name: 'open' })<CR>"
   nnoremap <buffer><expr> l
-  \ ddu#ui#is_tree() ?
-  \ "<Cmd>call ddu#ui#do_action('itemAction', {'name': 'narrow'})<CR>" :
-  \ "<Cmd>call ddu#ui#do_action('itemAction', {'name': 'open'})<CR>"
+  \ get(ddu#ui#get_item(), 'isTree', v:false) ?
+  \ "<Cmd>call ddu#ui#do_action('itemAction', #{ name: 'narrow' })<CR>" :
+  \ "<Cmd>call ddu#ui#do_action('itemAction', #{ name: 'open' })<CR>"
   function! s:toggle_hidden(name)
     let current = ddu#custom#get_current(b:ddu_ui_name)
     let source_options = get(current, 'sourceOptions', {})
