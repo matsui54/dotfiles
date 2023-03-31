@@ -259,7 +259,7 @@ export function main(denops: Denops) {
             name: "file",
             options: {
               path: await vars.t.get(denops, "ddu_ui_filer_path", ""),
-              columns: ["icon_filename"],
+              columns: ["icon_filename", "date"],
             },
           }],
           actionOptions: {
