@@ -6,7 +6,8 @@ set -eu
 while [[ $# -gt 0 ]]; do
     case $1 in
         --wsl)  WSL=true; shift;;
-        --desktop)  DESKTOP=true; shift;;
+        --laptop) X=true; LAPTOP=true; shift;;
+        --desktop) X=true; DESKTOP=true; shift;;
         --pandoc)  PANDOC=true; shift;;
         --tex)  TEX=true; shift;;
         *) echo "[ERROR] Unknown option $1"; exit 1;;
@@ -34,13 +35,29 @@ install_packages ()
     nodejs npm go zip deno zig rust julia \
     wget ghq man-db unzip openssh pyenv \
     words skk-jisyo \
-    base-devel cmake unzip ninja curl )
+    base-devel cmake unzip ninja curl \
+    tailscale verilator sshfs vim rclone pacman-contrib ctags reflector \
+  )
+
+  if [[ -v X ]]; then
+    PACKAGES+=( dolphin ark sddm i3-wm zathura alacritty \
+      ttf-hackgen noto-fonts-cjk noto-fonts-emoji \
+      xclip fcitx5-mozc fcitx5-im krdc freerdp kdeconnect rofi \
+      zathura-pdf-mupdf feh thunderbird ruby picom \
+      libreoffice-fresh zoom \
+      systemdgenie elisa gwenview spectacle filelight \
+      cups firefox vivaldi \
+    )
+  fi
+
+  if [[ -v LAPTOP ]]; then
+    PACKAGES+=(plasma-meta sddm xremap-x11-bin libinput ruby )
+  fi
 
   if [[ -v DESKTOP ]]; then
-    PACKAGES+=(plasma-meta dolphin ark sddm i3-wm zathura alacritty \
-      ttf-hackgen noto-fonts-cjk noto-fonts-emoji \
-      xclip fcitx5-mozc fcitx5-im krdc freerdp kdeconnect rofi xremap-x11-bin \
-      zathura-pdf-mupdf feh thunderbird libinput ruby picom \
+    PACKAGES+=( font-manager pavucontrol nvidia nvidia-settings archlinux-wallpaper \
+      wallutils libnotify xdg-user-dirs dunst breeze qt5ct \
+      lightdm lightdm-gtk-greeter light-locker polybar \
     )
   fi
 
@@ -143,17 +160,25 @@ install_nvim ()
 
 install_biz_font ()
 {
-  curl https://fonts.google.com/download?family=BIZ%20UDPGothic -o /tmp/BIZ_UDPGothic.zip
-  curl https://fonts.google.com/download?family=BIZ%20UDPMincho -o /tmp/BIZ_UDPMincho.zip
-  curl https://fonts.google.com/download?family=BIZ%20UDGothic -o /tmp/BIZ_UDGothic.zip
-  curl https://fonts.google.com/download?family=BIZ%20UDMincho -o /tmp/BIZ_UDMincho.zip
   if [[ ! -d $HOME/.local/share/fonts ]]; then
     mkdir -p $HOME/.local/share/fonts
   fi
-  unzip /tmp/BIZ_UDPGothic.zip -d $HOME/.local/share/fonts *.ttf
-  unzip /tmp/BIZ_UDPMincho.zip -d $HOME/.local/share/fonts *.ttf
-  unzip /tmp/BIZ_UDGothic.zip -d $HOME/.local/share/fonts *.ttf
-  unzip /tmp/BIZ_UDMincho.zip -d $HOME/.local/share/fonts *.ttf
+  if [[ ! -f $HOME/.local/share/fonts/BIZUDPGothic-Regular.ttf ]]; then
+    curl https://fonts.google.com/download?family=BIZ%20UDPGothic -o /tmp/BIZ_UDPGothic.zip
+    unzip /tmp/BIZ_UDPGothic.zip -d $HOME/.local/share/fonts *.ttf
+  fi
+  if [[ ! -f $HOME/.local/share/fonts/BIZUDPMincho-Regular.ttf ]]; then
+    curl https://fonts.google.com/download?family=BIZ%20UDPMincho -o /tmp/BIZ_UDPMincho.zip
+    unzip /tmp/BIZ_UDPMincho.zip -d $HOME/.local/share/fonts *.ttf
+  fi
+  if [[ ! -f $HOME/.local/share/fonts/BIZUDGothic-Regular.ttf ]]; then
+    curl https://fonts.google.com/download?family=BIZ%20UDGothic -o /tmp/BIZ_UDGothic.zip
+    unzip /tmp/BIZ_UDGothic.zip -d $HOME/.local/share/fonts *.ttf
+  fi
+  if [[ ! -f $HOME/.local/share/fonts/BIZUDMincho-Regular.ttf ]]; then
+    curl https://fonts.google.com/download?family=BIZ%20UDMincho -o /tmp/BIZ_UDMincho.zip
+    unzip /tmp/BIZ_UDMincho.zip -d $HOME/.local/share/fonts *.ttf
+  fi
 }
 
 setup_i3_in_plasma ()
@@ -201,6 +226,31 @@ setup_for_laptop ()
   fi
 }
 
+enable_service_if_disabled ()
+{
+  case $(systemctl is-enabled $1) in
+      not-found)  echo service $1 not found;;
+      disabled) echo enable service $1; systemctl enable $1;;
+      enabled) echo service $1 is already enabled;;
+      *) echo "[ERROR] enabling service $1"; exit 1;;
+  esac
+}
+
+start_services ()
+{
+  enable_service_if_disabled sshd
+  enable_service_if_disabled tailscaled
+  if [[ -v X ]]; then
+    enable_service_if_disabled cups
+  fi
+  if [[ -v DESKTOP ]]; then
+    enable_service_if_disabled lightdm
+  fi
+  if [[ -v LAPTOP ]]; then
+    enable_service_if_disabled bluetooth
+  fi
+}
+
 install_paru
 install_packages
 install_dotfiles
@@ -210,6 +260,9 @@ setup_gh
 install_pyenv
 install_nvim
 install_biz_font
-setup_i3_in_plasma
-setup_for_laptop
+if [[ -v LAPTOP ]]; then
+  setup_i3_in_plasma
+  setup_for_laptop
+fi
+start_services
 echo "done"

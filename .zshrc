@@ -126,7 +126,7 @@ elif [ -d ~/.zsh/zsh-syntax-highlighting ]; then
   source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-export PYENV_ROOT="$HOME/.local/pyenv"
+export PYENV_ROOT="$HOME/.pyenv"
 if [ -d $PYENV_ROOT ]; then
   command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
   eval "$(pyenv init -)"
