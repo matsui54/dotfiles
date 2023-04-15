@@ -2,7 +2,7 @@
 
 echo "install files in $Dotdir"
 
-for f in .vimrc .gitconfig .latexmkrc .zshenv .zshrc
+for f in .vimrc .gitconfig .latexmkrc .zshenv .zshrc .xprofile
 do
   if [[ ! -e $HOME/$f ]]; then
     ln -sv "$Dotdir/$f" "$HOME/$f"
