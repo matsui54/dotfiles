@@ -561,3 +561,7 @@ on_source = 'nvim-lspconfig'
 [[plugins]]
 repo = "uga-rosa/ccc.nvim"
 on_cmd = "CccHighlighterToggle"
+
+[[plugins]]
+repo = "github/copilot.vim"
+on_cmd = 'Copilot'
