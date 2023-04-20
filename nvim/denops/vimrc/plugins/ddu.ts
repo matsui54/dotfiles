@@ -1,20 +1,20 @@
-import { Denops } from "https://deno.land/x/denops_std@v3.12.1/mod.ts";
-import { batch } from "https://deno.land/x/denops_std@v3.12.1/batch/mod.ts";
+import { Denops } from "https://deno.land/x/denops_std@v4.1.5/mod.ts";
+import { batch } from "https://deno.land/x/denops_std@v4.1.5/batch/mod.ts";
 import {
   map,
   MapOptions,
-} from "https://deno.land/x/denops_std@v4.0.0/mapping/mod.ts";
-import * as op from "https://deno.land/x/denops_std@v4.0.0/option/mod.ts";
-import * as helper from "https://deno.land/x/denops_std@v4.0.0/helper/mod.ts";
-import * as vars from "https://deno.land/x/denops_std@v4.0.0/variable/mod.ts";
+} from "https://deno.land/x/denops_std@v4.1.5/mapping/mod.ts";
+import * as op from "https://deno.land/x/denops_std@v4.1.5/option/mod.ts";
+import * as helper from "https://deno.land/x/denops_std@v4.1.5/helper/mod.ts";
+import * as vars from "https://deno.land/x/denops_std@v4.1.5/variable/mod.ts";
 import {
   DduOptions,
   UserSource,
-} from "https://deno.land/x/ddu_vim@v2.2.0/types.ts";
+} from "https://deno.land/x/ddu_vim@v2.8.3/types.ts";
 import {
   Fn,
   register,
-} from "https://deno.land/x/denops_std@v4.0.0/lambda/mod.ts";
+} from "https://deno.land/x/denops_std@v4.1.5/lambda/mod.ts";
 
 export function main(denops: Denops) {
   denops.dispatcher = {
@@ -197,7 +197,6 @@ export function main(denops: Denops) {
         const winCol = column / 2 - winWidth;
         await start({
           sources: sources,
-          volatile: true,
           uiParams: {
             ff: {
               split: denops.meta.host == "nvim" ? "floating" : "horizontal",
@@ -219,7 +218,10 @@ export function main(denops: Denops) {
         });
       };
       await registerCommand("DduRgLive", async () => {
-        await dduWithPreview([{ name: "rg", options: { matchers: [] } }], true);
+        await dduWithPreview([{
+          name: "rg",
+          options: { matchers: [], volatile: true },
+        }], true);
       });
       await registerCommand("DeinUpdate", async () => {
         await dduWithPreview([{ name: "dein_update" }], false);
