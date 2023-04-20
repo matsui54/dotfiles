@@ -1,7 +1,7 @@
 modmap:
   - name: Global
     remap:
-      # CapsLock: Ctrl_L
+      CapsLock: Ctrl_L
       KatakanaHiragana: Win_R
 
 keymap:
