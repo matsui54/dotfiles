@@ -565,3 +565,7 @@ on_cmd = "CccHighlighterToggle"
 [[plugins]]
 repo = "github/copilot.vim"
 on_cmd = 'Copilot'
+hook_add = '''
+  let g:copilot_no_tab_map = v:true
+  imap <silent><script><expr> <C-v> copilot#Accept("\<CR>")
+'''
