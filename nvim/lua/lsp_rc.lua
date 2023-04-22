@@ -89,6 +89,16 @@ nvim_lsp.vimls.setup { on_attach = on_attach, capabilities = capabilities }
 nvim_lsp.pyright.setup { on_attach = on_attach, capabilities = capabilities }
 nvim_lsp.julials.setup { on_attach = on_attach, capabilities = capabilities }
 nvim_lsp.bashls.setup { on_attach = on_attach, capabilities = capabilities }
+nvim_lsp.svlangserver.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    systemverilog = {
+      launchConfiguration = "verilator -sv -Wall --lint-only pkg_def.sv",
+    }
+  }
+}
+nvim_lsp.svls.setup { on_attach = on_attach, capabilities = capabilities }
 nvim_lsp.texlab.setup {
   on_attach = on_attach,
   capabilities = capabilities,
