@@ -45,7 +45,7 @@ install_packages ()
       xclip fcitx5-mozc fcitx5-im krdc freerdp kdeconnect rofi \
       zathura-pdf-mupdf feh thunderbird ruby picom \
       libreoffice-fresh zoom \
-      systemdgenie elisa gwenview spectacle filelight \
+      systemdgenie elisa gwenview spectacle filelight plasma-systemmonitor \
       cups firefox vivaldi \
     )
   fi
