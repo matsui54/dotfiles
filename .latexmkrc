@@ -10,6 +10,7 @@ $dvipdf = 'dvipdfmx %O -o %D %S';
 $dvips = 'dvips %O -z -f %S | convbkmk -u > %D';
 $ps2pdf = 'ps2pdf %O %S %D';
 $pdf_mode = 3;
+$out_dir = "latex-out";
 if (-f '/home/matsui/.local/bin/SumatraPDF') {
   $pdf_previewer = 'SumatraPDF -reuse-instance';
 } else {
