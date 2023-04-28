@@ -43,20 +43,20 @@ install_packages ()
     PACKAGES+=( dolphin ark sddm i3-wm zathura alacritty \
       ttf-hackgen noto-fonts-cjk noto-fonts-emoji \
       xclip fcitx5-mozc fcitx5-im krdc freerdp kdeconnect rofi \
-      zathura-pdf-mupdf feh thunderbird ruby picom \
+      zathura-pdf-mupdf feh thunderbird picom \
       libreoffice-fresh zoom \
       systemdgenie elisa gwenview spectacle filelight plasma-systemmonitor \
-      cups firefox vivaldi \
+      cups firefox vivaldi xremap-x11-bin \
     )
   fi
 
   if [[ -v LAPTOP ]]; then
-    PACKAGES+=(plasma-meta sddm xremap-x11-bin libinput ruby )
+    PACKAGES+=(plasma-meta sddm libinput ruby )
   fi
 
   if [[ -v DESKTOP ]]; then
     PACKAGES+=( font-manager pavucontrol nvidia nvidia-settings archlinux-wallpaper \
-      wallutils libnotify xdg-user-dirs dunst breeze qt5ct \
+      wallutils libnotify xdg-user-dirs xfce4-notifyd breeze qt5ct \
       lightdm lightdm-gtk-greeter light-locker polybar \
     )
   fi
@@ -205,16 +205,18 @@ EOF
   sudo systemctl enable sddm.service
 }
 
-setup_for_laptop ()
+setup_fusuma ()
 {
-  systemctl enable bluetooth.service
-  systemctl start bluetooth.service
   if [[ ! -x ~/.local/share/gem/ruby/3.0.0/bin/fusuma ]]; then
     sudo gpasswd -a $USER input
     newgrp input
     gem install fusuma
     ~/.local/share/gem/ruby/3.0.0/bin/fusuma -d
   fi
+}
+
+setup_xremap ()
+{
   set +e
   pgrep xremap
   if [[ $? -ne 0 ]]; then
@@ -251,6 +253,22 @@ start_services ()
   fi
 }
 
+setup_desktop_additional ()
+{
+  if [[ ! -f /etc/X11/xorg.conf.d/00-keyboard.conf ]]; then
+    cat << EOF | sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf > /dev/null
+Section "InputClass"
+        Identifier "system-keyboard"
+        MatchIsKeyboard "on"
+        Option "XkbLayout" "us"
+        Option "XkbModel" "pc105"
+        Option "XkbOptions" "caps:ctrl_modifier"
+        Option "AutoRepeat" "200 20"
+EndSection
+EOF
+  fi
+}
+
 install_paru
 install_packages
 install_dotfiles
@@ -262,7 +280,11 @@ install_nvim
 install_biz_font
 if [[ -v LAPTOP ]]; then
   setup_i3_in_plasma
-  setup_for_laptop
+  setup_fusuma
+  setup_xremap
 fi
 start_services
+if [[ -v DESKTOP ]]; then
+  setup_desktop_additional
+fi
 echo "done"

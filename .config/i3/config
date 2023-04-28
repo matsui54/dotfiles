@@ -9,13 +9,6 @@ set $mod Mod4
 font pango:BIZ UDPGothic 8
 
 exec --no-startup-id picom -bc
-# exec --no-startup-id xremap ~/dotfiles/xremap_config.yml
-# exec --no-startup-id ~/.local/share/gem/ruby/3.0.0/bin/fusuma -d
-exec --no-startup-id setwallpaper /usr/share/backgrounds/archlinux/small.png
-exec --no-startup-id light-locker --lock-on-suspend
-exec --no-startup-id fcitx5 -d
-# exec --no-startup-id xset r rate 300 50
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -38,6 +31,7 @@ exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
 # Use pactl to adjust volume in PulseAudio.
 # set $refresh_i3status killall -SIGUSR1 i3status
+
 bindcode $mod+35 exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindcode $mod+34 exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
 # bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
@@ -64,7 +58,7 @@ bindsym $mod+q kill
 # There also is i3-dmenu-desktop which only displays applications shipping a
 # .desktop file. It is a wrapper around dmenu, so you need that installed.
 # bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
-bindsym $mod+d exec "rofi -modi drun,run,window,my-cmd:~/.config/i3/my_rofi_cmd,combi -show combi -combi-modi drun,window,my-cmd"
+bindsym $mod+d exec "rofi -show combi"
 # bindsym $mod+g exec "bwmenu"
 # bindsym $mod+c exec `rofi -show calc -modi calc -no-show-match -no-sort -calc-command "echo -n '{result}' | xclip -selection c"`
 
@@ -226,3 +220,9 @@ client.focused_inactive #313742 #29303a #ffffff #484e50   #313742
 client.unfocused        #313742 #29303a #888888 #292d2e   #313742
 client.urgent           #2f343a #5294e2 #ffffff #5294e2   #3e646f
 client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+
+include ~/.config/i3_additional
+
+for_window [class="^zoom$" title="^Zoom($|\s)"] floating disable
+for_window [class="^zoom$" title="^zoom"] floating enable
+no_focus   [class="^zoom$" title="^zoom"]

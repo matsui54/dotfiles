@@ -1,0 +1,6 @@
+exec --no-startup-id setwallpaper /usr/share/backgrounds/archlinux/small.png
+# exec --no-startup-id light-locker --lock-on-suspend
+exec --no-startup-id fcitx5 -d
+# exec --no-startup-id xset r rate 300 50
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd
