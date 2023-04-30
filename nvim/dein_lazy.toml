@@ -178,6 +178,9 @@ on_event = 'CmdlineEnter'
 hook_add = '''
   nnoremap gs <cmd>GinStatus<CR>
   nnoremap gnb <cmd>GinBranch -a<CR>
+  nnoremap gnl <cmd>GinLog --graph 
+  \ --pretty=format:%Cred%h%Creset\ -%C(yellow)%d%Creset\ %s\ %Cgreen(%ai)\ %C(bold\ blue)<%an>%Creset
+  \ <CR>
 '''
 [plugins.ftplugin]
 gin-status = '''
