@@ -36,7 +36,8 @@ install_packages ()
     wget ghq man-db unzip openssh pyenv \
     words skk-jisyo \
     base-devel cmake unzip ninja curl \
-    tailscale verilator sshfs vim rclone pacman-contrib ctags reflector \
+    tailscale verilator sshfs vim rclone pacman-contrib ctags \
+    reflector parallel \
   )
 
   if [[ -v X ]]; then
@@ -57,7 +58,7 @@ install_packages ()
   if [[ -v DESKTOP ]]; then
     PACKAGES+=( font-manager pavucontrol nvidia nvidia-settings archlinux-wallpaper \
       wallutils libnotify xdg-user-dirs xfce4-notifyd breeze qt5ct \
-      lightdm lightdm-gtk-greeter light-locker polybar \
+      lightdm lightdm-gtk-greeter xfce4-screensaver polybar xfce4-power-manager \
     )
   fi
 
