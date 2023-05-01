@@ -22,3 +22,7 @@ let b:caw_oneline_comment = '//'
 markdown = '''
 setlocal conceallevel=0
 '''
+
+systemverilog = '''
+let &commentstring="// %s"
+'''
