@@ -226,3 +226,6 @@ include ~/.config/i3_additional
 for_window [class="^zoom$" title="^Zoom($|\s)"] floating disable
 for_window [class="^zoom$" title="^zoom"] floating enable
 no_focus   [class="^zoom$" title="^zoom"]
+
+bindsym $mod+c exec "alacritty --class Alacritty-julia -e julia"
+for_window [class="Alacritty-julia"] floating enable
