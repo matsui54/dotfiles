@@ -26,9 +26,6 @@ hook_add = '''
         let index = 0
       endif
       call pum#map#confirm()
-      let complete_item = info.items[index]
-      " wait for the candidate is inserted
-      call timer_start(0, { -> vsnip_integ#on_complete_done(complete_item) })
       return "\<Ignore>"
     endfunction
     inoremap <silent><expr> <Tab>
@@ -51,11 +48,7 @@ hook_add = '''
     call pum#set_option('scrollbar_char', '')
 
     " ~/dotfiles/nvim/denops/vimrc/plugins/ddc.ts
-    if denops#plugin#wait('vimrc')
-      echoerr "Failed to wait for vimrc"
-      return
-    endif
-    call denops#request('vimrc', 'ddc_setup', [])
+    call ddc#custom#load_config(expand("~/dotfiles/nvim/plugins/ddc.ts"))
 
     call dein#source(["vim-vsnip"])
     call popup_preview#enable()
@@ -166,7 +159,7 @@ repo = 'LumaKernel/ddc-file'
 [[plugins]]
 repo = 'hrsh7th/vim-vsnip'
 lazy = 1
-depends = ['vim-vsnip-integ', 'friendly-snippets']
+depends = ['friendly-snippets']
 hook_add = '''
 " Expand
 imap <expr> <C-l> vsnip#expandable() ? '<Plug>(vsnip-expand)' : '<C-l>'
@@ -181,8 +174,7 @@ let g:vsnip_snippet_dir = expand('~/dotfiles/nvim/snippets')
 '''
 
 [[plugins]]
-repo = 'hrsh7th/vim-vsnip-integ'
-lazy = 1
+repo = 'uga-rosa/ddc-source-vsnip'
 
 [[plugins]]
 repo = 'rafamadriz/friendly-snippets'

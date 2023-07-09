@@ -1,5 +1,4 @@
 import { Denops } from "https://deno.land/x/denops_std@v3.12.1/mod.ts";
-import { main as DdcMain } from "./plugins/ddc.ts";
 import { main as DduMain } from "./plugins/ddu.ts";
 
 export function main(denops: Denops) {
@@ -10,6 +9,5 @@ export function main(denops: Denops) {
     },
   };
 
-  DdcMain(denops);
   DduMain(denops);
 }
