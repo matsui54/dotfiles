@@ -1,5 +1,4 @@
 import { Denops } from "https://deno.land/x/denops_std@v3.12.1/mod.ts";
-import { main as DduMain } from "./plugins/ddu.ts";
 
 export function main(denops: Denops) {
   denops.dispatcher = {
@@ -8,6 +7,4 @@ export function main(denops: Denops) {
       return Promise.resolve();
     },
   };
-
-  DduMain(denops);
 }

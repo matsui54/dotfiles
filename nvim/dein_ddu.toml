@@ -4,7 +4,7 @@ hook_add = '''
   augroup StartDdu
     autocmd!
     " ~/dotfiles/nvim/denops/vimrc/plugins/ddu.ts
-    autocmd User DenopsPluginPost:vimrc call denops#request('vimrc', 'ddu_setup', [])
+    autocmd User DenopsPluginPost:vimrc call ddu#custom#load_config(expand("~/dotfiles/nvim/plugins/ddu.ts"))
   augroup END
 '''
 
