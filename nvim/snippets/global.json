@@ -3,6 +3,11 @@
     "prefix": "date",
     "body": ["${CURRENT_YEAR}年${CURRENT_MONTH}月${CURRENT_DATE}日"],
     "description": "日付"
+  },
+  "today": {
+    "prefix": "today",
+    "body": ["${CURRENT_YEAR}/${CURRENT_MONTH}/${CURRENT_DATE}"],
+    "description": "日付"
   }
 }
 
