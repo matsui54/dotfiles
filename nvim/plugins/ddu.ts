@@ -167,7 +167,7 @@ export class Config extends BaseConfig {
     const registerCommand = async (command: string, fn: Fn) => {
       const id = register(denops, fn);
       await denops.cmd(
-        `command! ${command} call denops#request('vimrc', '${id}', [])`,
+        `command! ${command} call denops#request('ddu', '${id}', [])`,
       );
     };
     const start = async (dict: Partial<DduOptions>) => {
