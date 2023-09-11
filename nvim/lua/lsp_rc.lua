@@ -157,3 +157,17 @@ nvim_lsp.tsserver.setup {
   capabilities = capabilities,
   autostart = is_node_repo,
 }
+nvim_lsp.efm.setup {
+  init_options = { documentFormatting = true },
+  settings = {
+    rootMarkers = { ".git/" },
+    languages = {
+      markdown = {
+        { formatCommand = "deno fmt - --ext md", formatStdin = true }
+      },
+      python = {
+        { formatCommand = "black --quiet -", formatStdin = true }
+      }
+    }
+  }
+}

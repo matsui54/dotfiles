@@ -66,12 +66,12 @@ nnoremap G Gzz7<C-y>
 nnoremap <Leader>cd <cmd>tcd %:h<CR>
 
 " viml formatting
-function! s:format_viml()
-  let tmp = winsaveview()
-  normal! ggVG=
-  call winrestview(tmp)
-endfunction
-nnoremap <silent> <Leader>f <cmd>call <SID>format_viml()<CR>
+" function! s:format_viml()
+"   let tmp = winsaveview()
+"   normal! ggVG=
+"   call winrestview(tmp)
+" endfunction
+" nnoremap <silent> <Leader>f <cmd>call <SID>format_viml()<CR>
 
 " improved gd
 nnoremap gd <cmd>call godef#go_to_definition()<CR>

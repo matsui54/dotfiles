@@ -235,26 +235,6 @@ on_event = 'BufRead'
 lua_source = '''
   require('lsp_rc')
 '''
-
-[[plugins]]
-repo = "jose-elias-alvarez/null-ls.nvim"
-on_source = 'nvim-lspconfig'
-depends = ['plenary.nvim']
-lua_source = '''
-  local null_ls = require("null-ls")
-  vim.diagnostic.config({ 
-    virtual_text = false,
-    severity_sort = true,
-  })
-  null_ls.setup({
-    sources = {
-      null_ls.builtins.formatting.black,
-      null_ls.builtins.formatting.deno_fmt.with({
-        filetypes = { "markdown" }, -- only runs `deno fmt` for markdown
-      }),
-    },
-  })
-'''
 hook_add = '''
   nnoremap \f <cmd>lua vim.lsp.buf.format({ async = true })<CR>
   nnoremap gm <cmd>lua vim.diagnostic.open_float()<CR>
