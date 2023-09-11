@@ -34,7 +34,7 @@ export class Config extends BaseConfig {
     await m("<Space>m", "<cmd>Ddu man<CR>");
     await m(
       "<Space>f",
-      "<cmd>Ddu file_external -source-option-path=~/dotfiles<CR>",
+      "<cmd>Ddu file_external -source-option-file_external-path=~/dotfiles<CR>",
     );
     await m("g0", "<cmd>LspDocumentSymbols<CR>");
     await m(
