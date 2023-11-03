@@ -21,6 +21,8 @@ let b:caw_oneline_comment = '//'
 
 markdown = '''
 setlocal conceallevel=0
+set tabstop=2
+set shiftwidth=2
 '''
 
 systemverilog = '''

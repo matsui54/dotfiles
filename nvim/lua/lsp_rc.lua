@@ -163,7 +163,7 @@ nvim_lsp.efm.setup {
     rootMarkers = { ".git/" },
     languages = {
       markdown = {
-        { formatCommand = "deno fmt - --ext md", formatStdin = true }
+        { formatCommand = "deno fmt - --ext md --line-width 200", formatStdin = true }
       },
       python = {
         { formatCommand = "black --quiet -", formatStdin = true }
