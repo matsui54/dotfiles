@@ -44,7 +44,6 @@ hook_add = '''
     cnoremap <S-Tab> <Cmd>call pum#map#insert_relative(-1)<CR>
     cnoremap <C-y>   <Cmd>call pum#map#confirm()<CR>
 
-    call pum#set_option('setline_insert', v:false)
     call pum#set_option('scrollbar_char', '')
 
     " ~/dotfiles/nvim/denops/vimrc/plugins/ddc.ts
@@ -102,7 +101,7 @@ repo = 'matsui54/ddc-dictionary'
 repo = 'tani/ddc-fuzzy'
 
 [[plugins]]
-repo = 'Shougo/ddc-nvim-lsp'
+repo = 'Shougo/ddc-source-lsp'
 
 [[plugins]]
 repo = 'matsui54/ddc-buffer'

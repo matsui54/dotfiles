@@ -7,9 +7,7 @@ export class Config extends BaseConfig {
 
     args.contextBuilder.patchGlobal({
       ui: "pum",
-      sources: (hasNvim
-        ? ["nvim-lsp", "buffer", "around", "vsnip", "dictionary"]
-        : ["vim-lsp", "buffer", "around", "vsnip", "dictionary"]),
+      sources: ["lsp", "buffer", "around", "vsnip", "dictionary"],
       cmdlineSources: {
         ":": ["cmdline", "buffer"],
         "@": ["buffer", "input"],
