@@ -56,10 +56,21 @@ hook_add = '''
 [[plugins]]
 repo = 'Shougo/deol.nvim'
 hook_add = '''
-  tnoremap <C-\><C-\> <C-\><C-N><cmd>Deol -no-auto-cd -toggle<CR>
-  nnoremap <expr> <C-\><C-\> '<cmd>Deol -no-auto-cd -toggle -winwidth=' . &columns/2 . ' ' .
-  \ ((winnr('$') == 1 && bufname()=='') ? '<CR>' : '-split=vertical<CR>')
-  nnoremap <C-\>j <cmd>Deol -no-auto-cd -toggle -split=h<CR>
+  tnoremap <C-\><C-\> <C-\><C-N><cmd>call deol#start(#{
+    \ no-auto-cd: v:true,
+    \ toggle: v:true,
+    \ })<CR>
+  nnoremap <C-\><C-\> <cmd>call deol#start(#{
+    \ no-auto-cd: v:true,
+    \ toggle: v:true,
+    \ winwidth: &columns/2,
+    \ split: (winnr('$') == 1 && bufname()=='') ? "" : "vertical",
+    \ })<CR>
+  nnoremap <C-\>j <cmd>call deol#start(#{
+    \ no-auto-cd: v:true,
+    \ toggle: v:true,
+    \ split: "h",
+    \ })<CR>
 '''
 
 [[plugins]]
