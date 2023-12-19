@@ -275,10 +275,12 @@ install_packages
 install_dotfiles
 install_wsl
 chsh_to_zsh
-setup_gh
+# setup_gh
 install_pyenv
 install_nvim
-install_biz_font
+if [[ -v X ]]; then
+  install_biz_font
+fi
 if [[ -v LAPTOP ]]; then
   setup_i3_in_plasma
   setup_fusuma
