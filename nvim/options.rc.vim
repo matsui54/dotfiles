@@ -9,17 +9,17 @@ set tabstop=2
 set shiftwidth=0
 set smartindent
 
-if vimrc#is_wsl()
-  let s:clp_cmd = '/mnt/c/win32yank.exe'
+if executable("lemonade")
+  let s:clp_cmd = "lemonade --no-fallback-messages"
   let g:clipboard = {
         \   'name': 'myClipboard',
         \   'copy': {
-        \      '+': s:clp_cmd . ' -i',
-        \      '*': s:clp_cmd . ' -i',
+        \      '+': s:clp_cmd . ' copy',
+        \      '*': s:clp_cmd . ' copy',
         \    },
         \   'paste': {
-        \      '*': s:clp_cmd . ' -o --lf',
-        \      '+': s:clp_cmd . ' -o --lf',
+        \      '*': s:clp_cmd . ' paste',
+        \      '+': s:clp_cmd . ' paste',
         \   },
         \   'cache_enabled': 1,
         \ }
