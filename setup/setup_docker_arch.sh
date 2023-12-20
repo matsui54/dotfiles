@@ -32,7 +32,7 @@ chsh_to_zsh ()
   ZSH_BIN=/bin/zsh
   if [[ -x "$ZSH_BIN" && $SHELL != "$ZSH_BIN" ]]; then
     echo "change shell to zsh"
-    sudo chsh -s "$ZSH_BIN"
+    sudo chsh -s "$ZSH_BIN" "$(id un)"
   fi
 }
 
