@@ -132,8 +132,13 @@ if [ -d $PYENV_ROOT ]; then
   eval "$(pyenv init -)"
 fi
 
-if [ -f /usr/share/zsh/scripts/git-prompt.zsh ]; then
-  source /usr/share/zsh/scripts/git-prompt.zsh
+if [[ -f /usr/share/zsh/scripts/git-prompt.zsh || -f ~/git-prompt.zsh/git-prompt.zsh ]]; then
+  if [ -f ~/git-prompt.zsh/git-prompt.zsh ]; then
+    source ~/git-prompt.zsh/git-prompt.zsh
+  fi
+  if [ -f /usr/share/zsh/scripts/git-prompt.zsh ]; then
+    source /usr/share/zsh/scripts/git-prompt.zsh
+  fi
 
   ZSH_GIT_PROMPT_FORCE_BLANK=1
   ZSH_GIT_PROMPT_SHOW_UPSTREAM="full"
