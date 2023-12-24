@@ -7,11 +7,11 @@ install_packages ()
   PACKAGES=(zsh zsh-syntax-highlighting \
     ripgrep bat fzf fd bottom htop dust duf \
     nodejs npm go zip deno rust cargo \
-    wget man-db unzip openssh \
+    wget man-db unzip openssh pyenv \
     words skk-jisyo \
     base-devel cmake unzip ninja curl \
     sshfs vim rclone pacman-contrib ctags \
-    reflector parallel tmux \
+    reflector parallel tmux clang boost python-pip \
   )
   sudo pacman --noconfirm -Syu --needed ${PACKAGES[*]}
 }
@@ -36,6 +36,16 @@ chsh_to_zsh ()
   fi
 }
 
+install_pyenv ()
+{
+  if [[ $(pyenv version-name) == "system" ]]; then
+    sudo pacman --noconfirm -S --needed base-devel openssl zlib xz tk
+    set +e
+    pyenv install 3 && pyenv global $(pyenv latest 3)
+    set -e
+  fi
+}
+
 install_nvim ()
 {
   if [[ ! -x $(which nvim) ]]; then
@@ -55,11 +65,13 @@ setup_for_docker ()
   git clone https://github.com/woefe/git-prompt.zsh.git $HOME/git-prompt.zsh
   sudo sed -i '/^#en_US.UTF-8 UTF-8/s/^#//' /etc/locale.gen
   sudo locale-gen
+  pip install plotly polars matplotlib
 }
 
 install_packages
 install_dotfiles
 chsh_to_zsh
+install_pyenv
 install_nvim
 setup_for_docker
 echo "done"
