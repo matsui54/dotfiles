@@ -11,7 +11,7 @@ install_packages ()
     words skk-jisyo \
     base-devel cmake unzip ninja curl \
     sshfs vim rclone pacman-contrib ctags \
-    reflector parallel tmux clang boost python-pip \
+    reflector parallel tmux clang boost \
   )
   sudo pacman --noconfirm -Syu --needed ${PACKAGES[*]}
 }
@@ -43,6 +43,11 @@ install_pyenv ()
     set +e
     pyenv install 3 && pyenv global $(pyenv latest 3)
     set -e
+    export PYENV_ROOT="$HOME/.pyenv"
+    if [ -d $PYENV_ROOT ]; then
+      command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+      eval "$(pyenv init -)"
+    fi
   fi
 }
 
