@@ -1,0 +1,85 @@
+[colors.bright]
+black = "0x000000"
+blue = "0x2f5af3"
+cyan = "0x3e953a"
+green = "0x3e953a"
+magenta = "0xa00095"
+red = "0xde3d35"
+white = "0xffffff"
+yellow = "0xd2b67b"
+
+[colors.normal]
+black = "0x000000"
+blue = "0x2f5af3"
+cyan = "0x3e953a"
+green = "0x3e953a"
+magenta = "0xa00095"
+red = "0xde3d35"
+white = "0xbbbbbb"
+yellow = "0xd2b67b"
+
+[colors.primary]
+background = "0xf8f8f8"
+foreground = "0x2a2b33"
+
+[font]
+size = 10
+
+[font.bold]
+family = "HackGenConsoleNF"
+style = "Bold"
+
+[font.bold_italic]
+family = "HackGenConsoleNF"
+style = "Bold Italic"
+
+[font.italic]
+family = "HackGenConsoleNF"
+style = "Italic"
+
+[font.normal]
+family = "HackGenConsoleNF"
+style = "Regular"
+
+[[keyboard.bindings]]
+action = "Quit"
+key = "Q"
+mods = "Shift|Control"
+
+[[keyboard.bindings]]
+action = "Quit"
+key = "W"
+mods = "Shift|Control"
+
+[[keyboard.bindings]]
+action = "ToggleFullscreen"
+key = "F11"
+
+[[keyboard.bindings]]
+action = "ResetFontSize"
+key = "Key0"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "Equals"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "Plus"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "Equals"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "DecreaseFontSize"
+key = "Minus"
+mods = "Control"
+
+[window.padding]
+x = 2
+y = 2
