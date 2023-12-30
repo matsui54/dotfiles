@@ -14,6 +14,7 @@ install_packages ()
     htop \
     vim \
     tmux \
+    locales \
     curl
 }
 
@@ -51,6 +52,7 @@ setup_for_docker ()
 {
   git clone https://github.com/woefe/git-prompt.zsh.git $HOME/git-prompt.zsh
   curl -fsSL https://deno.land/x/install/install.sh | sh
+  sudo locale-gen en_US.UTF-8
 }
 
 install_packages
