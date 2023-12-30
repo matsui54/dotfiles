@@ -2,22 +2,6 @@
 
 set -eu
 
-install_packages ()
-{
-  sudo apt install -y \
-    zsh \
-    zsh-syntax-highlighting \
-    ripgrep \
-    bat \
-    fzf \
-    fd-find \
-    htop \
-    vim \
-    tmux \
-    locales \
-    curl
-}
-
 install_dotfiles ()
 {
   git clone https://github.com/matsui54/dotfiles.git ~/dotfiles
@@ -55,7 +39,6 @@ setup_for_docker ()
   sudo locale-gen en_US.UTF-8
 }
 
-install_packages
 install_dotfiles
 chsh_to_zsh
 install_nvim
