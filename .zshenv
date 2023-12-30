@@ -14,3 +14,5 @@ export PATH=/usr/local/texlive/2022/bin/x86_64-linux:$PATH
 if [[ -s "$HOME/.cargo/env" ]]; then
   source "$HOME/.cargo/env"
 fi
+export LC_ALL=en_US.UTF-8
+export LC_LANG=en_US.UTF-8
