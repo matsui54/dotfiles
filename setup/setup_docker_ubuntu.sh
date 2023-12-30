@@ -4,7 +4,6 @@ set -eu
 
 install_dotfiles ()
 {
-  git clone https://github.com/matsui54/dotfiles.git ~/dotfiles
   Dotdir=$HOME/dotfiles $HOME/dotfiles/setup/install_dot
   # pushd $HOME/dotfiles
   #   git remote set-url origin git@github.com:matsui54/dotfiles.git
