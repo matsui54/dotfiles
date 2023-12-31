@@ -69,6 +69,8 @@ export class Config extends BaseConfig {
         gin_action: { defaultAction: "execute" },
         source: { defaultAction: "execute" },
         ui_select: { defaultAction: "select" },
+        lsp: { defaultAction: "open" },
+        lsp_codeAction: { defaultAction: "apply" },
       },
       actionOptions: {
         echo: { quit: false },
@@ -175,7 +177,7 @@ export class Config extends BaseConfig {
     };
     const dduWithPreview = async (
       sources: UserSource[],
-      volatile: boolean,
+      uiAditonalParams: Record<string, unknown> = {},
     ) => {
       const column = await op.columns.get(denops);
       const line = await denops.eval("&lines") as number;
@@ -187,7 +189,7 @@ export class Config extends BaseConfig {
       await start({
         sources: sources,
         uiParams: {
-          ff: {
+          ff: Object.assign({
             split: denops.meta.host == "nvim" ? "floating" : "horizontal",
             autoAction: { name: "preview", delay: 50 },
             startAutoAction: true,
@@ -201,9 +203,9 @@ export class Config extends BaseConfig {
             winRow: winRow,
             winWidth: winWidth,
             winHeight: winHeight,
-            ignoreEmpty: !volatile,
+            ignoreEmpty: true,
             autoResize: false,
-          },
+          }, uiAditonalParams),
         },
       });
     };
@@ -211,18 +213,57 @@ export class Config extends BaseConfig {
       await dduWithPreview([{
         name: "rg",
         options: { matchers: [], volatile: true },
-      }], true);
+      }], { ignoreEmpty: false });
     });
     await registerCommand("DeinUpdate", async () => {
-      await dduWithPreview([{ name: "dein_update" }], false);
+      await dduWithPreview([{ name: "dein_update" }]);
+    });
+
+    await registerCommand("LspDefinition", async () => {
+      await dduWithPreview([{ name: "lsp_definition" }], {
+        immediateAction: "open",
+      });
+    });
+    await registerCommand("LspReferences", async () => {
+      await dduWithPreview([{ name: "lsp_references" }]);
     });
     await registerCommand("LspDocumentSymbols", async () => {
-      await dduWithPreview([{ name: "nvim_lsp_document_symbol" }], false);
+      await dduWithPreview([{ name: "lsp_documentSymbol" }], {
+        displayTree: true,
+      });
     });
+    await registerCommand("LspWorkspaceSymbol", async () => {
+      await dduWithPreview([{
+        name: "lsp_workspaceSymbol",
+        options: { volatile: false },
+      }], {
+        ignoreEmpty: false,
+      });
+    });
+    await registerCommand("LspIncomingCalls", async () => {
+      await dduWithPreview([{
+        name: "lsp_callHierarchy",
+        params: { method: "callHierarchy/incomingCalls" },
+      }], {
+        displayTree: true,
+      });
+    });
+    await registerCommand("LspOutgoingCalls", async () => {
+      await dduWithPreview([{
+        name: "lsp_callHierarchy",
+        params: { method: "callHierarchy/outgoingCalls" },
+      }], {
+        displayTree: true,
+      });
+    });
+    await registerCommand("LspCodeAction", async () => {
+      await dduWithPreview([{ name: "lsp_codeAction" }]);
+    });
+
     await registerCommand("DduRgPreview", async () => {
       const input = await helper.input(denops, { prompt: "Pattern: " });
       if (input == null) return;
-      await dduWithPreview([{ name: "rg", params: { input: input } }], false);
+      await dduWithPreview([{ name: "rg", params: { input: input } }]);
     });
     await registerCommand("DduRgGlob", async () => {
       const pattern = await helper.input(denops, {
