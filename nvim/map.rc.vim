@@ -11,17 +11,6 @@ endif
 
 nnoremap <Leader>m <cmd>wa <Bar> make<CR>
 
-" nnoremap <silent><Leader>d <cmd>call <SID>run()<CR>
-" function! s:run() abort
-"   let cmd_table = {}
-"   " let cmd_table.vim = 'w | source %'
-"   let cmd_table.cpp = 'wa | wincmd t | call My_quickrun_redirect()'
-"   let cmd_table.lua = 'w | luafile %'
-"   let cmd_table.gnuplot = 'w | !gnuplot %'
-"   let cmd = get(cmd_table, &filetype, 'w | QuickRun')
-"   execute cmd
-" endfunction
-
 nnoremap <A-h> <C-w>h
 nnoremap <A-j> <C-w>j
 nnoremap <A-k> <C-w>k
@@ -64,17 +53,6 @@ nnoremap G Gzz7<C-y>
 
 "change local directory
 nnoremap <Leader>cd <cmd>tcd %:h<CR>
-
-" viml formatting
-" function! s:format_viml()
-"   let tmp = winsaveview()
-"   normal! ggVG=
-"   call winrestview(tmp)
-" endfunction
-" nnoremap <silent> <Leader>f <cmd>call <SID>format_viml()<CR>
-
-" improved gd
-nnoremap gd <cmd>call godef#go_to_definition()<CR>
 
 " multiple search
 nnoremap <expr> <Leader>/ multi_search#hl_last_match() . "/"
