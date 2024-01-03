@@ -13,17 +13,8 @@ hook_add = '''
   function! s:ddc_setup() abort
     autocmd! StartDdc
     function s:confirm()
-      let info = pum#complete_info()
-      let index = info.selected
-      if skkeleton#is_enabled()
-        if info.selected == -1
-          call pum#map#insert_relative(1)
-        endif
-        return "\<Ignore>"
-      endif
-      if info.selected == -1
+      if pum#complete_info().selected == -1
         call pum#map#select_relative(+1)
-        let index = 0
       endif
       call pum#map#confirm()
       return "\<Ignore>"
