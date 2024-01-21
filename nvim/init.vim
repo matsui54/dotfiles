@@ -1,3 +1,7 @@
+if exists('g:vscode')
+  finish
+endif
+
 " dein settings--------------------------------------------
 let g:dein#lazy_rplugins = v:true
 let g:dein#auto_recache = !has('win32')
