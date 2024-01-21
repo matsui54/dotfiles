@@ -184,7 +184,8 @@ hook_add = '''
     call skkeleton#register_keymap('henkan', "x", '')
 
     call skkeleton#config({
-      \ 'userJisyo': expand('~/.cache/skkeleton/skkeleton'),
+      \ 'globalDictionaries': ["/usr/share/skk/SKK-JISYO.L"],
+      \ 'userDictionary': expand('~/.cache/skkeleton/skkeleton'),
       \ 'completionRankFile': expand('~/.cache/skkeleton/rank.json'),
       \ })
     call skkeleton#register_kanatable('rom', {
@@ -198,7 +199,7 @@ hook_add = '''
       \ })
     if has('win32') || has('win64')
       call skkeleton#config({
-        \ 'globalJisyo': expand('~/AppData/Local/skk/SKK-JISYO.L')
+        \ 'globalDictionaries': [expand('~/AppData/Local/skk/SKK-JISYO.L')]
         \ })
     endif
   endfunction

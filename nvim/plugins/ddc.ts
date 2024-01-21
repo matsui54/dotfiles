@@ -186,8 +186,12 @@ export class Config extends BaseConfig {
       ],
     });
     args.contextBuilder.patchFiletype("tex", {
-      keywordPattern: "[a-zA-Z0-9_@]*",
-      sourceOptions: { "vsnip": { "forceCompletionPattern": "@" } },
+      sourceOptions: {
+        vsnip: {
+          forceCompletionPattern: "@",
+          keywordPattern: "[a-zA-Z0-9_@]*",
+        },
+      },
     });
   }
 }
