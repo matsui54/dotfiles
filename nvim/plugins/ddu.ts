@@ -1,20 +1,21 @@
 import {
   map,
   MapOptions,
-} from "https://deno.land/x/denops_std@v5.0.1/mapping/mod.ts";
-import * as op from "https://deno.land/x/denops_std@v5.0.1/option/mod.ts";
-import * as helper from "https://deno.land/x/denops_std@v5.0.1/helper/mod.ts";
-import * as vars from "https://deno.land/x/denops_std@v5.0.1/variable/mod.ts";
+} from "https://deno.land/x/denops_std@v6.4.0/mapping/mod.ts";
+import * as op from "https://deno.land/x/denops_std@v6.4.0/option/mod.ts";
+import * as helper from "https://deno.land/x/denops_std@v6.4.0/helper/mod.ts";
+import * as vars from "https://deno.land/x/denops_std@v6.4.0/variable/mod.ts";
 import {
   BaseConfig,
   DduOptions,
   UserSource,
-} from "https://deno.land/x/ddu_vim@v3.4.4/types.ts";
-import { ConfigArguments } from "https://deno.land/x/ddu_vim@v3.4.4/base/config.ts";
+} from "https://deno.land/x/ddu_vim@v3.10.3/types.ts";
+import { ConfigArguments } from "https://deno.land/x/ddu_vim@v3.10.3/base/config.ts";
 import {
   Fn,
   register,
-} from "https://deno.land/x/denops_std@v5.0.1/lambda/mod.ts";
+} from "https://deno.land/x/denops_std@v6.4.0/lambda/mod.ts";
+import { ensure, is } from "https://deno.land/x/unknownutil@v3.17.0/mod.ts";
 
 export class Config extends BaseConfig {
   override async config(args: ConfigArguments): Promise<void> {
@@ -169,7 +170,7 @@ export class Config extends BaseConfig {
     const registerCommand = async (command: string, fn: Fn) => {
       const id = register(denops, fn);
       await denops.cmd(
-        `command! ${command} call denops#request('ddu', '${id}', [])`,
+        `command! -nargs=* ${command} call denops#request('ddu', '${id}', ["<args>"])`,
       );
     };
     const start = async (dict: Partial<DduOptions>) => {
@@ -181,10 +182,10 @@ export class Config extends BaseConfig {
     ) => {
       const column = await op.columns.get(denops);
       const line = await denops.eval("&lines") as number;
-      const winHeight = Math.min(line - 10, 45);
+      const winHeight = line - 8;
       const winRow = (line - winHeight) / 2;
 
-      const winWidth = Math.min(column / 2 - 5, 80);
+      const winWidth = Math.min(column / 2 - 5, 120);
       const winCol = column / 2 - winWidth;
       await start({
         sources: sources,
@@ -300,6 +301,16 @@ export class Config extends BaseConfig {
             quit: false,
           },
         },
+      });
+    });
+    await registerCommand("DduViewSpecSource", async (arg) => {
+      const args = ensure(arg, is.String).split(" ");
+      const [binPath, histFile] = args;
+      await dduWithPreview([{
+        name: "spec_addrs",
+        params: { binPath, histFile },
+      }], {
+        displayTree: true,
       });
     });
     return Promise.resolve();
