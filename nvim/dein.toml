@@ -117,12 +117,6 @@ lua_add = '''
 '''
 
 [[plugins]]
-repo = "numToStr/Comment.nvim"
-lua_add = '''
-  require('Comment').setup()
-'''
-
-[[plugins]]
 repo = "vim-denops/denops-shared-server.vim"
 
 [[plugins]]
