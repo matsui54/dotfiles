@@ -62,6 +62,7 @@ export class Config extends BaseConfig {
         command_history: { defaultAction: "execute" },
         dein_update: { matchers: ["matcher_dein_update"] },
         nvim_lsp_document_symbol: { columns: ["lsp_symbols"] },
+        spec_addrs: { defaultAction: "open" },
       },
       kindOptions: {
         file: { defaultAction: "open" },
@@ -305,10 +306,17 @@ export class Config extends BaseConfig {
     });
     await registerCommand("DduViewSpecSource", async (arg) => {
       const args = ensure(arg, is.String).split(" ");
-      const [binPath, histFile] = args;
+      const [histFile, binPath, histlen, targetAddr, shorten, minN] = args;
       await dduWithPreview([{
         name: "spec_addrs",
-        params: { binPath, histFile },
+        params: {
+          binPath,
+          histFile,
+          histlen: parseInt(histlen),
+          shorten: shorten === "1",
+          targetAddr: parseInt(targetAddr),
+          minN: parseInt(minN),
+        },
       }], {
         displayTree: true,
       });
