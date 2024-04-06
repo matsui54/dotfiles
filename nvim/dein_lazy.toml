@@ -432,20 +432,23 @@ hook_add = '''
 [[plugins]]
 repo = "mfussenegger/nvim-dap"
 on_event = 'BufRead'
+depends = ["nvim-dap-ui", "nvim-dap-virtual-text"]
 lua_source = '''
   require('dap_rc')
 '''
 
 [[plugins]]
 repo = "rcarriga/nvim-dap-ui"
-on_source = 'nvim-dap'
+depends = "nvim-nio"
 lua_source = '''
   require("dapui").setup()
 '''
 
 [[plugins]]
+repo = "nvim-neotest/nvim-nio"
+
+[[plugins]]
 repo = "theHamsta/nvim-dap-virtual-text"
-on_source = 'nvim-dap'
 lua_source = '''
   require("nvim-dap-virtual-text").setup()
 '''
