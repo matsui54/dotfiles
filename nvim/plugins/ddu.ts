@@ -1,7 +1,3 @@
-import {
-  map,
-  MapOptions,
-} from "https://deno.land/x/denops_std@v6.4.0/mapping/mod.ts";
 import * as op from "https://deno.land/x/denops_std@v6.4.0/option/mod.ts";
 import * as helper from "https://deno.land/x/denops_std@v6.4.0/helper/mod.ts";
 import * as vars from "https://deno.land/x/denops_std@v6.4.0/variable/mod.ts";
@@ -20,29 +16,6 @@ import { ensure, is } from "https://deno.land/x/unknownutil@v3.17.0/mod.ts";
 export class Config extends BaseConfig {
   override async config(args: ConfigArguments): Promise<void> {
     const denops = args.denops;
-    const m = async (lhs: string, rhs: string, op?: MapOptions) => {
-      await map(denops, lhs, rhs, op);
-    };
-    await m("<Space>d", "<cmd>Ddu source<CR>");
-    await m("<Space>a", "<cmd>Ddu file_external<CR>");
-    await m("<Space>h", "<cmd>Ddu help<CR>");
-    await m("<Space>o", "<cmd>Ddu file_old<CR>");
-    await m("<Space>s", "<cmd>Ddu directory_rec<CR>");
-    await m("<Space>n", "<cmd>Ddu ghq<CR>");
-    await m("<Space>b", "<cmd>Ddu buffer<CR>");
-    await m("<Space>r", "<cmd>Ddu -resume<CR>");
-    await m("<Space>g", "<cmd>DduRgLive<CR>");
-    await m("<Space>m", "<cmd>Ddu man<CR>");
-    await m(
-      "<Space>f",
-      "<cmd>Ddu file_external -source-option-file_external-path=~/dotfiles<CR>",
-    );
-    await m("g0", "<cmd>LspDocumentSymbols<CR>");
-    await m(
-      "<C-t>",
-      `"<C-u><ESC><cmd>Ddu command_history -input='" . getcmdline() . "'<CR>"`,
-      { mode: "c", expr: true, silent: true },
-    );
 
     args.setAlias("source", "directory_rec", "file_external");
     args.setAlias("source", "ghq", "file_external");
