@@ -354,9 +354,12 @@ on_cmd = 'FuzzyMotion'
 [[plugins]]
 repo = "lewis6991/gitsigns.nvim"
 lua_source = '''
+vim.api.nvim_set_hl(0, 'GitSignsAdd', { link = 'DiffAdd' })
+vim.api.nvim_set_hl(0, 'GitSignsChange', { link = 'DiffChange' })
+vim.api.nvim_set_hl(0, 'GitSignsDelete', { link = 'DiffDelete' })
 require('gitsigns').setup {
   signs = {
-    change = { hl = 'GitSignsChange', text = '!', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn' },
+    change = {text = '!'},
   },
   on_attach = function(bufnr)
     local gs = package.loaded.gitsigns
