@@ -1,17 +1,17 @@
-import * as op from "https://deno.land/x/denops_std@v6.4.0/option/mod.ts";
-import * as helper from "https://deno.land/x/denops_std@v6.4.0/helper/mod.ts";
-import * as vars from "https://deno.land/x/denops_std@v6.4.0/variable/mod.ts";
+import * as op from "https://deno.land/x/denops_std@v6.5.0/option/mod.ts";
+import * as helper from "https://deno.land/x/denops_std@v6.5.0/helper/mod.ts";
+import * as vars from "https://deno.land/x/denops_std@v6.5.0/variable/mod.ts";
 import {
   BaseConfig,
   DduOptions,
   UserSource,
-} from "https://deno.land/x/ddu_vim@v3.10.3/types.ts";
-import { ConfigArguments } from "https://deno.land/x/ddu_vim@v3.10.3/base/config.ts";
+} from "https://deno.land/x/ddu_vim@v4.1.1/types.ts";
+import { ConfigArguments } from "https://deno.land/x/ddu_vim@v4.1.1/base/config.ts";
 import {
   Fn,
   register,
-} from "https://deno.land/x/denops_std@v6.4.0/lambda/mod.ts";
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.17.0/mod.ts";
+} from "https://deno.land/x/denops_std@v6.5.0/lambda/mod.ts";
+import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 
 export class Config extends BaseConfig {
   override async config(args: ConfigArguments): Promise<void> {
