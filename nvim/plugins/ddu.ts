@@ -129,6 +129,7 @@ export class Config extends BaseConfig {
           filterFloatingPosition: "top",
           ignoreEmpty: true,
           autoResize: true,
+          maxHighlightItems: 1000,
         },
         filer: { split: "no", sortTreesFirst: true },
       },
@@ -306,19 +307,36 @@ export class Config extends BaseConfig {
     });
     await registerCommand("DduViewSpecSource", async (arg) => {
       const args = ensure(arg, is.String).split(" ");
-      const [histFile, binPath, histlen, targetAddr, shorten, minN] = args;
+      const histFile = args.find((v) => v.startsWith("file="))?.split("=")[1];
+      const binPath = args.find((v) => v.startsWith("bin="))?.split("=")[1];
+      const histlens = args.find((v) => v.startsWith("histlens="))?.split(
+        "=",
+      )[1];
+      const targetAddr = args.find((v) => v.startsWith("addr="))?.split("=")[1];
+      const shorten = args.find((v) =>
+        v.startsWith("shorten=")
+      )?.split("=")[1] ?? "0";
+      const minN = args.find((v) => v.startsWith("minN="))?.split("=")[1] ??
+        "0";
+      const similar =
+        args.find((v) => v.startsWith("similar="))?.split("=")[1] ?? "0";
+      if (!histFile || !binPath || !histlens || !targetAddr) {
+        return;
+      }
       await dduWithPreview([{
         name: "spec_addrs",
         params: {
           binPath,
           histFile,
-          histlen: parseInt(histlen),
+          histlens: histlens.split(",").map((v) => parseInt(v)),
           shorten: shorten === "1",
           targetAddr: parseInt(targetAddr),
           minN: parseInt(minN),
+          similar: similar === "1",
         },
       }], {
         displayTree: true,
+        maxHighlightItems: 1000,
       });
     });
     return Promise.resolve();
