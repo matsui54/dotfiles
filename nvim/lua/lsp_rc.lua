@@ -1,19 +1,19 @@
 local on_attach = function(client)
   vim.wo.signcolumn = 'yes'
   local maps = {
-    { 'n', '<c-]>',     '<cmd>lua vim.lsp.buf.definition()<CR>' },
+    { 'n', '<c-]>',     '<cmd>LspDefinition<CR>' },
     { 'n', 'K',         '<cmd>lua vim.lsp.buf.hover()<CR>' },
     { 'n', 'gD',        '<cmd>lua vim.lsp.buf.implementation()<CR>' },
     { 'n', '1gD',       '<cmd>lua vim.lsp.buf.type_definition()<CR>' },
     { 'n', 'gW',        '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>' },
     { 'n', 'gd',        '<cmd>lua vim.lsp.buf.declaration()<CR>' },
     { 'n', 'ga',        '<cmd>lua vim.lsp.buf.code_action()<CR>' },
-    { 'n', '<Leader>f', '<cmd>lua vim.lsp.buf.format({ async = true })<CR>' },
+    { 'n', '<Leader>f', '<cmd>lua vim.lsp.buf.format()<CR>' },
+    { 'v', '<Leader>f', '<cmd>lua vim.lsp.buf.format()<CR>' },
     { 'n', '<Leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>' },
     { 'n', 'gl',        '<cmd>lua vim.lsp.buf.document_highlight()<CR>' },
     { 'n', 'gm',        '<cmd>lua vim.diagnostic.open_float()<CR>' },
-    -- { 'n', 'g0', '<cmd>Denite lsp/document_symbol -auto-action=highlight<CR>' },
-    { 'n', 'gr',        '<cmd>Denite lsp/references -auto-action=preview_bat<CR>' },
+    { 'n', 'gr',        '<cmd>LspReferences<CR>' },
   }
   for _, map in ipairs(maps) do
     vim.api.nvim_buf_set_keymap(0, map[1], map[2], map[3], { noremap = true })
@@ -60,22 +60,9 @@ end
 
 require("neodev").setup()
 
--- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.preselectSupport = false
-capabilities.textDocument.completion.completionItem.insertReplaceSupport = false
-capabilities.textDocument.completion.completionItem.labelDetailsSupport = false
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities.textDocument.completion.completionItem.deprecatedSupport = false
-capabilities.textDocument.completion.completionItem.commitCharactersSupport = false
--- capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
-capabilities.textDocument.completion.completionItem.resolveSupport = {
-  properties = {
-    'documentation',
-    'detail',
-    -- 'additionalTextEdits',
-  }
-}
+local capabilities = require(
+  "ddc_source_lsp"
+).make_client_capabilities()
 local nvim_lsp = require('lspconfig')
 
 local node_root_dir = nvim_lsp.util.root_pattern("package.json", "node_modules")
