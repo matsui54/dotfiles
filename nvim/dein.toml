@@ -27,6 +27,7 @@ hook_add = '''
   " for fzf color theme
   let $FZF_DEFAULT_OPTS="--color=light"
 '''
+type__depth = 1
 
 [[plugins]]
 repo = 'kana/vim-operator-user'
@@ -39,6 +40,7 @@ repo = "sgur/vim-textobj-parameter"
 
 [[plugins]]
 repo = 'vim-jp/vimdoc-ja'
+type__depth = 1
 
 [[plugins]]
 repo = 'roxma/vim-hug-neovim-rpc'
