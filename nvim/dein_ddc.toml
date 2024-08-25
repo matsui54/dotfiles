@@ -170,6 +170,10 @@ repo = 'uga-rosa/ddc-source-vsnip'
 repo = 'rafamadriz/friendly-snippets'
 
 [[plugins]]
+repo = 'skk-dev/dict'
+type__depth = 1
+
+[[plugins]]
 repo = 'vim-skk/denops-skkeleton.vim'
 lazy = 1
 on_map = {ic = '<plug>(skkeleton-'}
@@ -183,8 +187,11 @@ hook_add = '''
     call skkeleton#register_keymap('henkan', "\<C-h>", 'henkanBackward')
     call skkeleton#register_keymap('henkan', "x", '')
 
+    if !isdirectory(expand('~/.cache/skkeleton'))
+      call mkdir(expand('~/.cache/skkeleton'), 'p')
+    endif
     call skkeleton#config({
-      \ 'globalDictionaries': ["/usr/share/skk/SKK-JISYO.L"],
+      \ 'globalDictionaries': ["~/.cache/dein/repos/github.com/skk-dev/dict/SKK-JISYO.L"],
       \ 'userDictionary': expand('~/.cache/skkeleton/skkeleton'),
       \ 'completionRankFile': expand('~/.cache/skkeleton/rank.json'),
       \ })
@@ -197,11 +204,6 @@ hook_add = '''
       \ 'z0': ['）', ''],
       \ '~': ['～', ''],
       \ })
-    if has('win32') || has('win64')
-      call skkeleton#config({
-        \ 'globalDictionaries': [expand('~/AppData/Local/skk/SKK-JISYO.L')]
-        \ })
-    endif
   endfunction
   autocmd User skkeleton-initialize-pre call s:skkeleton_init()
   augroup MyDdcSkkeleton

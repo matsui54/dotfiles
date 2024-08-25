@@ -84,7 +84,7 @@ export class Config extends BaseConfig {
         vsnip: { "mark": "[V]", "dup": "keep" },
         skkeleton: {
           mark: "[skk]",
-          matchers: ["skkeleton"],
+          matchers: [],
           sorters: [],
           isVolatile: true,
           minAutoCompleteLength: 2,
