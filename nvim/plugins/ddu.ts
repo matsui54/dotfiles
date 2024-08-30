@@ -1,16 +1,16 @@
-import * as op from "https://deno.land/x/denops_std@v6.5.0/option/mod.ts";
-import * as helper from "https://deno.land/x/denops_std@v6.5.0/helper/mod.ts";
-import * as vars from "https://deno.land/x/denops_std@v6.5.0/variable/mod.ts";
+import * as op from "https://deno.land/x/denops_std@v6.5.1/option/mod.ts";
+import * as helper from "https://deno.land/x/denops_std@v6.5.1/helper/mod.ts";
+import * as vars from "https://deno.land/x/denops_std@v6.5.1/variable/mod.ts";
 import {
   BaseConfig,
   DduOptions,
   UserSource,
-} from "https://deno.land/x/ddu_vim@v4.1.1/types.ts";
-import { ConfigArguments } from "https://deno.land/x/ddu_vim@v4.1.1/base/config.ts";
+} from "https://deno.land/x/ddu_vim@v5.0.0/types.ts";
+import { ConfigArguments } from "https://deno.land/x/ddu_vim@v5.0.0/base/config.ts";
 import {
   Fn,
   register,
-} from "https://deno.land/x/denops_std@v6.5.0/lambda/mod.ts";
+} from "https://deno.land/x/denops_std@v6.5.1/lambda/mod.ts";
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
 
 export class Config extends BaseConfig {
