@@ -32,7 +32,7 @@ install_packages ()
 {
   PACKAGES=(zsh zsh-syntax-highlighting git-prompt.zsh \
     ripgrep bat fzf fd github-cli bottom htop dust duf rsync \
-    nodejs npm go zip deno zig rust julia \
+    nodejs npm go zip zig rust julia \
     wget ghq man-db unzip openssh pyenv \
     words skk-jisyo \
     base-devel cmake unzip ninja curl \
@@ -241,8 +241,10 @@ enable_service_if_disabled ()
 
 start_services ()
 {
-  enable_service_if_disabled sshd
-  enable_service_if_disabled tailscaled
+  if [[ -v WSL ]]; then
+    enable_service_if_disabled sshd
+    enable_service_if_disabled tailscaled
+  fi
   if [[ -v X ]]; then
     enable_service_if_disabled cups
   fi

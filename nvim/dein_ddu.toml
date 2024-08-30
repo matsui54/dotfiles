@@ -22,8 +22,6 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/ddu-commands.vim'
-lazy = 1
-on_cmd = 'Ddu'
 
 [[plugins]]
 repo = 'Shougo/ddu-ui-ff'
