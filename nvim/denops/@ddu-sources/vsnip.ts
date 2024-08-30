@@ -1,9 +1,9 @@
 import {
   BaseSource,
   Item,
-} from "https://deno.land/x/ddu_vim@v0.7.0/types.ts#^";
-import { Denops, fn } from "https://deno.land/x/ddu_vim@v0.4.0/deps.ts#^";
-import { ActionData } from "https://deno.land/x/ddu_kind_file@v0.1.0/file.ts#^";
+} from "https://deno.land/x/ddu_vim@v0.7.0/types.ts";
+import { Denops, fn } from "https://deno.land/x/ddu_vim@v0.4.0/deps.ts";
+import { ActionData } from "https://deno.land/x/ddu_kind_file@v0.1.0/file.ts";
 
 type Params = {};
 

@@ -1,13 +1,13 @@
 import {
   BaseSource,
   Item,
-} from "https://deno.land/x/ddc_vim@v2.0.0/types.ts#^";
-import { vimoption2ts } from "https://deno.land/x/ddc_vim@v2.0.0/util.ts#^";
+} from "https://deno.land/x/ddc_vim@v2.0.0/types.ts";
+import { vimoption2ts } from "https://deno.land/x/ddc_vim@v2.0.0/util.ts";
 import {
   GatherArguments,
   GetCompletePositionArguments,
-} from "https://deno.land/x/ddc_vim@v2.0.0/base/source.ts#^";
-import * as fn from "https://deno.land/x/denops_std@v2.4.0/function/mod.ts#^";
+} from "https://deno.land/x/ddc_vim@v2.0.0/base/source.ts";
+import * as fn from "https://deno.land/x/denops_std@v2.4.0/function/mod.ts";
 import * as op from "https://deno.land/x/denops_std@v3.1.0/option/mod.ts";
 import { relative, resolve } from "https://deno.land/std@0.125.0/path/mod.ts";
 
