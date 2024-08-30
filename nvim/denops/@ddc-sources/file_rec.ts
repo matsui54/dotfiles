@@ -1,15 +1,13 @@
-import {
-  BaseSource,
-  Item,
-} from "https://deno.land/x/ddc_vim@v6.0.0/types.ts";
-import { vimoption2ts } from "https://deno.land/x/ddc_vim@v6.0.0/util.ts";
+import { Item } from "jsr:@shougo/ddc-vim@7.0.0/types";
+import { BaseSource } from "jsr:@shougo/ddc-vim@7.0.0/source";
+import { vimoption2ts } from "jsr:@shougo/ddc-vim@7.0.0/utils";
 import {
   GatherArguments,
   GetCompletePositionArguments,
-} from "https://deno.land/x/ddc_vim@v6.0.0/base/source.ts";
-import * as fn from "https://deno.land/x/denops_std@v6.5.1/function/mod.ts";
-import * as op from "https://deno.land/x/denops_std@v6.5.1/option/mod.ts";
-import { relative, resolve } from "https://deno.land/std@0.224.0/path/mod.ts";
+} from "jsr:@shougo/ddc-vim@7.0.0/source";
+import * as fn from "jsr:@denops/std@7.1.1/function";
+import * as op from "jsr:@denops/std@7.1.1/option";
+import { relative, resolve } from "jsr:@std/path@1.0.3";
 
 type Params = {
   cmd: string[];

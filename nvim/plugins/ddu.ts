@@ -1,17 +1,13 @@
-import * as op from "https://deno.land/x/denops_std@v6.5.1/option/mod.ts";
-import * as helper from "https://deno.land/x/denops_std@v6.5.1/helper/mod.ts";
-import * as vars from "https://deno.land/x/denops_std@v6.5.1/variable/mod.ts";
+import * as op from "jsr:@denops/std@7.1.1/option";
+import * as helper from "jsr:@denops/std@7.1.1/helper";
+import * as vars from "jsr:@denops/std@7.1.1/variable";
+import type { DduOptions, UserSource } from "jsr:@shougo/ddu-vim@6.1.0/types";
 import {
   BaseConfig,
-  DduOptions,
-  UserSource,
-} from "https://deno.land/x/ddu_vim@v5.0.0/types.ts";
-import { ConfigArguments } from "https://deno.land/x/ddu_vim@v5.0.0/base/config.ts";
-import {
-  Fn,
-  register,
-} from "https://deno.land/x/denops_std@v6.5.1/lambda/mod.ts";
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.18.1/mod.ts";
+  type ConfigArguments,
+} from "jsr:@shougo/ddu-vim@6.1.0/config";
+import { Fn, register } from "jsr:@denops/std@7.1.1/lambda";
+import { ensure, is } from "jsr:@core/unknownutil@4.3.0";
 
 export class Config extends BaseConfig {
   override async config(args: ConfigArguments): Promise<void> {
