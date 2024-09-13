@@ -50,7 +50,7 @@ local on_attach = function(client)
   -- override ddc setting of lsp buffer
   vim.fn['ddc#custom#patch_buffer']({
     sourceOptions = {
-      ["nvim-lsp"] = {
+      ["lsp"] = {
         minAutoCompleteLength = 1,
         forceCompletionPattern = forceCompletionPattern,
       }
