@@ -139,7 +139,7 @@ nvim_lsp.lua_ls.setup {
   }
 }
 nvim_lsp.rust_analyzer.setup { on_attach = on_attach, capabilities = capabilities }
-nvim_lsp.tsserver.setup {
+nvim_lsp.ts_ls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   autostart = is_node_repo,
