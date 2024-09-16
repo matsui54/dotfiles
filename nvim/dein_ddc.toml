@@ -172,11 +172,11 @@ repo = 'rafamadriz/friendly-snippets'
 [[plugins]]
 repo = 'skk-dev/dict'
 type__depth = 1
+if = 0
+merged = 0
 
 [[plugins]]
 repo = 'vim-skk/denops-skkeleton.vim'
-lazy = 1
-on_map = {ic = '<plug>(skkeleton-'}
 hook_add = '''
   imap <C-j> <Plug>(skkeleton-toggle)
   cmap <C-j> <Plug>(skkeleton-toggle)
