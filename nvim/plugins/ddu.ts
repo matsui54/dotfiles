@@ -152,7 +152,7 @@ export class Config extends BaseConfig {
       uiAditonalParams: Record<string, unknown> = {},
     ) => {
       const column = await op.columns.get(denops);
-      const line = await denops.eval("&lines") as number;
+      const line = await op.lines.get(denops);
       const winHeight = line - 8;
       const winRow = (line - winHeight) / 2;
 
@@ -255,11 +255,21 @@ export class Config extends BaseConfig {
       });
     });
     await registerCommand("DduFiler", async () => {
+      const line = await op.lines.get(denops);
+      const winHeight = line - 8;
+      const winRow = (line - winHeight) / 2;
       await start({
         ui: "filer",
-        name: "filer-" + await vars.t.get(denops, "ddu_index", ""),
+        name: "filer-" + await vars.t.get(denops, "ddu_filer_index", ""),
         resume: true,
         sync: true,
+        uiParams: {
+          filer: {
+            split: 'floating',
+            winRow: winRow,
+            winHeight: winHeight,
+          },
+        },
         sources: [{
           name: "file",
           options: {

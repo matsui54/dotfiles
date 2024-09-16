@@ -1,11 +1,4 @@
 [[plugins]]
-repo = 'Shougo/denite.nvim'
-on_event = 'CmdlineEnter'
-hook_source = '''
-  source ~/dotfiles/nvim/plugins/denite.rc.vim
-'''
-
-[[plugins]]
 repo = 'thinca/vim-quickrun'
 on_cmd = 'QuickRun'
 hook_add = '''
@@ -33,24 +26,6 @@ hook_source = '''
 calendar = '''
   nnoremap <buffer> <C-j> gT
   nnoremap <buffer> <C-k> gt
-'''
-
-[[plugins]]
-repo = 'Shougo/defx.nvim'
-depends = ['defx-icons']
-hook_source = '''
-  source ~/dotfiles/nvim/plugins/defx.rc.vim
-'''
-hook_add = '''
-  nnoremap <silent> <C-f> <cmd>Defx -buffer-name=`'defx' . t:defx_index`<CR>
-  nnoremap <silent> <Space>w <cmd>Defx -buffer-name=`'defx' . t:defx_index` ~/work<CR>
-  nnoremap <silent> <Space>p <cmd>Defx -buffer-name=`'defx' . t:defx_index` ~/.cache/dein/repos/github.com<CR>
-'''
-
-[[plugins]]
-repo = 'kristijanhusak/defx-icons'
-hook_add = '''
-  let g:defx_icons_column_length = 2
 '''
 
 [[plugins]]
@@ -146,9 +121,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'lambdalisue/gina.vim'
-on_source = 'denite.nvim'
 hook_add = '''
-  nnoremap gnl <cmd>Gina log<CR>
   nnoremap gnw <cmd>Gina browse<CR>
   nnoremap gn<Space> :Gina<Space>
 '''
@@ -282,11 +255,6 @@ on_cmd = ['SudaRead', 'SudaWrite']
 on_event = 'BufRead'
 
 [[plugins]]
-repo = 'matsui54/denite-nvim-lsp'
-if = 'has("nvim")'
-on_source = 'denite.nvim'
-
-[[plugins]]
 repo = 'machakann/vim-swap'
 on_map = '<plug>(swap-'
 hook_add = '''
@@ -296,18 +264,6 @@ hook_add = '''
   xmap <leader>gs <Plug>(swap-interactive)
   nmap g< <Plug>(swap-prev)
   nmap g> <Plug>(swap-next)
-'''
-
-[[plugins]]
-repo = 'editorconfig/editorconfig-vim'
-on_cmd = 'EditorConfigEnable'
-
-[[plugins]]
-repo = 'gamoutatsumi/dps-ghosttext.vim'
-depends = 'denops.vim'
-on_cmd = 'GhostStart'
-hook_add = '''
-  let g:dps_ghosttext#ftmap = {"github.com": "markdown", "zenn.dev": "markdown"}
 '''
 
 [[plugins]]
@@ -422,10 +378,6 @@ hook_add = '''
 on_event = 'InsertEnter'
 
 [[plugins]]
-repo = 'mattn/emmet-vim'
-on_ft = ['html', 'css']
-
-[[plugins]]
 repo = 'mattn/vim-sonictemplate'
 on_cmd = 'Template'
 hook_add = '''
@@ -454,104 +406,6 @@ repo = "nvim-neotest/nvim-nio"
 repo = "theHamsta/nvim-dap-virtual-text"
 lua_source = '''
   require("nvim-dap-virtual-text").setup()
-'''
-
-[[plugins]]
-repo = "lambdalisue/fern.vim"
-on_cmd = 'Fern'
-depends = ['nerdfont.vim', 'fern-renderer-nerdfont.vim', 'glyph-palette.vim']
-hook_add = """
-  " let g:fern#disable_default_mappings = 1
-  " nnoremap <silent> <C-f> <cmd>Fern .<CR>
-"""
-[plugins.ftplugin]
-fern = '''
-  nmap <silent> <buffer> p     <Plug>(fern-action-preview:toggle)
-  nmap <silent> <buffer> <C-p> <Plug>(fern-action-preview:auto:toggle)
-  nmap <silent> <buffer> <C-d> <Plug>(fern-action-preview:scroll:down:half)
-  nmap <silent> <buffer> <C-u> <Plug>(fern-action-preview:scroll:up:half)
-  nmap <silent><buffer> <CR> <Plug>(fern-action-open-or-enter)
-  " nmap <silent><buffer> + <Plug>(fern-action-add_session)
-  nmap <silent><buffer> c <Plug>(fern-action-clipboard-copy)
-  nmap <silent><buffer> m <Plug>(fern-action-clipboard-move)
-  nmap <silent><buffer> P <Plug>(fern-action-clipboard-paste)
-  nmap <silent><buffer> l <Plug>(fern-action-open-or-enter)
-  nmap <silent><buffer> E <Plug>(fern-action-open:side)
-  nmap <silent><buffer> t <Plug>(fern-action-open:tabedit)
-  nmap <silent><buffer> o <Plug>(fern-action-open-or-expand)
-  " nmap <silent><buffer> O defx#async_action('open_tree', 'recursive')
-  nmap <silent><buffer> K <Plug>(fern-action-new-dir)
-  nmap <silent><buffer> N <Plug>(fern-action-new-file)
-  " nmap <silent><buffer> S defx#do_action('multi', [['toggle_sort', 'time'], 'redraw'])
-  nmap <silent><buffer> d <Plug>(fern-action-trash)
-  nmap <silent><buffer> D <Plug>(fern-action-remove)
-  nmap <silent><buffer> r <Plug>(fern-action-rename)
-  nmap <silent><buffer> ! <Plug>(fern-action-ex)
-  nmap <silent><buffer> x <Plug>(fern-action-open:system)
-  nmap <silent><buffer> yy <Plug>(fern-action-yank)
-  nmap <silent><buffer> . <Plug>(fern-action-hidden)
-  nmap <silent><buffer> h <Plug>(fern-action-leave)
-  " nmap <silent><buffer> ~ <Plug>(fern-action-cd)
-  " nmap <silent><buffer> q ((&filetype =~# 'defx') && (bufname() =~# 'temp')) ?
-  "   \ <Plug>(fern-action-quit) : \ ':call <SID>quit_all_defx()<CR>'
-  " nmap <silent><buffer> <Esc> \ <Plug>(fern-action-quit)
-  " nmap <silent><buffer> , \ <Plug>(fern-action-toggle_select) . 'j'
-  " nmap <silent><buffer> * \ <Plug>(fern-action-toggle_select_all)
-  nmap <silent><buffer><expr> j line('.') == line('$') ? 'gg' : 'j'
-  nmap <silent><buffer><expr> k line('.') == 1 ? 'G' : 'k'
-  nmap <silent><buffer> <C-l> <Plug>(fern-action-reload):nohlsearch<CR>
-  " nmap <silent><buffer> <C-g> \ <Plug>(fern-action-print)
-  " nmap <silent><buffer> cd \ <Plug>(fern-action-change_vim_cwd)
-  " nmap <silent><buffer> ' \ defx#do_action('cd', [getcwd()])
-  " nmap <silent><buffer> <Tab> <cmd>call <SID>switch_defx_buf()<CR>
-  " nmap <silent><buffer><expr> L
-  "   \ <Plug>(fern-action-link)
-
-  " nmap <silent><buffer><expr> <Space>s \ ":Denite directory_rec:" . <SID>get_defx_cwd() . " -default-action=jump_defx<CR>"
-  " nmap <silent><buffer><expr> <Space>a \ ":Denite file/rec:" . <SID>get_defx_cwd() . "<CR>"
-  " nmap <silent><buffer><expr> <Space>g \ ":Denite grep:" . <SID>get_defx_cwd() . "<CR>"
-'''
-
-[[plugins]]
-repo = "yuki-yano/fern-preview.vim"
-on_source = 'fern.vim'
-
-[[plugins]]
-repo = "lambdalisue/nerdfont.vim"
-hook_add = """
-  let g:fern#renderer = "nerdfont"
-  let g:fern#renderer#nerdfont#padding = "  "
-  let g:fern#renderer#nerdfont#indent_markers=1
-"""
-
-[[plugins]]
-repo = "lambdalisue/fern-renderer-nerdfont.vim"
-
-[[plugins]]
-repo = "lambdalisue/glyph-palette.vim"
-[plugins.ftplugin]
-fern = '''
-  call glyph_palette#apply()
-'''
-
-[[plugins]]
-repo = "thinca/vim-partedit"
-on_cmd = 'Partedit'
-on_func = 'partedit#start'
-hook_add = '''
-  command! DeinPartedit call <SID>operator_partedit()
-  function! s:operator_partedit() abort
-    let context = context_filetype#get()
-    if context.range == [[0, 0], [0, 0]]
-      echohl WarningMsg
-      echomsg 'Context is not found'
-      echohl NONE
-      return
-    endif
-    call partedit#start(context.range[0][0], context.range[1][0],
-          \ {'filetype': context.filetype})
-    nnoremap <buffer><nowait> <C-q> <Cmd>w<CR><Cmd>ParteditEnd<CR>
-  endfunction
 '''
 
 [[plugins]]

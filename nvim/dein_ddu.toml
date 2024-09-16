@@ -14,6 +14,7 @@ hook_add = '''
   nnoremap <Space>g <cmd>DduRgLive<CR>
   nnoremap <Space>m <cmd>Ddu man<CR>
   nnoremap g0 <cmd>LspDocumentSymbols<CR>
+  nnoremap <C-f> <cmd>DduFiler<CR>
   
   cnoremap <expr><silent> <C-t>
       \ "<C-u><ESC><cmd>Ddu command_history -input='" .
@@ -152,6 +153,15 @@ ddu-filer = '''
     let matchers = get(source_options_name, 'matchers', [])
     return empty(matchers) ? ['matcher_hidden'] : []
   endfunction
+  nnoremap <buffer><silent> E
+  \ <Cmd>call ddu#ui#do_action('itemAction',
+  \ {'name': 'open', 'params': {'command': 'vsplit'}})<CR>
+  nnoremap <buffer><silent> t
+  \ <Cmd>call ddu#ui#do_action('itemAction',
+  \ {'name': 'open', 'params': {'command': 'tabedit'}})<CR>
+  nnoremap <buffer><silent> S
+  \ <Cmd>call ddu#ui#do_action('itemAction',
+  \ {'name': 'open', 'params': {'command': 'split'}})<CR>
 '''
 
 [[plugins]]

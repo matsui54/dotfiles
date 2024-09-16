@@ -80,8 +80,8 @@ set pumheight=15
 augroup MyAutoCmd
   autocmd!
   autocmd ColorScheme * call vimrc#color_settings(expand('<amatch>'))
-  autocmd VimEnter * let t:defx_index = 1 | let g:tab_idx = 1
-  autocmd TabNew * let t:defx_index = s:get_defx_idx()
+  autocmd VimEnter * let t:ddu_filer_index = 1 | let g:tab_idx = 1
+  autocmd TabNew * let t:ddu_filer_index = s:get_ddu_filer_idx()
   autocmd CmdwinEnter [:>] iunmap <buffer> <Tab>
   autocmd CmdwinEnter [:>] nunmap <buffer> <Tab>
   autocmd CursorHold * redrawtabline
@@ -89,7 +89,7 @@ augroup END
 
 colorscheme shirotelin
 
-function! s:get_defx_idx()
+function! s:get_ddu_filer_idx()
   let g:tab_idx += 1
   return g:tab_idx
 endfunction

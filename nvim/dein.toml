@@ -43,14 +43,6 @@ repo = 'vim-jp/vimdoc-ja'
 type__depth = 1
 
 [[plugins]]
-repo = 'roxma/vim-hug-neovim-rpc'
-if = '!has("nvim")'
-
-[[plugins]]
-repo = 'roxma/nvim-yarp'
-if = '!has("nvim")'
-
-[[plugins]]
 repo = 'lervag/vimtex'
 hook_add = '''
   let g:vimtex_syntax_conceal_disable = 1
@@ -120,6 +112,3 @@ lua_add = '''
 
 [[plugins]]
 repo = "vim-denops/denops-shared-server.vim"
-
-[[plugins]]
-repo = "lambdalisue/fern-hijack.vim"
