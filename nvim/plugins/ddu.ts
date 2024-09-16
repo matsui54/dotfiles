@@ -265,7 +265,7 @@ export class Config extends BaseConfig {
         sync: true,
         uiParams: {
           filer: {
-            split: 'floating',
+            split: "floating",
             winRow: winRow,
             winHeight: winHeight,
           },
@@ -275,6 +275,7 @@ export class Config extends BaseConfig {
           options: {
             path: await vars.t.get(denops, "ddu_ui_filer_path", ""),
             columns: ["icon_filename"],
+            sorters: ["sorter_alpha"],
           },
         }],
         actionOptions: {

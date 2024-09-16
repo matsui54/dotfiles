@@ -128,14 +128,21 @@ ddu-filer = '''
   \ <Cmd>call ddu#ui#do_action('itemAction',
   \ {'name': 'narrow', 'params': {'path':
   \  fnamemodify(input('New cwd: ', b:ddu_ui_filer_path, 'dir'), ':p')}})<CR>
-  nnoremap <buffer> >
-  \ <Cmd>call ddu#ui#do_action('updateOptions', {
-  \   'sourceOptions': {
-  \     'file': {
-  \       'matchers': <SID>toggle_hidden('file'),
-  \     },
-  \   },
-  \ })<CR>
+  nnoremap <buffer> .
+  \ <Cmd>call ddu#ui#multi_actions([
+  \   [
+  \      'updateOptions', #{
+  \        sourceOptions: #{
+  \          file: #{
+  \            matchers: ToggleHidden('file'),
+  \          },
+  \        },
+  \      }
+  \   ],
+  \   [
+  \      'redraw', #{ method: 'refreshItems' },
+  \   ],
+  \ ])<CR>
   nnoremap <buffer> <C-l>
   \ <Cmd>call ddu#ui#do_action('checkItems')<CR>
   nnoremap <buffer><expr> <CR>
@@ -146,12 +153,12 @@ ddu-filer = '''
   \ get(ddu#ui#get_item(), 'isTree', v:false) ?
   \ "<Cmd>call ddu#ui#do_action('itemAction', #{ name: 'narrow' })<CR>" :
   \ "<Cmd>call ddu#ui#do_action('itemAction', #{ name: 'open' })<CR>"
-  function! s:toggle_hidden(name)
-    let current = ddu#custom#get_current(b:ddu_ui_name)
-    let source_options = get(current, 'sourceOptions', {})
-    let source_options_name = get(source_options, a:name, {})
-    let matchers = get(source_options_name, 'matchers', [])
-    return empty(matchers) ? ['matcher_hidden'] : []
+  function! ToggleHidden(name)
+    return ddu#custom#get_current(b:ddu_ui_name)
+          \ ->get('sourceOptions', {})
+          \ ->get(a:name, {})
+          \ ->get('matchers', [])
+          \ ->empty() ? ['matcher_hidden'] : []
   endfunction
   nnoremap <buffer><silent> E
   \ <Cmd>call ddu#ui#do_action('itemAction',
@@ -235,3 +242,9 @@ repo = "lambdalisue/kensaku.vim"
 
 [[plugins]]
 repo = 'ryota2357/ddu-column-icon_filename'
+
+[[plugins]]
+repo = 'Shougo/ddu-filter-sorter_alpha'
+
+[[plugins]]
+repo = 'Shougo/ddu-filter-matcher_hidden'
