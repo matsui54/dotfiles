@@ -187,7 +187,7 @@ lua_source = '''
 require'nvim-treesitter.configs'.setup {
     highlight = {
         enable = true,
-        disable = {'latex', 'help'},
+        disable = {'latex', 'help', 'csv'},
     },
     refactor = {
       highlight_defintions = {
@@ -415,6 +415,10 @@ on_source = 'nvim-lspconfig'
 [[plugins]]
 repo = "uga-rosa/ccc.nvim"
 on_cmd = "CccHighlighterToggle"
+lua_source = '''
+	require("ccc").setup({
+	})
+'''
 
 [[plugins]]
 repo = "github/copilot.vim"
@@ -422,4 +426,11 @@ on_cmd = 'Copilot'
 hook_add = '''
   let g:copilot_no_tab_map = v:true
   imap <silent><script><expr> <C-v> copilot#Accept("\<CR>")
+'''
+
+[[plugins]]
+repo = "mechatroner/rainbow_csv"
+on_ft = ["csv"]
+hook_add = '''
+  let g:disable_rainbow_hover = 1
 '''
