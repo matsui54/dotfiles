@@ -45,9 +45,6 @@ nnoremap <Space><C-j> <cmd>tabmove -<CR>
 nnoremap <Space><C-k> <cmd>tabmove +<CR>
 nnoremap <Space>t <cmd>tabe<CR>
 
-" stop highlighting for search
-nnoremap <silent> <C-l> <cmd>nohlsearch<CR><C-l>
-
 " improved G
 nnoremap G Gzz7<C-y>
 
@@ -67,17 +64,6 @@ vmap <silent> <C-d> <cmd>call smooth_scroll#down()<CR>
 " for sandwich.vim
 nmap s <Nop>
 xmap s <Nop>
-
-" from nelstrom/vim-visual-star-search
-function! s:VSetSearch(cmdtype)
-  let temp = @"
-  norm! y
-  let @/ = '\V' . substitute(escape(@", a:cmdtype.'\'), '\n', '\\n', 'g')
-  let @" = temp
-endfunction
-
-xnoremap * <cmd>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
-xnoremap # <cmd>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
 
 nnoremap j gj
 nnoremap k gk
