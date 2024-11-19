@@ -209,10 +209,6 @@ require'nvim-treesitter.configs'.setup {
 '''
 
 [[plugins]]
-repo = 'nvim-treesitter/playground'
-on_source = 'nvim-treesitter'
-
-[[plugins]]
 repo = 'neovim/nvim-lspconfig'
 if = 'has("nvim")'
 on_event = 'BufRead'
@@ -236,9 +232,6 @@ lua_source = '''
     ensure_installed = { "rust_analyzer", "lua_ls", "texlab", "vimls", "pyright", "bashls" },
   })
 '''
-
-[[plugins]]
-repo = 'nvim-lua/popup.nvim'
 
 [[plugins]]
 repo = 'nvim-lua/plenary.nvim'
