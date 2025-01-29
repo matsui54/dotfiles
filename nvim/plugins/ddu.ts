@@ -1,20 +1,20 @@
-import * as op from "jsr:@denops/std@7.1.1/option";
-import * as helper from "jsr:@denops/std@7.1.1/helper";
-import * as vars from "jsr:@denops/std@7.1.1/variable";
-import type { DduOptions, UserSource } from "jsr:@shougo/ddu-vim@6.1.0/types";
+import * as op from "jsr:@denops/std@7.4.0/option";
+import * as helper from "jsr:@denops/std@7.4.0/helper";
+import * as vars from "jsr:@denops/std@7.4.0/variable";
+import type { DduOptions, UserSource } from "jsr:@shougo/ddu-vim@9.4.0/types";
 import {
   BaseConfig,
   type ConfigArguments,
-} from "jsr:@shougo/ddu-vim@6.1.0/config";
-import { Fn, register } from "jsr:@denops/std@7.1.1/lambda";
+} from "jsr:@shougo/ddu-vim@9.4.0/config";
+import { Fn, register } from "jsr:@denops/std@7.4.0/lambda";
 import { ensure, is } from "jsr:@core/unknownutil@4.3.0";
 
 export class Config extends BaseConfig {
   override async config(args: ConfigArguments): Promise<void> {
     const denops = args.denops;
 
-    args.setAlias("source", "directory_rec", "file_external");
-    args.setAlias("source", "ghq", "file_external");
+    args.setAlias("default", "source", "directory_rec", "file_external");
+    args.setAlias("default", "source", "ghq", "file_external");
     args.contextBuilder.patchGlobal({
       ui: "ff",
       profile: false,
