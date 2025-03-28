@@ -1,6 +1,5 @@
 set title
 set updatetime=500
-set hidden
 set laststatus=2
 set signcolumn=yes
 

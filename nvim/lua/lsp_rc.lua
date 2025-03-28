@@ -70,6 +70,7 @@ local buf_name = vim.api.nvim_buf_get_name(0)
 local current_buf = vim.api.nvim_get_current_buf()
 local is_node_repo = node_root_dir(buf_name, current_buf) ~= nil
 
+capabilities.textDocument.completion.completionItem.snippetSupport = false
 nvim_lsp.clangd.setup {
   on_attach = on_attach,
   capabilities = capabilities,
@@ -78,6 +79,7 @@ nvim_lsp.clangd.setup {
     "--offset-encoding=utf-16",
   },
 }
+capabilities.textDocument.completion.completionItem.snippetSupport = true
 nvim_lsp.gopls.setup { on_attach = on_attach, capabilities = capabilities }
 nvim_lsp.vimls.setup { on_attach = on_attach, capabilities = capabilities }
 nvim_lsp.pyright.setup { on_attach = on_attach, capabilities = capabilities }

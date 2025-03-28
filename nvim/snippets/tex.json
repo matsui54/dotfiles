@@ -4,7 +4,7 @@
       "zu",
       "ず"
     ],
-    "body": "図\\ref{$1}",
+    "body": "図~\\ref{$1}$2",
     "description": "picture ref"
   },
   "表": {
@@ -12,8 +12,28 @@
       "hyou",
       "表"
     ],
-    "body": " 表\\ref{$1} ",
+    "body": "表~\\ref{$1}$2",
     "description": "table ref"
+  },
+  "コード": {
+    "prefix": [
+      "code"
+    ],
+    "body": "コード~\\ref{$1}$2",
+    "description": "code ref"
+  },
+  "Cite": {
+      "prefix": "cite",
+      "body": ["~\\cite{$1}$2"],
+      "description": "Add a cite"
+  },
+  "setu": {
+    "prefix": [
+      "setu",
+      "せつ"
+    ],
+    "body": "~\\ref{$1}節$2",
+    "description": "setting ref"
   },
   "siki": {
     "prefix": "siki",
@@ -91,9 +111,14 @@
     ],
     "description": "figure"
   },
+  "texttt": {
+    "prefix": "tt",
+    "body": "\\texttt{$1}$2",
+    "description": "texttt"
+  },
   "dollar": {
     "prefix": "$",
-    "body": "\\$ $1 \\$ $2",
+    "body": "\\$ $1 \\$$2",
     "description": "dollar"
   }
 }

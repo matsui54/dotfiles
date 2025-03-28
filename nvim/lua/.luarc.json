@@ -1,0 +1,8 @@
+{
+    "workspace.library": [
+        "/home/matsui/.cache/dein/repos/github.com/folke/neodev.nvim/types/nightly",
+        "/home/matsui/.local/nvim/share/nvim/runtime/lua",
+        "/home/matsui/dotfiles/nvim/lua",
+        "${3rd}/luv/library"
+    ]
+}

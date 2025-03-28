@@ -7,7 +7,7 @@ _ = '''
 '''
 
 c = '''
-packadd termdebug
+"packadd termdebug
 '''
 
 go = '''

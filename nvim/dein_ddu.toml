@@ -248,3 +248,6 @@ repo = 'Shougo/ddu-filter-sorter_alpha'
 
 [[plugins]]
 repo = 'Shougo/ddu-filter-matcher_hidden'
+
+[[plugins]]
+repo = "~/ghq/github.com/matsui54/cpu_study/bpred_research/cbp2016/research/path_viewer/vim_plugin"
