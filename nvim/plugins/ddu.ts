@@ -158,7 +158,6 @@ export class Config extends BaseConfig {
 
       const winWidth = Math.min(Math.floor(column / 2) - 5, 120);
       const winCol = Math.floor(column / 2) - winWidth;
-      console.log(winRow, winWidth, winCol)
       await start({
         sources: sources,
         uiParams: {
