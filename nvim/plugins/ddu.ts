@@ -21,7 +21,7 @@ export class Config extends BaseConfig {
       sourceOptions: {
         _: { ignoreCase: true, matchers: ["matcher_fzy"] },
         dein: { defaultAction: "cd" },
-        line: { matchers: ["matcher_kensaku"] },
+        // line: { matchers: ["matcher_kensaku"] },
         highlight: { defaultAction: "edit" },
         help: { defaultAction: "open" },
         file_external: { defaultAction: "open" },
@@ -52,7 +52,7 @@ export class Config extends BaseConfig {
       },
       filterParams: {
         matcher_fzy: { hlGroup: "Special" },
-        matcher_kensaku: { highlightMatched: "Search" },
+        // matcher_kensaku: { highlightMatched: "Search" },
       },
       sourceParams: {
         file_external: {
@@ -154,10 +154,11 @@ export class Config extends BaseConfig {
       const column = await op.columns.get(denops);
       const line = await op.lines.get(denops);
       const winHeight = line - 8;
-      const winRow = (line - winHeight) / 2;
+      const winRow = Math.floor((line - winHeight) / 2);
 
-      const winWidth = Math.min(column / 2 - 5, 120);
-      const winCol = column / 2 - winWidth;
+      const winWidth = Math.min(Math.floor(column / 2) - 5, 120);
+      const winCol = Math.floor(column / 2) - winWidth;
+      console.log(winRow, winWidth, winCol)
       await start({
         sources: sources,
         uiParams: {
@@ -274,7 +275,7 @@ export class Config extends BaseConfig {
           name: "file",
           options: {
             path: await vars.t.get(denops, "ddu_ui_filer_path", ""),
-            columns: ["icon_filename"],
+            // columns: ["icon_filename"],
             sorters: ["sorter_alpha"],
           },
         }],

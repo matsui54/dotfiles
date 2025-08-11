@@ -2,15 +2,6 @@
 repo = 'Shougo/dein.vim'
 
 [[plugins]]
-repo = 'cocopon/iceberg.vim'
-
-[[plugins]]
-repo = 'sainnhe/edge'
-
-[[plugins]]
-repo = 'endel/vim-github-colorscheme'
-
-[[plugins]]
 repo = 'itchyny/lightline.vim'
 hook_add = '''
   source ~/dotfiles/nvim/plugins/lightline.rc.vim
@@ -39,30 +30,6 @@ repo = 'kana/vim-textobj-user'
 repo = "sgur/vim-textobj-parameter"
 
 [[plugins]]
-repo = 'vim-jp/vimdoc-ja'
-type__depth = 1
-
-[[plugins]]
-repo = 'lervag/vimtex'
-hook_add = '''
-  let g:vimtex_syntax_conceal_disable = 1
-  let g:vimtex_quickfix_ignore_filters=["Package caption Warning"]
-  let g:vimtex_compiler_latexmk = {
-      \ 'options' : [
-      \   '-shell-escape',
-      \ ],
-      \}
-  if executable('SumatraPDF')
-    let g:vimtex_view_general_viewer = 'SumatraPDF'
-    let g:vimtex_view_general_options
-        \ = '-reuse-instance -forward-search @tex @line @pdf'
-  else
-    let g:vimtex_view_method = 'zathura'
-    let g:vimtex_view_general_options = "-x \"nvr +%{line} %{input}\" --synctex-forward @line:0:@tex @pdf"
-  endif
-'''
-
-[[plugins]]
 repo = 'machakann/vim-sandwich'
 
 [[plugins]]
@@ -78,37 +45,5 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = "prabirshrestha/vim-lsp"
-if = '!has("nvim")'
-hook_add = '''
-	let g:lsp_completion_documentation_enabled = 0
-	let g:lsp_signature_help_enabled = 0
-'''
-
-[[plugins]]
-repo = 'mattn/vim-lsp-settings'
-if = '!has("nvim")'
-
-[[plugins]]
-repo = 'hrsh7th/vim-vital-vs'
-
-[[plugins]]
 repo = 'statiolake/vim-quickrun-runner-nvimterm'
 if = 'has("nvim")'
-
-[[plugins]]
-repo = 'RRethy/vim-illuminate'
-lua_add = '''
-require('illuminate').configure({
-    delay = 800,
-})
-'''
-
-[[plugins]]
-repo = 'williamboman/mason.nvim'
-lua_add = '''
-  require('mason').setup()
-'''
-
-[[plugins]]
-repo = "vim-denops/denops-shared-server.vim"

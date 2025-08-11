@@ -38,7 +38,7 @@ hook_add = '''
     call pum#set_option('scrollbar_char', '')
 
     " ~/dotfiles/nvim/denops/vimrc/plugins/ddc.ts
-    call ddc#custom#load_config(expand("~/dotfiles/nvim/plugins/ddc.ts"))
+    call ddc#custom#load_config(stdpath('config')."/plugins/ddc.ts")
 
     call dein#source(["vim-vsnip"])
     call popup_preview#enable()
@@ -52,14 +52,6 @@ repo = 'Shougo/pum.vim'
 
 [[plugins]]
 repo = 'Shougo/ddc-ui-pum'
-
-[[plugins]]
-repo = 'Shougo/context_filetype.vim'
-
-[[plugins]]
-repo = 'Shougo/neco-vim'
-on_ft = ['vim', 'toml']
-lazy = 1
 
 [[plugins]]
 repo = 'Shougo/ddc-cmdline'
@@ -110,9 +102,6 @@ repo = "matsui54/ddc-postfilter_score"
 repo = 'matsui54/ddc-converter_truncate'
 
 [[plugins]]
-repo = "gamoutatsumi/ddc-emoji"
-
-[[plugins]]
 repo = 'matsui54/denops-popup-preview.vim'
 hook_add = '''
 	let g:popup_preview_config = {
@@ -133,15 +122,6 @@ hook_add = '''
         \ 'border': v:false,
         \ }
 '''
-
-[[plugins]]
-repo = 'ray-x/lsp_signature.nvim'
-lazy = 1
-if = "has('nvim')"
-on_source = 'nvim-lspconfig'
-
-[[plugins]]
-repo = 'shun/ddc-vim-lsp'
 
 [[plugins]]
 repo = 'LumaKernel/ddc-file'
@@ -169,59 +149,59 @@ repo = 'uga-rosa/ddc-source-vsnip'
 [[plugins]]
 repo = 'rafamadriz/friendly-snippets'
 
-[[plugins]]
-repo = 'skk-dev/dict'
-type__depth = 1
-if = 0
-merged = 0
-
-[[plugins]]
-repo = 'vim-skk/denops-skkeleton.vim'
-hook_add = '''
-  imap <C-j> <Plug>(skkeleton-toggle)
-  cmap <C-j> <Plug>(skkeleton-toggle)
-
-  function! s:skkeleton_init() abort
-    " <BS>/<C-h>で変換候補を戻す
-    call skkeleton#register_keymap('henkan', "\<BS>", 'henkanBackward')
-    call skkeleton#register_keymap('henkan', "\<C-h>", 'henkanBackward')
-    call skkeleton#register_keymap('henkan', "x", '')
-
-    if !isdirectory(expand('~/.cache/skkeleton'))
-      call mkdir(expand('~/.cache/skkeleton'), 'p')
-    endif
-    call skkeleton#config({
-      \ 'globalDictionaries': ["~/.cache/dein/repos/github.com/skk-dev/dict/SKK-JISYO.L"],
-      \ 'userDictionary': expand('~/.cache/skkeleton/skkeleton'),
-      \ 'completionRankFile': expand('~/.cache/skkeleton/rank.json'),
-      \ })
-    call skkeleton#register_kanatable('rom', {
-      \ "z\<Space>": ["\u3000", ''],
-      \ 'jj': 'escape',
-      \ 'z,': ['，', ''],
-      \ 'z.': ['．', ''],
-      \ 'z9': ['（', ''],
-      \ 'z0': ['）', ''],
-      \ '~': ['～', ''],
-      \ })
-  endfunction
-  autocmd User skkeleton-initialize-pre call s:skkeleton_init()
-  augroup MyDdcSkkeleton
-    autocmd!
-    autocmd User skkeleton-enable-pre call s:skkeleton_pre()
-    autocmd User skkeleton-disable-pre call s:skkeleton_post()
-  augroup END
-  function! s:skkeleton_pre() abort
-    " Overwrite sources
-    inoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
-    inoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
-    let s:prev_buffer_config = ddc#custom#get_buffer()
-    call ddc#custom#patch_buffer('sources', ['skkeleton'])
-  endfunction
-  function! s:skkeleton_post() abort
-    " Restore sources
-    inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
-    inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
-    call ddc#custom#set_buffer(s:prev_buffer_config)
-  endfunction
-'''
+# [[plugins]]
+# repo = 'skk-dev/dict'
+# type__depth = 1
+# if = 0
+# merged = 0
+#
+# [[plugins]]
+# repo = 'vim-skk/denops-skkeleton.vim'
+# hook_add = '''
+#   imap <C-j> <Plug>(skkeleton-toggle)
+#   cmap <C-j> <Plug>(skkeleton-toggle)
+#
+#   function! s:skkeleton_init() abort
+#     " <BS>/<C-h>で変換候補を戻す
+#     call skkeleton#register_keymap('henkan', "\<BS>", 'henkanBackward')
+#     call skkeleton#register_keymap('henkan', "\<C-h>", 'henkanBackward')
+#     call skkeleton#register_keymap('henkan', "x", '')
+#
+#     if !isdirectory(expand('~/.cache/skkeleton'))
+#       call mkdir(expand('~/.cache/skkeleton'), 'p')
+#     endif
+#     call skkeleton#config({
+#       \ 'globalDictionaries': ["~/.cache/dein/repos/github.com/skk-dev/dict/SKK-JISYO.L"],
+#       \ 'userDictionary': expand('~/.cache/skkeleton/skkeleton'),
+#       \ 'completionRankFile': expand('~/.cache/skkeleton/rank.json'),
+#       \ })
+#     call skkeleton#register_kanatable('rom', {
+#       \ "z\<Space>": ["\u3000", ''],
+#       \ 'jj': 'escape',
+#       \ 'z,': ['，', ''],
+#       \ 'z.': ['．', ''],
+#       \ 'z9': ['（', ''],
+#       \ 'z0': ['）', ''],
+#       \ '~': ['～', ''],
+#       \ })
+#   endfunction
+#   autocmd User skkeleton-initialize-pre call s:skkeleton_init()
+#   augroup MyDdcSkkeleton
+#     autocmd!
+#     autocmd User skkeleton-enable-pre call s:skkeleton_pre()
+#     autocmd User skkeleton-disable-pre call s:skkeleton_post()
+#   augroup END
+#   function! s:skkeleton_pre() abort
+#     " Overwrite sources
+#     inoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
+#     inoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
+#     let s:prev_buffer_config = ddc#custom#get_buffer()
+#     call ddc#custom#patch_buffer('sources', ['skkeleton'])
+#   endfunction
+#   function! s:skkeleton_post() abort
+#     " Restore sources
+#     inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
+#     inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
+#     call ddc#custom#set_buffer(s:prev_buffer_config)
+#   endfunction
+# '''

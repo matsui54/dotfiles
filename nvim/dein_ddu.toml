@@ -1,7 +1,7 @@
 [[plugins]]
 repo = 'Shougo/ddu.vim'
 hook_add = '''
-  call ddu#custom#load_config(expand("~/dotfiles/nvim/plugins/ddu.ts"))
+  call ddu#custom#load_config(stdpath('config')."/plugins/ddu.ts")
   nnoremap <Space>d <cmd>Ddu source<CR>
   nnoremap <Space>a <cmd>Ddu file_external<CR>
   nnoremap <Space>f <cmd>Ddu file_external -source-option-file_external-path=~/dotfiles<CR>
@@ -187,9 +187,6 @@ repo = 'Shougo/ddu-source-action'
 repo = 'Shougo/ddu-source-file_rec'
 
 [[plugins]]
-repo = 'yuki-yano/ddu-filter-fzf'
-
-[[plugins]]
 repo = 'Shougo/ddu-kind-file'
 
 [[plugins]]
@@ -234,14 +231,14 @@ repo = 'matsui54/ddu-vim-ui-select'
 [[plugins]]
 repo = 'Shougo/ddu-column-filename'
 
-[[plugins]]
-repo = "Milly/ddu-filter-kensaku"
+# [[plugins]]
+# repo = "Milly/ddu-filter-kensaku"
+#
+# [[plugins]]
+# repo = "lambdalisue/kensaku.vim"
 
-[[plugins]]
-repo = "lambdalisue/kensaku.vim"
-
-[[plugins]]
-repo = 'ryota2357/ddu-column-icon_filename'
+# [[plugins]]
+# repo = 'ryota2357/ddu-column-icon_filename'
 
 [[plugins]]
 repo = 'Shougo/ddu-filter-sorter_alpha'

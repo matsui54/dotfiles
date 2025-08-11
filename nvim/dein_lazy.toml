@@ -9,26 +9,6 @@ hook_source = '''
 '''
 
 [[plugins]]
-repo = 'vim-jp/vital.vim'
-on_cmd = 'Vitalize'
-
-[[plugins]]
-repo = 'itchyny/calendar.vim'
-on_cmd = 'Calendar'
-hook_source = '''
-  if filereadable(expand('~/.cache/calendar.vim/credentials.vim', ':h:p'))
-    let g:calendar_google_calendar = 1
-    let g:calendar_google_task = 1
-    source ~/.cache/calendar.vim/credentials.vim
-  endif
-'''
-[plugins.ftplugin]
-calendar = '''
-  nnoremap <buffer> <C-j> gT
-  nnoremap <buffer> <C-k> gt
-'''
-
-[[plugins]]
 repo = 'Shougo/deol.nvim'
 hook_add = '''
   tnoremap <C-\><C-\> <C-\><C-N><cmd>call deol#start(#{
@@ -68,44 +48,6 @@ hook_add = '''
   nmap T <Plug>(clever-f-T)
   xmap T <Plug>(clever-f-T)
   omap T <Plug>(clever-f-T)
-'''
-
-[[plugins]]
-repo = 'tyru/open-browser.vim'
-on_map = '<Plug>(openbrowser'
-on_cmd = 'OpenBrowserSearch'
-hook_add = '''
-	nmap gx <Plug>(openbrowser-smart-search)
-	vmap gx <Plug>(openbrowser-smart-search)
-'''
-hook_source = '''
-  for cmd in ['wsl-open', 'xdg-open', 'exo-open']
-    if executable(cmd)
-      let g:openbrowser_browser_commands = [
-      \   {'name': cmd,
-      \  "args": ["{browser}", "{uri}"]},
-      \]
-    endif
-  endfor
-'''
-
-[[plugins]]
-repo = 'previm/previm'
-on_cmd = 'PrevimOpen'
-hook_source = '''
-  let g:previm_show_header=0
-  if vimrc#is_wsl()
-    let g:previm_open_cmd='wsl-open'
-  endif
-'''
-depends = 'open-browser.vim'
-
-[[plugins]]
-repo = 'tani/glance-vim'
-on_cmd = 'Glance'
-hook_add = '''
-  let g:glance#server_open = v:false
-  let g:glance#markdown_plugins = ['https://esm.sh/markdown-it-mathjax3?bundle']
 '''
 
 [[plugins]]
@@ -179,34 +121,34 @@ gitcommit = '''
   setlocal spell
 '''
  
-[[plugins]]
-repo = 'nvim-treesitter/nvim-treesitter'
-if = 'has("nvim")'
-on_event = 'BufRead'
-lua_source = '''
-require'nvim-treesitter.configs'.setup {
-    highlight = {
-        enable = true,
-        disable = {'latex', 'help', 'csv'},
-    },
-    refactor = {
-      highlight_defintions = {
-        enable = true
-      },
-      smart_rename = {
-        enable = true,
-        smart_rename = 'grr'
-      },
-      navigation = {
-        enable = true,
-        goto_definition = 'gnd',
-        list_definitions = 'gnD'
-      }
-    },
-    ignore_install = { "phpdoc", "help" },
-    ensure_installed = 'all'
-}
-'''
+# [[plugins]]
+# repo = 'nvim-treesitter/nvim-treesitter'
+# if = 'has("nvim")'
+# on_event = 'BufRead'
+# lua_source = '''
+# require'nvim-treesitter.configs'.setup {
+#     highlight = {
+#         enable = true,
+#         disable = {'latex', 'help', 'csv'},
+#     },
+#     refactor = {
+#       highlight_defintions = {
+#         enable = true
+#       },
+#       smart_rename = {
+#         enable = true,
+#         smart_rename = 'grr'
+#       },
+#       navigation = {
+#         enable = true,
+#         goto_definition = 'gnd',
+#         list_definitions = 'gnD'
+#       }
+#     },
+#     ignore_install = { "phpdoc", "help" },
+#     ensure_installed = 'all'
+# }
+# '''
 
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'
@@ -219,28 +161,6 @@ hook_add = '''
   nnoremap \f <cmd>lua vim.lsp.buf.format({ async = true })<CR>
   nnoremap gm <cmd>lua vim.diagnostic.open_float()<CR>
 '''
-
-[[plugins]]
-repo = "liuchengxu/vista.vim"
-on_source = 'nvim-lspconfig'
-
-[[plugins]]
-repo = 'williamboman/mason-lspconfig.nvim'
-on_source = 'nvim-lspconfig'
-lua_source = '''
-  require("mason-lspconfig").setup({
-    ensure_installed = { "rust_analyzer", "lua_ls", "texlab", "vimls", "pyright", "bashls" },
-  })
-'''
-
-[[plugins]]
-repo = 'nvim-lua/plenary.nvim'
-
-[[plugins]]
-repo = 'nvim-telescope/telescope.nvim'
-on_cmd = 'Telescope'
-if = 'has("nvim")'
-depends = ['popup.nvim', 'plenary.nvim']
 
 [[plugins]]
 repo = 'lambdalisue/suda.vim'
@@ -270,13 +190,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'lukas-reineke/indent-blankline.nvim'
-on_event = 'BufRead'
-hook_add = '''
-let g:indentLine_fileTypeExclude = ['help', 'calendar']
-'''
-
-[[plugins]]
 repo = 'thinca/vim-qfreplace'
 on_cmd = 'Qfreplace'
 
@@ -293,137 +206,8 @@ repo = "mbbill/undotree"
 on_cmd = 'UndotreeToggle'
 
 [[plugins]]
-repo = 'yuki-yano/fuzzy-motion.vim'
-depends = 'denops.vim'
-hook_add = '''
-nnoremap <Space>/ <cmd>FuzzyMotion<CR>
-'''
-on_cmd = 'FuzzyMotion'
-
-[[plugins]]
-repo = "lewis6991/gitsigns.nvim"
-lua_source = '''
-vim.api.nvim_set_hl(0, 'GitSignsAdd', { link = 'DiffAdd' })
-vim.api.nvim_set_hl(0, 'GitSignsChange', { link = 'DiffChange' })
-vim.api.nvim_set_hl(0, 'GitSignsDelete', { link = 'DiffDelete' })
-require('gitsigns').setup {
-  signs = {
-    change = {text = '!'},
-  },
-  on_attach = function(bufnr)
-    local gs = package.loaded.gitsigns
-
-    local function map(mode, l, r, opts)
-      opts = opts or {}
-      opts.buffer = bufnr
-      vim.keymap.set(mode, l, r, opts)
-    end
-
-    -- Navigation
-    map('n', ']c', function()
-      if vim.wo.diff then return ']c' end
-      vim.schedule(function() gs.next_hunk() end)
-      return '<Ignore>'
-    end, { expr = true })
-
-    map('n', '[c', function()
-      if vim.wo.diff then return '[c' end
-      vim.schedule(function() gs.prev_hunk() end)
-      return '<Ignore>'
-    end, { expr = true })
-
-    -- Actions
-    map({ 'n', 'v' }, '<leader>hs', ':Gitsigns stage_hunk<CR>')
-    map({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>')
-    map('n', '<leader>hS', gs.stage_buffer)
-    map('n', '<leader>hu', gs.undo_stage_hunk)
-    map('n', '<leader>hR', gs.reset_buffer)
-    map('n', '<leader>hp', gs.preview_hunk)
-    map('n', '<leader>hb', function() gs.blame_line { full = true } end)
-    map('n', '<leader>tb', gs.toggle_current_line_blame)
-    map('n', '<leader>hd', gs.diffthis)
-    map('n', '<leader>hD', function() gs.diffthis('~') end)
-    map('n', '<leader>td', gs.toggle_deleted)
-
-    -- Text object
-    map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
-  end
-}
-'''
-on_event = 'BufRead'
-
-[[plugins]]
-repo = 'tweekmonster/helpful.vim'
-on_cmd = ['HelpfulVersion']
-
-[[plugins]]
-repo = "j-hui/fidget.nvim"
-on_source = 'nvim-lspconfig'
-lua_source = '''
-  require"fidget".setup{}
-'''
-
-[[plugins]]
 repo = 'cohama/lexima.vim'
 hook_add = '''
   let g:lexima_ctrlh_as_backspace = 1
 '''
 on_event = 'InsertEnter'
-
-[[plugins]]
-repo = 'mattn/vim-sonictemplate'
-on_cmd = 'Template'
-hook_add = '''
-  let g:sonictemplate_vim_template_dir = '$HOME/dotfiles/nvim/template/'
-'''
-
-[[plugins]]
-repo = "mfussenegger/nvim-dap"
-on_event = 'BufRead'
-depends = ["nvim-dap-ui", "nvim-dap-virtual-text"]
-lua_source = '''
-  require('dap_rc')
-'''
-
-[[plugins]]
-repo = "rcarriga/nvim-dap-ui"
-depends = "nvim-nio"
-lua_source = '''
-  require("dapui").setup()
-'''
-
-[[plugins]]
-repo = "nvim-neotest/nvim-nio"
-
-[[plugins]]
-repo = "theHamsta/nvim-dap-virtual-text"
-lua_source = '''
-  require("nvim-dap-virtual-text").setup()
-'''
-
-[[plugins]]
-repo = "folke/neodev.nvim"
-on_source = 'nvim-lspconfig'
-
-[[plugins]]
-repo = "uga-rosa/ccc.nvim"
-on_cmd = "CccHighlighterToggle"
-lua_source = '''
-	require("ccc").setup({
-	})
-'''
-
-[[plugins]]
-repo = "github/copilot.vim"
-on_cmd = 'Copilot'
-hook_add = '''
-  let g:copilot_no_tab_map = v:true
-  imap <silent><script><expr> <C-v> copilot#Accept("\<CR>")
-'''
-
-[[plugins]]
-repo = "mechatroner/rainbow_csv"
-on_ft = ["csv"]
-hook_add = '''
-  let g:disable_rainbow_hover = 1
-'''
