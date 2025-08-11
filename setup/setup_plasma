@@ -1,0 +1,147 @@
+#!/usr/bin/env bash
+
+set -eu
+
+# from https://zenn.dev/takakiriy/articles/e65780261dd5e3
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --laptop) X=true; LAPTOP=true; shift;;
+        --desktop) X=true; DESKTOP=true; shift;;
+        --pandoc)  PANDOC=true; shift;;
+        --tex)  TEX=true; shift;;
+        *) echo "[ERROR] Unknown option $1"; exit 1;;
+    esac
+done
+
+install_paru ()
+{
+  if [[ ! -x $(which paru) ]]; then
+    if [[ ! -d $HOME/.local ]]; then
+      mkdir $HOME/.local
+    fi
+    sudo pacman -S --needed base-devel git
+    git clone https://aur.archlinux.org/paru.git $HOME/.local/paru
+    pushd $HOME/.local/paru
+      makepkg -si
+    popd
+  fi
+}
+
+install_packages ()
+{
+  PACKAGES=(zsh zsh-syntax-highlighting git-prompt.zsh \
+    ripgrep bat fzf fd github-cli bottom htop dust duf rsync \
+    nodejs npm go zip zig rust julia \
+    wget ghq man-db unzip openssh pyenv \
+    words skk-jisyo \
+    base-devel cmake unzip ninja curl \
+    tailscale verilator sshfs vim rclone pacman-contrib ctags \
+    reflector parallel \
+  )
+
+  PACKAGES+=( zathura alacritty \
+    ttf-hackgen noto-fonts-cjk noto-fonts-emoji \
+    xclip fcitx5-mozc \
+    zathura-pdf-mupdf thunderbird \
+    xremap-x11-bin libinput ruby \
+  )
+
+  paru -S --needed ${PACKAGES[*]}
+}
+
+install_dotfiles ()
+{
+  if [[ ! -d $HOME/dotfiles ]]; then
+    git clone https://github.com/matsui54/dotfiles.git ~/dotfiles
+  fi
+  Dotdir=$HOME/dotfiles $HOME/dotfiles/setup/install_dot
+  pushd $HOME/dotfiles
+    git remote set-url origin git@github.com:matsui54/dotfiles.git
+  popd
+}
+
+chsh_to_zsh ()
+{
+  ZSH_BIN=/bin/zsh
+  if [[ -x "$ZSH_BIN" && $SHELL != "$ZSH_BIN" ]]; then
+    echo "change shell to zsh"
+    chsh -s "$ZSH_BIN"
+  fi
+}
+
+setup_gh ()
+{
+  echo "check gh auth status"
+  set +e
+  gh auth status
+  if [[ $? -ne 0 ]]; then
+    set -e
+    if [[ ! -f ~/.ssh/id_ed25519 ]]; then
+      ssh-keygen -t ed25519 -C "haru.matu9168@gmail.com"
+      eval "$(ssh-agent -s)"
+      ssh-add ~/.ssh/id_ed25519
+    fi
+    gh auth login
+  else
+    set -e
+  fi
+}
+
+install_pyenv ()
+{
+  if [[ $(pyenv version-name) == "system" ]]; then
+    paru -S --needed base-devel openssl zlib xz tk
+    set +e
+    pyenv install 3 && pyenv global $(pyenv latest 3)
+    set -e
+  fi
+}
+
+install_nvim ()
+{
+  if [[ ! -x $(which nvim) ]]; then
+    if [[ ! -d "$(ghq root)/github.com/neovim/neovim" ]]; then
+      ghq get neovim/neovim
+    fi
+    if [[ ! -d $HOME/.local/bin ]]; then
+      mkdir "$HOME/.local/bin"
+    fi
+    pushd "$(ghq root)/github.com/neovim/neovim"
+      make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=$HOME/.local/nvim install
+      ln -s $HOME/.local/nvim/bin/nvim $HOME/.local/bin/nvim
+    popd
+  fi
+}
+
+setup_fusuma ()
+{
+  if [[ ! -x ~/.local/share/gem/ruby/3.0.0/bin/fusuma ]]; then
+    sudo gpasswd -a $USER input
+    newgrp input
+    gem install fusuma
+    ~/.local/share/gem/ruby/3.0.0/bin/fusuma -d
+  fi
+}
+
+setup_xremap ()
+{
+  set +e
+  pgrep xremap
+  if [[ $? -ne 0 ]]; then
+    set -e
+    echo "uinput" | sudo tee /etc/modules-load.d/uinput.conf
+    echo 'KERNEL=="uinput", GROUP="input", MODE="0660"' | sudo tee /etc/udev/rules.d/99-input.rules
+  else
+    set -e
+  fi
+}
+
+
+install_paru
+install_packages
+install_dotfiles
+chsh_to_zsh
+# setup_gh
+# install_pyenv
+# install_nvim
+echo "done"
