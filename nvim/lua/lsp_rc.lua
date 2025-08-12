@@ -52,7 +52,14 @@ local on_attach = function(client)
   })
 end
 
-require("neodev").setup()
+require("lazydev").setup({
+  library = {
+    -- See the configuration section for more details
+    -- Load luvit types when the `vim.uv` word is found
+    { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+  },
+})
+
 vim.diagnostic.config({
   virtual_text = false,
   severity_sort = true,

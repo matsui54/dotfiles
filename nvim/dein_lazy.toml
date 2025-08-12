@@ -406,7 +406,7 @@ lua_source = '''
 '''
 
 [[plugins]]
-repo = "folke/neodev.nvim"
+repo = "folke/lazydev.nvim"
 on_source = 'nvim-lspconfig'
 
 [[plugins]]
