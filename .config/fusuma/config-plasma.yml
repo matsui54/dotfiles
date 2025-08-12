@@ -1,0 +1,14 @@
+swipe:
+  3:
+    begin:
+      command: xdotool keydown Alt
+    right:
+      update:
+        command: xdotool key Tab
+        interval: 5
+    left:
+      update:
+        command: xdotool key Shift+Tab
+        interval: 5
+    end:
+      command: xdotool keyup Alt

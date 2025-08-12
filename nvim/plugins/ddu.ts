@@ -154,10 +154,10 @@ export class Config extends BaseConfig {
       const column = await op.columns.get(denops);
       const line = await op.lines.get(denops);
       const winHeight = line - 8;
-      const winRow = (line - winHeight) / 2;
+      const winRow = Math.floor((line - winHeight) / 2);
 
-      const winWidth = Math.min(column / 2 - 5, 120);
-      const winCol = column / 2 - winWidth;
+      const winWidth = Math.min(Math.floor(column / 2) - 5, 120);
+      const winCol = Math.floor(column / 2) - winWidth;
       await start({
         sources: sources,
         uiParams: {
