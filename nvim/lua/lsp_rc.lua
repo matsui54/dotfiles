@@ -19,12 +19,6 @@ local on_attach = function(client)
     vim.api.nvim_buf_set_keymap(0, map[1], map[2], map[3], { noremap = true })
   end
 
-  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics, {
-      virtual_text = false,
-      severity_sort = true,
-    }
-  )
   -- require "lsp_signature".on_attach({
   --   floating_window = false,
   -- })  -- Note: add in lsp client on-attach
@@ -59,6 +53,10 @@ local on_attach = function(client)
 end
 
 require("neodev").setup()
+vim.diagnostic.config({
+  virtual_text = false,
+  severity_sort = true,
+})
 
 local capabilities = require(
   "ddc_source_lsp"
@@ -70,32 +68,30 @@ local buf_name = vim.api.nvim_buf_get_name(0)
 local current_buf = vim.api.nvim_get_current_buf()
 local is_node_repo = node_root_dir(buf_name, current_buf) ~= nil
 
-nvim_lsp.clangd.setup {
+vim.lsp.config('*', {
   on_attach = on_attach,
   capabilities = capabilities,
+})
+nvim_lsp.clangd.setup {
   cmd = {
     "clangd",
     "--offset-encoding=utf-16",
   },
 }
-nvim_lsp.gopls.setup { on_attach = on_attach, capabilities = capabilities }
-nvim_lsp.vimls.setup { on_attach = on_attach, capabilities = capabilities }
-nvim_lsp.pyright.setup { on_attach = on_attach, capabilities = capabilities }
-nvim_lsp.julials.setup { on_attach = on_attach, capabilities = capabilities }
-nvim_lsp.bashls.setup { on_attach = on_attach, capabilities = capabilities }
+nvim_lsp.gopls.setup {}
+nvim_lsp.vimls.setup {}
+nvim_lsp.pyright.setup {}
+nvim_lsp.julials.setup {}
+nvim_lsp.bashls.setup {}
 nvim_lsp.svlangserver.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
   settings = {
     systemverilog = {
       launchConfiguration = "verilator -sv -Wall --lint-only pkg_def.sv",
     }
   }
 }
-nvim_lsp.svls.setup { on_attach = on_attach, capabilities = capabilities }
+nvim_lsp.svls.setup {}
 nvim_lsp.texlab.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
   root_dir = nvim_lsp.util.root_pattern('main.tex'),
   settings = {
     texlab = {
@@ -104,13 +100,9 @@ nvim_lsp.texlab.setup {
   }
 }
 nvim_lsp.zls.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
   cmd = { vim.fn.expand('$HOME/ghq/github.com/zigtools/zls/zig-out/bin/zls') },
 }
 nvim_lsp.denols.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
   init_options = {
     lint = true,
     unstable = true,
@@ -118,8 +110,6 @@ nvim_lsp.denols.setup {
   autostart = not (is_node_repo),
 }
 nvim_lsp.lua_ls.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
   settings = {
     Lua = {
       runtime = {
@@ -138,10 +128,8 @@ nvim_lsp.lua_ls.setup {
     },
   }
 }
-nvim_lsp.rust_analyzer.setup { on_attach = on_attach, capabilities = capabilities }
+nvim_lsp.rust_analyzer.setup {}
 nvim_lsp.ts_ls.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
   autostart = is_node_repo,
 }
 nvim_lsp.efm.setup {
@@ -158,3 +146,4 @@ nvim_lsp.efm.setup {
     }
   }
 }
+nvim_lsp.hls.setup {}
