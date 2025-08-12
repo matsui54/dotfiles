@@ -34,9 +34,10 @@ export class Config extends BaseConfig {
         },
         around: { "mark": "[A]" },
         cmdline: {
+          isVolatile: true,
           mark: "[cmd]",
-          forceCompletionPattern: "\\s|/|-",
           minAutoCompleteLength: 1,
+          forceCompletionPattern: String.raw`\S/\S*|\.\w*`,
         },
         "cmdline-history": {
           matchers: ["matcher_head"],
