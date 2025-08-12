@@ -78,7 +78,6 @@ endif
 set pumheight=15
 
 augroup MyAutoCmd
-  autocmd!
   autocmd ColorScheme * call vimrc#color_settings(expand('<amatch>'))
   autocmd VimEnter * let t:ddu_filer_index = 1 | let g:tab_idx = 1
   autocmd TabNew * let t:ddu_filer_index = s:get_ddu_filer_idx()
