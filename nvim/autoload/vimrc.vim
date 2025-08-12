@@ -17,13 +17,22 @@ function! vimrc#is_windows() abort
   return s:is_windows
 endfunction
 
-function! vimrc#on_filetype() abort
-  if execute('filetype') =~# 'OFF'
-    " Lazy loading
-    silent! filetype plugin indent on
-    syntax enable
-    filetype detect
-    call vimrc#color_settings()
+function vimrc#on_filetype() abort
+  if &l:filetype ==# '' && &l:syntax ==# '' && line('$') < 10000
+    " NOTE: filetype detect does not work on startup
+    silent filetype detect
+
+    if has('nvim') && bufnr()->bufloaded()
+      lua <<END
+      if vim.treesitter.get_parser(nil, nil, { error = false }) then
+        vim.treesitter.start()
+      else
+        vim.cmd('syntax enable')
+      end
+END
+    else
+      syntax enable
+    endif
   endif
 endfunction
 

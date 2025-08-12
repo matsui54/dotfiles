@@ -2,6 +2,12 @@ if exists('g:vscode')
   finish
 endif
 
+augroup MyAutoCmd
+  autocmd!
+  autocmd FileType,Syntax,BufNewFile,BufNew,BufRead *?
+        \ call vimrc#on_filetype()
+augroup END
+
 " dein settings--------------------------------------------
 let g:dein#lazy_rplugins = v:true
 let g:dein#auto_recache = !has('win32')
