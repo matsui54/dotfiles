@@ -79,44 +79,32 @@ vim.lsp.config('*', {
   on_attach = on_attach,
   capabilities = capabilities,
 })
-nvim_lsp.clangd.setup {
-  cmd = {
-    "clangd",
-    "--offset-encoding=utf-16",
-  },
-}
-nvim_lsp.gopls.setup {}
-nvim_lsp.vimls.setup {}
-nvim_lsp.pyright.setup {}
-nvim_lsp.julials.setup {}
-nvim_lsp.bashls.setup {}
-nvim_lsp.svlangserver.setup {
+vim.lsp.config('svlangserver', {
   settings = {
     systemverilog = {
       launchConfiguration = "verilator -sv -Wall --lint-only pkg_def.sv",
     }
   }
-}
-nvim_lsp.svls.setup {}
-nvim_lsp.texlab.setup {
+})
+vim.lsp.config('texlab', {
   root_dir = nvim_lsp.util.root_pattern('main.tex'),
   settings = {
     texlab = {
       rootDirectory = ".",
     }
   }
-}
-nvim_lsp.zls.setup {
+})
+vim.lsp.config('zls', {
   cmd = { vim.fn.expand('$HOME/ghq/github.com/zigtools/zls/zig-out/bin/zls') },
-}
-nvim_lsp.denols.setup {
+})
+vim.lsp.config('denols', {
   init_options = {
     lint = true,
     unstable = true,
   },
   autostart = not (is_node_repo),
-}
-nvim_lsp.lua_ls.setup {
+})
+vim.lsp.config('lua_ls', {
   settings = {
     Lua = {
       runtime = {
@@ -134,12 +122,11 @@ nvim_lsp.lua_ls.setup {
       },
     },
   }
-}
-nvim_lsp.rust_analyzer.setup {}
-nvim_lsp.ts_ls.setup {
+})
+vim.lsp.config('ts_ls', {
   autostart = is_node_repo,
-}
-nvim_lsp.efm.setup {
+})
+vim.lsp.config('efm', {
   init_options = { documentFormatting = true },
   settings = {
     rootMarkers = { ".git/" },
@@ -152,5 +139,6 @@ nvim_lsp.efm.setup {
       }
     }
   }
-}
-nvim_lsp.hls.setup {}
+})
+vim.lsp.enable({ 'clangd', 'svlangserver', 'svls', 'texlab', 'zls', 'denols', 'lua_ls', 'rust_analyzer', 'ts_ls', 'efm',
+  'gopls', 'vimls', 'pyright', 'julials', 'bashls', 'hls' })
