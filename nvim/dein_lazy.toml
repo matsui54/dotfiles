@@ -29,39 +29,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'rhysd/clever-f.vim'
-on_map = {nxo = '<Plug>'}
-hook_add = '''
-  let g:clever_f_not_overwrites_standard_mappings = 1
-  let g:clever_f_mark_direct = 1
-  let g:clever_f_smart_case = 1
-  let g:clever_f_use_migemo = 1
-  nmap f <Plug>(clever-f-f)
-  xmap f <Plug>(clever-f-f)
-  omap f <Plug>(clever-f-f)
-  nmap F <Plug>(clever-f-F)
-  xmap F <Plug>(clever-f-F)
-  omap F <Plug>(clever-f-F)
-  nmap t <Plug>(clever-f-t)
-  xmap t <Plug>(clever-f-t)
-  omap t <Plug>(clever-f-t)
-  nmap T <Plug>(clever-f-T)
-  xmap T <Plug>(clever-f-T)
-  omap T <Plug>(clever-f-T)
-'''
-
-[[plugins]]
-repo = 'tyru/caw.vim'
-on_map = {nx = '<Plug>'}
-if = '!has("nvim")'
-hook_add = '''
-  nmap gc <Plug>(caw:prefix)
-  xmap gc <Plug>(caw:prefix)
-  nmap gcc <Plug>(caw:hatpos:toggle)
-  xmap gcc <Plug>(caw:hatpos:toggle)
-'''
-
-[[plugins]]
 repo = 'lambdalisue/gina.vim'
 hook_add = '''
   nnoremap gnw <cmd>Gina browse<CR>
