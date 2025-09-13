@@ -4,7 +4,9 @@ hook_add = '''
   call ddu#custom#load_config(stdpath('config')."/plugins/ddu.ts")
   nnoremap <Space>d <cmd>Ddu source<CR>
   nnoremap <Space>a <cmd>Ddu file_external<CR>
-  nnoremap <Space>f <cmd>Ddu file_external -source-option-file_external-path=~/dotfiles<CR>
+  nnoremap <expr><silent> <Space>f
+      \ "<cmd>Ddu file_external -source-option-file_external-path="
+      \ . stdpath('config') . "/..<CR>"
   nnoremap <Space>h <cmd>Ddu help<CR>
   nnoremap <Space>o <cmd>Ddu file_old<CR>
   nnoremap <Space>s <cmd>Ddu directory_rec<CR>
