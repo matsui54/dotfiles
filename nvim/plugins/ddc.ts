@@ -60,7 +60,7 @@ export class Config extends BaseConfig {
           dup: "keep",
           minAutoCompleteLength: 10000,
           converters: ["converter_kind_labels"],
-          sorters: ["sorter_lsp-kind"],
+          sorters: ["sorter_lsp_kind"],
         },
         "vim-lsp": {
           mark: "[lsp]",
