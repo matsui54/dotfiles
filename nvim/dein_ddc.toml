@@ -155,59 +155,60 @@ repo = 'uga-rosa/ddc-source-vsnip'
 [[plugins]]
 repo = 'rafamadriz/friendly-snippets'
 
-# [[plugins]]
-# repo = 'skk-dev/dict'
-# type__depth = 1
-# if = 0
-# merged = 0
-#
-# [[plugins]]
-# repo = 'vim-skk/denops-skkeleton.vim'
-# hook_add = '''
-#   imap <C-j> <Plug>(skkeleton-toggle)
-#   cmap <C-j> <Plug>(skkeleton-toggle)
-#
-#   function! s:skkeleton_init() abort
-#     " <BS>/<C-h>で変換候補を戻す
-#     call skkeleton#register_keymap('henkan', "\<BS>", 'henkanBackward')
-#     call skkeleton#register_keymap('henkan', "\<C-h>", 'henkanBackward')
-#     call skkeleton#register_keymap('henkan', "x", '')
-#
-#     if !isdirectory(expand('~/.cache/skkeleton'))
-#       call mkdir(expand('~/.cache/skkeleton'), 'p')
-#     endif
-#     call skkeleton#config({
-#       \ 'globalDictionaries': ["~/.cache/dein/repos/github.com/skk-dev/dict/SKK-JISYO.L"],
-#       \ 'userDictionary': expand('~/.cache/skkeleton/skkeleton'),
-#       \ 'completionRankFile': expand('~/.cache/skkeleton/rank.json'),
-#       \ })
-#     call skkeleton#register_kanatable('rom', {
-#       \ "z\<Space>": ["\u3000", ''],
-#       \ 'jj': 'escape',
-#       \ 'z,': ['，', ''],
-#       \ 'z.': ['．', ''],
-#       \ 'z9': ['（', ''],
-#       \ 'z0': ['）', ''],
-#       \ '~': ['～', ''],
-#       \ })
-#   endfunction
-#   autocmd User skkeleton-initialize-pre call s:skkeleton_init()
-#   augroup MyDdcSkkeleton
-#     autocmd!
-#     autocmd User skkeleton-enable-pre call s:skkeleton_pre()
-#     autocmd User skkeleton-disable-pre call s:skkeleton_post()
-#   augroup END
-#   function! s:skkeleton_pre() abort
-#     " Overwrite sources
-#     inoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
-#     inoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
-#     let s:prev_buffer_config = ddc#custom#get_buffer()
-#     call ddc#custom#patch_buffer('sources', ['skkeleton'])
-#   endfunction
-#   function! s:skkeleton_post() abort
-#     " Restore sources
-#     inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
-#     inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
-#     call ddc#custom#set_buffer(s:prev_buffer_config)
-#   endfunction
-# '''
+[[plugins]]
+repo = 'skk-dev/dict'
+type__depth = 1
+if = 0
+merged = 0
+
+[[plugins]]
+repo = 'vim-skk/denops-skkeleton.vim'
+merged = 0
+hook_add = '''
+  imap <C-j> <Plug>(skkeleton-toggle)
+  cmap <C-j> <Plug>(skkeleton-toggle)
+
+  function! s:skkeleton_init() abort
+    " <BS>/<C-h>で変換候補を戻す
+    call skkeleton#register_keymap('henkan', "\<BS>", 'henkanBackward')
+    call skkeleton#register_keymap('henkan', "\<C-h>", 'henkanBackward')
+    call skkeleton#register_keymap('henkan', "x", '')
+
+    if !isdirectory(expand('~/.cache/skkeleton'))
+      call mkdir(expand('~/.cache/skkeleton'), 'p')
+    endif
+    call skkeleton#config({
+      \ 'globalDictionaries': ["~/.cache/dein/repos/github.com/skk-dev/dict/SKK-JISYO.L"],
+      \ 'userDictionary': expand('~/.cache/skkeleton/skkeleton'),
+      \ 'completionRankFile': expand('~/.cache/skkeleton/rank.json'),
+      \ })
+    call skkeleton#register_kanatable('rom', {
+      \ "z\<Space>": ["\u3000", ''],
+      \ 'jj': 'escape',
+      \ 'z,': ['，', ''],
+      \ 'z.': ['．', ''],
+      \ 'z9': ['（', ''],
+      \ 'z0': ['）', ''],
+      \ '~': ['～', ''],
+      \ })
+  endfunction
+  autocmd User skkeleton-initialize-pre call s:skkeleton_init()
+  augroup MyDdcSkkeleton
+    autocmd!
+    autocmd User skkeleton-enable-pre call s:skkeleton_pre()
+    autocmd User skkeleton-disable-pre call s:skkeleton_post()
+  augroup END
+  function! s:skkeleton_pre() abort
+    " Overwrite sources
+    inoremap <C-n>   <Cmd>call pum#map#insert_relative(+1)<CR>
+    inoremap <C-p>   <Cmd>call pum#map#insert_relative(-1)<CR>
+    let s:prev_buffer_config = ddc#custom#get_buffer()
+    call ddc#custom#patch_buffer('sources', ['skkeleton'])
+  endfunction
+  function! s:skkeleton_post() abort
+    " Restore sources
+    inoremap <C-n>   <Cmd>call pum#map#select_relative(+1)<CR>
+    inoremap <C-p>   <Cmd>call pum#map#select_relative(-1)<CR>
+    call ddc#custom#set_buffer(s:prev_buffer_config)
+  endfunction
+'''
