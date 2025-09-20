@@ -72,12 +72,6 @@ vim.diagnostic.config({
 local capabilities = require(
   "ddc_source_lsp"
 ).make_client_capabilities()
-local nvim_lsp = require('lspconfig')
-
-local node_root_dir = nvim_lsp.util.root_pattern("package.json", "node_modules")
-local buf_name = vim.api.nvim_buf_get_name(0)
-local current_buf = vim.api.nvim_get_current_buf()
-local is_node_repo = node_root_dir(buf_name, current_buf) ~= nil
 
 vim.lsp.config('*', {
   capabilities = capabilities,
@@ -90,7 +84,7 @@ vim.lsp.config('svlangserver', {
   }
 })
 vim.lsp.config('texlab', {
-  root_dir = nvim_lsp.util.root_pattern('main.tex'),
+  root_dir = vim.fs.root(0, 'main.tex'),
   settings = {
     texlab = {
       rootDirectory = ".",
@@ -105,7 +99,6 @@ vim.lsp.config('denols', {
     lint = true,
     unstable = true,
   },
-  autostart = not (is_node_repo),
 })
 vim.lsp.config('lua_ls', {
   settings = {
@@ -126,9 +119,6 @@ vim.lsp.config('lua_ls', {
     },
   }
 })
-vim.lsp.config('ts_ls', {
-  autostart = is_node_repo,
-})
 vim.lsp.config('efm', {
   init_options = { documentFormatting = true },
   settings = {
@@ -143,5 +133,20 @@ vim.lsp.config('efm', {
     }
   }
 })
-vim.lsp.enable({ 'clangd', 'texlab', 'zls', 'denols', 'lua_ls', 'rust_analyzer', 'ts_ls',
-  'gopls', 'vimls', 'pyright', 'julials', 'bashls', 'hls' })
+vim.lsp.enable({ 'clangd', 'texlab', 'zls', 'lua_ls', 'rust_analyzer', 'gopls', 'vimls', 'pyright', 'julials', 'bashls',
+  'hls' })
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("LspStartNodeOrDeno", { clear = true }),
+  pattern = {
+    "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx"
+  },
+  callback = function()
+    if vim.fn.findfile("package.json", ".;") ~= "" then
+      vim.lsp.start(vim.lsp.config.ts_ls)
+      return
+    end
+
+    vim.lsp.start(vim.lsp.config.denols)
+  end,
+})
