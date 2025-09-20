@@ -415,6 +415,9 @@ repo = 'cohama/lexima.vim'
 hook_add = '''
   let g:lexima_ctrlh_as_backspace = 1
 '''
+hook_source = '''
+  call lexima#add_rule({'char': "'", 'input': "'", 'filetype': ['verilog', 'systemverilog']})
+'''
 on_event = 'InsertEnter'
 
 [[plugins]]
