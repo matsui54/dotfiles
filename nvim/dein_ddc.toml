@@ -174,13 +174,15 @@ hook_add = '''
     call skkeleton#register_keymap('henkan', "\<C-h>", 'henkanBackward')
     call skkeleton#register_keymap('henkan', "x", '')
 
-    if !isdirectory(expand('~/.cache/skkeleton'))
-      call mkdir(expand('~/.cache/skkeleton'), 'p')
+    let cache_dir = stdpath("cache")
+    let skkeleton_dir = cache_dir . "/skkeleton"
+    if !isdirectory(skkeleton_dir)
+      call mkdir(skkeleton_dir, 'p')
     endif
     call skkeleton#config({
-      \ 'globalDictionaries': ["~/.cache/dein/repos/github.com/skk-dev/dict/SKK-JISYO.L"],
-      \ 'userDictionary': expand('~/.cache/skkeleton/skkeleton'),
-      \ 'completionRankFile': expand('~/.cache/skkeleton/rank.json'),
+      \ 'globalDictionaries': [cache_dir . "/dein/repos/github.com/skk-dev/dict/SKK-JISYO.L"],
+      \ 'userDictionary': skkeleton_dir . '/skkeleton',
+      \ 'completionRankFile': skkeleton_dir . '/rank.json',
       \ })
     call skkeleton#register_kanatable('rom', {
       \ "z\<Space>": ["\u3000", ''],

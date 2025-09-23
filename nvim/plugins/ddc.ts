@@ -87,13 +87,13 @@ export class Config extends BaseConfig {
         //   minAutoCompleteLength: 1,
         // },
         vsnip: { "mark": "[V]", "dup": "keep" },
-        // skkeleton: {
-        //   mark: "[skk]",
-        //   matchers: [],
-        //   sorters: [],
-        //   isVolatile: true,
-        //   minAutoCompleteLength: 2,
-        // },
+        skkeleton: {
+          mark: "[skk]",
+          matchers: [],
+          sorters: [],
+          isVolatile: true,
+          minAutoCompleteLength: 2,
+        },
         zsh: {
           mark: "[Z]",
           forceCompletionPattern: "^!.*",

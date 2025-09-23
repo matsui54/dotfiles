@@ -14,7 +14,7 @@ let g:dein#auto_recache = !has('win32')
 let g:dein#install_progress_type = 'floating'
 let g:dein#install_check_diff = v:true
 
-let s:dein_dir = stdpath('cache')
+let s:dein_dir = stdpath('cache') . '/dein'
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 let s:config_dir = stdpath('config')
 
