@@ -222,6 +222,7 @@ hook_add = '''
 '''
 hook_source = '''
   call lexima#add_rule({'char': "'", 'input': "'", 'filetype': ['verilog', 'systemverilog']})
+  call lexima#add_rule({'char': "`", 'input': "`", 'filetype': ['verilog', 'systemverilog']})
 '''
 on_event = 'InsertEnter'
 
