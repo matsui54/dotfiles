@@ -275,7 +275,7 @@ export class Config extends BaseConfig {
           name: "file",
           options: {
             path: await vars.t.get(denops, "ddu_ui_filer_path", ""),
-            // columns: ["icon_filename"],
+            columns: ["filename"],
             sorters: ["sorter_alpha"],
           },
         }],
