@@ -75,6 +75,8 @@ ddu-ff-filter = '''
 repo = 'Shougo/ddu-ui-filer'
 [plugins.ftplugin]
 ddu-filer = '''
+  nnoremap <buffer><silent> i
+  \ <Cmd>call ddu#ui#do_action('openFilterWindow')<CR>
   nnoremap <buffer> ,
   \ <Cmd>call ddu#ui#do_action('toggleSelectItem')<CR>j
   nnoremap <buffer> *
@@ -150,6 +152,25 @@ ddu-filer = '''
   \      'redraw', #{ method: 'refreshItems' },
   \   ],
   \ ])<CR>
+  nnoremap <buffer> M
+        \ <Cmd>call ddu#ui#multi_actions([
+        \   [
+        \     'updateOptions', #{
+        \       uiParams: #{
+        \         filer: #{
+        \           fileFilter: 'fileFilter regexp: '
+        \               ->input(ddu#custom#get_current(b:ddu_ui_name)
+        \               ->get('uiParams', {})
+        \               ->get('filer', {})
+        \               ->get('fileFilter', '')),
+        \         },
+        \       },
+        \     },
+        \   ],
+        \   [
+        \      'redraw', #{ method: 'refreshItems' },
+        \   ],
+        \ ])<CR>
   nnoremap <buffer> <C-l>
   \ <Cmd>call ddu#ui#do_action('checkItems')<CR>
   nnoremap <buffer><expr> <CR>
