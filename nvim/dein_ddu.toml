@@ -89,8 +89,13 @@ ddu-filer = '''
   nnoremap <buffer> O
   \ <Cmd>call ddu#ui#do_action('expandItem',
   \ {'maxLevel': -1})<CR>
+  nnoremap <buffer><silent> cd
+  \ <Cmd>call ddu#ui#do_action('itemAction', {'name': 'cd'})<CR>
   "nnoremap <buffer> O
   "\ <Cmd>call ddu#ui#do_action('collapseItem')<CR>
+  nnoremap <buffer> '
+  \ <Cmd>call ddu#ui#do_action('itemAction',
+  \ {'name': 'narrow', 'params': {'path': getcwd()}})<CR>
   nnoremap <buffer> c
   \ <Cmd>call ddu#ui#multi_actions([
   \ ['itemAction', {'name': 'copy'}],
