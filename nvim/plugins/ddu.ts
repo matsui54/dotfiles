@@ -49,6 +49,7 @@ export class Config extends BaseConfig {
         newFile: { quit: false },
         newDirectory: { quit: false },
         narrow: { quit: false },
+        cd: { quit: false },
       },
       filterParams: {
         matcher_fzy: { hlGroup: "Special" },
