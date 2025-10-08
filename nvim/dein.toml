@@ -55,9 +55,12 @@ hook_add = '''
 [[plugins]]
 repo = 'vim-denops/denops.vim'
 hook_add = '''
-  " let g:denops_server_addr = '127.0.0.1:32123' 
+  let g:denops_server_addr = '127.0.0.1:32123' 
 '''
 
 [[plugins]]
 repo = 'statiolake/vim-quickrun-runner-nvimterm'
 if = 'has("nvim")'
+
+[[plugins]]
+repo = "vim-denops/denops-shared-server.vim"
