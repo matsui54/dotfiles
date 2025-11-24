@@ -131,34 +131,38 @@ gitcommit = '''
   setlocal spell
 '''
  
-# [[plugins]]
-# repo = 'nvim-treesitter/nvim-treesitter'
-# if = 'has("nvim")'
-# on_event = 'BufRead'
-# lua_source = '''
-# require'nvim-treesitter.configs'.setup {
-#     highlight = {
-#         enable = true,
-#         disable = {'latex', 'help', 'csv'},
-#     },
-#     refactor = {
-#       highlight_defintions = {
-#         enable = true
-#       },
-#       smart_rename = {
-#         enable = true,
-#         smart_rename = 'grr'
-#       },
-#       navigation = {
-#         enable = true,
-#         goto_definition = 'gnd',
-#         list_definitions = 'gnD'
-#       }
-#     },
-#     ignore_install = { "phpdoc", "help" },
-#     ensure_installed = 'all'
-# }
-# '''
+[[plugins]]
+repo = 'nvim-treesitter/nvim-treesitter'
+if = 'has("nvim")'
+on_event = 'BufRead'
+rev = "main"
+hook_post_update = 'TSUpdate'
+lua_source = '''
+  -- Install parsers
+  require'nvim-treesitter'.install {
+    'c',
+    'javascript',
+    'rust',
+    'python',
+    'toml',
+    'typescript',
+  }
+
+  -- Enable highlight
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = {
+      'c',
+      'python',
+      'rust',
+      'typescript',
+      'vim',
+      'toml',
+    },
+    callback = function()
+      vim.treesitter.start()
+    end,
+  })
+'''
 
 [[plugins]]
 repo = 'neovim/nvim-lspconfig'

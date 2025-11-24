@@ -56,6 +56,7 @@ export class Config extends BaseConfig {
         },
         necovim: { "mark": "[neco]", "maxItems": 6 },
         lsp: {
+          isVolatile: true,
           mark: "[lsp]",
           dup: "keep",
           minAutoCompleteLength: 10000,
