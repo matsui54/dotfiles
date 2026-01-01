@@ -237,6 +237,7 @@ repo = 'williamboman/mason-lspconfig.nvim'
 on_source = 'nvim-lspconfig'
 lua_source = '''
   require("mason-lspconfig").setup({
+    automatic_enable = false,
     ensure_installed = { "rust_analyzer", "lua_ls", "texlab", "vimls", "pyright", "bashls", "svlangserver" },
   })
 '''
