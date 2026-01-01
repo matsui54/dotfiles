@@ -100,8 +100,13 @@ export class Config extends BaseConfig {
           ignoreEmpty: true,
           autoResize: true,
           maxHighlightItems: 1000,
+          overwriteStatusline: false,
         },
-        filer: { split: "no", sortTreesFirst: true },
+        filer: {
+          split: "no",
+          sortTreesFirst: true,
+          overwriteStatusline: false,
+        },
       },
       columnParams: {
         lsp_symbols: {
