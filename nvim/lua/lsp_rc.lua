@@ -77,4 +77,12 @@ vim.lsp.config('svlangserver', {
     }
   }
 })
+vim.lsp.config("slang-server", {
+  cmd = { "slang-server" },
+  root_markers = { ".git", ".slang" },
+  filetypes = {
+    "systemverilog",
+    "verilog",
+  },
+})
 vim.lsp.enable({ 'pyright' })
