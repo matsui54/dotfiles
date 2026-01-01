@@ -133,6 +133,14 @@ vim.lsp.config('efm', {
     }
   }
 })
+vim.lsp.config("slang-server", {
+  cmd = { "slang-server" },
+  root_markers = { ".git", ".slang" },
+  filetypes = {
+    "systemverilog",
+    "verilog",
+  },
+})
 vim.lsp.enable({ 'clangd', 'texlab', 'zls', 'lua_ls', 'rust_analyzer', 'gopls', 'vimls', 'pyright', 'julials', 'bashls',
   'hls' })
 
