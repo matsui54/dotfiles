@@ -216,10 +216,6 @@ repo = 'thinca/vim-prettyprint'
 on_cmd = ['PrettyPrint', 'PP']
 
 [[plugins]]
-repo = "mbbill/undotree"
-on_cmd = 'UndotreeToggle'
-
-[[plugins]]
 repo = 'cohama/lexima.vim'
 hook_add = '''
   let g:lexima_ctrlh_as_backspace = 1
