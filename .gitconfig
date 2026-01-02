@@ -9,3 +9,7 @@
 	editor = nvim
 [pull]
 	rebase = false
+[difftool "nvim_difftool"]
+  cmd = nvim -c \"packadd nvim.difftool\" -c \"DiffTool $LOCAL $REMOTE\"
+[diff]
+  tool = nvim_difftool

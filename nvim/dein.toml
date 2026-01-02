@@ -2,15 +2,6 @@
 repo = 'Shougo/dein.vim'
 
 [[plugins]]
-repo = 'cocopon/iceberg.vim'
-
-[[plugins]]
-repo = 'sainnhe/edge'
-
-[[plugins]]
-repo = 'endel/vim-github-colorscheme'
-
-[[plugins]]
 repo = 'itchyny/lightline.vim'
 hook_add = '''
   let g:lightline = {}

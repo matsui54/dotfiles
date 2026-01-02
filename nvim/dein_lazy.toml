@@ -298,16 +298,15 @@ repo = 'thinca/vim-prettyprint'
 on_cmd = ['PrettyPrint', 'PP']
 
 [[plugins]]
-repo = "mbbill/undotree"
-on_cmd = 'UndotreeToggle'
-
-[[plugins]]
-repo = 'yuki-yano/fuzzy-motion.vim'
-depends = 'denops.vim'
+repo = 'cohama/lexima.vim'
 hook_add = '''
-nnoremap <Space>/ <cmd>FuzzyMotion<CR>
+  let g:lexima_ctrlh_as_backspace = 1
 '''
-on_cmd = 'FuzzyMotion'
+hook_source = '''
+  call lexima#add_rule({'char': "'", 'input': "'", 'filetype': ['verilog', 'systemverilog']})
+  call lexima#add_rule({'char': "`", 'input': "`", 'filetype': ['verilog', 'systemverilog']})
+'''
+on_event = 'InsertEnter'
 
 [[plugins]]
 repo = "lewis6991/gitsigns.nvim"
@@ -371,16 +370,6 @@ on_source = 'nvim-lspconfig'
 lua_source = '''
   require"fidget".setup{}
 '''
-
-[[plugins]]
-repo = 'cohama/lexima.vim'
-hook_add = '''
-  let g:lexima_ctrlh_as_backspace = 1
-'''
-hook_source = '''
-  call lexima#add_rule({'char': "'", 'input': "'", 'filetype': ['verilog', 'systemverilog']})
-'''
-on_event = 'InsertEnter'
 
 [[plugins]]
 repo = 'mattn/vim-sonictemplate'

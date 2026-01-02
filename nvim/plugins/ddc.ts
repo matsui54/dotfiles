@@ -81,12 +81,6 @@ export class Config extends BaseConfig {
           forceCompletionPattern: "\\",
         },
         file_rec: { "mark": "[P]", "minAutoCompleteLength": 1 },
-        emoji: {
-          mark: "[emoji]",
-          dup: "keep",
-          matcherKey: "kind",
-          minAutoCompleteLength: 1,
-        },
         vsnip: { "mark": "[V]", "dup": "keep" },
         skkeleton: {
           mark: "[skk]",

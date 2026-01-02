@@ -116,9 +116,6 @@ repo = "matsui54/ddc-postfilter_score"
 repo = 'matsui54/ddc-converter_truncate'
 
 [[plugins]]
-repo = "gamoutatsumi/ddc-emoji"
-
-[[plugins]]
 repo = 'matsui54/denops-popup-preview.vim'
 hook_add = '''
 	let g:popup_preview_config = {
@@ -139,15 +136,6 @@ hook_add = '''
         \ 'border': v:false,
         \ }
 '''
-
-[[plugins]]
-repo = 'ray-x/lsp_signature.nvim'
-lazy = 1
-if = "has('nvim')"
-on_source = 'nvim-lspconfig'
-
-[[plugins]]
-repo = 'shun/ddc-vim-lsp'
 
 [[plugins]]
 repo = 'LumaKernel/ddc-file'
