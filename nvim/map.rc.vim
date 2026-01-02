@@ -82,3 +82,6 @@ cnoremap <C-b> <Left>
 " commands
 command! DeinClean :call map(dein#check_clean(), "delete(v:val, 'rf')") |
       \ call dein#recache_runtimepath()
+
+command! Undotree :packadd nvim.undotree | Undotree                                                                                                                                                     
+command! DiffTool :packadd nvim.difftool | DiffTool                                                                                                                                                     
