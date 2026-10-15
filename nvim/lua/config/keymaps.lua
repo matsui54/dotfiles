@@ -90,7 +90,8 @@ end, { silent = true, desc = 'Resize window left (step 10)' })
 -- Command-line mode shortcut with ;
 vim.keymap.set({ 'n', 'x' }, ';', ':')
 
--- Move around tabpages
+-- Tabpage operations
+vim.keymap.set('n', '<Space>t', '<cmd>tabe<CR>', { desc = 'Open new tab' })
 vim.keymap.set('n', '<C-j>', 'gT', { desc = 'Previous tab' })
 vim.keymap.set('n', '<C-k>', 'gt', { desc = 'Next tab' })
 

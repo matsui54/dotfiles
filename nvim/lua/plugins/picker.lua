@@ -14,11 +14,32 @@ return {
           select_vsplit = '<C-v>', -- 垂直分割 (ddu の E 相当)
           select_split = '<C-s>',  -- 水平分割 (ddu の S 相当)
           select_tab = '<C-t>',    -- タブ (ddu の t 相当)
+          clear_query = '<C-u>',   -- 入力クエリを全消去 (コマンドラインの <C-u> 相当)
+        },
+        mappings = {
+          i = {
+            ['<C-a>'] = '<Home>',  -- 行頭へ移動
+            ['<C-e>'] = '<End>',   -- 行末へ移動
+            ['<C-f>'] = '<Right>', -- 右へ移動
+            ['<C-b>'] = '<Left>',  -- 左へ移動
+            ['<C-d>'] = '<Del>',   -- 1文字削除
+            ['<C-h>'] = '<BS>',    -- バックスペース
+            ['<C-k>'] = '<C-o>D',  -- カーソル位置から行末まで削除
+            ['<C-y>'] = '<C-r>*',  -- クリップボード貼り付け
+          },
         },
       }
     end,
     keys = {
       { '<Space>a', function() require('fff').find_files() end, desc = 'fff: Find files' },
+      {
+        '<Space>f',
+        function()
+          local config_parent = vim.fn.fnamemodify(vim.fn.stdpath('config') .. '/..', ':p:h')
+          require('fff').find_files_in_dir(config_parent)
+        end,
+        desc = 'fff: Find files in dotfiles',
+      },
       { '<Space>g', function() require('fff').live_grep() end, desc = 'fff: Live grep' },
       { 'ff', function() require('fff').find_files() end, desc = 'fff: Find files' },
     },
