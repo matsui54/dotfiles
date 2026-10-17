@@ -2,7 +2,6 @@
 vim.opt.title = true
 vim.opt.updatetime = 500
 vim.opt.hidden = true
-vim.opt.laststatus = 2
 vim.opt.signcolumn = "yes"
 vim.opt.termguicolors = true
 vim.opt.mouse = "nv"
@@ -36,9 +35,61 @@ pcall(vim.cmd, "language en_US.utf8")
 -- File name characters
 vim.opt.isfname:remove("=")
 
--- Tabline
+-- Tabline & Statusline
 vim.opt.showtabline = 2
 vim.opt.tabline = "%!tabline#MyTabLine()"
+vim.opt.laststatus = 2
+function _G.my_statusline()
+  local parts = {}
+
+  -- 左側: ファイル名 (%< で必要時に切り詰め)
+  table.insert(parts, "%<%f")
+
+  -- バッファ状態フラグ: ヘルプ (%h), プレビュー (%w), 変更 [%+], 読み込み専用 [RO], ターミナル終了コード
+  table.insert(parts, "%( %h%w%m%r%{v:lua.require('vim._core.util').term_exitcode()}%)")
+
+  -- 非同期 Git ブランチ (gitsigns キャッシュ)
+  local branch = vim.b.gitsigns_head
+  if branch and branch ~= "" then
+    table.insert(parts, " [" .. branch .. "]")
+  end
+
+  -- 右寄せセパレータ
+  table.insert(parts, "%=")
+
+  -- 入力中キー (showcmdloc=statusline の場合)
+  table.insert(parts, " %(%-10S %)")
+
+  -- ビジースピナー
+  if vim.o.busy and vim.o.busy > 0 then
+    table.insert(parts, "◐ ")
+  end
+
+  -- LSP 進行状況
+  if package.loaded["vim.ui"] and vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin or -1) then
+    local progress = vim.ui.progress_status()
+    if progress and progress ~= "" then
+      table.insert(parts, progress .. " ")
+    end
+  end
+
+  -- LSP 診断カウント (E:1 W:1 など)
+  if package.loaded["vim.diagnostic"] and next(vim.diagnostic.count(0)) then
+    local diag = vim.diagnostic.status()
+    if diag and diag ~= "" then
+      table.insert(parts, diag .. " ")
+    end
+  end
+
+  -- ルーラー (%l: 行, %c%V: 列, %P: 位置%)
+  if vim.o.ruler then
+    table.insert(parts, vim.o.rulerformat ~= "" and vim.o.rulerformat or "%18(%l,%c%V%= %P%)%<")
+  end
+
+  return table.concat(parts)
+end
+
+vim.opt.statusline = "%!v:lua.my_statusline()"
 
 -- Additional highlight settings for shirotelin
 local function set_shirotelin_highlights()
@@ -64,6 +115,11 @@ local function set_shirotelin_highlights()
   vim.api.nvim_set_hl(0, "LspReferenceText", { link = "ReferenceHighlight" })
   vim.api.nvim_set_hl(0, "LspReferenceWrite", { link = "ReferenceHighlight" })
   vim.api.nvim_set_hl(0, "FloatBorder", { link = "NormalFloat" })
+  vim.api.nvim_set_hl(0, "DiagnosticSignError", { fg = "#ff5555", bold = true })
+  vim.api.nvim_set_hl(0, "DiagnosticSignWarn",  { fg = "#ff8c00", bold = true })
+  vim.api.nvim_set_hl(0, "DiagnosticSignInfo",  { fg = "#f5cc00", bold = true })
+  vim.api.nvim_set_hl(0, "DiagnosticSignHint",  { fg = "#9C83FF", bold = true })
+
 end
 
 local my_autocmd = vim.api.nvim_create_augroup("MyAutoCmd", { clear = true })

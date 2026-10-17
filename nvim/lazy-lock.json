@@ -11,6 +11,7 @@
   "lexima.vim": { "branch": "master", "commit": "9f6942c5e1f0f6fe63bdcdac515f34c484b970f5" },
   "lightline.vim": { "branch": "master", "commit": "255f61db1a4cc36ee11eb479261d6bc471ed0819" },
   "nvim-lspconfig": { "branch": "master", "commit": "ac062d0d01c019c0dbdb798968f3e5d8b35c3853" },
+  "nvim-treesitter": { "branch": "main", "commit": "ca581c3436fc2b236847f5b739ebc263739e5ca6" },
   "shirotelin": { "branch": "master", "commit": "c486f6f1c88acb585859b8d96dd68eafeb14bbd3" },
   "vim-gitbranch": { "branch": "master", "commit": "1a8ba866f3eaf0194783b9f8573339d6ede8f1ed" },
   "vim-quickrun": { "branch": "master", "commit": "77b4d6ea9972a206f02c736882c2398c36d2983c" },

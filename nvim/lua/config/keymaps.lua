@@ -124,3 +124,20 @@ vim.api.nvim_create_user_command('DiffTool', function()
   vim.cmd('packadd nvim.difftool')
   vim.cmd('DiffTool')
 end, { desc = 'Load and launch difftool' })
+
+-- Snippet jump keymaps (vim.snippet / vsnip migration)
+vim.keymap.set({ 'i', 's' }, '<C-f>', function()
+  if vim.snippet.active({ direction = 1 }) then
+    return '<Cmd>lua vim.snippet.jump(1)<CR>'
+  else
+    return '<C-f>'
+  end
+end, { desc = 'Snippet: Jump next placeholder', expr = true, silent = true })
+
+vim.keymap.set({ 'i', 's' }, '<C-b>', function()
+  if vim.snippet.active({ direction = -1 }) then
+    return '<Cmd>lua vim.snippet.jump(-1)<CR>'
+  else
+    return '<C-b>'
+  end
+end, { desc = 'Snippet: Jump prev placeholder', expr = true, silent = true })
