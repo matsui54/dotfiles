@@ -39,7 +39,8 @@ vim.opt.isfname:remove("=")
 vim.opt.showtabline = 2
 vim.opt.tabline = "%!tabline#MyTabLine()"
 vim.opt.laststatus = 2
-function _G.my_statusline()
+-- Active バッファ用 statusline (Gitブランチ、LSP、診断等を含む完全版)
+local function active_statusline()
   local parts = {}
 
   -- 左側: ファイル名 (%< で必要時に切り詰め)
@@ -66,7 +67,7 @@ function _G.my_statusline()
   end
 
   -- LSP 進行状況
-  if package.loaded["vim.ui"] and vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin or -1) then
+  if package.loaded["vim.ui"] then
     local progress = vim.ui.progress_status()
     if progress and progress ~= "" then
       table.insert(parts, progress .. " ")
@@ -89,7 +90,54 @@ function _G.my_statusline()
   return table.concat(parts)
 end
 
-vim.opt.statusline = "%!v:lua.my_statusline()"
+-- Inactive バッファ用 statusline (GitブランチやLSPを省いたシンプル表示)
+local function inactive_statusline()
+  local parts = {}
+
+  -- 左側: ファイル名 (%< で必要時に切り詰め)
+  table.insert(parts, "%<%f")
+
+  -- バッファ状態フラグ: ヘルプ (%h), プレビュー (%w), 変更 [%+], 読み込み専用 [RO], ターミナル終了コード
+  table.insert(parts, "%( %h%w%m%r%{v:lua.require('vim._core.util').term_exitcode()}%)")
+
+  -- 右寄せセパレータ
+  table.insert(parts, "%=")
+
+  -- ルーラー (%l: 行, %c%V: 列, %P: 位置%)
+  if vim.o.ruler then
+    table.insert(parts, vim.o.rulerformat ~= "" and vim.o.rulerformat or "%18(%l,%c%V%= %P%)%<")
+  end
+
+  return table.concat(parts)
+end
+
+-- Statusline 定義
+_G.Statusline = {
+  active = active_statusline,
+  inactive = inactive_statusline,
+}
+
+-- デフォルトのステータスライン
+vim.opt.statusline = "%!v:lua.Statusline.active()"
+
+-- ウィンドウのフォーカス出入りに応じてローカル statusline を切り替え
+local statusline_group = vim.api.nvim_create_augroup("StatuslineSwitch", { clear = true })
+
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+  group = statusline_group,
+  callback = function()
+    vim.wo.statusline = "%!v:lua.Statusline.active()"
+  end,
+  desc = "Set active statusline",
+})
+
+vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+  group = statusline_group,
+  callback = function()
+    vim.wo.statusline = "%!v:lua.Statusline.inactive()"
+  end,
+  desc = "Set inactive statusline",
+})
 
 -- Additional highlight settings for shirotelin
 local function set_shirotelin_highlights()
