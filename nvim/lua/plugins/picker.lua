@@ -48,6 +48,16 @@ return {
   -- fzf-lua (buffers, help, oldfiles, ui_select, etc.)
   {
     'ibhagwan/fzf-lua',
+    init = function()
+      -- コマンドライン入力中の <C-t> で command_history を起動 (ddu の <C-t> 相当)
+      vim.keymap.set('c', '<C-t>', function()
+        local cmdline = vim.fn.getcmdline()
+        vim.schedule(function()
+          require('fzf-lua').command_history({ query = cmdline })
+        end)
+        return '<C-u><Esc>'
+      end, { expr = true, silent = true, desc = 'fzf-lua: Command history' })
+    end,
     config = function()
       local fzf = require('fzf-lua')
       fzf.setup({
@@ -60,12 +70,19 @@ return {
             ['ctrl-t'] = fzf.actions.file_tabedit, -- タブ (ddu の t 相当)
           },
         },
+        command_history = {
+          actions = {
+            ['enter'] = fzf.actions.ex_run, -- Enter で常にコマンドライン編集状態にする
+            ['ctrl-r'] = fzf.actions.ex_run_cr, -- 即時実行したい場合の代替キー
+          },
+        },
       })
       fzf.register_ui_select()
     end,
     keys = {
       { '<Space>b', function() require('fzf-lua').buffers() end, desc = 'fzf-lua: Buffers' },
       { '<Space>h', function() require('fzf-lua').help_tags() end, desc = 'fzf-lua: Help tags' },
+      { '<Space>m', function() require('fzf-lua').manpages() end, desc = 'fzf-lua: Man pages' },
       { '<Space>o', function() require('fzf-lua').oldfiles() end, desc = 'fzf-lua: Oldfiles' },
       { '<Space>r', function() require('fzf-lua').resume() end, desc = 'fzf-lua: Resume' },
     },
