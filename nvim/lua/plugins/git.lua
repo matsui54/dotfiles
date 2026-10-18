@@ -66,4 +66,93 @@ return {
       vim.g.git_messenger_always_into_popup = true
     end,
   },
+  -- esmuellert/codediff.nvim
+  {
+    'esmuellert/codediff.nvim',
+    cmd = 'CodeDiff',
+    keys = {
+      { 'gs',  '<cmd>CodeDiff<CR>',         desc = 'CodeDiff: Git status / review' },
+      { 'gnl', '<cmd>CodeDiff history<CR>', mode = { 'n', 'v' },                   desc = 'CodeDiff: Git history / log' },
+    },
+    opts = {},
+    init = function()
+      -- gitcommit ファイルタイプ時に spell check を有効化
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'gitcommit',
+        callback = function()
+          vim.opt_local.spell = true
+        end,
+        desc = 'Enable spell check in gitcommit',
+      })
+      -- codediff-explorer バッファローカルのキーマップ (旧 gin-status 相当)
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'codediff-explorer',
+        callback = function(ev)
+          vim.keymap.set('n', '<Space>gc', function()
+            vim.cmd('Commit')
+          end, { buffer = ev.buf, desc = 'Git: commit via guise' })
+          vim.keymap.set('n', '<Space>gp', function()
+            vim.notify('Git push 開始...', vim.log.levels.INFO)
+            vim.fn.jobstart({ 'git', 'push' }, {
+              on_exit = function(_, code)
+                if code == 0 then
+                  vim.notify('Git push done', vim.log.levels.INFO)
+                else
+                  vim.notify('Git push fail (code: ' .. code .. ')', vim.log.levels.ERROR)
+                end
+              end,
+            })
+          end, { buffer = ev.buf, desc = 'Git: push' })
+        end,
+        desc = 'Custom keymaps for codediff-explorer',
+      })
+    end,
+  },
+  -- lambdalisue/vim-guise
+  {
+    'lambdalisue/vim-guise',
+    lazy = false,
+    init = function()
+      -- 新規インスタンスを起動せず、垂直分割で親 Neovim にバッファを開く
+      vim.g.guise_edit_opener = 'vsplit'
+    end,
+    config = function()
+      -- guise.server を確実に起動
+      pcall(function()
+        require('guise.server').start()
+      end)
+
+      -- Git は git config core.editor を EDITOR より優先するため、
+      -- 最優先される GIT_EDITOR に guise の EDITOR を設定する
+      if vim.env.EDITOR then
+        vim.env.GIT_EDITOR = vim.env.EDITOR
+      end
+
+      -- 非同期ジョブで git commit を起動するコマンド (:Commit)
+      vim.api.nvim_create_user_command('Commit', function(opts)
+        local args = { 'git', 'commit' }
+        if opts.args and opts.args ~= '' then
+          vim.list_extend(args, vim.split(opts.args, '%s+'))
+        end
+
+        local editor = vim.env.GIT_EDITOR or vim.env.EDITOR
+        local env = {}
+        if editor then
+          env.GIT_EDITOR = editor
+        end
+
+        local job_id = vim.fn.jobstart(args, {
+          env = env,
+          on_exit = function(_, code)
+            if code == 0 then
+              vim.notify('Git commit: Done', vim.log.levels.INFO)
+            end
+          end,
+        })
+        if job_id <= 0 then
+          vim.notify('Git commit: Fail', vim.log.levels.ERROR)
+        end
+      end, { nargs = '*', desc = 'Run non-blocking git commit via guise' })
+    end,
+  },
 }

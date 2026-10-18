@@ -80,6 +80,7 @@ return {
       fzf.register_ui_select()
     end,
     keys = {
+      { 'gnb', function() require('fzf-lua').git_branches() end, desc = 'fzf-lua: Git branches' },
       { '<Space>b', function() require('fzf-lua').buffers() end, desc = 'fzf-lua: Buffers' },
       { '<Space>h', function() require('fzf-lua').help_tags() end, desc = 'fzf-lua: Help tags' },
       { '<Space>m', function() require('fzf-lua').manpages() end, desc = 'fzf-lua: Man pages' },
