@@ -1,21 +1,19 @@
-#!/bin/bash -eu
+#!/usr/bin/env bash
+set -eu
 
-if [[ ! -d ~/.local/bin ]]; then
-  mkdir -v ~/.local/bin
-fi
+mkdir -p "$HOME/.local/bin"
 
-if [[ ! -e ~/.local/bin/explorer.exe ]]; then
-  ln -sv /mnt/c/Windows/explorer.exe ~/.local/bin/explorer.exe
-fi
+link_if_exists() {
+  local src="$1"
+  local dest="$HOME/.local/bin/$2"
+  if [[ -e "$src" ]]; then
+    ln -sfnv "$src" "$dest"
+  elif [[ -L "$dest" ]]; then
+    rm -fv "$dest"
+  fi
+}
 
-if [[ ! -e ~/.local/bin/cmd.exe ]]; then
-  ln -sv /mnt/c/Windows/System32/cmd.exe ~/.local/bin/cmd.exe
-fi
-
-if [[ ! -e ~/.local/bin/clip.exe ]]; then
-  ln -sv /mnt/c/Windows/System32/clip.exe ~/.local/bin/clip.exe
-fi
-
-if [[ ! -e ~/.local/bin/pwsh.exe ]]; then
-  ln -sv "/mnt/c/Program Files/PowerShell/7/pwsh.exe" ~/.local/bin/pwsh.exe
-fi
+link_if_exists "/mnt/c/Windows/explorer.exe" "explorer.exe"
+link_if_exists "/mnt/c/Windows/System32/cmd.exe" "cmd.exe"
+link_if_exists "/mnt/c/Windows/System32/clip.exe" "clip.exe"
+link_if_exists "/mnt/c/Program Files/PowerShell/7/pwsh.exe" "pwsh.exe"

@@ -119,14 +119,5 @@ fi
 #Additional Settings-----------------------------------------------
 alias lll='ll | less'
 
-function vimsettings() {
-	cd ~/.config/nvim
-	nvim -O ~/.config/nvim/*.toml
-}
-
-if [ -f $HOME/.xkb/keymap/mykbd ]; then
-  xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mykbd $DISPLAY 2> /dev/null
-fi
-
-export PATH+=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:~/.local/bin
+export PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/.cargo/bin:$PATH"
 export HISTTIMEFORMAT='%F %T '

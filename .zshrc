@@ -2,13 +2,6 @@ if [ "$ZSHRC_PROFILE" != "" ]; then
   zmodload zsh/zprof && zprof > /dev/null
 fi
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=5000
 SAVEHIST=100000
@@ -89,13 +82,6 @@ bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 
-function configure-vim() {
-  ./configure --with-features=huge --enable-gui=gtk3 \
-    --enable-python3interp \
-    --enable-luainterp --with-luajit \
-    --enable-fail-if-missing
-}
-
 function ghq-fzf() {
   local src=$(ghq list -p | fzf)
   if [ -n "$src" ]; then
@@ -112,7 +98,9 @@ function zsh-profiler() {
   ZSHRC_PROFILE=1 zsh -i -c zprof
 }
 
-if [ -d /usr/share/doc/fzf/examples ]; then
+if command -v fzf >/dev/null 2>&1 && fzf --zsh >/dev/null 2>&1; then
+  source <(fzf --zsh)
+elif [ -d /usr/share/doc/fzf/examples ]; then
   source /usr/share/doc/fzf/examples/key-bindings.zsh
   source /usr/share/doc/fzf/examples/completion.zsh
 elif [ -d /usr/share/fzf ]; then
@@ -120,25 +108,20 @@ elif [ -d /usr/share/fzf ]; then
   source /usr/share/fzf/key-bindings.zsh
 fi
 
-if [ -d /usr/share/zsh/plugins/zsh-syntax-highlighting ]; then
+if [ -d ~/.zsh/zsh-syntax-highlighting ]; then
+  source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+elif [ -d /usr/share/zsh/plugins/zsh-syntax-highlighting ]; then
   source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 elif [ -d /usr/share/zsh-syntax-highlighting ]; then
   source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-elif [ -d ~/.zsh/zsh-syntax-highlighting ]; then
-  source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-export PYENV_ROOT="$HOME/.pyenv"
-if [ -d $PYENV_ROOT ]; then
-  command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init -)"
-fi
-
-if [[ -f /usr/share/zsh/scripts/git-prompt.zsh || -f ~/git-prompt.zsh/git-prompt.zsh ]]; then
-  if [ -f ~/git-prompt.zsh/git-prompt.zsh ]; then
+if [[ -f ~/.zsh/git-prompt.zsh/git-prompt.zsh || -f ~/git-prompt.zsh/git-prompt.zsh || -f /usr/share/zsh/scripts/git-prompt.zsh ]]; then
+  if [ -f ~/.zsh/git-prompt.zsh/git-prompt.zsh ]; then
+    source ~/.zsh/git-prompt.zsh/git-prompt.zsh
+  elif [ -f ~/git-prompt.zsh/git-prompt.zsh ]; then
     source ~/git-prompt.zsh/git-prompt.zsh
-  fi
-  if [ -f /usr/share/zsh/scripts/git-prompt.zsh ]; then
+  elif [ -f /usr/share/zsh/scripts/git-prompt.zsh ]; then
     source /usr/share/zsh/scripts/git-prompt.zsh
   fi
 
@@ -168,8 +151,4 @@ if [[ -f /usr/share/zsh/scripts/git-prompt.zsh || -f ~/git-prompt.zsh/git-prompt
     PROMPT=$'┏╸%(?..%F{red}%?%f · )%B%~%b$(gitprompt)\n┗╸%F{blue}❯%f%F{cyan}❯%f%F{green}❯%f '
   fi
   RPROMPT=''
-elif [ -f ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme ]; then
-  source ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme
-  # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 fi

@@ -1,24 +1,26 @@
-#!/bin/bash -eu
+#!/usr/bin/env bash
+set -eu
 
-echo "install files in $Dotdir"
+DOTDIR="${Dotdir:-$(cd "$(dirname "$0")/.." && pwd)}"
+echo "Linking dotfiles from $DOTDIR..."
 
-for f in .vimrc .gitconfig .latexmkrc .zshenv .zshrc .xprofile
-do
-  if [[ ! -e $HOME/$f ]]; then
-    ln -sv "$Dotdir/$f" "$HOME/$f"
-  fi
+for f in .vimrc .gitconfig .latexmkrc .zshenv .zshrc .bashrc; do
+  ln -sfnv "$DOTDIR/$f" "$HOME/$f"
 done
 
-if [[ ! -d $HOME/.config ]]; then
-  mkdir "$HOME/.config"
-fi
+mkdir -p "$HOME/.config" "$HOME/.local/bin"
 
-if [[ ! -d $HOME/.config/nvim ]]; then
-  ln -sv "$Dotdir/nvim" "$HOME/.config/nvim"
-fi
+ln -sfnv "$DOTDIR/nvim" "$HOME/.config/nvim"
 
-while read -r p; do
-  if [[ ! -e $HOME/.config/$p ]]; then
-    ln -sv "$Dotdir/.config/$p" "$HOME/.config/$p"
-  fi
-done < <(find "$Dotdir/.config" -mindepth 1 -maxdepth 1 -exec basename {} \;)
+for p in "$DOTDIR/.config"/*; do
+  [[ -e "$p" ]] || continue
+  name="$(basename "$p")"
+  ln -sfnv "$p" "$HOME/.config/$name"
+done
+
+ln -sfnv "$DOTDIR/scripts/pkg.py" "$HOME/.local/bin/pkg"
+
+if grep -qi microsoft /proc/version 2>/dev/null; then
+  "$DOTDIR/setup/link_windows_exe"
+  ln -sfnv "$DOTDIR/scripts/xdg-open" "$HOME/.local/bin/xdg-open"
+fi
