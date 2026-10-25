@@ -104,28 +104,12 @@ PACKAGES: Dict[str, Dict[str, Any]] = {
         "default": True,
         "desc": "fzf command-line fuzzy finder",
     },
-    "gh": {
-        "repo": "cli/cli",
-        "asset": "gh_*_linux_amd64.tar.gz",
-        "bins": ["bin/gh"],
-        "strip": True,
-        "default": True,
-        "desc": "GitHub CLI",
-    },
-    "ghq": {
-        "repo": "x-motemen/ghq",
-        "asset": "ghq_linux_amd64.zip",
-        "bins": ["ghq"],
-        "strip": True,
-        "default": True,
-        "desc": "ghq remote repository manager",
-    },
     "tree-sitter": {
         "repo": "tree-sitter/tree-sitter",
         "asset": "tree-sitter-linux-x64.gz",
         "bins": ["tree-sitter"],
         "strip": False,
-        "default": True,
+        "default": False,
         "desc": "tree-sitter CLI (for nvim-treesitter parser compilation)",
     },
     "rust": {
@@ -432,16 +416,8 @@ def parse_bin_spec(b: str) -> Tuple[str, str]:
 
 
 def install_neovim_from_source(force: bool = False) -> None:
-    # 1. Determine ghq root or fallback
-    ghq_root = Path.home() / "ghq"
-    if shutil.which("ghq"):
-        try:
-            out = subprocess.check_output(["ghq", "root"], text=True).strip()
-            if out:
-                ghq_root = Path(out)
-        except Exception:
-            pass
-    src_dir = ghq_root / "github.com" / "neovim" / "neovim"
+    # 1. Source directory and destination
+    src_dir = Path.home() / ".local" / "src" / "neovim"
     dest_prefix = Path.home() / ".local" / "nvim"
     nvim_bin = dest_prefix / "bin" / "nvim"
     state = load_state()

@@ -82,18 +82,6 @@ bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 
-function ghq-fzf() {
-  local src=$(ghq list -p | fzf)
-  if [ -n "$src" ]; then
-    BUFFER="cd $src"
-    # zle accept-line
-    CURSOR=${#BUFFER}
-  fi
-  zle -R -c
-}
-zle -N ghq-fzf
-bindkey '^]' ghq-fzf
-
 function zsh-profiler() {
   ZSHRC_PROFILE=1 zsh -i -c zprof
 }
