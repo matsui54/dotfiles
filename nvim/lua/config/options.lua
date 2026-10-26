@@ -15,7 +15,7 @@ vim.opt.shiftwidth = 0
 vim.opt.smartindent = true
 
 -- Clipboard
-vim.opt.clipboard = "unnamedplus"
+vim.g.clipboard = 'osc52'
 
 -- Search
 vim.opt.ignorecase = true
