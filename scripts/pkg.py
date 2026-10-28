@@ -20,6 +20,7 @@ from pkglib import (
     NpmPackage,
     Pkg,
     UrlArchive,
+    UvTool,
     fetch_json,
     glibc_version,
     http_get,
@@ -332,6 +333,25 @@ PACKAGES = [
         source=GoInstall(
             package="github.com/isaacphi/mcp-language-server@latest",
             bins=["mcp-language-server"],
+        ),
+    ),
+    Pkg(
+        "serena",
+        desc="Serena coding agent toolkit (via uv tool)",
+        source=UvTool(
+            package="serena-agent",
+            bins=["serena"],
+            python="3.13",
+        ),
+    ),
+    Pkg(
+        "verible",
+        default=False,
+        desc="verible language server",
+        source=GitHubRelease(
+            repo="chipsalliance/verible",
+            asset="verible-*-linux-static-x86_64.tar.gz",
+            bins=["verible-verilog-ls"],
         ),
     ),
 ]

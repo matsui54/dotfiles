@@ -464,6 +464,76 @@ class CargoInstall(Installer):
                 print(f"[{pkg.name}] Removed {cargo_bin_path}")
 
 
+class UvTool(Installer):
+    """Install Python CLI tool via `uv tool install`."""
+
+    def __init__(
+        self,
+        package: str,
+        bins: Sequence[str],
+        python: Optional[str] = None,
+        uv_pkg: str = "uv",
+    ):
+        self.package = package
+        self.bins = list(bins)
+        self.python = python
+        self.depends = [uv_pkg] if uv_pkg else []
+
+    def _find_uv(self) -> Path:
+        uv_bin = BIN_DIR / "uv"
+        if uv_bin.exists():
+            return uv_bin
+        which_uv = shutil.which("uv")
+        if which_uv:
+            return Path(which_uv)
+        raise RuntimeError("uv not found. Please install uv first.")
+
+    def is_installed(self, pkg: "Pkg") -> bool:
+        return all((BIN_DIR / parse_bin_spec(b)[0]).exists() for b in self.bins)
+
+    def install(self, pkg: "Pkg", force: bool, state: Dict[str, str]) -> Optional[str]:
+        uv_bin = self._find_uv()
+        installed_ver = state.get(pkg.name)
+        if not force and installed_ver and self.is_installed(pkg):
+            print(f"[{pkg.name}] Already installed ({installed_ver})")
+            return None
+
+        cmd = [str(uv_bin), "tool", "install"]
+        if force:
+            cmd.append("--upgrade")
+        if self.python:
+            cmd.extend(["-p", self.python])
+        cmd.append(self.package)
+
+        print(f"[{pkg.name}] Installing {self.package} via uv tool install...")
+        BIN_DIR.mkdir(parents=True, exist_ok=True)
+        env = os.environ.copy()
+        env["UV_TOOL_BIN_DIR"] = str(BIN_DIR)
+        env["PATH"] = f"{BIN_DIR}:{env.get('PATH', '')}"
+        subprocess.run(cmd, env=env, check=True)
+
+        ver = "installed"
+        try:
+            out = subprocess.check_output([str(uv_bin), "tool", "list"], env=env, text=True)
+            for line in out.splitlines():
+                parts = line.strip().split()
+                if len(parts) >= 2 and parts[0] == self.package:
+                    ver = parts[1]
+                    break
+        except Exception:
+            pass
+        return ver
+
+    def remove(self, pkg: "Pkg") -> None:
+        try:
+            uv_bin = self._find_uv()
+            env = os.environ.copy()
+            env["UV_TOOL_BIN_DIR"] = str(BIN_DIR)
+            subprocess.run([str(uv_bin), "tool", "uninstall", self.package], env=env, check=True)
+        except Exception:
+            unlink_bins(pkg.name, self.bins)
+
+
 class Custom(Installer):
     """Custom callback-driven installer for specialized builds/toolchains."""
 
