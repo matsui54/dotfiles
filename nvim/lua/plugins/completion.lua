@@ -14,6 +14,13 @@ return {
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
     opts = {
+      enabled = function()
+        local ok, skkelua = pcall(require, 'skkelua')
+        if ok and skkelua.is_enabled() then
+          return false
+        end
+        return vim.bo.buftype ~= 'prompt' and vim.b.completion ~= false
+      end,
       keymap = {
         preset = 'none',
 
@@ -37,8 +44,8 @@ return {
         ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
 
         -- ddc の候補移動・確定・キャンセル
-        ['<C-n>'] = { function(cmp) return cmp.select_next({ auto_insert = false }) end, 'fallback_to_mappings' },
-        ['<C-p>'] = { function(cmp) return cmp.select_prev({ auto_insert = false }) end, 'fallback_to_mappings' },
+        ['<C-n>'] = { function(cmp) return cmp.select_next({ auto_insert = false }) end, 'fallback' },
+        ['<C-p>'] = { function(cmp) return cmp.select_prev({ auto_insert = false }) end, 'fallback' },
         ['<C-y>'] = { 'select_and_accept', 'fallback' },
         ['<C-e>'] = { 'cancel', 'fallback' },
 
@@ -94,6 +101,62 @@ return {
         },
       },
     },
+  },
 
+  -- kjuq/skkelua.nvim (SKK 日本語入力)
+  {
+    'kjuq/skkelua.nvim',
+    lazy = false,
+    dependencies = {
+      'skk-dev/dict',
+    },
+    config = function()
+      local skkelua = require('skkelua')
+
+      vim.keymap.set({ 'i', 'c', 't' }, '<C-j>', '<Plug>(skkelua-toggle)', { desc = 'SKK: Toggle skkelua' })
+
+      -- <BS>/<C-h> で変換候補を戻す
+      skkelua.register_keymap('henkan', '<BS>', 'henkanBackward')
+      skkelua.register_keymap('henkan', '<C-h>', 'henkanBackward')
+      skkelua.register_keymap('henkan', 'x', '')
+
+      skkelua.config({
+        globalDictionaries = {
+          vim.fs.joinpath(vim.fn.stdpath('data'), 'lazy', 'dict', 'SKK-JISYO.L'),
+        },
+        completionRankFile = vim.fs.joinpath(vim.fn.stdpath('state'), 'skkelua', 'rank'),
+        completion = {
+          enabled = true,
+          insertOnSelect = true,
+          deferOkuri = true,
+        },
+        indicator = {
+          alwaysShown = false,
+        },
+      })
+
+      skkelua.register_kanatable('rom', {
+        ['z '] = { '\u{3000}', '' },
+        ['jj'] = 'escape',
+        ['z,'] = { '，', '' },
+        ['z.'] = { '．', '' },
+        ['z9'] = { '（', '' },
+        ['z0'] = { '）', '' },
+        ['~'] = { '～', '' },
+      })
+
+      -- 有効化・無効化時に blink.cmp のメニューが開いていれば閉じる
+      local group = vim.api.nvim_create_augroup('my.skkelua', { clear = true })
+      vim.api.nvim_create_autocmd('User', {
+        group = group,
+        pattern = { 'skkelua-enable-pre', 'skkelua-disable-post' },
+        callback = function()
+          local ok, blink = pcall(require, 'blink.cmp')
+          if ok and blink.is_visible() then
+            blink.hide()
+          end
+        end,
+      })
+    end,
   },
 }
