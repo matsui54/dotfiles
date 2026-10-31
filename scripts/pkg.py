@@ -354,6 +354,16 @@ PACKAGES = [
             bins=["verible-verilog-ls"],
         ),
     ),
+    Pkg(
+        "konata",
+        default=False,
+        desc="Pipeline visualizer",
+        source=GitHubRelease(
+            repo="shioyadan/Konata",
+            asset="konata-*.zip",
+            bins=["konata.sh"],
+        ),
+    ),
 ]
 
 
