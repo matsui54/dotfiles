@@ -4,23 +4,37 @@ set -eu
 DOTDIR="${Dotdir:-$(cd "$(dirname "$0")/.." && pwd)}"
 echo "Linking dotfiles from $DOTDIR..."
 
+link_item() {
+  local src="$1"
+  local dst="$2"
+  if [[ -e "$dst" || -L "$dst" ]]; then
+    if [[ "$(readlink "$dst" 2>/dev/null || true)" == "$src" ]]; then
+      echo "Already linked: $dst -> $src"
+    else
+      echo "Skipping $dst: already exists"
+    fi
+    return 0
+  fi
+  ln -snv "$src" "$dst"
+}
+
 for f in .vimrc .gitconfig .latexmkrc .zshenv .zshrc .bashrc; do
-  ln -sfnv "$DOTDIR/$f" "$HOME/$f"
+  link_item "$DOTDIR/$f" "$HOME/$f"
 done
 
 mkdir -p "$HOME/.config" "$HOME/.local/bin"
 
-ln -sfnv "$DOTDIR/nvim" "$HOME/.config/nvim"
+link_item "$DOTDIR/nvim" "$HOME/.config/nvim"
 
 for p in "$DOTDIR/.config"/*; do
   [[ -e "$p" ]] || continue
   name="$(basename "$p")"
-  ln -sfnv "$p" "$HOME/.config/$name"
+  link_item "$p" "$HOME/.config/$name"
 done
 
-ln -sfnv "$DOTDIR/scripts/pkg.py" "$HOME/.local/bin/pkg"
+link_item "$DOTDIR/scripts/pkg.py" "$HOME/.local/bin/pkg"
 
 if grep -qi microsoft /proc/version 2>/dev/null; then
   "$DOTDIR/setup/link_windows_exe"
-  ln -sfnv "$DOTDIR/scripts/xdg-open" "$HOME/.local/bin/xdg-open"
+  link_item "$DOTDIR/scripts/xdg-open" "$HOME/.local/bin/xdg-open"
 fi
