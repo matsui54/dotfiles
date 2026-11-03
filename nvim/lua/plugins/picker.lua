@@ -1,3 +1,13 @@
+local last_picker = nil
+
+vim.api.nvim_create_autocmd('User', {
+  group = vim.api.nvim_create_augroup('my.picker_resume', { clear = true }),
+  pattern = 'FFFClose',
+  callback = function()
+    last_picker = 'fff'
+  end,
+})
+
 return {
   -- fff (Files & Live Grep)
   {
@@ -61,6 +71,11 @@ return {
     config = function()
       local fzf = require('fzf-lua')
       fzf.setup({
+        winopts = {
+          on_close = function()
+            last_picker = 'fzf'
+          end,
+        },
         actions = {
           files = {
             ['enter'] = fzf.actions.file_edit,
@@ -85,7 +100,17 @@ return {
       { '<Space>h', function() require('fzf-lua').help_tags() end, desc = 'fzf-lua: Help tags' },
       { '<Space>m', function() require('fzf-lua').manpages() end, desc = 'fzf-lua: Man pages' },
       { '<Space>o', function() require('fzf-lua').oldfiles() end, desc = 'fzf-lua: Oldfiles' },
-      { '<Space>r', function() require('fzf-lua').resume() end, desc = 'fzf-lua: Resume' },
+      {
+        '<Space>r',
+        function()
+          if last_picker == 'fff' then
+            vim.cmd('FFFResume')
+          else
+            require('fzf-lua').resume()
+          end
+        end,
+        desc = 'Picker: Resume (fff / fzf-lua)',
+      },
     },
   },
 }
