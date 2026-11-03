@@ -51,7 +51,6 @@ return {
         desc = 'fff: Find files in dotfiles',
       },
       { '<Space>g', function() require('fff').live_grep() end, desc = 'fff: Live grep' },
-      { 'ff', function() require('fff').find_files() end, desc = 'fff: Find files' },
     },
   },
 

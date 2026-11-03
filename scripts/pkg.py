@@ -263,6 +263,11 @@ PACKAGES = [
         source=CargoInstall(crate="tree-sitter-cli", bins=["tree-sitter"]),
     ),
     Pkg(
+        "zoxide",
+        desc="zoxide",
+        source=CargoInstall(crate="zoxide", bins=["zoxide"]),
+    ),
+    Pkg(
         "lua-language-server",
         desc="Lua Language Server",
         source=GitHubRelease(
