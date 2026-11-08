@@ -12,6 +12,7 @@ return {
         'python',
         'toml',
         'typescript',
+        'systemverilog',
       })
 
       -- Enable highlight
@@ -23,6 +24,7 @@ return {
           'typescript',
           'vim',
           'toml',
+          'systemverilog',
         },
         callback = function()
           vim.treesitter.start()
