@@ -18,7 +18,7 @@ link_item() {
   ln -snv "$src" "$dst"
 }
 
-for f in .vimrc .gitconfig .latexmkrc .zshenv .zshrc .bashrc; do
+for f in .vimrc .latexmkrc .zshenv .zshrc .bashrc; do
   link_item "$DOTDIR/$f" "$HOME/$f"
 done
 
@@ -33,6 +33,7 @@ for p in "$DOTDIR/.config"/*; do
 done
 
 link_item "$DOTDIR/scripts/pkg.py" "$HOME/.local/bin/pkg"
+link_item "$DOTDIR/scripts/git-csv-diff" "$HOME/.local/bin/git-csv-diff"
 
 if grep -qi microsoft /proc/version 2>/dev/null; then
   "$DOTDIR/setup/link_windows_exe"

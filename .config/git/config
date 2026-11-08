@@ -10,3 +10,5 @@
   cmd = nvim -c \"packadd nvim.difftool\" -c \"DiffTool $LOCAL $REMOTE\"
 [diff]
   tool = nvim_difftool
+[diff "csv"]
+	command = ~/.local/bin/git-csv-diff
