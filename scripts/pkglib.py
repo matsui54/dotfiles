@@ -585,6 +585,12 @@ class PackageManager:
     def __init__(self, packages: Sequence[Pkg]):
         self.packages: Dict[str, Pkg] = {p.name: p for p in packages}
 
+    def is_installed(self, name: str) -> bool:
+        if name not in self.packages:
+            raise ValueError(f"Unknown package: {name}")
+        pkg = self.packages[name]
+        return pkg.source.is_installed(pkg)
+
     def install(self, name: str, force: bool = False) -> None:
         if name not in self.packages:
             raise ValueError(f"Unknown package: {name}")
@@ -600,6 +606,14 @@ class PackageManager:
             state[name] = new_version
             save_state(state)
             print(f"[{name}] Done ({new_version})")
+
+    def update(self, name: str, force: bool = False) -> None:
+        if name not in self.packages:
+            raise ValueError(f"Unknown package: {name}")
+        if not self.is_installed(name):
+            print(f"[{name}] Not installed, skipping")
+            return
+        self.install(name, force=force)
 
     def remove(self, name: str) -> None:
         if name not in self.packages:
@@ -635,9 +649,7 @@ def run_cli(packages: Sequence[Pkg]) -> None:
 
     sub.add_parser("list", aliases=["status", "ls"], help="List packages and installation status")
 
-    p_install = sub.add_parser(
-        "install", aliases=["update", "up", "i"], help="Install or update packages"
-    )
+    p_install = sub.add_parser("install", aliases=["i"], help="Install packages")
     p_install.add_argument(
         "packages", nargs="*", help="Package names (default: all default packages)"
     )
@@ -645,6 +657,17 @@ def run_cli(packages: Sequence[Pkg]) -> None:
         "-a", "--all", action="store_true", help="Install all packages including optional ones"
     )
     p_install.add_argument(
+        "-f", "--force", action="store_true", help="Force reinstall even if up to date"
+    )
+
+    p_update = sub.add_parser("update", aliases=["up"], help="Update installed packages")
+    p_update.add_argument(
+        "packages", nargs="*", help="Package names (default: all installed packages)"
+    )
+    p_update.add_argument(
+        "-a", "--all", action="store_true", help="Update all installed packages"
+    )
+    p_update.add_argument(
         "-f", "--force", action="store_true", help="Force reinstall even if up to date"
     )
 
@@ -657,7 +680,7 @@ def run_cli(packages: Sequence[Pkg]) -> None:
         pm.list_packages()
         return
 
-    if args.cmd in ("install", "update", "up", "i"):
+    if args.cmd in ("install", "i"):
         if args.all:
             targets = list(pm.packages.keys())
         elif args.packages:
@@ -669,6 +692,22 @@ def run_cli(packages: Sequence[Pkg]) -> None:
         for name in targets:
             try:
                 pm.install(name, force=args.force)
+            except Exception as e:
+                print(f"[{name}] ERROR: {e}", file=sys.stderr)
+                failed.append(name)
+        if failed:
+            sys.exit(1)
+
+    elif args.cmd in ("update", "up"):
+        if args.packages:
+            targets = args.packages
+        else:
+            targets = [name for name in pm.packages if pm.is_installed(name)]
+
+        failed = []
+        for name in targets:
+            try:
+                pm.update(name, force=args.force)
             except Exception as e:
                 print(f"[{name}] ERROR: {e}", file=sys.stderr)
                 failed.append(name)
