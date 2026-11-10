@@ -7,12 +7,14 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
-from typing import Dict, Optional, Tuple
+import tempfile
+from typing import Any, Dict, Optional
 
 from pkglib import (
     BIN_DIR,
     LOCAL_DIR,
     SRC_DIR,
+    ArchiveSpec,
     CargoInstall,
     Custom,
     GitHubRelease,
@@ -21,12 +23,13 @@ from pkglib import (
     Pkg,
     UrlArchive,
     UvTool,
+    download_bytes,
     fetch_json,
-    glibc_version,
     http_get,
     link_executable,
     run_cli,
     unlink_bins,
+    verify_sha256,
 )
 
 
@@ -35,31 +38,88 @@ from pkglib import (
 # ============================================================================
 
 
-def resolve_zig() -> Tuple[str, str, int]:
+def resolve_zig() -> ArchiveSpec:
     info = fetch_json("https://ziglang.org/download/index.json")
     master = info["master"]
     pack = master["x86_64-linux"]
-    return master["version"], pack["tarball"], int(pack.get("size", 0))
+    return ArchiveSpec(
+        version=master["version"],
+        url=pack["tarball"],
+        size=int(pack.get("size", 0)),
+        sha256=pack.get("shasum"),
+    )
 
 
-def resolve_go() -> Tuple[str, str, int]:
+def resolve_go() -> ArchiveSpec:
     releases = fetch_json("https://go.dev/dl/?mode=json")
     latest = releases[0]
     version = latest["version"]
     for f in latest.get("files", []):
         if f.get("os") == "linux" and f.get("arch") == "amd64" and f.get("kind") == "archive":
-            return version, f"https://go.dev/dl/{f['filename']}", int(f.get("size", 0))
+            return ArchiveSpec(
+                version=version,
+                url=f"https://go.dev/dl/{f['filename']}",
+                size=int(f.get("size", 0)),
+                sha256=f.get("sha256"),
+            )
     raise RuntimeError(f"No linux-amd64 archive found in Go release {version}")
 
 
-def resolve_node() -> Tuple[str, str, int]:
+def resolve_node() -> ArchiveSpec:
     releases = fetch_json("https://nodejs.org/dist/index.json")
     latest_lts = next((r for r in releases if r.get("lts")), releases[0])
     version = latest_lts["version"]
-    return version, f"https://nodejs.org/dist/{version}/node-{version}-linux-x64.tar.xz", 0
+    filename = f"node-{version}-linux-x64.tar.xz"
+    url = f"https://nodejs.org/dist/{version}/{filename}"
+    sha256 = None
+    with http_get(f"https://nodejs.org/dist/{version}/SHASUMS256.txt") as resp:
+        for line in resp.read().decode("utf-8").splitlines():
+            parts = line.split()
+            if len(parts) == 2 and parts[1] == filename:
+                sha256 = parts[0]
+                break
+    return ArchiveSpec(version=version, url=url, size=0, sha256=sha256)
 
 
-def install_neovim_source(pkg: Pkg, force: bool, state: Dict[str, str]) -> Optional[str]:
+def lock_neovim_source(_pkg: Pkg) -> Dict[str, Any]:
+    """Resolve Neovim 'stable' release version and exact commit SHA."""
+    rel = fetch_json("https://api.github.com/repos/neovim/neovim/releases/latest", is_api=True)
+    tag_name = rel["tag_name"]
+    out = subprocess.check_output(
+        [
+            "git",
+            "ls-remote",
+            "https://github.com/neovim/neovim.git",
+            f"refs/tags/{tag_name}",
+            f"refs/tags/{tag_name}^{{}}",
+            "refs/tags/stable",
+            "refs/tags/stable^{}",
+        ],
+        text=True,
+    )
+    ref_map: Dict[str, str] = {}
+    for line in out.splitlines():
+        parts = line.split()
+        if len(parts) == 2:
+            ref_map[parts[1]] = parts[0]
+
+    commit = (
+        ref_map.get(f"refs/tags/{tag_name}^{{}}")
+        or ref_map.get(f"refs/tags/{tag_name}")
+        or ref_map.get("refs/tags/stable^{}")
+        or ref_map.get("refs/tags/stable")
+    )
+    if not commit:
+        raise RuntimeError("Failed to resolve commit SHA for Neovim stable release")
+    return {"version": tag_name, "commit": commit}
+
+
+def install_neovim_source(
+    pkg: Pkg,
+    force: bool,
+    state: Dict[str, str],
+    lock_entry: Optional[Dict[str, Any]] = None,
+) -> Optional[str]:
     src_dir = SRC_DIR / "neovim"
     dest_prefix = LOCAL_DIR / "nvim"
     nvim_bin = dest_prefix / "bin" / "nvim"
@@ -76,7 +136,25 @@ def install_neovim_source(pkg: Pkg, force: bool, state: Dict[str, str]) -> Optio
             f"(e.g. sudo apt install -y build-essential cmake gettext ninja-build)"
         )
 
-    need_build = force or not is_neovim_installed(pkg)
+    if lock_entry is None:
+        lock_entry = lock_neovim_source(pkg)
+    target_version = lock_entry["version"]
+    target_commit = lock_entry["commit"]
+
+    if not force and state.get(pkg.name) == target_version and is_neovim_installed(pkg):
+        if src_dir.exists():
+            try:
+                cur_head = subprocess.check_output(
+                    ["git", "rev-parse", "HEAD"], cwd=src_dir, text=True
+                ).strip()
+                if cur_head == target_commit:
+                    print(f"[{pkg.name}] Already up to date ({target_version})")
+                    return None
+            except Exception:
+                pass
+        else:
+            print(f"[{pkg.name}] Already up to date ({target_version})")
+            return None
 
     if not src_dir.exists():
         print(f"[{pkg.name}] Cloning neovim/neovim to {src_dir}...")
@@ -84,27 +162,24 @@ def install_neovim_source(pkg: Pkg, force: bool, state: Dict[str, str]) -> Optio
         subprocess.run(
             ["git", "clone", "https://github.com/neovim/neovim.git", str(src_dir)], check=True
         )
-        need_build = True
     else:
-        print(f"[{pkg.name}] Updating repository in {src_dir}...")
-        subprocess.run(["git", "checkout", "master"], cwd=src_dir, check=True)
-        old_head = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=src_dir, text=True
-        ).strip()
-        subprocess.run(["git", "pull", "--rebase"], cwd=src_dir, check=True)
-        new_head = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=src_dir, text=True
-        ).strip()
-        if old_head != new_head:
-            need_build = True
+        print(f"[{pkg.name}] Fetching latest commits/tags in {src_dir}...")
+        subprocess.run(
+            ["git", "fetch", "--tags", "--force", "origin"], cwd=src_dir, check=True
+        )
 
-    if not need_build:
-        ver = state.get(pkg.name, "installed (source)")
-        print(f"[{pkg.name}] Already up to date ({ver})")
-        return None
+    print(f"[{pkg.name}] Checking out locked stable commit {target_commit[:12]} ({target_version})...")
+    subprocess.run(["git", "checkout", "--detach", target_commit], cwd=src_dir, check=True)
+    actual_head = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=src_dir, text=True
+    ).strip()
+    if actual_head.lower() != target_commit.lower():
+        raise RuntimeError(
+            f"[{pkg.name}] Commit verification failed! Expected {target_commit}, got {actual_head}"
+        )
 
     print(
-        f"[{pkg.name}] Building Neovim with "
+        f"[{pkg.name}] Building Neovim ({target_version}) with "
         f"'make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX={dest_prefix} install'..."
     )
     env = os.environ.copy()
@@ -117,12 +192,7 @@ def install_neovim_source(pkg: Pkg, force: bool, state: Dict[str, str]) -> Optio
     )
 
     link_executable(nvim_bin, "nvim")
-
-    try:
-        ver_line = subprocess.check_output([str(nvim_bin), "--version"], text=True).splitlines()[0]
-        return ver_line.split()[1]
-    except Exception:
-        return "source"
+    return target_version
 
 
 def remove_neovim_source(pkg: Pkg) -> None:
@@ -137,34 +207,75 @@ def is_neovim_installed(_pkg: Pkg) -> bool:
     return (LOCAL_DIR / "nvim" / "bin" / "nvim").exists() and (BIN_DIR / "nvim").exists()
 
 
-def install_rustup(pkg: Pkg, force: bool, state: Dict[str, str]) -> Optional[str]:
+RUSTUP_INIT_URL = (
+    "https://static.rust-lang.org/rustup/dist/x86_64-unknown-linux-gnu/rustup-init"
+)
+RUSTUP_INIT_SHA256_URL = f"{RUSTUP_INIT_URL}.sha256"
+
+
+def lock_rustup(_pkg: Pkg) -> Dict[str, Any]:
+    rel = fetch_json("https://api.github.com/repos/rust-lang/rust/releases/latest", is_api=True)
+    version = rel["tag_name"]
+    with http_get(RUSTUP_INIT_SHA256_URL) as resp:
+        sha256_text = resp.read().decode("utf-8").strip()
+    sha256 = sha256_text.split()[0].lower()
+    if len(sha256) != 64:
+        raise RuntimeError(f"Invalid SHA256 from {RUSTUP_INIT_SHA256_URL}: {sha256_text}")
+    return {
+        "version": version,
+        "url": RUSTUP_INIT_URL,
+        "sha256": sha256,
+    }
+
+
+def install_rustup(
+    pkg: Pkg,
+    force: bool,
+    state: Dict[str, str],
+    lock_entry: Optional[Dict[str, Any]] = None,
+) -> Optional[str]:
     cargo_dir = Path.home() / ".cargo" / "bin"
     rustup_bin = cargo_dir / "rustup"
-    rustc_bin = cargo_dir / "rustc"
+
+    if lock_entry is None:
+        lock_entry = lock_rustup(pkg)
+    target_version = lock_entry["version"]
+    url = lock_entry["url"]
+    expected_sha256 = lock_entry["sha256"]
+
+    installed_ver = state.get(pkg.name)
+    if not force and installed_ver == target_version and is_rust_installed(pkg):
+        print(f"[{pkg.name}] Already up to date ({target_version})")
+        return None
 
     if is_rust_installed(pkg) and rustup_bin.exists():
-        if force:
-            print(f"[{pkg.name}] Updating toolchain via rustup...")
-            subprocess.run([str(rustup_bin), "update"], check=True)
-        else:
-            ver = state.get(pkg.name, "installed")
-            print(f"[{pkg.name}] Already installed ({ver})")
-            return None
-    else:
-        print(f"[{pkg.name}] Installing rustup and cargo to ~/.cargo...")
-        with http_get("https://sh.rustup.rs") as resp:
-            installer = resp.read()
+        print(f"[{pkg.name}] Installing/setting Rust toolchain {target_version} via rustup...")
         subprocess.run(
-            ["sh", "-s", "--", "-y", "--no-modify-path"],
-            input=installer,
-            check=True,
+            [str(rustup_bin), "toolchain", "install", target_version], check=True
         )
+        subprocess.run([str(rustup_bin), "default", target_version], check=True)
+    else:
+        print(f"[{pkg.name}] Downloading rustup-init from {url}...")
+        data = download_bytes(url)
+        verify_sha256(data, expected_sha256, pkg.name)
+        print(f"  Verified SHA256: {expected_sha256[:16]}...")
 
-    if rustc_bin.exists():
-        out = subprocess.check_output([str(rustc_bin), "--version"], text=True).strip()
-        parts = out.split()
-        return parts[1] if len(parts) > 1 else "installed"
-    return "installed"
+        with tempfile.TemporaryDirectory(prefix="rustup_init_") as tmpdir:
+            init_bin = Path(tmpdir) / "rustup-init"
+            init_bin.write_bytes(data)
+            init_bin.chmod(0o755)
+            subprocess.run(
+                [
+                    str(init_bin),
+                    "-y",
+                    "--no-modify-path",
+                    "--default-toolchain",
+                    target_version,
+                ],
+                check=True,
+            )
+
+    return target_version
 
 
 def remove_rustup(pkg: Pkg) -> None:
@@ -182,26 +293,26 @@ def is_rust_installed(_pkg: Pkg) -> bool:
 # Package Catalog
 # ============================================================================
 
-OLD_GLIBC = glibc_version() < (2, 32)
-
 PACKAGES = [
     # --- Default Core Packages ---
     Pkg(
         "nvim",
         default=True,
-        desc="Neovim editor (built from source into ~/.local/nvim)",
+        desc="Neovim editor (built from locked stable commit into ~/.local/nvim)",
         source=Custom(
             install=install_neovim_source,
             remove=remove_neovim_source,
             is_installed=is_neovim_installed,
+            lock=lock_neovim_source,
         ),
     ),
     Pkg(
         "nvim-bin",
         desc="Neovim editor (prebuilt binary)",
         source=GitHubRelease(
-            repo="neovim/neovim-releases" if OLD_GLIBC else "neovim/neovim",
+            repo="neovim/neovim",
             asset="nvim-linux-x86_64.tar.gz",
+            old_glibc_repo="neovim/neovim-releases",
             bins=["bin/nvim"],
         ),
     ),
@@ -254,6 +365,7 @@ PACKAGES = [
             install=install_rustup,
             remove=remove_rustup,
             is_installed=is_rust_installed,
+            lock=lock_rustup,
         ),
     ),
     # --- Optional Packages (LSPs, Runtimes, Tools) ---
@@ -291,11 +403,8 @@ PACKAGES = [
         desc="SystemVerilog LSP server",
         source=GitHubRelease(
             repo="hudson-trading/slang-server",
-            asset=(
-                "slang-server-old-linux-x64-gcc.tar.gz"
-                if OLD_GLIBC
-                else "slang-server-linux-x64.tar.gz"
-            ),
+            asset="slang-server-linux-x64.tar.gz",
+            old_glibc_asset="slang-server-old-linux-x64-gcc.tar.gz",
             bins=["slang-server"],
             strip=False,
         ),
@@ -336,7 +445,7 @@ PACKAGES = [
         "mcp-language-server",
         desc="Language server for Model Context Protocol (MCP)",
         source=GoInstall(
-            package="github.com/isaacphi/mcp-language-server@latest",
+            package="github.com/isaacphi/mcp-language-server",
             bins=["mcp-language-server"],
         ),
     ),
@@ -374,4 +483,3 @@ PACKAGES = [
 
 if __name__ == "__main__":
     run_cli(PACKAGES)
-

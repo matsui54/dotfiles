@@ -1,0 +1,125 @@
+{
+  "bat": {
+    "sha256": "0dcd8ac79732c0d5b136f11f4ee00e581440e16a44eab5b3105b611bbf2cf191",
+    "size": 3584928,
+    "url": "https://github.com/sharkdp/bat/releases/download/v0.26.1/bat-v0.26.1-x86_64-unknown-linux-musl.tar.gz",
+    "version": "v0.26.1"
+  },
+  "clangd": {
+    "sha256": "e53b1a96196095faedb7642cf64964f7fb9ad4a0c1f00dd2c172a3d9dcbafdfd",
+    "size": 117949007,
+    "url": "https://github.com/clangd/clangd/releases/download/23.1.0/clangd-linux-23.1.0.zip",
+    "version": "23.1.0"
+  },
+  "fd": {
+    "sha256": "7e2d07fa2b8807642aaec67b7e2972a9fbe4db26fcb340a7372392db42b26694",
+    "size": 1798931,
+    "url": "https://github.com/sharkdp/fd/releases/download/v10.5.2/fd-v10.5.2-x86_64-unknown-linux-musl.tar.gz",
+    "version": "v10.5.2"
+  },
+  "fzf": {
+    "sha256": "0d6640f83582d991cf429754baad64b07e3a4e439a6019670f4b91da1314141c",
+    "size": 2294235,
+    "url": "https://github.com/junegunn/fzf/releases/download/v0.75.0/fzf-0.75.0-linux_amd64.tar.gz",
+    "version": "v0.75.0"
+  },
+  "go": {
+    "sha256": "65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40",
+    "size": 70588678,
+    "url": "https://go.dev/dl/go1.27.3.linux-amd64.tar.gz",
+    "version": "go1.27.3"
+  },
+  "konata": {
+    "sha256": "14f42cceef005224062d7de5fb4a228e056d3fb354b5e34695fd72e6599ae662",
+    "size": 537373,
+    "url": "https://github.com/shioyadan/Konata/releases/download/v1.2.0/konata-v1.2.0.zip",
+    "version": "v1.2.0"
+  },
+  "lua-language-server": {
+    "sha256": "93ad326b10f6c00911dd8c450fa098332dbd8f9f45d1052f5636a2d54479b947",
+    "size": 3696210,
+    "url": "https://github.com/LuaLS/lua-language-server/releases/download/3.19.2/lua-language-server-3.19.2-linux-x64.tar.gz",
+    "version": "3.19.2"
+  },
+  "mcp-language-server": {
+    "version": "v0.1.1"
+  },
+  "node": {
+    "sha256": "d28a96af6c38596f6d9d97c0ee531c13d238d757742387d1928de822d959e997",
+    "size": 0,
+    "url": "https://nodejs.org/dist/v26.13.0/node-v26.13.0-linux-x64.tar.xz",
+    "version": "v26.13.0"
+  },
+  "nvim": {
+    "commit": "779c36969e31080503be2dfccbcc3f999e289606",
+    "version": "v0.12.6"
+  },
+  "nvim-bin": {
+    "old_glibc": {
+      "sha256": "9e4a0e9c2aebbcf1eb5f6cdf645b460c9249f517650d0191170f9f152ecfd721",
+      "size": 9347923,
+      "url": "https://github.com/neovim/neovim-releases/releases/download/v0.12.5/nvim-linux-x86_64.tar.gz",
+      "version": "v0.12.5"
+    },
+    "sha256": "474430d53e6264f6d6dd18db42d6dc9df3a1b56ca9e88a325bbf860e1a811d87",
+    "size": 11404582,
+    "url": "https://github.com/neovim/neovim/releases/download/v0.12.6/nvim-linux-x86_64.tar.gz",
+    "version": "v0.12.6"
+  },
+  "pyright": {
+    "sha256": "bf5f473f6167c0d14175492c3263d783b4489a6956e1c06c18e15228e3a3fa42",
+    "size": 4226827,
+    "url": "https://registry.npmjs.org/pyright/-/pyright-1.1.414.tgz",
+    "version": "1.1.414"
+  },
+  "rg": {
+    "sha256": "33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c",
+    "size": 2265718,
+    "url": "https://github.com/BurntSushi/ripgrep/releases/download/15.2.0/ripgrep-15.2.0-x86_64-unknown-linux-musl.tar.gz",
+    "version": "15.2.0"
+  },
+  "rust": {
+    "sha256": "b1c8cb14e30889e7e2999e6b69e62d9e9b9ffc0f4df8180564d306d9680e6c55",
+    "url": "https://static.rust-lang.org/rustup/dist/x86_64-unknown-linux-gnu/rustup-init",
+    "version": "1.99.1"
+  },
+  "serena": {
+    "version": "2.1.0"
+  },
+  "slang-server": {
+    "old_glibc": {
+      "sha256": "5162701e675e5b2cc8b43eab1b98a2af8bc2081667fc80d07aa971866bc9b867",
+      "size": 5269067,
+      "url": "https://github.com/hudson-trading/slang-server/releases/download/v0.3.1/slang-server-old-linux-x64-gcc.tar.gz",
+      "version": "v0.3.1"
+    },
+    "sha256": "5162701e675e5b2cc8b43eab1b98a2af8bc2081667fc80d07aa971866bc9b867",
+    "size": 5269067,
+    "url": "https://github.com/hudson-trading/slang-server/releases/download/v0.3.1/slang-server-linux-x64.tar.gz",
+    "version": "v0.3.1"
+  },
+  "tree-sitter": {
+    "version": "0.27.2"
+  },
+  "uv": {
+    "sha256": "287491da03f2a785c70fa75b13e1f849918c2f2b5415fe84876b8214eeb792f9",
+    "size": 18396915,
+    "url": "https://github.com/astral-sh/uv/releases/download/0.13.7/uv-x86_64-unknown-linux-musl.tar.gz",
+    "version": "0.13.7"
+  },
+  "verible": {
+    "sha256": "ca83778c7c2b73272277bd670d1851c8caf973fd3283688aeb0d36d4b3598a90",
+    "size": 17582801,
+    "url": "https://github.com/chipsalliance/verible/releases/download/v0.0-4298-g085eef05/verible-v0.0-4298-g085eef05-linux-static-x86_64.tar.gz",
+    "version": "v0.0-4298-g085eef05"
+  },
+  "zig": {
+    "sha256": "eae031cf003551d7bd7c6b9ae5e2b594667f91388ec70ef3fdd2ac160f4d3dcf",
+    "size": 59246788,
+    "url": "https://ziglang.org/builds/zig-x86_64-linux-0.18.0-dev.954+60635c2bd.tar.xz",
+    "version": "0.18.0-dev.954+60635c2bd"
+  },
+  "zoxide": {
+    "version": "0.10.0"
+  }
+}
