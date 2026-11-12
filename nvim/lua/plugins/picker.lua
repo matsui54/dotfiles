@@ -12,12 +12,11 @@ return {
   -- fff (Files & Live Grep)
   {
     'dmtrKovalenko/fff',
-    build = function()
-      require('fff.download').download_or_build_binary()
-    end,
+    -- 外部からの未検証プリビルドバイナリ取得を行わず、ロックされたソースからローカルビルドする
+    build = 'cargo build --release',
     init = function()
       vim.g.fff = {
-        lazy_sync = true,
+        lazy_sync = false,
         debug = { enabled = true, show_scores = true },
         keymaps = {
           select = '<CR>',

@@ -8,6 +8,21 @@ vim.opt.mouse = "nv"
 vim.opt.splitright = true
 vim.opt.undofile = true
 
+-- Security hardening (shared server safe defaults)
+vim.opt.modeline = false
+vim.opt.exrc = false
+
+do
+  local uv = vim.uv or vim.loop
+  for _, kind in ipairs({ "state", "data" }) do
+    local dir = vim.fn.stdpath(kind)
+    if type(dir) == "string" then
+      vim.fn.mkdir(dir, "p", "0700")
+      pcall(uv.fs_chmod, dir, tonumber("700", 8))
+    end
+  end
+end
+
 -- Indentation
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
