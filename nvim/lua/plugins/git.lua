@@ -1,7 +1,25 @@
+vim.api.nvim_create_autocmd('BufReadCmd', {
+  group = vim.api.nvim_create_augroup('my_git_status_restore', { clear = true }),
+  pattern = 'git-status://*',
+  callback = function(ev)
+    local root = ev.match:gsub('^git%-status://', '')
+    require('my.git_status').open({ buf = ev.buf, root = root })
+  end,
+})
+
+vim.api.nvim_create_user_command('GitStatus', function()
+  require('my.git_status').open()
+end, { desc = 'Open custom Git status buffer' })
+
+vim.keymap.set('n', 'gs', function()
+  require('my.git_status').open()
+end, { desc = 'GitStatus: open' })
+
 return {
   -- lewis6991/gitsigns.nvim
   {
     'lewis6991/gitsigns.nvim',
+    cmd = 'Gitsigns',
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       vim.api.nvim_set_hl(0, 'GitSignsAdd', { link = 'DiffAdd' })
@@ -71,7 +89,7 @@ return {
     'esmuellert/codediff.nvim',
     cmd = 'CodeDiff',
     keys = {
-      { 'gs',  '<cmd>CodeDiff<CR>',         desc = 'CodeDiff: Git status / review' },
+      -- { 'gs',  '<cmd>CodeDiff<CR>',         desc = 'CodeDiff: Git status / review' },
       { 'gnl', '<cmd>CodeDiff history<CR>', mode = { 'n', 'v' },                   desc = 'CodeDiff: Git history / log' },
     },
     opts = {},
