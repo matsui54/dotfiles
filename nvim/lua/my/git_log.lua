@@ -131,11 +131,11 @@ end
 local function hl_for_code(code)
   local c = code:sub(1, 1)
   if c == 'A' then
-    return 'DiffAdd'
+    return 'Added'
   elseif c == 'D' then
-    return 'DiffDelete'
+    return 'Removed'
   elseif c == 'M' or c == 'R' or c == 'C' then
-    return 'DiffChange'
+    return 'Changed'
   end
   return 'Normal'
 end
@@ -526,21 +526,11 @@ local function open_diff(base_ref, target_ref, file, files_list, reuse_current_t
 end
 
 ---@param commit table
-local function toggle_commit_expand(commit)
-  if commit.expanded then
-    commit.expanded = false
-    render()
+local function fetch_commit_files(commit)
+  if commit.files or commit.loading then
     return
   end
-
-  commit.expanded = true
-  if commit.files then
-    render()
-    return
-  end
-
   commit.loading = true
-  render()
   git_async(state.root, { 'diff-tree', '--no-commit-id', '--name-status', '-r', '-z', '--root', commit.hash }, function(res)
     commit.loading = false
     if res.code ~= 0 then
@@ -552,6 +542,29 @@ local function toggle_commit_expand(commit)
     commit.files = parse_name_status(res.stdout or '')
     render()
   end)
+end
+
+---@param commits table[]
+local function toggle_commits_expand(commits)
+  if #commits == 0 then
+    return
+  end
+
+  local should_expand = false
+  for _, c in ipairs(commits) do
+    if not c.expanded then
+      should_expand = true
+      break
+    end
+  end
+
+  for _, c in ipairs(commits) do
+    c.expanded = should_expand
+    if should_expand then
+      fetch_commit_files(c)
+    end
+  end
+  render()
 end
 
 local function toggle_mark()
@@ -690,7 +703,7 @@ local function setup_keymaps(buf)
       return
     end
     if item.kind == 'commit' then
-      toggle_commit_expand(item.commit)
+      toggle_commits_expand({ item.commit })
     elseif item.kind == 'file' then
       open_diff(item.commit.hash .. '^', item.commit.hash, item.file, item.commit.files, false)
     elseif item.kind == 'compare_file' then
@@ -698,8 +711,30 @@ local function setup_keymaps(buf)
     end
   end
 
+  local function activate_visual()
+    local l1 = vim.fn.line('v')
+    local l2 = vim.fn.line('.')
+    local esc = vim.api.nvim_replace_termcodes('<Esc>', true, false, true)
+    vim.api.nvim_feedkeys(esc, 'nx', false)
+    if l1 > l2 then
+      l1, l2 = l2, l1
+    end
+    local seen = {}
+    local commits = {}
+    for l = l1, l2 do
+      local item = state.line_items[l]
+      if item and item.commit and not seen[item.commit.hash] then
+        seen[item.commit.hash] = true
+        table.insert(commits, item.commit)
+      end
+    end
+    toggle_commits_expand(commits)
+  end
+
   map('n', '<CR>', activate, 'GitLog: expand commit or open diff')
   map('n', '<Tab>', activate, 'GitLog: expand commit or open diff')
+  map('x', '<CR>', activate_visual, 'GitLog: expand/collapse selected commits')
+  map('x', '<Tab>', activate_visual, 'GitLog: expand/collapse selected commits')
   map('n', ',', toggle_mark, 'GitLog: mark commit (up to 2)')
   map('n', 'd', run_compare, 'GitLog: compare marked commits')
   map('n', 'c', function()

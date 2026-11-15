@@ -123,11 +123,11 @@ end
 local function hl_for_code(code)
   local c = code:sub(1, 1)
   if c == 'A' then
-    return 'DiffAdd'
+    return 'Added'
   elseif c == 'D' then
-    return 'DiffDelete'
+    return 'Removed'
   elseif c == 'M' or c == 'R' or c == 'C' then
-    return 'DiffChange'
+    return 'Changed'
   elseif c == '?' then
     return 'Comment'
   elseif c == 'U' then

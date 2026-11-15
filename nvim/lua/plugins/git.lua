@@ -101,18 +101,6 @@ return {
     end,
   },
 
-  -- rhysd/git-messenger.vim
-  {
-    'rhysd/git-messenger.vim',
-    cmd = 'GitMessenger',
-    keys = {
-      { '<Leader>gm', '<Plug>(git-messenger)', mode = 'n', desc = 'GitMessenger: Show blame popup' },
-    },
-    init = function()
-      vim.g.git_messenger_no_default_mappings = true
-      vim.g.git_messenger_always_into_popup = true
-    end,
-  },
   -- lambdalisue/vim-guise
   {
     'lambdalisue/vim-guise',

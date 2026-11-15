@@ -12,8 +12,27 @@ return {
   -- fff (Files & Live Grep)
   {
     'dmtrKovalenko/fff',
-    -- 外部からの未検証プリビルドバイナリ取得を行わず、ロックされたソースからローカルビルドする
-    build = 'cargo build --release',
+    -- 外部からの未検証プリビルドバイナリ取得や rust-toolchain.toml による勝手なコンポーネント取得を防ぎ、
+    -- 既存のデフォルトツールチェーンで fff-nvim クレートのみをロックビルドする
+    build = function(plugin)
+      local env = nil
+      if vim.fn.executable('rustup') == 1 then
+        local out = vim.fn.systemlist({ 'rustup', 'default' })
+        if vim.v.shell_error == 0 and out[1] then
+          local toolchain = out[1]:match('^(%S+)')
+          if toolchain then
+            env = { RUSTUP_TOOLCHAIN = toolchain }
+          end
+        end
+      end
+      local res = vim.system(
+        { 'cargo', 'build', '--release', '--locked', '-p', 'fff-nvim' },
+        { cwd = plugin.dir, env = env }
+      ):wait()
+      if res.code ~= 0 then
+        error('fff-nvim cargo build failed:\n' .. (res.stderr or ''))
+      end
+    end,
     init = function()
       vim.g.fff = {
         lazy_sync = false,
