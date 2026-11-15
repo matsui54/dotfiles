@@ -9,7 +9,10 @@ local state = {
   entries = {},      -- list of { section, code, path, orig_path, key }
   line_entries = {}, -- line_nr (1-based) -> entry
   marked = {},       -- key -> true
+  loading = false,
+  refresh_gen = 0,
   diff_tab_idx = nil,
+  diff_gen = 0,
 }
 
 --- Run a git command synchronously and return result
@@ -183,7 +186,15 @@ local function render()
     return #lines
   end
 
-  add_line(string.format('Repo: %s  [%s]', state.root or '', state.branch or ''), 'Title')
+  local header = string.format('Repo: %s  [%s]', state.root or '', state.branch or '...')
+  if state.loading then
+    local lnum_1 = add_line(header .. '  (Loading...)')
+    local lnum_0 = lnum_1 - 1
+    table.insert(highlights, { lnum_0, 0, #header, 'Title' })
+    table.insert(highlights, { lnum_0, #header + 2, -1, 'Comment' })
+  else
+    add_line(header, 'Title')
+  end
 
   local function render_section(title, list)
     add_line(string.format('%s (%d)', title, #list), 'Title')
@@ -244,9 +255,30 @@ function M.refresh()
   if not state.root then
     return
   end
-  state.branch = get_branch(state.root)
+  state.refresh_gen = state.refresh_gen + 1
+  local gen = state.refresh_gen
+  state.loading = true
+  render()
+
+  git_async(state.root, { 'rev-parse', '--abbrev-ref', 'HEAD' }, function(res)
+    if gen ~= state.refresh_gen then
+      return
+    end
+    if res.code == 0 and res.stdout then
+      state.branch = vim.trim(res.stdout)
+    else
+      state.branch = '(unknown)'
+    end
+    render()
+  end)
+
   git_async(state.root, { 'status', '--porcelain=v1', '-z', '-uall' }, function(res)
+    if gen ~= state.refresh_gen then
+      return
+    end
+    state.loading = false
     if res.code ~= 0 then
+      render()
       vim.notify('git status failed: ' .. (res.stderr or ''), vim.log.levels.ERROR)
       return
     end
@@ -404,21 +436,19 @@ end
 
 ---@param root string
 ---@param rev_path string
----@return string[]|nil
-local function git_show_lines(root, rev_path)
-  local res = git_sync(root, { 'show', rev_path })
-  if res.code ~= 0 or not res.stdout then
-    return nil
-  end
-  local out = res.stdout
-  if out == '' then
-    return {}
-  end
-  local lines = vim.split(out, '\n', { plain = true })
-  if lines[#lines] == '' then
-    table.remove(lines, #lines)
-  end
-  return lines
+---@param on_done fun(lines: string[])
+local function git_show_lines_async(root, rev_path, on_done)
+  git_async(root, { 'show', rev_path }, function(res)
+    if res.code ~= 0 or not res.stdout or res.stdout == '' then
+      on_done({})
+      return
+    end
+    local lines = vim.split(res.stdout, '\n', { plain = true })
+    if lines[#lines] == '' then
+      table.remove(lines, #lines)
+    end
+    on_done(lines)
+  end)
 end
 
 ---@param lines string[]
@@ -455,23 +485,25 @@ local function open_diff(entry, reuse_current_tab)
     end
   end
 
-  local left_lines
+  state.diff_gen = state.diff_gen + 1
+  local gen = state.diff_gen
+
+  local left_rev = nil
   local left_title
+  local right_rev = nil
   local right_buf = nil
-  local right_lines
   local right_title
 
   if entry.section == 'staged' then
-    left_lines = git_show_lines(root, 'HEAD:' .. orig_path) or {}
+    left_rev = 'HEAD:' .. orig_path
     left_title = string.format('git://HEAD/%s', orig_path)
-    right_lines = git_show_lines(root, ':0:' .. path) or {}
+    right_rev = ':0:' .. path
     right_title = string.format('git://INDEX/%s', path)
   else
     if entry.code == '??' or entry.code == 'A' then
-      left_lines = {}
       left_title = string.format('git://EMPTY/%s', path)
     else
-      left_lines = git_show_lines(root, ':0:' .. orig_path) or {}
+      left_rev = ':0:' .. orig_path
       left_title = string.format('git://INDEX/%s', orig_path)
     end
 
@@ -479,7 +511,6 @@ local function open_diff(entry, reuse_current_tab)
     if entry.code ~= 'D' and vim.fn.filereadable(full_path) == 1 then
       right_buf = vim.fn.bufadd(full_path)
     else
-      right_lines = {}
       right_title = string.format('git://DELETED/%s', path)
     end
   end
@@ -492,7 +523,7 @@ local function open_diff(entry, reuse_current_tab)
   end
 
   local left_win = vim.api.nvim_get_current_win()
-  local left_buf = create_scratch_buf(left_lines, left_title, ft)
+  local left_buf = create_scratch_buf(left_rev and { 'Loading...' } or {}, left_title, ft)
   vim.api.nvim_win_set_buf(left_win, left_buf)
 
   vim.cmd('rightbelow vsplit')
@@ -501,7 +532,7 @@ local function open_diff(entry, reuse_current_tab)
     vim.fn.bufload(right_buf)
     vim.api.nvim_win_set_buf(right_win, right_buf)
   else
-    right_buf = create_scratch_buf(right_lines, right_title, ft)
+    right_buf = create_scratch_buf(right_rev and { 'Loading...' } or {}, right_title, ft)
     vim.api.nvim_win_set_buf(right_win, right_buf)
   end
 
@@ -509,6 +540,32 @@ local function open_diff(entry, reuse_current_tab)
   vim.cmd('diffthis')
   vim.api.nvim_set_current_win(right_win)
   vim.cmd('diffthis')
+
+  local function populate_buf(buf, lines)
+    if gen ~= state.diff_gen or not vim.api.nvim_buf_is_valid(buf) then
+      return
+    end
+    vim.bo[buf].modifiable = true
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    vim.bo[buf].modifiable = false
+    if vim.api.nvim_win_is_valid(left_win) then
+      vim.api.nvim_win_call(left_win, function()
+        vim.cmd('diffupdate')
+      end)
+    end
+  end
+
+  if left_rev then
+    git_show_lines_async(root, left_rev, function(lines)
+      populate_buf(left_buf, lines)
+    end)
+  end
+
+  if right_rev then
+    git_show_lines_async(root, right_rev, function(lines)
+      populate_buf(right_buf, lines)
+    end)
+  end
 
   local function cleanup_real_buf_maps()
     if right_is_real and vim.api.nvim_buf_is_valid(right_buf) then
