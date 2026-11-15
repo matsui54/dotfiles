@@ -651,6 +651,11 @@ local function setup_keymaps(buf)
   end, 'Git: push')
 end
 
+---@return boolean
+function M.is_open()
+  return state.buf ~= nil and vim.api.nvim_buf_is_valid(state.buf) and vim.api.nvim_buf_is_loaded(state.buf)
+end
+
 ---@param opts? { buf?: integer, root?: string }
 function M.open(opts)
   opts = opts or {}

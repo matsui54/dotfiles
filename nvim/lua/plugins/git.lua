@@ -164,6 +164,12 @@ return {
           on_exit = function(_, code)
             if code == 0 then
               vim.notify('Git commit: Done', vim.log.levels.INFO)
+              vim.schedule(function()
+                local ok, gs = pcall(require, 'my.git_status')
+                if ok and gs.is_open() then
+                  gs.refresh()
+                end
+              end)
             end
           end,
         })
