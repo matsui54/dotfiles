@@ -3,12 +3,14 @@
 Package definitions and custom recipes for user-space package manager.
 """
 
+import io
 import os
 from pathlib import Path
 import shutil
 import subprocess
 import tempfile
 from typing import Any, Dict, Optional
+import zipfile
 
 from pkglib import (
     BIN_DIR,
@@ -23,6 +25,7 @@ from pkglib import (
     Pkg,
     UrlArchive,
     UvTool,
+    compute_sha256_bytes,
     download_bytes,
     fetch_json,
     http_get,
@@ -79,6 +82,29 @@ def resolve_node() -> ArchiveSpec:
                 sha256 = parts[0]
                 break
     return ArchiveSpec(version=version, url=url, size=0, sha256=sha256)
+
+
+def resolve_konata() -> ArchiveSpec:
+    url = "https://shioyadan.github.io/Konata/konata-latest.zip"
+    data = download_bytes(url)
+    sha256 = compute_sha256_bytes(data)
+    version = f"master-{sha256[:7]}"
+    with zipfile.ZipFile(io.BytesIO(data)) as zf:
+        for name in zf.namelist():
+            if name.endswith("/konata.sh") or name == "konata.sh":
+                text = zf.read(name).decode("utf-8", errors="replace")
+                for line in text.splitlines():
+                    if line.startswith("build="):
+                        raw_build = line.split("=", 1)[1].strip()
+                        parts = raw_build.split("-", 2)
+                        if len(parts) == 3:
+                            _, commit_hash, build_date = parts
+                            version = f"{build_date}-{commit_hash}"
+                        else:
+                            version = raw_build
+                        break
+                break
+    return ArchiveSpec(version=version, url=url, size=len(data), sha256=sha256)
 
 
 def lock_neovim_source(_pkg: Pkg) -> Dict[str, Any]:
@@ -471,10 +497,9 @@ PACKAGES = [
     Pkg(
         "konata",
         default=False,
-        desc="Pipeline visualizer",
-        source=GitHubRelease(
-            repo="shioyadan/Konata",
-            asset="konata-*.zip",
+        desc="Pipeline visualizer (master development build)",
+        source=UrlArchive(
+            resolver=resolve_konata,
             bins=["konata.sh"],
         ),
     ),

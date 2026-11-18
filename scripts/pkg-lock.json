@@ -30,10 +30,10 @@
     "version": "go1.27.3"
   },
   "konata": {
-    "sha256": "14f42cceef005224062d7de5fb4a228e056d3fb354b5e34695fd72e6599ae662",
-    "size": 537373,
-    "url": "https://github.com/shioyadan/Konata/releases/download/v1.2.0/konata-v1.2.0.zip",
-    "version": "v1.2.0"
+    "sha256": "7e25b603e3a7d76fbe66b5c1827eb685a374022674c04b795e4e70fc92245859",
+    "size": 764613,
+    "url": "https://shioyadan.github.io/Konata/konata-latest.zip",
+    "version": "2026-10-25-866f516"
   },
   "lua-language-server": {
     "sha256": "93ad326b10f6c00911dd8c450fa098332dbd8f9f45d1052f5636a2d54479b947",

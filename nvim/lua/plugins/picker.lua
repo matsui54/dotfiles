@@ -35,8 +35,9 @@ return {
     end,
     init = function()
       vim.g.fff = {
-        lazy_sync = false,
-        debug = { enabled = true, show_scores = true },
+        preview = { enabled = false },
+        layout = { border = 'none' },
+        prompt = '> ',
         keymaps = {
           select = '<CR>',
           select_vsplit = '<C-v>', -- 垂直分割 (ddu の E 相当)
@@ -68,7 +69,7 @@ return {
         end,
         desc = 'fff: Find files in dotfiles',
       },
-      { '<Space>g', function() require('fff').live_grep() end, desc = 'fff: Live grep' },
+      { '<Space>g', function() require('fff').live_grep() end,  desc = 'fff: Live grep' },
     },
   },
 
@@ -96,15 +97,15 @@ return {
         actions = {
           files = {
             ['enter'] = fzf.actions.file_edit,
-            ['ctrl-v'] = fzf.actions.file_vsplit, -- 垂直分割 (ddu の E 相当)
-            ['ctrl-s'] = fzf.actions.file_split,  -- 水平分割 (ddu の S 相当)
-            ['ctrl-x'] = fzf.actions.file_split,  -- 水平分割 (端末のC-sバッティング対策)
+            ['ctrl-v'] = fzf.actions.file_vsplit,  -- 垂直分割 (ddu の E 相当)
+            ['ctrl-s'] = fzf.actions.file_split,   -- 水平分割 (ddu の S 相当)
+            ['ctrl-x'] = fzf.actions.file_split,   -- 水平分割 (端末のC-sバッティング対策)
             ['ctrl-t'] = fzf.actions.file_tabedit, -- タブ (ddu の t 相当)
           },
         },
         command_history = {
           actions = {
-            ['enter'] = fzf.actions.ex_run, -- Enter で常にコマンドライン編集状態にする
+            ['enter'] = fzf.actions.ex_run,     -- Enter で常にコマンドライン編集状態にする
             ['ctrl-r'] = fzf.actions.ex_run_cr, -- 即時実行したい場合の代替キー
           },
         },
@@ -112,11 +113,11 @@ return {
       fzf.register_ui_select()
     end,
     keys = {
-      { 'gnb', function() require('fzf-lua').git_branches() end, desc = 'fzf-lua: Git branches' },
-      { '<Space>b', function() require('fzf-lua').buffers() end, desc = 'fzf-lua: Buffers' },
-      { '<Space>h', function() require('fzf-lua').help_tags() end, desc = 'fzf-lua: Help tags' },
-      { '<Space>m', function() require('fzf-lua').manpages() end, desc = 'fzf-lua: Man pages' },
-      { '<Space>o', function() require('fzf-lua').oldfiles() end, desc = 'fzf-lua: Oldfiles' },
+      { 'gnb',      function() require('fzf-lua').git_branches() end, desc = 'fzf-lua: Git branches' },
+      { '<Space>b', function() require('fzf-lua').buffers() end,      desc = 'fzf-lua: Buffers' },
+      { '<Space>h', function() require('fzf-lua').help_tags() end,    desc = 'fzf-lua: Help tags' },
+      { '<Space>m', function() require('fzf-lua').manpages() end,     desc = 'fzf-lua: Man pages' },
+      { '<Space>o', function() require('fzf-lua').oldfiles() end,     desc = 'fzf-lua: Oldfiles' },
       {
         '<Space>r',
         function()
