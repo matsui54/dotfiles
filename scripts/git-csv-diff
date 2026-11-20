@@ -1,0 +1,473 @@
+#!/usr/bin/env python3
+"""
+Git external diff driver & CLI tool for CSV files (`git-csv-diff`).
+Pure Python 3 standard library implementation (zero external dependencies).
+
+Features:
+- Auto-detects UTF-8 (with BOM) and CP932 (Shift_JIS) encodings from Excel exports
+- Normalizes CRLF and in-cell newlines so each record stays on a single table line
+- Supports multi-row headers (e.g., 2 or 3 header rows with Excel merged cells via forward-fill)
+- Prefixes headers with Excel column letters (A, B, ..., Z, AA, AB...)
+- Pins user-specified key columns (CSV_KEYS="A,B" or "1,2" or "ID,案件名") on the left
+- Collapses unchanged columns into "..." so both cell updates (->) and added/deleted rows (+++/---)
+  remain compact on a single horizontal line
+"""
+
+import argparse
+import csv
+import difflib
+import os
+from pathlib import Path
+import sys
+from typing import List, Optional, Sequence, Set, Tuple
+import unicodedata
+
+RESET = "\033[0m"
+BOLD = "\033[1m"
+DIM = "\033[2m"
+RED = "\033[31m"
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+CYAN = "\033[36m"
+
+
+def col_to_excel(col_idx: int) -> str:
+    """Convert 0-based column index to Excel column letters (A, B, ..., Z, AA, AB...)."""
+    res = ""
+    n = col_idx + 1
+    while n > 0:
+        n, rem = divmod(n - 1, 26)
+        res = chr(65 + rem) + res
+    return res
+
+
+def excel_to_col(letters: str) -> int:
+    """Convert Excel column letters (A, B, AA...) to 0-based column index."""
+    n = 0
+    for ch in letters.upper():
+        n = n * 26 + (ord(ch) - 64)
+    return n - 1
+
+
+def display_width(text: str) -> int:
+    """Calculate terminal display width considering East Asian Wide characters."""
+    w = 0
+    for ch in text:
+        if unicodedata.east_asian_width(ch) in ("W", "F"):
+            w += 2
+        else:
+            w += 1
+    return w
+
+
+def pad_right(text: str, width: int) -> str:
+    pad = max(0, width - display_width(text))
+    return text + (" " * pad)
+
+
+def read_csv_rows(path: str) -> List[List[str]]:
+    if not path or path == "/dev/null" or not os.path.exists(path):
+        return []
+
+    raw = Path(path).read_bytes()
+    text = None
+    for enc in ("utf-8-sig", "cp932", "utf-8"):
+        try:
+            text = raw.decode(enc)
+            break
+        except UnicodeDecodeError:
+            continue
+    if text is None:
+        text = raw.decode("cp932", errors="replace")
+
+    lines = text.replace("\r\n", "\n").replace("\r", "\n").splitlines(keepends=True)
+    rows: List[List[str]] = []
+    for row in csv.reader(lines):
+        rows.append([cell.replace("\n", "\\n") for cell in row])
+    return rows
+
+
+def build_headers(header_rows: List[List[str]], max_cols: int, ffill: bool = True) -> List[str]:
+    """Merge multi-row headers into a single row with Excel column letters."""
+    if not header_rows:
+        return [f"{col_to_excel(i)}({i + 1})" for i in range(max_cols)]
+
+    normalized: List[List[str]] = []
+    for r_idx, row in enumerate(header_rows):
+        padded = list(row) + [""] * max(0, max_cols - len(row))
+        # Forward-fill empty cells on upper header rows (for Excel merged header cells)
+        if ffill and r_idx < len(header_rows) - 1:
+            last_val = ""
+            for c_idx, val in enumerate(padded):
+                if val.strip():
+                    last_val = val.strip()
+                else:
+                    padded[c_idx] = last_val
+        normalized.append(padded)
+
+    headers: List[str] = []
+    for c_idx in range(max_cols):
+        parts: List[str] = []
+        for r_idx in range(len(normalized)):
+            val = normalized[r_idx][c_idx].strip().replace("\\n", " ")
+            if val and (not parts or parts[-1] != val):
+                parts.append(val)
+        col_label = f"{col_to_excel(c_idx)}"
+        joined = "/".join(parts) if parts else f"Col_{c_idx + 1}"
+        headers.append(f"{col_label}:{joined}")
+    return headers
+
+
+def resolve_key_cols(key_spec: str, headers: List[str]) -> List[int]:
+    """Resolve '1,2', 'A,B', or 'ID,案件名' into 0-based column indices."""
+    if not headers:
+        return []
+    if not key_spec.strip():
+        return [0]
+
+    cols: List[int] = []
+    for token in [t.strip() for t in key_spec.split(",") if t.strip()]:
+        if token.isdigit():
+            idx = int(token) - 1
+            if 0 <= idx < len(headers) and idx not in cols:
+                cols.append(idx)
+        elif token.isascii() and token.isalpha() and len(token) <= 3:
+            idx = excel_to_col(token)
+            if 0 <= idx < len(headers) and idx not in cols:
+                cols.append(idx)
+        else:
+            for idx, h in enumerate(headers):
+                h_name = h.split(":", 1)[-1]
+                if token in h_name and idx not in cols:
+                    cols.append(idx)
+    return cols if cols else [0]
+
+
+def align_and_find_changed_cols(
+    old_data: List[List[str]],
+    new_data: List[List[str]],
+    old_headers: List[str],
+    new_headers: List[str],
+    key_cols: List[int],
+    max_cols: int,
+) -> Tuple[List[Tuple[str, Optional[int], Optional[int]]], Set[int]]:
+    """
+    Align rows using key_cols (or full row if key is empty) and return:
+    - list of (op, old_row_idx, new_row_idx) where op is 'equal', 'modify', 'delete', 'insert'
+    - set of column indices that changed in 'modify' rows or header changes
+    """
+
+    def make_key(row: List[str]) -> Tuple[str, ...]:
+        if key_cols:
+            return tuple(row[c] if c < len(row) else "" for c in key_cols)
+        return tuple(row)
+
+    old_keys = [make_key(r) for r in old_data]
+    new_keys = [make_key(r) for r in new_data]
+
+    matcher = difflib.SequenceMatcher(None, old_keys, new_keys)
+    ops: List[Tuple[str, Optional[int], Optional[int]]] = []
+    changed_cols: Set[int] = set()
+
+    for c in range(max_cols):
+        oh = old_headers[c] if c < len(old_headers) else ""
+        nh = new_headers[c] if c < len(new_headers) else ""
+        if oh != nh:
+            changed_cols.add(c)
+
+    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+        if tag == "equal":
+            for oi, ni in zip(range(i1, i2), range(j1, j2)):
+                orow, nrow = old_data[oi], new_data[ni]
+                if orow == nrow:
+                    ops.append(("equal", oi, ni))
+                else:
+                    ops.append(("modify", oi, ni))
+                    for c in range(max_cols):
+                        ov = orow[c] if c < len(orow) else ""
+                        nv = nrow[c] if c < len(nrow) else ""
+                        if ov != nv:
+                            changed_cols.add(c)
+        elif tag == "replace":
+            common = min(i2 - i1, j2 - j1)
+            for k in range(common):
+                oi, ni = i1 + k, j1 + k
+                orow, nrow = old_data[oi], new_data[ni]
+                ops.append(("modify", oi, ni))
+                for c in range(max_cols):
+                    ov = orow[c] if c < len(orow) else ""
+                    nv = nrow[c] if c < len(nrow) else ""
+                    if ov != nv:
+                        changed_cols.add(c)
+            for oi in range(i1 + common, i2):
+                ops.append(("delete", oi, None))
+            for ni in range(j1 + common, j2):
+                ops.append(("insert", None, ni))
+        elif tag == "delete":
+            for oi in range(i1, i2):
+                ops.append(("delete", oi, None))
+        elif tag == "insert":
+            for ni in range(j1, j2):
+                ops.append(("insert", None, ni))
+
+    if not changed_cols and any(op in ("delete", "insert") for op, _, _ in ops):
+        for c in range(min(5, max_cols)):
+            if c not in key_cols:
+                changed_cols.add(c)
+
+    return ops, changed_cols
+
+
+def build_column_plan(
+    max_cols: int, key_cols: List[int], changed_cols: Set[int]
+) -> List[Optional[int]]:
+    """
+    Build ordered list of columns to display:
+    - Pinned key_cols first (in order)
+    - Changed columns (in order), with None representing collapsed '...' gaps
+    """
+    active = set(key_cols) | changed_cols
+    plan: List[Optional[int]] = []
+
+    for k in key_cols:
+        if 0 <= k < max_cols and k not in plan:
+            plan.append(k)
+
+    skipped = False
+    for c in range(max_cols):
+        if c in key_cols:
+            continue
+        if c in active:
+            if skipped:
+                plan.append(None)
+                skipped = False
+            plan.append(c)
+        else:
+            skipped = True
+    if skipped:
+        plan.append(None)
+
+    return plan
+
+
+def render_table(
+    headers: List[str],
+    old_data: List[List[str]],
+    new_data: List[List[str]],
+    ops: List[Tuple[str, Optional[int], Optional[int]]],
+    col_plan: List[Optional[int]],
+    header_count: int,
+    context: int,
+) -> None:
+    """Render a compact horizontal diff table in the terminal."""
+    changed_indices = [idx for idx, (op, _, _) in enumerate(ops) if op != "equal"]
+    if not changed_indices:
+        print(f"{DIM}(No differences found){RESET}")
+        return
+
+    keep_ops: Set[int] = set()
+    for idx in changed_indices:
+        for c in range(max(0, idx - context), min(len(ops), idx + context + 1)):
+            keep_ops.add(c)
+
+    header_plain = ["@@", "Row"]
+    for c in col_plan:
+        header_plain.append("..." if c is None else headers[c])
+
+    table_rows: List[Tuple[str, List[str], List[str]]] = []
+    last_idx = -1
+
+    for idx in sorted(keep_ops):
+        if last_idx != -1 and idx > last_idx + 1:
+            dots = ["..." for _ in header_plain]
+            table_rows.append(("dots", dots, [f"{DIM}...{RESET}" for _ in header_plain]))
+        last_idx = idx
+
+        op, oi, ni = ops[idx]
+        orow = old_data[oi] if oi is not None else []
+        nrow = new_data[ni] if ni is not None else []
+
+        if op == "equal":
+            rnum = str((ni if ni is not None else 0) + header_count + 1)
+            plain = ["", rnum]
+            colored = ["", f"{DIM}{rnum}{RESET}"]
+            for c in col_plan:
+                val = "..." if c is None else (nrow[c] if c < len(nrow) else "")
+                plain.append(val)
+                colored.append(f"{DIM}{val}{RESET}" if c is None else val)
+            table_rows.append((op, plain, colored))
+
+        elif op == "modify":
+            rnum_old = (oi if oi is not None else 0) + header_count + 1
+            rnum_new = (ni if ni is not None else 0) + header_count + 1
+            rnum = str(rnum_new) if rnum_old == rnum_new else f"{rnum_old}->{rnum_new}"
+            plain = ["->", rnum]
+            colored = [f"{YELLOW}{BOLD}->{RESET}", f"{CYAN}{rnum}{RESET}"]
+            for c in col_plan:
+                if c is None:
+                    plain.append("...")
+                    colored.append(f"{DIM}...{RESET}")
+                else:
+                    ov = orow[c] if c < len(orow) else ""
+                    nv = nrow[c] if c < len(nrow) else ""
+                    if ov == nv:
+                        plain.append(nv)
+                        colored.append(nv)
+                    else:
+                        p_cell = f"{ov} -> {nv}"
+                        c_cell = f"{RED}{ov}{RESET} {YELLOW}->{RESET} {GREEN}{nv}{RESET}"
+                        plain.append(p_cell)
+                        colored.append(c_cell)
+            table_rows.append((op, plain, colored))
+
+        elif op == "delete":
+            rnum = str((oi if oi is not None else 0) + header_count + 1)
+            plain = ["---", f"-{rnum}"]
+            colored = [f"{RED}{BOLD}---{RESET}", f"{RED}-{rnum}{RESET}"]
+            for c in col_plan:
+                val = "..." if c is None else (orow[c] if c < len(orow) else "")
+                plain.append(val)
+                colored.append(f"{DIM}...{RESET}" if c is None else f"{RED}{val}{RESET}")
+            table_rows.append((op, plain, colored))
+
+        elif op == "insert":
+            rnum = str((ni if ni is not None else 0) + header_count + 1)
+            plain = ["+++", f"+{rnum}"]
+            colored = [f"{GREEN}{BOLD}+++{RESET}", f"{GREEN}+{rnum}{RESET}"]
+            for c in col_plan:
+                val = "..." if c is None else (nrow[c] if c < len(nrow) else "")
+                plain.append(val)
+                colored.append(f"{DIM}...{RESET}" if c is None else f"{GREEN}{val}{RESET}")
+            table_rows.append((op, plain, colored))
+
+    col_widths = [display_width(h) for h in header_plain]
+    for _, plain, _ in table_rows:
+        for i, cell in enumerate(plain):
+            col_widths[i] = max(col_widths[i], display_width(cell))
+
+    header_cells = [
+        f"{BOLD}{CYAN}{pad_right(h, col_widths[i])}{RESET}" for i, h in enumerate(header_plain)
+    ]
+    print(" | ".join(header_cells))
+    sep_cells = ["-" * col_widths[i] for i in range(len(header_plain))]
+    print(f"{DIM}" + "-+-".join(sep_cells) + f"{RESET}")
+
+    for _, plain, colored in table_rows:
+        rendered_cells: List[str] = []
+        for i, (p_cell, c_cell) in enumerate(zip(plain, colored)):
+            pad_len = max(0, col_widths[i] - display_width(p_cell))
+            rendered_cells.append(c_cell + (" " * pad_len))
+        print(" | ".join(rendered_cells))
+
+
+def parse_args(argv: Sequence[str]) -> Tuple[argparse.Namespace, str, str, str]:
+    epilog = """\
+Environment Variables:
+  CSV_HEADERS          Number of header rows to merge (same as -H / --headers)
+  CSV_KEYS             Key columns to pin on the left (same as -k / --keys)
+  CSV_CONTEXT          Number of unchanged context rows (same as -U / --context)
+
+Examples (One-off / CLI):
+  CSV_HEADERS=2 CSV_KEYS=A,B git diff
+  CSV_HEADERS=3 CSV_KEYS="ID,品名" CSV_CONTEXT=1 git diff
+  git-csv-diff -H 2 -k A,B old.csv new.csv
+
+Per-Project / Per-File Git Configuration:
+  1. Add pattern rules to `.gitattributes` (or `.git/info/attributes` to keep local):
+       sales_*.csv      diff=csv-sales
+       master/*.csv     diff=csv-master
+
+  2. Define drivers in `.git/config` (or `~/.gitconfig`):
+       [diff "csv-sales"]
+           command = ~/.local/bin/git-csv-diff -H 2 -k A,B
+       [diff "csv-master"]
+           command = ~/.local/bin/git-csv-diff -H 3 -k "ID,品名"
+"""
+    parser = argparse.ArgumentParser(
+        prog="git-csv-diff",
+        description="Git CSV diff tool supporting CP932, multi-row headers, and pinned key columns.",
+        epilog=epilog,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        add_help=False,
+    )
+    parser.add_argument(
+        "-H",
+        "--headers",
+        type=int,
+        default=int(os.environ.get("CSV_HEADERS", "1")),
+        help="Number of header rows to merge (default: $CSV_HEADERS or 1)",
+    )
+    parser.add_argument(
+        "-k",
+        "--keys",
+        type=str,
+        default=os.environ.get("CSV_KEYS", "1"),
+        help="Key columns to always pin on the left, e.g. '1,2' or 'A,B' or 'ID,案件名' (default: $CSV_KEYS or '1')",
+    )
+    parser.add_argument(
+        "-U",
+        "--context",
+        type=int,
+        default=int(os.environ.get("CSV_CONTEXT", "0")),
+        help="Number of unchanged context rows to show (default: $CSV_CONTEXT or 0)",
+    )
+    parser.add_argument("-h", "--help", action="store_true", help="Show help message")
+
+    known, rest = parser.parse_known_args(argv)
+    if known.help:
+        parser.print_help()
+        sys.exit(0)
+
+    # 1. Git external diff: path old-file old-hex old-mode new-file new-hex new-mode
+    if len(rest) >= 6:
+        display_path = rest[0]
+        old_file = rest[1]
+        new_file = rest[4]
+    elif len(rest) == 2:
+        display_path = f"{rest[0]} -> {rest[1]}"
+        old_file = rest[0]
+        new_file = rest[1]
+    else:
+        parser.print_help(sys.stderr)
+        sys.exit(1)
+
+    return known, display_path, old_file, new_file
+
+
+def main() -> None:
+    args, display_path, old_file, new_file = parse_args(sys.argv[1:])
+
+    old_rows = read_csv_rows(old_file)
+    new_rows = read_csv_rows(new_file)
+
+    header_count = max(1, args.headers)
+    max_cols = max(
+        max((len(r) for r in old_rows), default=0),
+        max((len(r) for r in new_rows), default=0),
+    )
+
+    old_headers = build_headers(old_rows[:header_count], max_cols)
+    new_headers = build_headers(new_rows[:header_count], max_cols)
+    headers = new_headers if new_rows else old_headers
+
+    old_data = old_rows[header_count:]
+    new_data = new_rows[header_count:]
+
+    key_cols = resolve_key_cols(args.keys, headers)
+    ops, changed_cols = align_and_find_changed_cols(
+        old_data, new_data, old_headers, new_headers, key_cols, max_cols
+    )
+    col_plan = build_column_plan(max_cols, key_cols, changed_cols)
+
+    key_names = ", ".join(headers[c] for c in key_cols if c < len(headers))
+    print(
+        f"{BOLD}{CYAN}=== CSV Diff: {display_path} "
+        f"{DIM}(headers={header_count}, keys=[{key_names}]){RESET}{BOLD}{CYAN} ==={RESET}"
+    )
+
+    render_table(headers, old_data, new_data, ops, col_plan, header_count, args.context)
+
+
+if __name__ == "__main__":
+    main()
+

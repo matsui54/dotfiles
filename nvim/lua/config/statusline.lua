@@ -88,6 +88,9 @@ local statusline_group = vim.api.nvim_create_augroup("StatuslineSwitch", { clear
 vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
   group = statusline_group,
   callback = function()
+    if vim.api.nvim_win_get_config(0).relative ~= "" then
+      return
+    end
     vim.wo.statusline = "%!v:lua.Statusline.active()"
   end,
   desc = "Set active statusline",
@@ -96,6 +99,9 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
 vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
   group = statusline_group,
   callback = function()
+    if vim.api.nvim_win_get_config(0).relative ~= "" then
+      return
+    end
     vim.wo.statusline = "%!v:lua.Statusline.inactive()"
   end,
   desc = "Set inactive statusline",

@@ -1,5 +1,21 @@
--- Bootstrap lazy.nvim
+-- Bootstrap lazy.nvim with commit pinned from lazy-lock.json
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local lockfile = vim.fn.stdpath("config") .. "/lazy-lock.json"
+
+local function get_locked_lazy_commit()
+  local f = io.open(lockfile, "r")
+  if not f then
+    return nil
+  end
+  local content = f:read("*a")
+  f:close()
+  local ok, decoded = pcall(vim.json.decode, content)
+  if ok and type(decoded) == "table" and decoded["lazy.nvim"] then
+    return decoded["lazy.nvim"].commit
+  end
+  return nil
+end
+
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
@@ -11,6 +27,10 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     }, true, {})
     vim.fn.getchar()
     os.exit(1)
+  end
+  local locked_commit = get_locked_lazy_commit()
+  if locked_commit then
+    vim.fn.system({ "git", "-C", lazypath, "checkout", "--detach", locked_commit })
   end
 end
 vim.opt.rtp:prepend(lazypath)
@@ -26,7 +46,8 @@ require("lazy").setup({
     -- import your plugins
     { import = "plugins" },
   },
-  -- Configure any other settings here. See the documentation for more details.
-  -- colorscheme that will be used when installing plugins.
+  lockfile = lockfile,
   install = { colorscheme = { "shirotelin" } },
+  checker = { enabled = false },
+  change_detection = { enabled = false },
 })

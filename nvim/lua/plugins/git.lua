@@ -1,7 +1,54 @@
+vim.api.nvim_create_autocmd('BufReadCmd', {
+  group = vim.api.nvim_create_augroup('my_git_status_restore', { clear = true }),
+  pattern = 'git-status://*',
+  callback = function(ev)
+    local root = ev.match:gsub('^git%-status://', '')
+    require('my.git_status').open({ buf = ev.buf, root = root })
+  end,
+})
+
+vim.api.nvim_create_autocmd('BufReadCmd', {
+  group = vim.api.nvim_create_augroup('my_git_log_restore', { clear = true }),
+  pattern = 'git-log://*',
+  callback = function(ev)
+    local root = ev.match:gsub('^git%-log://', '')
+    require('my.git_log').open({ buf = ev.buf, root = root })
+  end,
+})
+
+vim.api.nvim_create_user_command('GitStatus', function()
+  require('my.git_status').open()
+end, { desc = 'Open custom Git status buffer' })
+
+vim.api.nvim_create_user_command('GitLog', function()
+  require('my.git_log').open()
+end, { desc = 'Open custom Git log buffer' })
+
+vim.keymap.set('n', 'gs', function()
+  require('my.git_status').open()
+end, { desc = 'GitStatus: open' })
+
+vim.keymap.set('n', 'gnl', function()
+  require('my.git_log').open()
+end, { desc = 'GitLog: open' })
+
+vim.keymap.set('x', 'gnl', function()
+  local l1 = vim.fn.line('v')
+  local l2 = vim.fn.line('.')
+  if l1 > l2 then
+    l1, l2 = l2, l1
+  end
+  local file = vim.api.nvim_buf_get_name(0)
+  local esc = vim.api.nvim_replace_termcodes('<Esc>', true, false, true)
+  vim.api.nvim_feedkeys(esc, 'nx', false)
+  require('my.git_log').open({ file = file, line_range = { l1, l2 } })
+end, { desc = 'GitLog: line history' })
+
 return {
   -- lewis6991/gitsigns.nvim
   {
     'lewis6991/gitsigns.nvim',
+    cmd = 'Gitsigns',
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       vim.api.nvim_set_hl(0, 'GitSignsAdd', { link = 'DiffAdd' })
@@ -54,60 +101,6 @@ return {
     end,
   },
 
-  -- rhysd/git-messenger.vim
-  {
-    'rhysd/git-messenger.vim',
-    cmd = 'GitMessenger',
-    keys = {
-      { '<Leader>gm', '<Plug>(git-messenger)', mode = 'n', desc = 'GitMessenger: Show blame popup' },
-    },
-    init = function()
-      vim.g.git_messenger_no_default_mappings = true
-      vim.g.git_messenger_always_into_popup = true
-    end,
-  },
-  -- esmuellert/codediff.nvim
-  {
-    'esmuellert/codediff.nvim',
-    cmd = 'CodeDiff',
-    keys = {
-      { 'gs',  '<cmd>CodeDiff<CR>',         desc = 'CodeDiff: Git status / review' },
-      { 'gnl', '<cmd>CodeDiff history<CR>', mode = { 'n', 'v' },                   desc = 'CodeDiff: Git history / log' },
-    },
-    opts = {},
-    init = function()
-      -- gitcommit ファイルタイプ時に spell check を有効化
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'gitcommit',
-        callback = function()
-          vim.opt_local.spell = true
-        end,
-        desc = 'Enable spell check in gitcommit',
-      })
-      -- codediff-explorer バッファローカルのキーマップ (旧 gin-status 相当)
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'codediff-explorer',
-        callback = function(ev)
-          vim.keymap.set('n', '<Space>gc', function()
-            vim.cmd('Commit')
-          end, { buffer = ev.buf, desc = 'Git: commit via guise' })
-          vim.keymap.set('n', '<Space>gp', function()
-            vim.notify('Git push 開始...', vim.log.levels.INFO)
-            vim.fn.jobstart({ 'git', 'push' }, {
-              on_exit = function(_, code)
-                if code == 0 then
-                  vim.notify('Git push done', vim.log.levels.INFO)
-                else
-                  vim.notify('Git push fail (code: ' .. code .. ')', vim.log.levels.ERROR)
-                end
-              end,
-            })
-          end, { buffer = ev.buf, desc = 'Git: push' })
-        end,
-        desc = 'Custom keymaps for codediff-explorer',
-      })
-    end,
-  },
   -- lambdalisue/vim-guise
   {
     'lambdalisue/vim-guise',
@@ -146,6 +139,12 @@ return {
           on_exit = function(_, code)
             if code == 0 then
               vim.notify('Git commit: Done', vim.log.levels.INFO)
+              vim.schedule(function()
+                local ok, gs = pcall(require, 'my.git_status')
+                if ok and gs.is_open() then
+                  gs.refresh()
+                end
+              end)
             end
           end,
         })

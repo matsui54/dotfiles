@@ -1,0 +1,2 @@
+*.csv diff=csv
+*.CSV diff=csv
