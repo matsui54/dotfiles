@@ -388,6 +388,8 @@ function M.close(opts)
   end
 
   local on_cancel = opts.on_cancel and state.ctx and state.ctx.on_cancel
+  local on_close = state.source and state.source.on_close
+  local close_ctx = state.ctx
   local origin_win = state.ctx and state.ctx.origin_win
 
   pcall(vim.api.nvim_clear_autocmds, { group = augroup })
@@ -424,6 +426,10 @@ function M.close(opts)
   state.items = {}
   state.source = nil
   state.ctx = {}
+
+  if on_close then
+    pcall(on_close, close_ctx)
+  end
 
   if on_cancel then
     pcall(on_cancel)

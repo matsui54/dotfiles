@@ -12,6 +12,8 @@ end
 ---@param item table
 ---@param cmd 'edit'|'vsplit'|'split'|'tabedit'
 local function open_single(item, cmd)
+  pcall(vim.cmd, "normal! m'")
+
   if item.bufnr and vim.api.nvim_buf_is_valid(item.bufnr) then
     if cmd == 'vsplit' then
       vim.cmd('vsplit')
@@ -20,11 +22,17 @@ local function open_single(item, cmd)
     elseif cmd == 'tabedit' then
       vim.cmd('tab split')
     end
-    vim.api.nvim_win_set_buf(0, item.bufnr)
+    if vim.api.nvim_get_current_buf() ~= item.bufnr then
+      vim.api.nvim_win_set_buf(0, item.bufnr)
+    end
   elseif item.path and item.path ~= '' then
     local escaped = vim.fn.fnameescape(item.path)
     if cmd == 'edit' then
-      vim.cmd('edit ' .. escaped)
+      local cur_name = vim.api.nvim_buf_get_name(0)
+      local same_buf = cur_name ~= '' and vim.fs.normalize(cur_name) == vim.fs.normalize(item.path)
+      if not same_buf then
+        vim.cmd('edit ' .. escaped)
+      end
     elseif cmd == 'vsplit' then
       vim.cmd('vsplit ' .. escaped)
     elseif cmd == 'split' then

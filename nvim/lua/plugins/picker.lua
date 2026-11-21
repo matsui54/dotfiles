@@ -31,10 +31,4 @@ vim.keymap.set('n', '<Space>m', function() require('my.finder').manpages() end, 
 vim.keymap.set('n', '<Space>o', function() require('my.finder').oldfiles() end, { desc = 'Finder: Oldfiles' })
 vim.keymap.set('n', '<Space>r', function() require('my.finder').resume() end, { desc = 'Finder: Resume' })
 
-return {
-  -- Phase 2 で LSP 系を自作へ移行するまで nvim/lua/plugins/lsp.lua 用に残す
-  {
-    'ibhagwan/fzf-lua',
-    lazy = true,
-  },
-}
+return {}

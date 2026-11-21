@@ -4,7 +4,6 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = {
       "saghen/blink.cmp",
-      "ibhagwan/fzf-lua",
     },
     config = function()
       -- Diagnostics UI
@@ -25,21 +24,21 @@ return {
             vim.keymap.set(mode, lhs, rhs, { buffer = buf, desc = desc })
           end
 
-          local fzf = require("fzf-lua")
+          local finder = require("my.finder")
 
-          map("n", "<C-]>", fzf.lsp_definitions, "LSP: Definition")
+          map("n", "<C-]>", finder.lsp_definitions, "LSP: Definition")
           map("n", "K", vim.lsp.buf.hover, "LSP: Hover")
-          map("n", "gD", fzf.lsp_implementations, "LSP: Implementation")
-          map("n", "1gD", fzf.lsp_typedefs, "LSP: Type Definition")
-          map("n", "gW", fzf.lsp_live_workspace_symbols, "LSP: Workspace Symbol")
-          map("n", "gd", fzf.lsp_declarations, "LSP: Declaration")
-          map("n", "ga", fzf.lsp_code_actions, "LSP: Code Action")
-          map("n", "g0", fzf.lsp_document_symbols, "LSP: Document Symbols")
+          map("n", "gD", finder.lsp_implementations, "LSP: Implementation")
+          map("n", "1gD", finder.lsp_typedefs, "LSP: Type Definition")
+          map("n", "gW", finder.lsp_live_workspace_symbols, "LSP: Workspace Symbol")
+          map("n", "gd", finder.lsp_declarations, "LSP: Declaration")
+          map("n", "ga", finder.lsp_code_actions, "LSP: Code Action")
+          map("n", "g0", finder.lsp_document_symbols, "LSP: Document Symbols")
           map({ "n", "v" }, "<Leader>f", function() vim.lsp.buf.format({ async = true }) end, "LSP: Format")
           map("n", "<Leader>r", vim.lsp.buf.rename, "LSP: Rename")
           map("n", "gl", vim.lsp.buf.document_highlight, "LSP: Document Highlight")
           map("n", "gm", vim.diagnostic.open_float, "LSP: Diagnostic Float")
-          map("n", "gr", fzf.lsp_references, "LSP: References")
+          map("n", "gr", finder.lsp_references, "LSP: References")
 
           -- -- Inlay hints (Neovim 0.10+)
           -- if client and client:supports_method("textDocument/inlayHint") then

@@ -141,12 +141,65 @@ function M.resume()
   ui.resume()
 end
 
+local ui_select_registered = false
+
 function M.register_ui_select()
   register_command()
+  if ui_select_registered then
+    return
+  end
+  ui_select_registered = true
   vim.ui.select = function(items, opts, on_choice)
     local source = require('my.finder.sources.ui_select').new(items, opts, on_choice)
     ui.open(source, {})
   end
+end
+
+---@param opts? table
+function M.lsp_definitions(opts)
+  register_command()
+  require('my.finder.sources.lsp').definitions(opts)
+end
+
+---@param opts? table
+function M.lsp_declarations(opts)
+  register_command()
+  require('my.finder.sources.lsp').declarations(opts)
+end
+
+---@param opts? table
+function M.lsp_implementations(opts)
+  register_command()
+  require('my.finder.sources.lsp').implementations(opts)
+end
+
+---@param opts? table
+function M.lsp_typedefs(opts)
+  register_command()
+  require('my.finder.sources.lsp').typedefs(opts)
+end
+
+---@param opts? table
+function M.lsp_references(opts)
+  register_command()
+  require('my.finder.sources.lsp').references(opts)
+end
+
+---@param opts? table
+function M.lsp_document_symbols(opts)
+  register_command()
+  require('my.finder.sources.lsp').document_symbols(opts)
+end
+
+---@param opts? table
+function M.lsp_live_workspace_symbols(opts)
+  register_command()
+  require('my.finder.sources.lsp').live_workspace_symbols(opts)
+end
+
+function M.lsp_code_actions()
+  M.register_ui_select()
+  vim.lsp.buf.code_action()
 end
 
 return M
