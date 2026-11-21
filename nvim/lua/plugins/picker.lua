@@ -1,134 +1,40 @@
-local last_picker = nil
-
 vim.api.nvim_create_autocmd('User', {
-  group = vim.api.nvim_create_augroup('my.picker_resume', { clear = true }),
-  pattern = 'FFFClose',
+  group = vim.api.nvim_create_augroup('my.finder_init', { clear = true }),
+  pattern = 'VeryLazy',
+  once = true,
   callback = function()
-    last_picker = 'fff'
+    local finder = require('my.finder')
+    finder.init({ quiet = true })
+    finder.register_ui_select()
   end,
 })
 
-return {
-  -- fff (Files & Live Grep)
-  {
-    'dmtrKovalenko/fff',
-    -- 外部からの未検証プリビルドバイナリ取得や rust-toolchain.toml による勝手なコンポーネント取得を防ぎ、
-    -- 既存のデフォルトツールチェーンで fff-nvim クレートのみをロックビルドする
-    build = function(plugin)
-      local env = nil
-      if vim.fn.executable('rustup') == 1 then
-        local out = vim.fn.systemlist({ 'rustup', 'default' })
-        if vim.v.shell_error == 0 and out[1] then
-          local toolchain = out[1]:match('^(%S+)')
-          if toolchain then
-            env = { RUSTUP_TOOLCHAIN = toolchain }
-          end
-        end
-      end
-      local res = vim.system(
-        { 'cargo', 'build', '--release', '--locked', '-p', 'fff-nvim' },
-        { cwd = plugin.dir, env = env }
-      ):wait()
-      if res.code ~= 0 then
-        error('fff-nvim cargo build failed:\n' .. (res.stderr or ''))
-      end
-    end,
-    init = function()
-      vim.g.fff = {
-        preview = { enabled = false },
-        layout = { border = 'none' },
-        prompt = '> ',
-        keymaps = {
-          select = '<CR>',
-          select_vsplit = '<C-v>', -- 垂直分割 (ddu の E 相当)
-          select_split = '<C-s>',  -- 水平分割 (ddu の S 相当)
-          select_tab = '<C-t>',    -- タブ (ddu の t 相当)
-          clear_query = '<C-u>',   -- 入力クエリを全消去 (コマンドラインの <C-u> 相当)
-        },
-        mappings = {
-          i = {
-            ['<C-a>'] = '<Home>',  -- 行頭へ移動
-            ['<C-e>'] = '<End>',   -- 行末へ移動
-            ['<C-f>'] = '<Right>', -- 右へ移動
-            ['<C-b>'] = '<Left>',  -- 左へ移動
-            ['<C-d>'] = '<Del>',   -- 1文字削除
-            ['<C-h>'] = '<BS>',    -- バックスペース
-            ['<C-k>'] = '<C-o>D',  -- カーソル位置から行末まで削除
-            ['<C-y>'] = '<C-r>*',  -- クリップボード貼り付け
-          },
-        },
-      }
-    end,
-    keys = {
-      { '<Space>a', function() require('fff').find_files() end, desc = 'fff: Find files' },
-      {
-        '<Space>f',
-        function()
-          local config_parent = vim.fn.fnamemodify(vim.fn.stdpath('config') .. '/..', ':p:h')
-          require('fff').find_files_in_dir(config_parent)
-        end,
-        desc = 'fff: Find files in dotfiles',
-      },
-      { '<Space>g', function() require('fff').live_grep() end,  desc = 'fff: Live grep' },
-    },
-  },
+-- コマンドライン入力中の <C-t> で command_history を起動
+vim.keymap.set('c', '<C-t>', function()
+  local cmdline = vim.fn.getcmdline()
+  vim.schedule(function()
+    require('my.finder').command_history({ query = cmdline })
+  end)
+  return '<C-u><Esc>'
+end, { expr = true, silent = true, desc = 'Finder: Command history' })
 
-  -- fzf-lua (buffers, help, oldfiles, ui_select, etc.)
+vim.keymap.set('n', '<Space>a', function() require('my.finder').files() end, { desc = 'Finder: Find files' })
+vim.keymap.set('n', '<Space>f', function()
+  local config_parent = vim.fn.fnamemodify(vim.fn.stdpath('config') .. '/..', ':p:h')
+  require('my.finder').files_in_dir(config_parent)
+end, { desc = 'Finder: Find files in dotfiles' })
+vim.keymap.set('n', '<Space>g', function() require('my.finder').live_grep() end, { desc = 'Finder: Live grep' })
+vim.keymap.set('n', 'gnb', function() require('my.finder').git_branches() end, { desc = 'Finder: Git branches' })
+vim.keymap.set('n', '<Space>b', function() require('my.finder').buffers() end, { desc = 'Finder: Buffers' })
+vim.keymap.set('n', '<Space>h', function() require('my.finder').help_tags() end, { desc = 'Finder: Help tags' })
+vim.keymap.set('n', '<Space>m', function() require('my.finder').manpages() end, { desc = 'Finder: Man pages' })
+vim.keymap.set('n', '<Space>o', function() require('my.finder').oldfiles() end, { desc = 'Finder: Oldfiles' })
+vim.keymap.set('n', '<Space>r', function() require('my.finder').resume() end, { desc = 'Finder: Resume' })
+
+return {
+  -- Phase 2 で LSP 系を自作へ移行するまで nvim/lua/plugins/lsp.lua 用に残す
   {
     'ibhagwan/fzf-lua',
-    init = function()
-      -- コマンドライン入力中の <C-t> で command_history を起動 (ddu の <C-t> 相当)
-      vim.keymap.set('c', '<C-t>', function()
-        local cmdline = vim.fn.getcmdline()
-        vim.schedule(function()
-          require('fzf-lua').command_history({ query = cmdline })
-        end)
-        return '<C-u><Esc>'
-      end, { expr = true, silent = true, desc = 'fzf-lua: Command history' })
-    end,
-    config = function()
-      local fzf = require('fzf-lua')
-      fzf.setup({
-        winopts = {
-          on_close = function()
-            last_picker = 'fzf'
-          end,
-        },
-        actions = {
-          files = {
-            ['enter'] = fzf.actions.file_edit,
-            ['ctrl-v'] = fzf.actions.file_vsplit,  -- 垂直分割 (ddu の E 相当)
-            ['ctrl-s'] = fzf.actions.file_split,   -- 水平分割 (ddu の S 相当)
-            ['ctrl-x'] = fzf.actions.file_split,   -- 水平分割 (端末のC-sバッティング対策)
-            ['ctrl-t'] = fzf.actions.file_tabedit, -- タブ (ddu の t 相当)
-          },
-        },
-        command_history = {
-          actions = {
-            ['enter'] = fzf.actions.ex_run,     -- Enter で常にコマンドライン編集状態にする
-            ['ctrl-r'] = fzf.actions.ex_run_cr, -- 即時実行したい場合の代替キー
-          },
-        },
-      })
-      fzf.register_ui_select()
-    end,
-    keys = {
-      { 'gnb',      function() require('fzf-lua').git_branches() end, desc = 'fzf-lua: Git branches' },
-      { '<Space>b', function() require('fzf-lua').buffers() end,      desc = 'fzf-lua: Buffers' },
-      { '<Space>h', function() require('fzf-lua').help_tags() end,    desc = 'fzf-lua: Help tags' },
-      { '<Space>m', function() require('fzf-lua').manpages() end,     desc = 'fzf-lua: Man pages' },
-      { '<Space>o', function() require('fzf-lua').oldfiles() end,     desc = 'fzf-lua: Oldfiles' },
-      {
-        '<Space>r',
-        function()
-          if last_picker == 'fff' then
-            vim.cmd('FFFResume')
-          else
-            require('fzf-lua').resume()
-          end
-        end,
-        desc = 'Picker: Resume (fff / fzf-lua)',
-      },
-    },
+    lazy = true,
   },
 }

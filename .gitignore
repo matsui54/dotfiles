@@ -3,3 +3,5 @@
 .mypy_cache/
 node_modules/
 .lock
+nvim/lua/my/finder/rust/target/
+nvim/lua/my/finder/native.*

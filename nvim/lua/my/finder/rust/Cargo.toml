@@ -1,0 +1,13 @@
+[package]
+name = "my-finder-native"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "my_finder_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+fff-search = "0.11.0"
+frizbee = "0.13.0"
+mlua = { version = "0.11.6", features = ["luajit", "module"] }
