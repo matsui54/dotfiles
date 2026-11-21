@@ -156,10 +156,13 @@ def install_neovim_source(
         if not shutil.which(t) and not (BIN_DIR / t).exists()
     ]
     if missing:
+        if shutil.which("dnf"):
+            hint = "sudo dnf install -y gcc gcc-c++ make cmake gettext ninja-build curl glibc-gconv-extra"
+        else:
+            hint = "sudo apt install -y build-essential cmake gettext ninja-build"
         raise RuntimeError(
             f"Missing required build tools for Neovim: {', '.join(missing)}.\n"
-            f"Please install them via system package manager "
-            f"(e.g. sudo apt install -y build-essential cmake gettext ninja-build)"
+            f"Please install them via system package manager (e.g. {hint})"
         )
 
     if lock_entry is None:
