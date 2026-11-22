@@ -1,13 +1,4 @@
 vim.api.nvim_create_autocmd('BufReadCmd', {
-  group = vim.api.nvim_create_augroup('my_git_status_restore', { clear = true }),
-  pattern = 'git-status://*',
-  callback = function(ev)
-    local root = ev.match:gsub('^git%-status://', '')
-    require('my.git_status').open({ buf = ev.buf, root = root })
-  end,
-})
-
-vim.api.nvim_create_autocmd('BufReadCmd', {
   group = vim.api.nvim_create_augroup('my_git_log_restore', { clear = true }),
   pattern = 'git-log://*',
   callback = function(ev)
@@ -17,15 +8,15 @@ vim.api.nvim_create_autocmd('BufReadCmd', {
 })
 
 vim.api.nvim_create_user_command('GitStatus', function()
-  require('my.git_status').open()
-end, { desc = 'Open custom Git status buffer' })
+  require('my.finder').git_status()
+end, { desc = 'Open Git status finder' })
 
 vim.api.nvim_create_user_command('GitLog', function()
   require('my.git_log').open()
 end, { desc = 'Open custom Git log buffer' })
 
 vim.keymap.set('n', 'gs', function()
-  require('my.git_status').open()
+  require('my.finder').git_status()
 end, { desc = 'GitStatus: open' })
 
 vim.keymap.set('n', 'gnl', function()
@@ -139,12 +130,6 @@ return {
           on_exit = function(_, code)
             if code == 0 then
               vim.notify('Git commit: Done', vim.log.levels.INFO)
-              vim.schedule(function()
-                local ok, gs = pcall(require, 'my.git_status')
-                if ok and gs.is_open() then
-                  gs.refresh()
-                end
-              end)
             end
           end,
         })

@@ -118,7 +118,7 @@ local function update_filter_virt_text()
   end
   vim.api.nvim_buf_clear_namespace(state.filter_buf, ns_filter, 0, -1)
 
-  local prompt = (state.source and state.source.prompt) or '> '
+  local prompt = (state.ctx and state.ctx.prompt) or (state.source and state.source.prompt) or '> '
   pcall(vim.api.nvim_buf_set_extmark, state.filter_buf, ns_filter, 0, 0, {
     virt_text = { { prompt, 'MyFinderPrompt' } },
     virt_text_pos = 'inline',
@@ -159,10 +159,10 @@ local function render_list(preserve_cursor)
 
   if #state.items == 0 then
     local hint = nil
-    if state.query == '' and state.source and state.source.empty_hint then
+    if state.scanning then
+      hint = (state.source and state.source.scanning_hint) or '  Scanning files...'
+    elseif state.query == '' and state.source and state.source.empty_hint then
       hint = state.source.empty_hint
-    elseif state.scanning then
-      hint = '  Scanning files...'
     elseif state.source and state.source.no_match_hint then
       hint = state.source.no_match_hint
     else
@@ -269,6 +269,25 @@ local function resolve_action_items()
     return { cur }
   end
   return {}
+end
+
+---@return table[]
+local function resolve_visual_items()
+  local l1 = vim.fn.line('v')
+  local l2 = vim.fn.line('.')
+  local esc = vim.api.nvim_replace_termcodes('<Esc>', true, false, true)
+  vim.api.nvim_feedkeys(esc, 'nx', false)
+  if l1 > l2 then
+    l1, l2 = l2, l1
+  end
+  local out = {}
+  for l = l1, l2 do
+    local item = state.items[l]
+    if item then
+      out[#out + 1] = item
+    end
+  end
+  return out
 end
 
 local function sync_preview(opts)
@@ -633,13 +652,13 @@ function _G.MyFinderCompleteAction(arglead)
 end
 
 ---@param kind string
----@param action_opts? { from_chooser?: boolean }
+---@param action_opts? { from_chooser?: boolean, visual?: boolean }
 local function run_action(kind, action_opts)
   if not state.active or state.closing then
     return
   end
 
-  local targets = resolve_action_items()
+  local targets = (action_opts and action_opts.visual) and resolve_visual_items() or resolve_action_items()
   local source = state.source
   local ctx = state.ctx
   local session_ctx = state.ctx
@@ -904,13 +923,18 @@ local function setup_keymaps()
   lmap('n', 'q', function() M.close({ save_session = true, on_cancel = true }) end, 'Finder: close')
   lmap('n', '<Esc>', function() M.close({ save_session = true, on_cancel = true }) end, 'Finder: close')
 
-  -- Source-specific extra Normal mode keymaps
+  -- Source-specific extra keymaps
   if state.source and state.source.keymaps then
     for lhs, spec in pairs(state.source.keymaps) do
-      local mode = spec.mode or 'n'
+      local modes = type(spec.mode) == 'table' and spec.mode or { spec.mode or 'n' }
       local action_name = spec.action
-      local cb = spec.fn or function() run_action(action_name) end
-      lmap(mode, lhs, cb, spec.desc or ('Finder: ' .. tostring(action_name or lhs)))
+      for _, mode in ipairs(modes) do
+        local is_visual = mode == 'x' or mode == 'v'
+        local cb = spec.fn or function()
+          run_action(action_name, is_visual and { visual = true } or nil)
+        end
+        lmap(mode, lhs, cb, spec.desc or ('Finder: ' .. tostring(action_name or lhs)))
+      end
     end
   end
 

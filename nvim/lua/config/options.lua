@@ -68,7 +68,8 @@ local function set_shirotelin_highlights()
   vim.api.nvim_set_hl(0, "@text.diff.delete", { link = "DiffRemoved" })
   vim.api.nvim_set_hl(0, "@diff.minus", { link = "DiffRemoved" })
   vim.api.nvim_set_hl(0, "diffAdded", { link = "DiffAdd" })
-  vim.api.nvim_set_hl(0, "diffRemoved", { link = "DiffRemoved" })
+  -- Note: highlight group names are case-insensitive in Neovim, so DiffRemoved and diffRemoved
+  -- share the same group; linking them to each other would overwrite it with a self-link.
 
   vim.api.nvim_set_hl(0, "LspReferenceRead", { link = "ReferenceHighlight" })
   vim.api.nvim_set_hl(0, "LspReferenceText", { link = "ReferenceHighlight" })

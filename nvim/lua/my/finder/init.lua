@@ -116,6 +116,13 @@ function M.git_branches(opts)
 end
 
 ---@param opts? table
+function M.git_status(opts)
+  register_command()
+  local source = require('my.finder.sources.git_status').new()
+  ui.open(source, opts)
+end
+
+---@param opts? table
 function M.help_tags(opts)
   register_command()
   local source = require('my.finder.sources.help').new()

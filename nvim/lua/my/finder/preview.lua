@@ -136,6 +136,30 @@ local function render_lines(win, lines, opts)
     attach_lightweight_ts(buf, opts.path, lines)
   end
 
+  if type(opts.highlights) == 'table' then
+    for _, h in ipairs(opts.highlights) do
+      if h.row ~= nil then
+        if h.line_hl then
+          pcall(vim.api.nvim_buf_set_extmark, buf, ns, h.row, 0, {
+            line_hl_group = h.line_hl,
+            priority = 120,
+          })
+        elseif h.hl_group then
+          local line_len = #(lines[h.row + 1] or '')
+          local start_col = math.max(0, h.col_start or 0)
+          local end_col = (h.col_end == -1 or h.col_end == nil) and line_len or math.min(h.col_end, line_len)
+          if end_col >= start_col then
+            pcall(vim.api.nvim_buf_set_extmark, buf, ns, h.row, start_col, {
+              end_col = end_col,
+              hl_group = h.hl_group,
+              priority = 120,
+            })
+          end
+        end
+      end
+    end
+  end
+
   local line_offset = opts.line_offset or 0
   local target_lnum = opts.lnum
   if target_lnum and target_lnum > 0 and #lines > 0 then
@@ -424,6 +448,12 @@ local function run_preview(win, item, source, gen)
           return false
         end
         return not vim.api.nvim_win_is_valid(win)
+      end,
+      preview_file = function(path, lnum)
+        if gen ~= state.gen or not vim.api.nvim_win_is_valid(win) then
+          return
+        end
+        preview_file_async(win, { path = path, lnum = lnum }, gen)
       end,
     }, function(lines, ropts)
       if vim.in_fast_event() then

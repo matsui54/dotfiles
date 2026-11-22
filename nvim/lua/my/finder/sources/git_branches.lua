@@ -1,84 +1,7 @@
 local backend = require('my.finder.backend')
+local git_util = require('my.finder.git_util')
 
 local M = {}
-
----@param path string
----@return string|nil
-local function find_git_root(path)
-  local dir = (path and path ~= '') and vim.fn.fnamemodify(path, ':h') or vim.fn.getcwd()
-  if vim.fn.isdirectory(dir) == 0 then
-    dir = vim.fn.getcwd()
-  end
-  local res = vim.system({ 'git', '-C', dir, 'rev-parse', '--show-toplevel' }, { text = true }):wait()
-  if res.code ~= 0 or not res.stdout then
-    return nil
-  end
-  return vim.trim(res.stdout)
-end
-
----@param git_args string[]
----@return string
-local function format_git_cmd(git_args)
-  local parts = { 'git' }
-  for _, arg in ipairs(git_args) do
-    local s = tostring(arg)
-    if s:match('^[%w%._/%-%+=:@]+$') then
-      parts[#parts + 1] = s
-    else
-      parts[#parts + 1] = vim.fn.shellescape(s)
-    end
-  end
-  return table.concat(parts, ' ')
-end
-
----@param res vim.SystemCompleted
----@return string
-local function trim_output(res)
-  local err = vim.trim(res.stderr or '')
-  if err ~= '' then
-    return err
-  end
-  return vim.trim(res.stdout or '')
-end
-
----@param root string
----@param git_args string[]
----@param cb fun(res: vim.SystemCompleted)
-local function run_git(root, git_args, cb)
-  local cmd = { 'git', '-C', root }
-  vim.list_extend(cmd, git_args)
-  vim.system(cmd, { text = true }, function(res)
-    vim.schedule(function()
-      cb(res)
-    end)
-  end)
-end
-
----@param ctx table
----@param cmds string[][]
----@param extra_note? string
----@return boolean
-local function confirm_git_cmds(ctx, cmds, extra_note)
-  local cmd_strs = {}
-  for _, args in ipairs(cmds) do
-    cmd_strs[#cmd_strs + 1] = format_git_cmd(args)
-  end
-
-  local msg
-  if #cmd_strs == 1 then
-    msg = 'Run: ' .. cmd_strs[1]
-  else
-    msg = 'Run:\n  ' .. table.concat(cmd_strs, '\n  ')
-  end
-  if extra_note and extra_note ~= '' then
-    msg = msg .. '\n\n' .. extra_note
-  end
-
-  local choice = ctx.with_prompt(function()
-    return vim.fn.confirm(msg, '&Yes\n&No', 2)
-  end)
-  return choice == 1
-end
 
 ---@param raw string
 ---@return table[], string[]
@@ -132,28 +55,23 @@ local function fetch_branches(ctx, on_done)
   ctx.fetch_gen = (ctx.fetch_gen or 0) + 1
   local gen = ctx.fetch_gen
 
-  vim.system({
-    'git',
-    '-C',
-    ctx.git_root,
+  git_util.run_git(ctx.git_root, {
     'for-each-ref',
     '--sort=-committerdate',
     '--format=%(HEAD)%09%(refname)%09%(refname:short)%09%(objectname:short)%09%(subject)',
     'refs/heads',
     'refs/remotes',
-  }, { text = true }, function(res)
-    vim.schedule(function()
-      if gen ~= ctx.fetch_gen then
-        return
-      end
-      if res.code == 0 and res.stdout then
-        ctx.entries, ctx.match_texts = parse_branches(res.stdout)
-      else
-        ctx.entries, ctx.match_texts = {}, {}
-      end
-      ctx.loading = false
-      on_done()
-    end)
+  }, function(res)
+    if gen ~= ctx.fetch_gen then
+      return
+    end
+    if res.code == 0 and res.stdout then
+      ctx.entries, ctx.match_texts = parse_branches(res.stdout)
+    else
+      ctx.entries, ctx.match_texts = {}, {}
+    end
+    ctx.loading = false
+    on_done()
   end)
 end
 
@@ -218,17 +136,17 @@ local function delete_local_branches(targets, ctx, force)
   end
   local extra_note = #notes > 0 and table.concat(notes, '\n') or nil
 
-  if not confirm_git_cmds(ctx, { args }, extra_note) then
+  if not git_util.confirm_git_cmds(ctx, { args }, extra_note) then
     return 'keep_open'
   end
 
-  run_git(root, args, function(res)
+  git_util.run_git(root, args, function(res)
     ctx.clear_marks(target_ids)
     if res.code == 0 then
-      local msg = trim_output(res)
+      local msg = git_util.trim_output(res)
       vim.notify(msg ~= '' and msg or ('Deleted branch(es): ' .. table.concat(local_names, ', ')), vim.log.levels.INFO)
     else
-      local msg = trim_output(res)
+      local msg = git_util.trim_output(res)
       vim.notify('git branch delete failed' .. (msg ~= '' and ': ' .. msg or ''), vim.log.levels.ERROR)
     end
     reload_branches(ctx)
@@ -277,7 +195,7 @@ local function delete_remote_branches(targets, ctx)
   end
 
   local extra_note = #skipped_local > 0 and ('Skipped local: ' .. table.concat(skipped_local, ', ')) or nil
-  if not confirm_git_cmds(ctx, cmds, extra_note) then
+  if not git_util.confirm_git_cmds(ctx, cmds, extra_note) then
     return 'keep_open'
   end
 
@@ -296,10 +214,10 @@ local function delete_remote_branches(targets, ctx)
     end
     local args = cmds[idx]
     idx = idx + 1
-    run_git(root, args, function(res)
+    git_util.run_git(root, args, function(res)
       if res.code ~= 0 then
-        local msg = trim_output(res)
-        errors[#errors + 1] = format_git_cmd(args) .. (msg ~= '' and ': ' .. msg or '')
+        local msg = git_util.trim_output(res)
+        errors[#errors + 1] = git_util.format_git_cmd(args) .. (msg ~= '' and ': ' .. msg or '')
       end
       step()
     end)
@@ -314,12 +232,13 @@ function M.new()
     name = 'git_branches',
     title = 'Git Branches',
     prompt = 'branch> ',
+    scanning_hint = '  Loading...',
     show_preview = true,
     allow_preview = true,
     builtin_actions = {},
 
     prepare = function(ctx)
-      local root = find_git_root(ctx.origin_path)
+      local root = git_util.find_git_root(ctx.origin_path)
       return {
         git_root = root,
         entries = nil,
@@ -455,20 +374,20 @@ function M.new()
         end
 
         local function do_switch(args, label, select_ref)
-          run_git(it.git_root, args, function(res)
+          git_util.run_git(it.git_root, args, function(res)
             if res.code == 0 then
               vim.notify('Switched to branch: ' .. label, vim.log.levels.INFO)
               pcall(vim.cmd, 'checktime')
               reload_branches(ctx, { restore_cursor_id = 'branch:' .. select_ref })
             else
-              local msg = trim_output(res)
+              local msg = git_util.trim_output(res)
               vim.notify('git switch failed' .. (msg ~= '' and ': ' .. msg or ''), vim.log.levels.ERROR)
             end
           end)
         end
 
         if it.is_remote and it.short_branch then
-          run_git(it.git_root, { 'show-ref', '--verify', '--quiet', 'refs/heads/' .. it.short_branch }, function(check)
+          git_util.run_git(it.git_root, { 'show-ref', '--verify', '--quiet', 'refs/heads/' .. it.short_branch }, function(check)
             if check.code == 0 then
               do_switch({ 'switch', it.short_branch }, it.short_branch, 'refs/heads/' .. it.short_branch)
             else
@@ -504,13 +423,13 @@ function M.new()
               if name == '' then
                 return
               end
-              run_git(ctx.git_root, { 'switch', '-c', name }, function(res)
+              git_util.run_git(ctx.git_root, { 'switch', '-c', name }, function(res)
                 if res.code == 0 then
                   vim.notify('Created and switched to branch: ' .. name, vim.log.levels.INFO)
                   pcall(vim.cmd, 'checktime')
                   reload_branches(ctx, { restore_cursor_id = 'branch:refs/heads/' .. name })
                 else
-                  local msg = trim_output(res)
+                  local msg = git_util.trim_output(res)
                   vim.notify('git switch -c failed' .. (msg ~= '' and ': ' .. msg or ''), vim.log.levels.ERROR)
                 end
               end)
@@ -535,13 +454,13 @@ function M.new()
             if name == '' then
               return
             end
-            run_git(it.git_root, { 'switch', '-c', name, '--no-track', it.fullref or it.branch }, function(res)
+            git_util.run_git(it.git_root, { 'switch', '-c', name, '--no-track', it.fullref or it.branch }, function(res)
               if res.code == 0 then
                 vim.notify('Created and switched to branch: ' .. name .. ' (from ' .. it.branch .. ')', vim.log.levels.INFO)
                 pcall(vim.cmd, 'checktime')
                 reload_branches(ctx, { restore_cursor_id = 'branch:refs/heads/' .. name })
               else
-                local msg = trim_output(res)
+                local msg = git_util.trim_output(res)
                 vim.notify('git switch -c failed' .. (msg ~= '' and ': ' .. msg or ''), vim.log.levels.ERROR)
               end
             end)
@@ -581,13 +500,13 @@ function M.new()
             if new_name == '' or new_name == it.branch then
               return
             end
-            run_git(it.git_root, { 'branch', '-m', it.branch, new_name }, function(res)
+            git_util.run_git(it.git_root, { 'branch', '-m', it.branch, new_name }, function(res)
               if res.code == 0 then
                 vim.notify('Renamed branch: ' .. it.branch .. ' -> ' .. new_name, vim.log.levels.INFO)
                 ctx.clear_marks({ it.id })
                 reload_branches(ctx, { restore_cursor_id = 'branch:refs/heads/' .. new_name })
               else
-                local msg = trim_output(res)
+                local msg = git_util.trim_output(res)
                 vim.notify('git branch -m failed' .. (msg ~= '' and ': ' .. msg or ''), vim.log.levels.ERROR)
               end
             end)
@@ -606,16 +525,16 @@ function M.new()
           return 'keep_open'
         end
         local args = { 'merge', it.branch }
-        if not confirm_git_cmds(ctx, { args }) then
+        if not git_util.confirm_git_cmds(ctx, { args }) then
           return 'keep_open'
         end
-        run_git(it.git_root, args, function(res)
+        git_util.run_git(it.git_root, args, function(res)
           pcall(vim.cmd, 'checktime')
           if res.code == 0 then
-            local msg = trim_output(res)
+            local msg = git_util.trim_output(res)
             vim.notify(msg ~= '' and msg or ('Merged ' .. it.branch), vim.log.levels.INFO)
           else
-            local msg = trim_output(res)
+            local msg = git_util.trim_output(res)
             vim.notify('git merge failed' .. (msg ~= '' and ': ' .. msg or ''), vim.log.levels.ERROR)
           end
           reload_branches(ctx)
@@ -633,16 +552,16 @@ function M.new()
           return 'keep_open'
         end
         local args = { 'rebase', it.branch }
-        if not confirm_git_cmds(ctx, { args }) then
+        if not git_util.confirm_git_cmds(ctx, { args }) then
           return 'keep_open'
         end
-        run_git(it.git_root, args, function(res)
+        git_util.run_git(it.git_root, args, function(res)
           pcall(vim.cmd, 'checktime')
           if res.code == 0 then
-            local msg = trim_output(res)
+            local msg = git_util.trim_output(res)
             vim.notify(msg ~= '' and msg or ('Rebased onto ' .. it.branch), vim.log.levels.INFO)
           else
-            local msg = trim_output(res)
+            local msg = git_util.trim_output(res)
             vim.notify('git rebase failed' .. (msg ~= '' and ': ' .. msg or ''), vim.log.levels.ERROR)
           end
           reload_branches(ctx)
@@ -659,12 +578,12 @@ function M.new()
             return 'keep_open'
           end
           vim.notify('Running: git fetch --prune...', vim.log.levels.INFO)
-          run_git(ctx.git_root, { 'fetch', '--prune' }, function(res)
+          git_util.run_git(ctx.git_root, { 'fetch', '--prune' }, function(res)
             if res.code == 0 then
-              local msg = trim_output(res)
+              local msg = git_util.trim_output(res)
               vim.notify(msg ~= '' and msg or 'git fetch --prune completed', vim.log.levels.INFO)
             else
-              local msg = trim_output(res)
+              local msg = git_util.trim_output(res)
               vim.notify('git fetch failed' .. (msg ~= '' and ': ' .. msg or ''), vim.log.levels.ERROR)
             end
             reload_branches(ctx)
