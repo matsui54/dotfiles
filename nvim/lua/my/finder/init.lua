@@ -123,6 +123,13 @@ function M.git_status(opts)
 end
 
 ---@param opts? table
+function M.git_log(opts)
+  register_command()
+  local source = require('my.finder.sources.git_log').new()
+  ui.open(source, opts)
+end
+
+---@param opts? table
 function M.help_tags(opts)
   register_command()
   local source = require('my.finder.sources.help').new()

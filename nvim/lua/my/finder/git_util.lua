@@ -114,12 +114,15 @@ local function resolve_diff_hl(preferred, fallback)
 end
 
 ---@param lines string[]
+---@param start_idx? integer
+---@param out? table[]
 ---@return table[]
-function M.highlight_diff_lines(lines)
+local function append_diff_highlights(lines, start_idx, out)
   local add_hl = resolve_diff_hl('diffAdded', 'DiffAdd')
   local del_hl = resolve_diff_hl('diffRemoved', 'DiffDelete')
-  local hls = {}
-  for i, line in ipairs(lines) do
+  local hls = out or {}
+  for i = start_idx or 1, #lines do
+    local line = lines[i]
     local row = i - 1
     if vim.startswith(line, 'diff --git ')
       or vim.startswith(line, '--- ')
@@ -142,6 +145,39 @@ function M.highlight_diff_lines(lines)
     elseif vim.startswith(line, '-') then
       hls[#hls + 1] = { row = row, line_hl = del_hl }
     end
+  end
+  return hls
+end
+
+---@param lines string[]
+---@return table[]
+function M.highlight_diff_lines(lines)
+  return append_diff_highlights(lines, 1, {})
+end
+
+---@param lines string[]
+---@return table[]
+function M.highlight_commit_show_lines(lines)
+  local hls = {}
+  local diff_start = nil
+  for i, line in ipairs(lines) do
+    if vim.startswith(line, 'diff --git ') then
+      diff_start = i
+      break
+    end
+    local row = i - 1
+    if vim.startswith(line, 'commit ') then
+      hls[#hls + 1] = { row = row, col_start = 0, col_end = -1, hl_group = 'Title' }
+    elseif vim.startswith(line, 'Author:')
+      or vim.startswith(line, 'AuthorDate:')
+      or vim.startswith(line, 'Commit:')
+      or vim.startswith(line, 'CommitDate:')
+      or vim.startswith(line, 'Merge:') then
+      hls[#hls + 1] = { row = row, col_start = 0, col_end = -1, hl_group = 'Type' }
+    end
+  end
+  if diff_start then
+    append_diff_highlights(lines, diff_start, hls)
   end
   return hls
 end
@@ -181,6 +217,108 @@ local function create_scratch_buf(lines, title, ft)
   return buf
 end
 
+---@param ref string
+---@return string
+local function short_ref_label(ref)
+  local hex, suffix = ref:match('^(%x+)(.*)$')
+  if hex and #hex > 7 then
+    return hex:sub(1, 7) .. suffix
+  end
+  return ref
+end
+
+---@param root string
+---@param spec { ft?: string, left_rev?: string, left_title: string, right_rev?: string, right_buf?: integer, right_title?: string }
+---@param step_cb? fun(delta: integer, cleanup: fun())
+---@param reuse_current_tab? boolean
+local function open_diff_tab_core(root, spec, step_cb, reuse_current_tab)
+  diff_gen = diff_gen + 1
+  local gen = diff_gen
+
+  local right_buf = spec.right_buf
+  local right_is_real = right_buf ~= nil
+  if reuse_current_tab then
+    vim.cmd('only')
+  else
+    vim.cmd('tabnew')
+  end
+
+  local left_win = vim.api.nvim_get_current_win()
+  local left_buf = create_scratch_buf(spec.left_rev and { 'Loading...' } or {}, spec.left_title, spec.ft)
+  vim.api.nvim_win_set_buf(left_win, left_buf)
+
+  vim.cmd('rightbelow vsplit')
+  local right_win = vim.api.nvim_get_current_win()
+  if right_buf then
+    vim.fn.bufload(right_buf)
+    vim.api.nvim_win_set_buf(right_win, right_buf)
+  else
+    right_buf = create_scratch_buf(spec.right_rev and { 'Loading...' } or {}, spec.right_title or '', spec.ft)
+    vim.api.nvim_win_set_buf(right_win, right_buf)
+  end
+
+  vim.api.nvim_set_current_win(left_win)
+  vim.cmd('diffthis')
+  vim.api.nvim_set_current_win(right_win)
+  vim.cmd('diffthis')
+
+  local function populate_buf(buf, lines)
+    if gen ~= diff_gen or not vim.api.nvim_buf_is_valid(buf) then
+      return
+    end
+    vim.bo[buf].modifiable = true
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    vim.bo[buf].modifiable = false
+    if vim.api.nvim_win_is_valid(left_win) then
+      vim.api.nvim_win_call(left_win, function()
+        vim.cmd('diffupdate')
+      end)
+    end
+  end
+
+  if spec.left_rev then
+    git_show_lines_async(root, spec.left_rev, function(lines)
+      populate_buf(left_buf, lines)
+    end)
+  end
+
+  if spec.right_rev then
+    git_show_lines_async(root, spec.right_rev, function(lines)
+      populate_buf(right_buf, lines)
+    end)
+  end
+
+  local function cleanup_real_buf_maps()
+    if right_is_real and vim.api.nvim_buf_is_valid(right_buf) then
+      pcall(vim.keymap.del, 'n', 'q', { buffer = right_buf })
+      pcall(vim.keymap.del, 'n', ']f', { buffer = right_buf })
+      pcall(vim.keymap.del, 'n', '[f', { buffer = right_buf })
+    end
+  end
+
+  local function close_diff_tab()
+    cleanup_real_buf_maps()
+    if vim.fn.tabpagenr('$') > 1 then
+      vim.cmd('tabclose')
+    else
+      vim.cmd('diffoff!')
+      vim.cmd('only')
+    end
+  end
+
+  local function step_diff(delta)
+    if step_cb then
+      step_cb(delta, cleanup_real_buf_maps)
+    end
+  end
+
+  for _, b in ipairs({ left_buf, right_buf }) do
+    vim.keymap.set('n', 'q', close_diff_tab, { buffer = b, silent = true, desc = 'GitDiff: close tab' })
+    vim.keymap.set('n', ']f', function() step_diff(1) end, { buffer = b, silent = true, desc = 'GitDiff: next file' })
+    vim.keymap.set('n', '[f', function() step_diff(-1) end, { buffer = b, silent = true, desc = 'GitDiff: prev file' })
+  end
+end
+
 ---@param root string
 ---@param entry table
 ---@param entries table[]
@@ -197,9 +335,6 @@ function M.open_status_diff_tab(root, entry, entries, reuse_current_tab)
       break
     end
   end
-
-  diff_gen = diff_gen + 1
-  local gen = diff_gen
 
   local left_rev = nil
   local left_title
@@ -228,90 +363,84 @@ function M.open_status_diff_tab(root, entry, entries, reuse_current_tab)
     end
   end
 
-  local right_is_real = right_buf ~= nil
-  if reuse_current_tab then
-    vim.cmd('only')
-  else
-    vim.cmd('tabnew')
-  end
-
-  local left_win = vim.api.nvim_get_current_win()
-  local left_buf = create_scratch_buf(left_rev and { 'Loading...' } or {}, left_title, ft)
-  vim.api.nvim_win_set_buf(left_win, left_buf)
-
-  vim.cmd('rightbelow vsplit')
-  local right_win = vim.api.nvim_get_current_win()
-  if right_buf then
-    vim.fn.bufload(right_buf)
-    vim.api.nvim_win_set_buf(right_win, right_buf)
-  else
-    right_buf = create_scratch_buf(right_rev and { 'Loading...' } or {}, right_title, ft)
-    vim.api.nvim_win_set_buf(right_win, right_buf)
-  end
-
-  vim.api.nvim_set_current_win(left_win)
-  vim.cmd('diffthis')
-  vim.api.nvim_set_current_win(right_win)
-  vim.cmd('diffthis')
-
-  local function populate_buf(buf, lines)
-    if gen ~= diff_gen or not vim.api.nvim_buf_is_valid(buf) then
-      return
-    end
-    vim.bo[buf].modifiable = true
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-    vim.bo[buf].modifiable = false
-    if vim.api.nvim_win_is_valid(left_win) then
-      vim.api.nvim_win_call(left_win, function()
-        vim.cmd('diffupdate')
-      end)
-    end
-  end
-
-  if left_rev then
-    git_show_lines_async(root, left_rev, function(lines)
-      populate_buf(left_buf, lines)
-    end)
-  end
-
-  if right_rev then
-    git_show_lines_async(root, right_rev, function(lines)
-      populate_buf(right_buf, lines)
-    end)
-  end
-
-  local function cleanup_real_buf_maps()
-    if right_is_real and vim.api.nvim_buf_is_valid(right_buf) then
-      pcall(vim.keymap.del, 'n', 'q', { buffer = right_buf })
-      pcall(vim.keymap.del, 'n', ']f', { buffer = right_buf })
-      pcall(vim.keymap.del, 'n', '[f', { buffer = right_buf })
-    end
-  end
-
-  local function close_diff_tab()
-    cleanup_real_buf_maps()
-    if vim.fn.tabpagenr('$') > 1 then
-      vim.cmd('tabclose')
-    else
-      vim.cmd('diffoff!')
-      vim.cmd('only')
-    end
-  end
-
-  local function step_diff(delta)
+  open_diff_tab_core(root, {
+    ft = ft,
+    left_rev = left_rev,
+    left_title = left_title,
+    right_rev = right_rev,
+    right_buf = right_buf,
+    right_title = right_title,
+  }, function(delta, cleanup)
     if not entries or #entries == 0 or not diff_idx then
       return
     end
-    cleanup_real_buf_maps()
+    cleanup()
     local next_idx = ((diff_idx - 1 + delta) % #entries) + 1
     M.open_status_diff_tab(root, entries[next_idx], entries, true)
+  end, reuse_current_tab)
+end
+
+---@param root string
+---@param base_ref string|nil
+---@param target_ref string|nil -- 'WORKTREE' for working tree file
+---@param file table
+---@param files_list table[]
+---@param reuse_current_tab boolean|nil
+function M.open_commit_diff_tab(root, base_ref, target_ref, file, files_list, reuse_current_tab)
+  local path = file.rel_path or file.path
+  local orig_path = file.orig_path or path
+  local ft = vim.filetype.match({ filename = path })
+
+  local diff_idx = nil
+  for idx, f in ipairs(files_list or {}) do
+    local fp = f.rel_path or f.path
+    if fp == path then
+      diff_idx = idx
+      break
+    end
   end
 
-  for _, b in ipairs({ left_buf, right_buf }) do
-    vim.keymap.set('n', 'q', close_diff_tab, { buffer = b, silent = true, desc = 'GitDiff: close tab' })
-    vim.keymap.set('n', ']f', function() step_diff(1) end, { buffer = b, silent = true, desc = 'GitDiff: next file' })
-    vim.keymap.set('n', '[f', function() step_diff(-1) end, { buffer = b, silent = true, desc = 'GitDiff: prev file' })
+  local left_rev = nil
+  local left_title
+  if base_ref and file.code ~= 'A' then
+    left_rev = base_ref .. ':' .. orig_path
+    left_title = string.format('git://%s/%s', short_ref_label(base_ref), orig_path)
+  else
+    left_title = string.format('git://EMPTY/%s', orig_path)
   end
+
+  local right_rev = nil
+  local right_buf = nil
+  local right_title
+  if target_ref == 'WORKTREE' then
+    local full_path = root .. '/' .. path
+    if file.code ~= 'D' and vim.fn.filereadable(full_path) == 1 then
+      right_buf = vim.fn.bufadd(full_path)
+    else
+      right_title = string.format('git://DELETED/%s', path)
+    end
+  elseif target_ref and file.code ~= 'D' then
+    right_rev = target_ref .. ':' .. path
+    right_title = string.format('git://%s/%s', short_ref_label(target_ref), path)
+  else
+    right_title = string.format('git://DELETED/%s', path)
+  end
+
+  open_diff_tab_core(root, {
+    ft = ft,
+    left_rev = left_rev,
+    left_title = left_title,
+    right_rev = right_rev,
+    right_buf = right_buf,
+    right_title = right_title,
+  }, function(delta, cleanup)
+    if not files_list or #files_list == 0 or not diff_idx then
+      return
+    end
+    cleanup()
+    local next_idx = ((diff_idx - 1 + delta) % #files_list) + 1
+    M.open_commit_diff_tab(root, base_ref, target_ref, files_list[next_idx], files_list, true)
+  end, reuse_current_tab)
 end
 
 return M

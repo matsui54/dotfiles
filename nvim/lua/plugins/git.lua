@@ -1,26 +1,17 @@
-vim.api.nvim_create_autocmd('BufReadCmd', {
-  group = vim.api.nvim_create_augroup('my_git_log_restore', { clear = true }),
-  pattern = 'git-log://*',
-  callback = function(ev)
-    local root = ev.match:gsub('^git%-log://', '')
-    require('my.git_log').open({ buf = ev.buf, root = root })
-  end,
-})
-
 vim.api.nvim_create_user_command('GitStatus', function()
   require('my.finder').git_status()
 end, { desc = 'Open Git status finder' })
 
 vim.api.nvim_create_user_command('GitLog', function()
-  require('my.git_log').open()
-end, { desc = 'Open custom Git log buffer' })
+  require('my.finder').git_log()
+end, { desc = 'Open Git log finder' })
 
 vim.keymap.set('n', 'gs', function()
   require('my.finder').git_status()
 end, { desc = 'GitStatus: open' })
 
 vim.keymap.set('n', 'gnl', function()
-  require('my.git_log').open()
+  require('my.finder').git_log()
 end, { desc = 'GitLog: open' })
 
 vim.keymap.set('x', 'gnl', function()
@@ -32,7 +23,7 @@ vim.keymap.set('x', 'gnl', function()
   local file = vim.api.nvim_buf_get_name(0)
   local esc = vim.api.nvim_replace_termcodes('<Esc>', true, false, true)
   vim.api.nvim_feedkeys(esc, 'nx', false)
-  require('my.git_log').open({ file = file, line_range = { l1, l2 } })
+  require('my.finder').git_log({ file = file, line_range = { l1, l2 } })
 end, { desc = 'GitLog: line history' })
 
 return {

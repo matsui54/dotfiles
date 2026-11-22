@@ -694,6 +694,22 @@ local function run_action(kind, action_opts)
       end
     end
   end
+  ctx.get_marks = function()
+    if not state.active or state.ctx ~= session_ctx then
+      return {}
+    end
+    return vim.deepcopy(state.marked)
+  end
+  ctx.get_cursor_id = function()
+    if not state.active or state.ctx ~= session_ctx then
+      return nil
+    end
+    local cur = current_item()
+    return cur and cur.id or nil
+  end
+  ctx.get_preview_enabled = function()
+    return state.preview_enabled
+  end
   ctx.with_prompt = function(fn, async_mode)
     if type(fn) ~= 'function' then
       return nil
