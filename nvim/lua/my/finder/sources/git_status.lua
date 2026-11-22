@@ -347,6 +347,65 @@ local function discard_targets(targets, ctx)
   return 'keep_open'
 end
 
+---@param root string
+---@param extra_args? string[]
+local function run_commit_and_reopen(root, extra_args)
+  pcall(function()
+    require('guise.server').start()
+  end)
+
+  local cmd = { 'git', '-C', root, 'commit' }
+  if extra_args and #extra_args > 0 then
+    vim.list_extend(cmd, extra_args)
+  end
+
+  local editor = vim.env.GIT_EDITOR or vim.env.EDITOR
+  local env = editor and { GIT_EDITOR = editor } or nil
+  local stderr_lines = {}
+
+  local function reopen_status()
+    vim.schedule(function()
+      if not require('my.finder.ui').is_open() then
+        require('my.finder').git_status({ git_root = root })
+      end
+    end)
+  end
+
+  local job_id = vim.fn.jobstart(cmd, {
+    env = env,
+    stderr_buffered = true,
+    on_stderr = function(_, data)
+      if type(data) == 'table' then
+        for _, line in ipairs(data) do
+          if line ~= '' then
+            stderr_lines[#stderr_lines + 1] = line
+          end
+        end
+      end
+    end,
+    on_exit = function(_, code)
+      vim.schedule(function()
+        if code == 0 then
+          vim.notify('Git commit: Done', vim.log.levels.INFO)
+          pcall(vim.cmd, 'checktime')
+        else
+          local msg = vim.trim(table.concat(stderr_lines, '\n'))
+          vim.notify(
+            msg ~= '' and ('Git commit aborted/failed: ' .. msg) or ('Git commit exited with code ' .. tostring(code)),
+            vim.log.levels.WARN
+          )
+        end
+        reopen_status()
+      end)
+    end,
+  })
+
+  if job_id <= 0 then
+    vim.notify('Git commit: Fail', vim.log.levels.ERROR)
+    reopen_status()
+  end
+end
+
 function M.new()
   return {
     name = 'git_status',
@@ -357,8 +416,8 @@ function M.new()
     show_preview = true,
     allow_preview = true,
 
-    prepare = function(ctx)
-      local root = git_util.find_git_root(ctx.origin_path)
+    prepare = function(ctx, opts)
+      local root = (opts and opts.git_root) or git_util.find_git_root(ctx.origin_path)
       return {
         git_root = root,
         branch = nil,
@@ -575,22 +634,32 @@ function M.new()
 
       commit = {
         allow_empty = true,
-        desc = 'Commit via guise (:Commit)',
+        desc = 'Commit via guise and reopen git_status',
         fn = function(_, ctx)
+          local root = ctx.git_root
+          if not root then
+            vim.notify('Not inside a git repository', vim.log.levels.WARN)
+            return 'keep_open'
+          end
           ctx.close()
           vim.schedule(function()
-            vim.cmd('Commit')
+            run_commit_and_reopen(root)
           end)
         end,
       },
 
       commit_amend = {
         allow_empty = true,
-        desc = 'Commit --amend via guise (:Commit --amend)',
+        desc = 'Commit --amend via guise and reopen git_status',
         fn = function(_, ctx)
+          local root = ctx.git_root
+          if not root then
+            vim.notify('Not inside a git repository', vim.log.levels.WARN)
+            return 'keep_open'
+          end
           ctx.close()
           vim.schedule(function()
-            vim.cmd('Commit --amend')
+            run_commit_and_reopen(root, { '--amend' })
           end)
         end,
       },

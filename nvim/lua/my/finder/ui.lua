@@ -1228,6 +1228,11 @@ function M.open(source, opts)
   start_scan_poll_if_needed()
 end
 
+---@return boolean
+function M.is_open()
+  return state.active and not state.closing
+end
+
 function M.resume()
   if not last_session or not last_session.source then
     vim.notify('No previous finder session to resume', vim.log.levels.INFO)
