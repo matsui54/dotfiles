@@ -110,10 +110,17 @@ function M.new()
 
     actions = {
       delete_buf = function(targets, ctx)
+        local deleted_ids = {}
         for _, it in ipairs(targets) do
           if it.bufnr and vim.api.nvim_buf_is_valid(it.bufnr) then
-            pcall(vim.api.nvim_buf_delete, it.bufnr, { force = false })
+            local ok = pcall(vim.api.nvim_buf_delete, it.bufnr, { force = false })
+            if ok and (not vim.api.nvim_buf_is_valid(it.bufnr) or vim.fn.buflisted(it.bufnr) == 0) then
+              deleted_ids[#deleted_ids + 1] = it.id
+            end
           end
+        end
+        if #deleted_ids > 0 then
+          ctx.clear_marks(deleted_ids)
         end
         local entries, match_texts = collect_buffers(ctx.origin_buf)
         ctx.entries = entries

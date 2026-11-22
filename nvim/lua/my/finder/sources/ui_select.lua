@@ -43,6 +43,7 @@ function M.new(raw_items, opts, on_choice)
     show_preview = false,
     allow_preview = false,
     no_resume = true,
+    builtin_actions = { 'open' },
 
     prepare = function(ctx)
       ctx.on_cancel = function()

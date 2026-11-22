@@ -86,6 +86,7 @@ function M.new()
     prompt = 'help> ',
     show_preview = true,
     allow_preview = true,
+    builtin_actions = { 'open', 'vsplit', 'split', 'tabedit' },
 
     prepare = function()
       local entries, match_texts = load_help_tags()

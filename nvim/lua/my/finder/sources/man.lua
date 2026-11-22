@@ -46,6 +46,7 @@ function M.new()
     prompt = 'man> ',
     show_preview = true,
     allow_preview = true,
+    builtin_actions = { 'open', 'vsplit', 'split', 'tabedit' },
 
     prepare = function()
       return {

@@ -9,6 +9,7 @@ function M.new()
     prompt = ': ',
     show_preview = false,
     allow_preview = false,
+    builtin_actions = { 'open' },
 
     prepare = function()
       local total = vim.fn.histnr('cmd')

@@ -10,6 +10,7 @@ local ns_filter = vim.api.nvim_create_namespace('my_finder_filter')
 local augroup = vim.api.nvim_create_augroup('my_finder_ui', { clear = true })
 
 local MARK_PREFIX_WIDTH = 2 -- "* " or "  "
+local DEFAULT_BUILTIN_ACTIONS = { 'open', 'vsplit', 'split', 'tabedit', 'qf' }
 
 local function setup_highlights()
   vim.api.nvim_set_hl(0, 'MyFinderPrompt', { link = 'Special', default = true })
@@ -46,6 +47,7 @@ local state = {
   last_first_id = nil,
   last_cursor_id = nil,
   search_gen = 0,
+  action_candidates = {},
   debounce_timer = nil,
   scan_poll_timer = nil,
 }
@@ -220,15 +222,17 @@ local function render_list(preserve_cursor)
   if win and vim.api.nvim_win_is_valid(win) then
     local target_line = 1
     if preserve_cursor and #state.items > 0 then
+      local found = false
       if prev_id then
         for i, item in ipairs(state.items) do
           if item.id == prev_id then
             target_line = i
+            found = true
             break
           end
         end
       end
-      if target_line == 1 and not prev_id then
+      if not found then
         target_line = math.min(prev_line, #state.items)
       end
     end
@@ -291,14 +295,16 @@ local function apply_search_results(res, opts)
   render_list(opts.preserve_cursor)
 
   if opts.restore_cursor_id then
+    local found = false
     local target_line = opts.restore_cursor_line or 1
     for i, it in ipairs(state.items) do
       if it.id == opts.restore_cursor_id then
         target_line = i
+        found = true
         break
       end
     end
-    if state.list_win and vim.api.nvim_win_is_valid(state.list_win) and #state.items > 0 then
+    if (found or opts.restore_cursor_line ~= nil) and state.list_win and vim.api.nvim_win_is_valid(state.list_win) and #state.items > 0 then
       target_line = math.max(1, math.min(target_line, #state.items))
       pcall(vim.api.nvim_win_set_cursor, state.list_win, { target_line, 0 })
     end
@@ -424,6 +430,7 @@ function M.close(opts)
   state.list_win = nil
   state.preview_win = nil
   state.items = {}
+  state.action_candidates = {}
   state.source = nil
   state.ctx = {}
 
@@ -544,32 +551,185 @@ local function toggle_preview()
   end
 end
 
+---@param source table|nil
 ---@param kind string
-local function run_action(kind)
-  local targets = resolve_action_items()
-  if #targets == 0 then
+---@return { fn: function, allow_empty: boolean, desc: string|nil }|nil
+local function get_source_action(source, kind)
+  if not source or type(source.actions) ~= 'table' then
+    return nil
+  end
+  local spec = source.actions[kind]
+  if type(spec) == 'function' then
+    return { fn = spec, allow_empty = false }
+  elseif type(spec) == 'table' and type(spec.fn) == 'function' then
+    return {
+      fn = spec.fn,
+      allow_empty = spec.allow_empty == true,
+      desc = spec.desc,
+    }
+  end
+  return nil
+end
+
+---@param source table|nil
+---@param kind string
+---@return boolean
+local function is_builtin_allowed(source, kind)
+  local list = (source and source.builtin_actions) or DEFAULT_BUILTIN_ACTIONS
+  for _, name in ipairs(list) do
+    if name == kind then
+      return true
+    end
+  end
+  return false
+end
+
+---@param source table|nil
+---@return string[]
+local function list_available_actions(source)
+  local seen = {}
+  local out = {}
+  local function add(name)
+    if type(name) == 'string' and name ~= '' and not seen[name] then
+      seen[name] = true
+      out[#out + 1] = name
+    end
+  end
+
+  if source and type(source.actions) == 'table' then
+    for name in pairs(source.actions) do
+      if get_source_action(source, name) then
+        add(name)
+      end
+    end
+  end
+
+  local builtins = (source and source.builtin_actions) or DEFAULT_BUILTIN_ACTIONS
+  for _, name in ipairs(builtins) do
+    add(name)
+  end
+
+  table.sort(out)
+  return out
+end
+
+function _G.MyFinderCompleteAction(arglead)
+  local candidates = state.action_candidates or {}
+  if not arglead or arglead == '' then
+    return vim.deepcopy(candidates)
+  end
+  local lead = arglead:lower()
+  local prefix = {}
+  local substr = {}
+  for _, name in ipairs(candidates) do
+    local lower = name:lower()
+    if vim.startswith(lower, lead) then
+      prefix[#prefix + 1] = name
+    elseif lower:find(lead, 1, true) then
+      substr[#substr + 1] = name
+    end
+  end
+  return vim.list_extend(prefix, substr)
+end
+
+---@param kind string
+---@param action_opts? { from_chooser?: boolean }
+local function run_action(kind, action_opts)
+  if not state.active or state.closing then
     return
   end
 
+  local targets = resolve_action_items()
   local source = state.source
-  local ctx = vim.tbl_extend('force', state.ctx, {
-    query = state.query,
-    title = (source and source.title) or 'Finder',
-    refresh = function(preserve)
-      run_search({ preserve_cursor = preserve ~= false, force_preview = true })
-    end,
-    close = function()
-      M.close({ save_session = true })
-    end,
-  })
+  local ctx = state.ctx
+  local session_ctx = state.ctx
 
-  if source and source.actions and type(source.actions[kind]) == 'function' then
-    local keep_open = source.actions[kind](targets, ctx)
+  ctx.query = state.query
+  ctx.title = (source and source.title) or 'Finder'
+  ctx.refresh = function(arg)
+    if not state.active or state.ctx ~= session_ctx then
+      return
+    end
+    local ropts = { preserve_cursor = true, force_preview = true }
+    if type(arg) == 'table' then
+      ropts = vim.tbl_extend('force', ropts, arg)
+    elseif arg == false then
+      ropts.preserve_cursor = false
+    end
+    run_search(ropts)
+  end
+  ctx.close = function()
+    if state.active and state.ctx == session_ctx then
+      M.close({ save_session = true })
+    end
+  end
+  ctx.clear_marks = function(ids)
+    if not state.active or state.ctx ~= session_ctx then
+      return
+    end
+    if ids == nil then
+      state.marked = {}
+    else
+      for _, id in ipairs(ids) do
+        state.marked[id] = nil
+      end
+    end
+  end
+  ctx.with_prompt = function(fn, async_mode)
+    if type(fn) ~= 'function' then
+      return nil
+    end
+    local prev = state.transitioning
+    state.transitioning = true
+    local restored = false
+    local function restore()
+      if not restored then
+        restored = true
+        state.transitioning = prev
+      end
+    end
+    local ok, res = pcall(fn, restore)
+    if not ok then
+      restore()
+      local msg = tostring(res)
+      if not msg:find('Keyboard interrupt', 1, true) then
+        vim.notify(msg, vim.log.levels.ERROR)
+      end
+      return nil
+    end
+    if not async_mode then
+      restore()
+    end
+    return res
+  end
+
+  local action_spec = get_source_action(source, kind)
+  if action_spec then
+    if #targets == 0 and not action_spec.allow_empty then
+      if action_opts and action_opts.from_chooser then
+        vim.notify('No target item for action: ' .. kind, vim.log.levels.WARN)
+      end
+      return
+    end
+    local keep_open = action_spec.fn(targets, ctx)
     if keep_open == 'keep_open' then
       return
     end
     M.close({ save_session = true })
     return
+  end
+
+  if not is_builtin_allowed(source, kind) then
+    return
+  end
+
+  if #targets == 0 then
+    if kind ~= 'qf' or #state.items == 0 then
+      if action_opts and action_opts.from_chooser then
+        vim.notify('No target item for action: ' .. kind, vim.log.levels.WARN)
+      end
+      return
+    end
   end
 
   if kind == 'open' then
@@ -608,6 +768,59 @@ local function run_action(kind)
     local qf_targets = next(state.marked) ~= nil and targets or state.items
     M.close({ save_session = true })
     actions.send_to_qf(qf_targets, ctx)
+  end
+end
+
+local function choose_action()
+  if not state.active or state.closing then
+    return
+  end
+  local candidates = list_available_actions(state.source)
+  if #candidates == 0 then
+    vim.notify('No actions available', vim.log.levels.INFO)
+    return
+  end
+  state.action_candidates = candidates
+  state.transitioning = true
+
+  local settled = false
+  local function settle()
+    if not settled then
+      settled = true
+      state.transitioning = false
+      state.action_candidates = {}
+    end
+  end
+
+  local ok, err = pcall(vim.ui.input, {
+    prompt = 'Action: ',
+    completion = 'customlist,v:lua.MyFinderCompleteAction',
+  }, function(choice)
+    settle()
+    if not choice then
+      return
+    end
+    local name = vim.trim(choice)
+    if name == '' then
+      return
+    end
+    if not vim.tbl_contains(candidates, name) then
+      vim.notify('Unknown finder action: ' .. name, vim.log.levels.WARN)
+      return
+    end
+    vim.schedule(function()
+      if state.active and not state.closing then
+        run_action(name, { from_chooser = true })
+      end
+    end)
+  end)
+
+  if not ok then
+    settle()
+    local msg = tostring(err)
+    if not msg:find('Keyboard interrupt', 1, true) then
+      vim.notify(msg, vim.log.levels.ERROR)
+    end
   end
 end
 
@@ -669,7 +882,7 @@ local function setup_keymaps()
 
   -- List Normal mode
   lmap('n', 'i', enter_filter_insert, 'Finder: enter filter')
-  lmap('n', 'a', enter_filter_insert, 'Finder: enter filter')
+  lmap('n', 'a', choose_action, 'Finder: choose action')
   lmap('n', '<CR>', function() run_action('open') end, 'Finder: open')
   lmap('n', 'E', function() run_action('vsplit') end, 'Finder: vsplit')
   lmap('n', 'S', function() run_action('split') end, 'Finder: split')
