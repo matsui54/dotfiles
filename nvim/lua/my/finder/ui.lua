@@ -42,6 +42,7 @@ local state = {
   total_matched = 0,
   total_items = 0,
   scanning = false,
+  has_more = false,
   marked = {},
 
   last_first_id = nil,
@@ -50,6 +51,7 @@ local state = {
   action_candidates = {},
   debounce_timer = nil,
   scan_poll_timer = nil,
+  scan_poll_active = false,
 }
 
 local last_session = nil
@@ -125,11 +127,12 @@ local function update_filter_virt_text()
     right_gravity = false,
   })
 
+  local total_str = state.has_more and (tostring(state.total_items) .. '+') or tostring(state.total_items)
   local status_str
   if state.scanning then
-    status_str = string.format('%d / %d (scanning...)', state.total_matched, state.total_items)
+    status_str = string.format('%d / %s (scanning...)', state.total_matched, total_str)
   else
-    status_str = string.format('%d / %d', state.total_matched, state.total_items)
+    status_str = string.format('%d / %s', state.total_matched, total_str)
   end
 
   pcall(vim.api.nvim_buf_set_extmark, state.filter_buf, ns_filter, 0, 0, {
@@ -304,26 +307,31 @@ local function sync_preview(opts)
   preview.schedule(state.preview_win, item, state.source, opts)
 end
 
+local start_scan_poll_if_needed
+
 local function apply_search_results(res, opts)
   opts = opts or {}
   state.items = res.items or {}
   state.total_matched = res.total_matched or #state.items
   state.total_items = res.total_items or #state.items
   state.scanning = res.scanning == true
+  state.has_more = res.has_more == true
 
   render_list(opts.preserve_cursor)
 
-  if opts.restore_cursor_id then
+  local restore_id = opts.restore_cursor_id or res.restore_cursor_id
+  local restore_line = opts.restore_cursor_line or res.restore_cursor_line
+  if restore_id then
     local found = false
-    local target_line = opts.restore_cursor_line or 1
+    local target_line = restore_line or 1
     for i, it in ipairs(state.items) do
-      if it.id == opts.restore_cursor_id then
+      if it.id == restore_id then
         target_line = i
         found = true
         break
       end
     end
-    if (found or opts.restore_cursor_line ~= nil) and state.list_win and vim.api.nvim_win_is_valid(state.list_win) and #state.items > 0 then
+    if (found or restore_line ~= nil) and state.list_win and vim.api.nvim_win_is_valid(state.list_win) and #state.items > 0 then
       target_line = math.max(1, math.min(target_line, #state.items))
       pcall(vim.api.nvim_win_set_cursor, state.list_win, { target_line, 0 })
     end
@@ -331,20 +339,34 @@ local function apply_search_results(res, opts)
 
   local first_item = state.items[1]
   local new_first_id = first_item and first_item.id or nil
+  local cur = current_item()
+  local new_cur_id = cur and cur.id or nil
+  local force_preview = opts.force_preview or res.force_preview
 
-  if opts.force_preview then
+  if force_preview then
     state.last_first_id = new_first_id
-    local cur = current_item()
-    state.last_cursor_id = cur and cur.id or nil
+    state.last_cursor_id = new_cur_id
     if state.preview_enabled and state.preview_win and vim.api.nvim_win_is_valid(state.preview_win) then
       preview.schedule(state.preview_win, cur, state.source, { force = true, immediate = opts.immediate_preview })
     end
-  elseif new_first_id ~= state.last_first_id then
-    -- Only update preview when the top item changes during filtering
+  elseif new_cur_id ~= state.last_cursor_id then
     state.last_first_id = new_first_id
-    state.last_cursor_id = new_first_id
+    state.last_cursor_id = new_cur_id
     if state.preview_enabled and state.preview_win and vim.api.nvim_win_is_valid(state.preview_win) then
-      preview.schedule(state.preview_win, first_item, state.source, { force = true })
+      preview.schedule(state.preview_win, cur, state.source, { force = true })
+    end
+  end
+
+  if state.scanning then
+    if state.source and state.source.poll_scan then
+      start_scan_poll_if_needed()
+    end
+  elseif state.scan_poll_active then
+    state.scan_poll_active = false
+    if state.scan_poll_timer then
+      pcall(function()
+        state.scan_poll_timer:stop()
+      end)
     end
   end
 end
@@ -367,7 +389,7 @@ local function run_search(opts)
         return
       end
       apply_search_results(async_res, opts)
-    end)
+    end, opts)
     if type(sync_res) == 'table' then
       apply_search_results(sync_res, opts)
     end
@@ -375,6 +397,7 @@ local function run_search(opts)
 end
 
 local function stop_timers()
+  state.scan_poll_active = false
   if state.debounce_timer then
     pcall(function()
       state.debounce_timer:stop()
@@ -443,6 +466,8 @@ function M.close(opts)
   state.active = false
   state.closing = false
   state.transitioning = false
+  state.scanning = false
+  state.has_more = false
   state.filter_buf = nil
   state.filter_win = nil
   state.list_buf = nil
@@ -651,20 +676,10 @@ function _G.MyFinderCompleteAction(arglead)
   return vim.list_extend(prefix, substr)
 end
 
----@param kind string
----@param action_opts? { from_chooser?: boolean, visual?: boolean }
-local function run_action(kind, action_opts)
-  if not state.active or state.closing then
-    return
-  end
+---@param ctx table
+local function bind_ctx_helpers(ctx)
+  local session_ctx = ctx
 
-  local targets = (action_opts and action_opts.visual) and resolve_visual_items() or resolve_action_items()
-  local source = state.source
-  local ctx = state.ctx
-  local session_ctx = state.ctx
-
-  ctx.query = state.query
-  ctx.title = (source and source.title) or 'Finder'
   ctx.refresh = function(arg)
     if not state.active or state.ctx ~= session_ctx then
       return
@@ -677,11 +692,13 @@ local function run_action(kind, action_opts)
     end
     run_search(ropts)
   end
+
   ctx.close = function()
     if state.active and state.ctx == session_ctx then
       M.close({ save_session = true })
     end
   end
+
   ctx.clear_marks = function(ids)
     if not state.active or state.ctx ~= session_ctx then
       return
@@ -694,12 +711,14 @@ local function run_action(kind, action_opts)
       end
     end
   end
+
   ctx.get_marks = function()
     if not state.active or state.ctx ~= session_ctx then
       return {}
     end
     return vim.deepcopy(state.marked)
   end
+
   ctx.get_cursor_id = function()
     if not state.active or state.ctx ~= session_ctx then
       return nil
@@ -707,9 +726,11 @@ local function run_action(kind, action_opts)
     local cur = current_item()
     return cur and cur.id or nil
   end
+
   ctx.get_preview_enabled = function()
     return state.preview_enabled
   end
+
   ctx.with_prompt = function(fn, async_mode)
     if type(fn) ~= 'function' then
       return nil
@@ -737,6 +758,21 @@ local function run_action(kind, action_opts)
     end
     return res
   end
+end
+
+---@param kind string
+---@param action_opts? { from_chooser?: boolean, visual?: boolean }
+local function run_action(kind, action_opts)
+  if not state.active or state.closing then
+    return
+  end
+
+  local targets = (action_opts and action_opts.visual) and resolve_visual_items() or resolve_action_items()
+  local source = state.source
+  local ctx = state.ctx
+
+  ctx.query = state.query
+  ctx.title = (source and source.title) or 'Finder'
 
   local action_spec = get_source_action(source, kind)
   if action_spec then
@@ -999,6 +1035,7 @@ on_filter_changed = function()
     return
   end
   state.query = new_query
+  state.ctx.query = new_query
 
   local debounce_ms = (state.source and state.source.debounce_ms) or 0
   if debounce_ms > 0 then
@@ -1048,6 +1085,11 @@ local function setup_autocmds()
         return
       end
       sync_preview({})
+      if state.source and type(state.source.on_cursor_moved) == 'function'
+        and state.list_win and vim.api.nvim_win_is_valid(state.list_win) then
+        local lnum = vim.api.nvim_win_get_cursor(state.list_win)[1]
+        state.source.on_cursor_moved(lnum, #state.items, state.ctx, state.query)
+      end
     end,
   })
 
@@ -1070,13 +1112,14 @@ local function setup_autocmds()
   })
 end
 
-local function start_scan_poll_if_needed()
+start_scan_poll_if_needed = function()
   if not state.source or not state.source.poll_scan then
     return
   end
-  if not state.scanning then
+  if not state.scanning or state.scan_poll_active then
     return
   end
+  state.scan_poll_active = true
   if not state.scan_poll_timer then
     state.scan_poll_timer = uv.new_timer()
   end
@@ -1088,11 +1131,14 @@ local function start_scan_poll_if_needed()
         stop_timers()
         return
       end
-      run_search({ preserve_cursor = true })
-      if not state.scanning and state.scan_poll_timer then
-        pcall(function()
-          state.scan_poll_timer:stop()
-        end)
+      run_search({ preserve_cursor = true, is_poll = true })
+      if not state.scanning then
+        state.scan_poll_active = false
+        if state.scan_poll_timer then
+          pcall(function()
+            state.scan_poll_timer:stop()
+          end)
+        end
       end
     end)
   )
@@ -1132,6 +1178,7 @@ function M.open(source, opts)
   state.total_matched = 0
   state.total_items = 0
   state.scanning = false
+  state.has_more = false
   state.marked = opts.marked or {}
   state.last_first_id = nil
   state.last_cursor_id = nil
@@ -1142,6 +1189,8 @@ function M.open(source, opts)
     origin_buf = origin_buf,
     origin_path = origin_path,
     dir = opts.dir,
+    query = state.query,
+    title = source.title or 'Finder',
     track_query = source.track_query,
     on_cancel = opts.on_cancel,
     opts = opts,
@@ -1155,6 +1204,8 @@ function M.open(source, opts)
       end
     end
   end
+
+  bind_ctx_helpers(state.ctx)
 
   local layout = compute_layout(state.preview_enabled)
 

@@ -4,7 +4,12 @@ local ui = require('my.finder.ui')
 
 local M = {}
 
-local PAGE_SIZE = 100
+local DEFAULT_STREAM_CAP = 200000
+local LOAD_MORE_STEP = 200000
+local DISPLAY_PAGE_SIZE = 200
+local QUERY_DISPLAY_LIMIT = 200
+local FILES_MATCH_LIMIT = 500
+local SCROLL_PREFETCH_MARGIN = 30
 local MAX_PREVIEW_LINES = 1500
 
 ---@param root string|nil
@@ -36,66 +41,63 @@ local function hl_for_code(code)
   return 'Normal'
 end
 
----@param raw string
----@return table[], string[]
-local function parse_commits(raw)
-  local entries = {}
-  local match_texts = {}
-  local records = vim.split(raw, '\x1e', { plain = true, trimempty = true })
-
-  for _, rec in ipairs(records) do
-    local fields = vim.split(rec, '\0', { plain = true })
-    if #fields >= 6 then
-      local hash = vim.trim(fields[1])
-      if hash ~= '' then
-        local short = fields[2] or ''
-        local date = fields[3] or ''
-        local author = fields[4] or ''
-        local refs = vim.trim(fields[5] or '')
-        local subject = fields[6] or ''
-        local parents = vim.trim(fields[7] or '')
-
-        local refs_str = (refs ~= '') and (' ' .. refs) or ''
-        local display = string.format('%s  %s  %s%s  %s', short, date, author, refs_str, subject)
-
-        local hash_start = 0
-        local hash_end = #short
-        local date_start = hash_end + 2
-        local date_end = date_start + #date
-        local author_start = date_end + 2
-        local author_end = author_start + #author
-
-        local hls = {
-          { hash_start, hash_end, 'Identifier' },
-          { date_start, date_end, 'Comment' },
-          { author_start, author_end, 'Type' },
-        }
-        if refs_str ~= '' then
-          local refs_start = author_end + 1
-          local refs_end = refs_start + #refs
-          hls[#hls + 1] = { refs_start, refs_end, 'Special' }
-        end
-
-        entries[#entries + 1] = {
-          id = 'commit:' .. hash,
-          hash = hash,
-          short = short,
-          date = date,
-          author = author,
-          refs = refs,
-          subject = subject,
-          parents = parents,
-          has_parent = parents ~= '',
-          display = display,
-          highlights = hls,
-          match_offset = 0,
-        }
-        match_texts[#match_texts + 1] = display
-      end
-    end
+---@param rec string
+---@param git_root string|nil
+---@return table|nil, string|nil
+local function parse_commit_record(rec, git_root)
+  local fields = vim.split(rec, '\0', { plain = true })
+  if #fields < 6 then
+    return nil, nil
+  end
+  local hash = vim.trim(fields[1])
+  if hash == '' then
+    return nil, nil
   end
 
-  return entries, match_texts
+  local short = fields[2] or ''
+  local date = fields[3] or ''
+  local author = fields[4] or ''
+  local refs = vim.trim(fields[5] or '')
+  local subject = fields[6] or ''
+  local parents = vim.trim(fields[7] or '')
+
+  local refs_str = (refs ~= '') and (' ' .. refs) or ''
+  local display = string.format('%s  %s  %s%s  %s', short, date, author, refs_str, subject)
+
+  local hash_start = 0
+  local hash_end = #short
+  local date_start = hash_end + 2
+  local date_end = date_start + #date
+  local author_start = date_end + 2
+  local author_end = author_start + #author
+
+  local hls = {
+    { hash_start, hash_end, 'Identifier' },
+    { date_start, date_end, 'Comment' },
+    { author_start, author_end, 'Type' },
+  }
+  if refs_str ~= '' then
+    local refs_start = author_end + 1
+    local refs_end = refs_start + #refs
+    hls[#hls + 1] = { refs_start, refs_end, 'Special' }
+  end
+
+  local entry = {
+    id = 'commit:' .. hash,
+    git_root = git_root,
+    hash = hash,
+    short = short,
+    date = date,
+    author = author,
+    refs = refs,
+    subject = subject,
+    parents = parents,
+    has_parent = parents ~= '',
+    display = display,
+    highlights = hls,
+    match_offset = 0,
+  }
+  return entry, display
 end
 
 ---@param raw string
@@ -225,7 +227,7 @@ local function new_files_source(spec)
 
       local function build_response()
         local res = backend.fuzzy_match_list(query, ctx.match_texts or {}, {
-          limit = math.max(500, ctx.limit or PAGE_SIZE),
+          limit = math.max(FILES_MATCH_LIMIT, ctx.limit or FILES_MATCH_LIMIT),
         })
         local items = {}
         for _, m in ipairs(res.items or {}) do
@@ -347,7 +349,8 @@ local function new_files_source(spec)
       back = {
         allow_empty = true,
         desc = 'Return to git commit log',
-        fn = function()
+        fn = function(_, ctx)
+          ctx.returning_to_parent = true
           local snap = spec.parent_snapshot
           local parent_opts = { _snapshot = snap }
           if snap.ui_opts then
@@ -369,69 +372,61 @@ local function new_files_source(spec)
         end,
       },
     },
+
+    on_close = function(ctx)
+      if ctx.returning_to_parent then
+        return
+      end
+      local snap = spec.parent_snapshot
+      if snap and snap.session_id then
+        backend.git_log_cancel(snap.session_id, { only_if_scanning = true })
+      end
+    end,
+  }
+end
+
+---@param it table
+---@param git_root string
+---@return table
+local function convert_rust_item(it, git_root)
+  local hls = {
+    { 0, it.short_len, 'Identifier' },
+    { it.date_start, it.date_end, 'Comment' },
+    { it.author_start, it.author_end, 'Type' },
+  }
+  if it.refs_end and it.refs_end > it.refs_start then
+    hls[#hls + 1] = { it.refs_start, it.refs_end, 'Special' }
+  end
+  return {
+    id = 'commit:' .. it.hash,
+    git_root = git_root,
+    order_idx = it.order_idx,
+    hash = it.hash,
+    short = it.short,
+    has_parent = it.has_parent,
+    display = it.display,
+    highlights = hls,
+    match_offset = 0,
+    match_indices = (it.match_indices and #it.match_indices > 0) and it.match_indices or nil,
   }
 end
 
 ---@param ctx table
----@param on_done fun()
-local function fetch_log(ctx, on_done)
-  ctx.fetch_gen = (ctx.fetch_gen or 0) + 1
-  local gen = ctx.fetch_gen
-  local pending = 2
-
-  local function finish_one()
-    pending = pending - 1
-    if pending == 0 then
-      ctx.prompt = build_log_prompt(ctx)
-      ctx.loading = false
-      on_done()
-    end
+---@param opts? { force?: boolean }
+---@return table|nil, string|nil
+local function open_log_session(ctx, opts)
+  if not ctx.git_root or ctx.git_root == '' then
+    return nil, 'not a git repository'
   end
-
-  git_util.run_git(ctx.git_root, { 'rev-parse', '--abbrev-ref', 'HEAD' }, function(res)
-    if gen ~= ctx.fetch_gen then
-      return
-    end
-    local branch = '(HEAD)'
-    if res.code == 0 and res.stdout then
-      local trimmed = vim.trim(res.stdout)
-      if trimmed ~= '' then
-        branch = trimmed
-      end
-    end
-    ctx.branch = branch
-    finish_one()
-  end)
-
-  local args = {
-    'log',
-    '--max-count=' .. tostring(ctx.limit or PAGE_SIZE),
-    '--date=short',
-    '--format=%H%x00%h%x00%ad%x00%an%x00%d%x00%s%x00%P%x1e',
+  opts = opts or {}
+  local open_args = {
+    root = ctx.git_root,
+    filter_file = (ctx.line_range ~= nil or ctx.filter_file) and ctx.origin_file or nil,
+    line_range = ctx.line_range,
+    limit = ctx.explicit_limit,
+    force = opts.force == true,
   }
-  if ctx.line_range and ctx.origin_file then
-    args[#args + 1] = '--no-patch'
-    args[#args + 1] = string.format('-L%d,%d:%s', ctx.line_range[1], ctx.line_range[2], ctx.origin_file)
-  elseif ctx.filter_file and ctx.origin_file then
-    args[#args + 1] = '--'
-    args[#args + 1] = ctx.origin_file
-  end
-
-  git_util.run_git(ctx.git_root, args, function(res)
-    if gen ~= ctx.fetch_gen then
-      return
-    end
-    if res.code == 0 and res.stdout then
-      ctx.entries, ctx.match_texts = parse_commits(res.stdout)
-    else
-      ctx.entries, ctx.match_texts = {}, {}
-      local msg = git_util.trim_output(res)
-      if msg ~= '' then
-        vim.notify('git log failed: ' .. msg, vim.log.levels.ERROR)
-      end
-    end
-    finish_one()
-  end, { text = false })
+  return backend.git_log_open(open_args)
 end
 
 ---@param ctx table
@@ -440,24 +435,53 @@ local function reload_log(ctx, refresh_opts)
   if not ctx.git_root then
     return
   end
-  fetch_log(ctx, function()
-    ctx.refresh(refresh_opts ~= nil and refresh_opts or true)
-  end)
+  local opened, err = open_log_session(ctx, { force = true })
+  if not opened then
+    if err and err ~= '' then
+      vim.notify('git log failed: ' .. err, vim.log.levels.ERROR)
+    end
+    return
+  end
+
+  if refresh_opts ~= false and ctx.get_cursor_id then
+    ctx.pending_restore_id = ctx.get_cursor_id()
+  else
+    ctx.pending_restore_id = nil
+  end
+  ctx.pending_restore_line = nil
+  ctx.keep_stale_on_reload = ctx.last_response ~= nil
+  ctx.session_id = opened.session_id
+  ctx.branch = opened.branch
+  ctx.prompt = build_log_prompt(ctx)
+  ctx.loading = opened.scanning == true
+  ctx.has_more = opened.has_more == true
+  ctx.last_revision = -1
+  ctx.notified_error = nil
+  ctx.pending_force_preview = true
+
+  if ctx.refresh then
+    ctx.refresh({
+      preserve_cursor = refresh_opts ~= false,
+      force_preview = not ctx.keep_stale_on_reload,
+    })
+  end
 end
 
 ---@param ctx table
 ---@return table
 local function make_parent_snapshot(ctx)
   return {
+    session_id = ctx.session_id,
     git_root = ctx.git_root,
     branch = ctx.branch,
     origin_file = ctx.origin_file,
     filter_file = ctx.filter_file,
     line_range = ctx.line_range,
-    limit = ctx.limit,
-    entries = ctx.entries,
-    match_texts = ctx.match_texts,
+    explicit_limit = ctx.explicit_limit,
+    load_step = ctx.load_step,
+    display_limit = ctx.display_limit,
     prompt = ctx.prompt,
+    has_more = ctx.has_more == true,
     ui_opts = {
       query = ctx.query,
       marked = ctx.get_marks(),
@@ -468,13 +492,8 @@ local function make_parent_snapshot(ctx)
 end
 
 ---@param targets table[]
----@param ctx table
 ---@return table[]
-local function sort_targets_chronological_oldest_first(targets, ctx)
-  local index_of = {}
-  for i, e in ipairs(ctx.entries or {}) do
-    index_of[e.hash] = i
-  end
+local function sort_targets_chronological_oldest_first(targets)
   local ordered = {}
   for _, it in ipairs(targets) do
     if it.hash then
@@ -482,7 +501,7 @@ local function sort_targets_chronological_oldest_first(targets, ctx)
     end
   end
   table.sort(ordered, function(a, b)
-    return (index_of[a.hash] or 0) > (index_of[b.hash] or 0)
+    return (a.order_idx or 0) > (b.order_idx or 0)
   end)
   return ordered
 end
@@ -497,6 +516,8 @@ function M.new()
     empty_hint = '  (no commits)',
     show_preview = true,
     allow_preview = true,
+    poll_scan = true,
+    debounce_ms = 15,
     builtin_actions = {},
 
     prepare = function(ctx, open_opts)
@@ -506,23 +527,62 @@ function M.new()
         open_opts.git_root = snap.git_root
         open_opts.filter_file = snap.filter_file
         open_opts.line_range = snap.line_range
-        open_opts.limit = snap.limit or PAGE_SIZE
+        open_opts.limit = snap.explicit_limit
+        open_opts.load_step = snap.load_step
+        open_opts.display_limit = snap.display_limit
         if snap.git_root and snap.origin_file then
           open_opts.file = snap.git_root .. '/' .. snap.origin_file
         end
-        return {
+
+        local res_ctx = {
           git_root = snap.git_root,
           branch = snap.branch,
           origin_file = snap.origin_file,
           filter_file = snap.filter_file,
           line_range = snap.line_range,
-          limit = snap.limit or PAGE_SIZE,
-          entries = snap.entries,
-          match_texts = snap.match_texts,
+          explicit_limit = snap.explicit_limit,
+          load_step = snap.load_step or LOAD_MORE_STEP,
+          display_limit = math.max(snap.display_limit or DISPLAY_PAGE_SIZE, (open_opts and open_opts.restore_cursor_line or 0) + DISPLAY_PAGE_SIZE),
+          session_id = nil,
+          has_more = snap.has_more == true,
+          loading = false,
           prompt = snap.prompt,
-          loading = snap.entries == nil and snap.git_root ~= nil,
-          fetch_gen = 0,
+          last_revision = -1,
+          last_query = nil,
+          last_limit = nil,
+          last_response = nil,
+          keep_stale_on_reload = false,
+          pending_restore_id = nil,
+          pending_restore_line = nil,
+          pending_force_preview = false,
+          restore_query = (open_opts and open_opts.query) or '',
+          notified_error = nil,
+          drilling_down = false,
         }
+
+        if snap.session_id then
+          local st = backend.git_log_status(snap.session_id)
+          if st and st.exists then
+            res_ctx.session_id = snap.session_id
+            res_ctx.loading = st.scanning == true
+            res_ctx.has_more = st.has_more == true
+          end
+        end
+
+        if not res_ctx.session_id and res_ctx.git_root then
+          local opened, err = open_log_session(res_ctx, { force = false })
+          if opened then
+            res_ctx.session_id = opened.session_id
+            res_ctx.branch = opened.branch
+            res_ctx.prompt = build_log_prompt(res_ctx)
+            res_ctx.loading = opened.scanning == true
+            res_ctx.has_more = opened.has_more == true
+          elseif err and err ~= '' then
+            vim.notify('git log failed: ' .. err, vim.log.levels.ERROR)
+          end
+        end
+
+        return res_ctx
       end
 
       local target_file = (open_opts and open_opts.file) or ctx.origin_path
@@ -530,66 +590,213 @@ function M.new()
       local rel = to_rel_path(root, target_file)
       local line_range = open_opts and open_opts.line_range or nil
       local filter_file = (line_range ~= nil and rel ~= nil) or (open_opts and open_opts.filter_file == true and rel ~= nil)
-      return {
+      local restore_line = open_opts and open_opts.restore_cursor_line or 0
+      local explicit_limit = open_opts and open_opts.limit or nil
+      local display_limit = math.max((open_opts and open_opts.display_limit) or DISPLAY_PAGE_SIZE, restore_line + DISPLAY_PAGE_SIZE)
+
+      local out_ctx = {
         git_root = root,
         branch = nil,
         origin_file = rel,
         filter_file = filter_file,
         line_range = line_range,
-        limit = (open_opts and open_opts.limit) or PAGE_SIZE,
-        entries = nil,
-        match_texts = nil,
-        loading = root ~= nil,
-        fetch_gen = 0,
+        explicit_limit = explicit_limit,
+        load_step = (open_opts and open_opts.load_step) or LOAD_MORE_STEP,
+        display_limit = display_limit,
+        session_id = nil,
+        has_more = false,
+        loading = false,
+        prompt = nil,
+        last_revision = -1,
+        last_query = nil,
+        last_limit = nil,
+        last_response = nil,
+        keep_stale_on_reload = false,
+        pending_restore_id = open_opts and open_opts.restore_cursor_id or nil,
+        pending_restore_line = open_opts and open_opts.restore_cursor_line or nil,
+        pending_force_preview = false,
+        restore_query = (open_opts and open_opts.query) or '',
+        notified_error = nil,
+        drilling_down = false,
       }
+
+      if root then
+        local opened, err = open_log_session(out_ctx, { force = false })
+        if opened then
+          out_ctx.session_id = opened.session_id
+          out_ctx.branch = opened.branch
+          out_ctx.prompt = build_log_prompt(out_ctx)
+          out_ctx.loading = opened.scanning == true
+          out_ctx.has_more = opened.has_more == true
+        elseif err and err ~= '' then
+          vim.notify('git log failed: ' .. err, vim.log.levels.ERROR)
+        end
+      end
+
+      return out_ctx
     end,
 
-    search = function(query, ctx, async_cb)
-      if not ctx.git_root then
+    search = function(query, ctx, _, search_opts)
+      if not ctx.git_root or not ctx.session_id then
         return {
           items = {},
           total_matched = 0,
           total_items = 0,
           scanning = false,
+          has_more = false,
         }
       end
 
-      local function build_response()
-        local res = backend.fuzzy_match_list(query, ctx.match_texts or {}, {
-          limit = math.max(500, ctx.limit or PAGE_SIZE),
-        })
-        local items = {}
-        for _, m in ipairs(res.items or {}) do
-          local src = ctx.entries[m.idx]
-          if src then
-            items[#items + 1] = vim.tbl_extend('force', src, {
-              match_indices = m.match_indices,
-              git_root = ctx.git_root,
-            })
+      local q = query or ''
+      if q ~= (ctx.restore_query or '') then
+        ctx.pending_restore_id = nil
+        ctx.pending_restore_line = nil
+      end
+      if ctx.last_query ~= nil and q ~= ctx.last_query then
+        ctx.keep_stale_on_reload = false
+      end
+
+      local is_nonempty = vim.trim(q) ~= ''
+      local limit = is_nonempty and QUERY_DISPLAY_LIMIT or (ctx.display_limit or DISPLAY_PAGE_SIZE)
+
+      local st = backend.git_log_status(ctx.session_id)
+      if st and not st.exists then
+        local opened, err = open_log_session(ctx, { force = false })
+        if opened then
+          ctx.session_id = opened.session_id
+          ctx.branch = opened.branch
+          ctx.prompt = build_log_prompt(ctx)
+          ctx.last_revision = -1
+          st = backend.git_log_status(ctx.session_id)
+        else
+          if err and err ~= '' and ctx.notified_error ~= err then
+            ctx.notified_error = err
+            vim.notify('git log failed: ' .. err, vim.log.levels.ERROR)
           end
+          return {
+            items = {},
+            total_matched = 0,
+            total_items = 0,
+            scanning = false,
+            has_more = false,
+          }
+        end
+      end
+
+      if ctx.keep_stale_on_reload and ctx.last_response then
+        if st and st.scanning and (st.total_items or 0) == 0 then
+          return vim.tbl_extend('force', ctx.last_response, { scanning = true })
+        end
+        ctx.keep_stale_on_reload = false
+      end
+
+      local is_poll = search_opts and search_opts.is_poll == true
+      if is_poll and st and st.scanning and st.revision == ctx.last_revision and q == ctx.last_query and limit == ctx.last_limit then
+        return nil
+      end
+
+      local res, err = backend.git_log_search(ctx.session_id, q, { limit = limit, offset = 0 })
+      if not res then
+        if err and err ~= '' and ctx.notified_error ~= err then
+          ctx.notified_error = err
+          vim.notify('git log search failed: ' .. err, vim.log.levels.ERROR)
         end
         return {
-          items = items,
-          total_matched = res.total_matched or #items,
-          total_items = res.total_items or #ctx.entries,
+          items = {},
+          total_matched = 0,
+          total_items = 0,
           scanning = false,
+          has_more = false,
         }
       end
 
-      if ctx.entries then
-        return build_response()
+      if res.error and res.error ~= '' and ctx.notified_error ~= res.error then
+        ctx.notified_error = res.error
+        vim.notify(res.error, vim.log.levels.ERROR)
       end
 
-      fetch_log(ctx, function()
-        async_cb(build_response())
-      end)
+      ctx.loading = res.scanning == true
+      ctx.has_more = res.has_more == true
+      ctx.total_items = res.total_items or 0
+      ctx.last_revision = res.revision or 0
+      ctx.last_query = q
+      ctx.last_limit = limit
 
-      return {
-        items = {},
-        total_matched = 0,
-        total_items = 0,
-        scanning = true,
+      local items = {}
+      for i, it in ipairs(res.items or {}) do
+        items[i] = convert_rust_item(it, ctx.git_root)
+      end
+
+      local out = {
+        items = items,
+        total_matched = res.total_matched or #items,
+        total_items = res.total_items or #items,
+        scanning = ctx.loading,
+        has_more = ctx.has_more,
       }
+
+      if ctx.pending_restore_id then
+        local found = false
+        for _, it in ipairs(items) do
+          if it.id == ctx.pending_restore_id then
+            found = true
+            break
+          end
+        end
+        if found or not ctx.loading then
+          out.restore_cursor_id = ctx.pending_restore_id
+          out.restore_cursor_line = ctx.pending_restore_line
+          out.force_preview = true
+          ctx.pending_restore_id = nil
+          ctx.pending_restore_line = nil
+          ctx.pending_force_preview = false
+        end
+      elseif ctx.pending_force_preview and (#items > 0 or not ctx.loading) then
+        out.force_preview = true
+        ctx.pending_force_preview = false
+      end
+
+      ctx.last_response = out
+      return out
+    end,
+
+    on_cursor_moved = function(lnum, total_rendered, ctx, query)
+      ctx.pending_restore_id = nil
+      ctx.pending_restore_line = nil
+      if vim.trim(query or '') ~= '' then
+        return
+      end
+      if total_rendered == 0 or lnum < total_rendered - SCROLL_PREFETCH_MARGIN then
+        return
+      end
+
+      local total_loaded = ctx.total_items or 0
+      local cur_limit = ctx.display_limit or DISPLAY_PAGE_SIZE
+      if cur_limit < total_loaded then
+        ctx.display_limit = math.min(total_loaded, cur_limit + DISPLAY_PAGE_SIZE)
+        if ctx.refresh then
+          ctx.refresh({ preserve_cursor = true, force_preview = false })
+        end
+      elseif ctx.has_more and not ctx.loading and ctx.session_id then
+        local step = ctx.load_step or LOAD_MORE_STEP
+        ctx.display_limit = total_loaded + DISPLAY_PAGE_SIZE
+        local lm = backend.git_log_load_more(ctx.session_id, step)
+        if lm and (lm.started or lm.queued) then
+          ctx.loading = true
+          if ctx.refresh then
+            ctx.refresh({ preserve_cursor = true, force_preview = false })
+          end
+        end
+      end
+    end,
+
+    on_close = function(ctx)
+      if ctx.drilling_down then
+        return
+      end
+      if ctx.session_id then
+        backend.git_log_cancel(ctx.session_id, { only_if_scanning = true })
+      end
     end,
 
     preview = function(item, pctx, cb)
@@ -681,6 +888,7 @@ function M.new()
           fetch_args = { 'diff-tree', '--no-commit-id', '--name-status', '-r', '-z', '--root', '--first-parent', it.hash },
           parent_snapshot = snap,
         })
+        ctx.drilling_down = true
         ui.open(child, { preview_enabled = ctx.get_preview_enabled() })
         return 'keep_open'
       end,
@@ -702,7 +910,7 @@ function M.new()
           target_short = 'WORKTREE'
           fetch_args = { 'diff', '--name-status', '-z', base }
         else
-          local ordered = sort_targets_chronological_oldest_first(targets, ctx)
+          local ordered = sort_targets_chronological_oldest_first(targets)
           base = ordered[1].hash
           target = ordered[2].hash
           base_short = ordered[1].short
@@ -720,6 +928,7 @@ function M.new()
           fetch_args = fetch_args,
           parent_snapshot = snap,
         })
+        ctx.drilling_down = true
         ui.open(child, { preview_enabled = ctx.get_preview_enabled() })
         return 'keep_open'
       end,
@@ -752,22 +961,66 @@ function M.new()
             vim.notify('No origin file to filter by', vim.log.levels.INFO)
             return 'keep_open'
           end
+          if ctx.session_id then
+            backend.git_log_cancel(ctx.session_id, { only_if_scanning = true })
+          end
           ctx.line_range = nil
           ctx.filter_file = not ctx.filter_file
-          reload_log(ctx, true)
+          ctx.display_limit = DISPLAY_PAGE_SIZE
+          ctx.explicit_limit = (ctx.opts and ctx.opts.limit) or nil
+          ctx.last_revision = -1
+          ctx.notified_error = nil
+          ctx.keep_stale_on_reload = false
+          ctx.pending_restore_id = nil
+          ctx.pending_restore_line = nil
+          ctx.pending_force_preview = true
+
+          local opened, err = open_log_session(ctx, { force = false })
+          if opened then
+            ctx.session_id = opened.session_id
+            ctx.branch = opened.branch
+            ctx.prompt = build_log_prompt(ctx)
+            ctx.loading = opened.scanning == true
+            ctx.has_more = opened.has_more == true
+          elseif err and err ~= '' then
+            ctx.loading = false
+            ctx.has_more = false
+            vim.notify('git log failed: ' .. err, vim.log.levels.ERROR)
+          end
+
+          ctx.refresh({ preserve_cursor = false, force_preview = true })
           return 'keep_open'
         end,
       },
 
       load_more = {
         allow_empty = true,
-        desc = 'Load more commits (+100)',
+        desc = 'Load more older commits',
         fn = function(_, ctx)
-          if not ctx.git_root then
+          if not ctx.git_root or not ctx.session_id then
             return 'keep_open'
           end
-          ctx.limit = (ctx.limit or PAGE_SIZE) + PAGE_SIZE
-          reload_log(ctx, true)
+          local step = ctx.load_step or LOAD_MORE_STEP
+          local res, err = backend.git_log_load_more(ctx.session_id, step)
+          if not res then
+            if err and err ~= '' then
+              vim.notify('git log load_more failed: ' .. err, vim.log.levels.ERROR)
+            end
+            return 'keep_open'
+          end
+          if res.already_complete then
+            vim.notify('All commits already loaded (' .. tostring(res.total_items or 0) .. ')', vim.log.levels.INFO)
+            return 'keep_open'
+          end
+          if res.queued then
+            vim.notify('Queued loading +' .. step .. ' older commits', vim.log.levels.INFO)
+            return 'keep_open'
+          end
+          if res.started then
+            ctx.loading = true
+            ctx.display_limit = math.max(ctx.display_limit or DISPLAY_PAGE_SIZE, (res.total_items or 0) + DISPLAY_PAGE_SIZE)
+            ctx.refresh({ preserve_cursor = true, force_preview = false })
+          end
           return 'keep_open'
         end,
       },
@@ -837,7 +1090,7 @@ function M.new()
         if not ctx.git_root then
           return 'keep_open'
         end
-        local ordered = sort_targets_chronological_oldest_first(targets, ctx)
+        local ordered = sort_targets_chronological_oldest_first(targets)
         if #ordered == 0 then
           return 'keep_open'
         end

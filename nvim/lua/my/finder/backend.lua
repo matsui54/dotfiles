@@ -349,4 +349,90 @@ function M.fuzzy_match_list(query, items, opts)
   return { items = out, total_matched = #matched_texts, total_items = #items }
 end
 
+---@param opts table
+---@return table|nil, string|nil
+function M.git_log_open(opts)
+  if not M.init({ quiet = true }) then
+    return nil, load_error or 'native core not loaded'
+  end
+  local mod = load_native()
+  if not mod then
+    return nil, load_error
+  end
+  local ok, res = pcall(mod.git_log_open, opts)
+  if not ok then
+    return nil, tostring(res)
+  end
+  return res, nil
+end
+
+---@param session_id integer
+---@return table|nil, string|nil
+function M.git_log_status(session_id)
+  if not session_id then
+    return nil, 'missing session_id'
+  end
+  local mod = load_native()
+  if not mod then
+    return nil, load_error or 'native core not loaded'
+  end
+  local ok, res = pcall(mod.git_log_status, session_id)
+  if not ok then
+    return nil, tostring(res)
+  end
+  return res, nil
+end
+
+---@param session_id integer
+---@param query string
+---@param opts? { limit?: integer, offset?: integer }
+---@return table|nil, string|nil
+function M.git_log_search(session_id, query, opts)
+  if not session_id then
+    return nil, 'missing session_id'
+  end
+  local mod = load_native()
+  if not mod then
+    return nil, load_error or 'native core not loaded'
+  end
+  local ok, res = pcall(mod.git_log_search, session_id, query or '', opts or {})
+  if not ok then
+    return nil, tostring(res)
+  end
+  return res, nil
+end
+
+---@param session_id integer
+---@param add_count? integer
+---@return table|nil, string|nil
+function M.git_log_load_more(session_id, add_count)
+  if not session_id then
+    return nil, 'missing session_id'
+  end
+  local mod = load_native()
+  if not mod then
+    return nil, load_error or 'native core not loaded'
+  end
+  local ok, res = pcall(mod.git_log_load_more, session_id, add_count)
+  if not ok then
+    return nil, tostring(res)
+  end
+  return res, nil
+end
+
+---@param session_id integer|nil
+---@param opts? { only_if_scanning?: boolean }
+---@return boolean
+function M.git_log_cancel(session_id, opts)
+  if not session_id then
+    return false
+  end
+  local mod = load_native()
+  if not mod then
+    return false
+  end
+  local ok, res = pcall(mod.git_log_cancel, session_id, opts)
+  return ok and res == true
+end
+
 return M

@@ -76,6 +76,24 @@ function M.run_git_sync(root, git_args, opts)
   return vim.system(cmd, { text = text }):wait()
 end
 
+---@param root string|nil
+---@param git_args string[]
+---@param opts? { text?: boolean, on_stdout?: fun(err: string|nil, data: string|nil), on_exit?: fun(res: vim.SystemCompleted) }
+---@return vim.SystemObj
+function M.stream_git(root, git_args, opts)
+  local cmd = { 'git' }
+  if root and root ~= '' then
+    vim.list_extend(cmd, { '-C', root })
+  end
+  vim.list_extend(cmd, git_args)
+  local text = not (opts and opts.text == false)
+  -- Note: on_stdout and on_exit execute in libuv fast-event context; callers must schedule main-loop work.
+  return vim.system(cmd, {
+    text = text,
+    stdout = opts and opts.on_stdout or nil,
+  }, opts and opts.on_exit or nil)
+end
+
 ---@param ctx table
 ---@param cmds string[][]
 ---@param extra_note? string

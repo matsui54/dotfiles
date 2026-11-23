@@ -15,6 +15,8 @@ use fff_search::{
 use frizbee::{Config as FrizbeeConfig, Matcher as FrizbeeMatcher, Pattern as FrizbeePattern};
 use mlua::prelude::*;
 
+mod git_log;
+
 const DEFAULT_LIMIT: usize = 200;
 const DEFAULT_MAX_MATCHES_PER_FILE: usize = 50;
 
@@ -725,6 +727,137 @@ fn lua_fuzzy_match_list(
     Ok(tbl)
 }
 
+fn lua_git_log_open(lua: &Lua, opts: LuaTable) -> LuaResult<LuaTable> {
+    let root: String = opts.get("root")?;
+    let filter_file = opts
+        .get::<Option<String>>("filter_file")?
+        .filter(|s| !s.is_empty());
+    let line_range = match opts.get::<Option<LuaTable>>("line_range")? {
+        Some(t) => {
+            let l1 = t.get::<Option<u32>>(1)?;
+            let l2 = t.get::<Option<u32>>(2)?;
+            match (l1, l2) {
+                (Some(a), Some(b)) => Some((a, b)),
+                _ => None,
+            }
+        }
+        None => None,
+    };
+    let explicit_limit = opts.get::<Option<usize>>("limit")?;
+    let force = opts.get::<Option<bool>>("force")?.unwrap_or(false);
+
+    let out = git_log::open_session(&root, filter_file, line_range, explicit_limit, force)
+        .map_err(LuaError::external)?;
+
+    let tbl = lua.create_table()?;
+    tbl.set("session_id", out.session_id)?;
+    tbl.set("branch", out.branch)?;
+    tbl.set("head_oid", out.head_oid)?;
+    tbl.set("cached", out.cached)?;
+    tbl.set("scanning", out.scanning)?;
+    tbl.set("total_items", out.total_items)?;
+    tbl.set("has_more", out.has_more)?;
+    tbl.set("revision", out.revision)?;
+    Ok(tbl)
+}
+
+fn lua_git_log_status(lua: &Lua, session_id: u64) -> LuaResult<LuaTable> {
+    let st = git_log::session_status(session_id).map_err(LuaError::external)?;
+    let tbl = lua.create_table()?;
+    tbl.set("exists", st.exists)?;
+    tbl.set("scanning", st.scanning)?;
+    tbl.set("total_items", st.total_items)?;
+    tbl.set("has_more", st.has_more)?;
+    tbl.set("revision", st.revision)?;
+    if let Some(err) = st.error {
+        tbl.set("error", err)?;
+    }
+    Ok(tbl)
+}
+
+fn lua_git_log_search(
+    lua: &Lua,
+    (session_id, query, opts): (u64, String, Option<LuaTable>),
+) -> LuaResult<LuaTable> {
+    let mut limit = DEFAULT_LIMIT;
+    let mut offset = 0usize;
+    if let Some(t) = opts {
+        if let Some(l) = t.get::<Option<usize>>("limit")? {
+            limit = l.max(1);
+        }
+        if let Some(o) = t.get::<Option<usize>>("offset")? {
+            offset = o;
+        }
+    }
+
+    let out = git_log::search_session(session_id, &query, limit, offset)
+        .map_err(LuaError::external)?;
+
+    let tbl = lua.create_table()?;
+    let lua_items = lua.create_table_with_capacity(out.items.len(), 0)?;
+    for (idx, item) in out.items.into_iter().enumerate() {
+        let row = lua.create_table()?;
+        row.set("order_idx", item.order_idx)?;
+        row.set("hash", item.hash.as_ref())?;
+        row.set("short", item.short.as_ref())?;
+        row.set("display", item.display.as_ref())?;
+        row.set("short_len", item.short_len)?;
+        row.set("date_start", item.date_start)?;
+        row.set("date_end", item.date_end)?;
+        row.set("author_start", item.author_start)?;
+        row.set("author_end", item.author_end)?;
+        row.set("refs_start", item.refs_start)?;
+        row.set("refs_end", item.refs_end)?;
+        row.set("has_parent", item.has_parent)?;
+        row.set("score", item.score)?;
+
+        let indices_tbl = lua.create_table_with_capacity(item.match_indices.len(), 0)?;
+        for (i, pos) in item.match_indices.into_iter().enumerate() {
+            indices_tbl.set(i + 1, pos)?;
+        }
+        row.set("match_indices", indices_tbl)?;
+        lua_items.set(idx + 1, row)?;
+    }
+
+    tbl.set("exists", out.exists)?;
+    tbl.set("items", lua_items)?;
+    tbl.set("total_matched", out.total_matched)?;
+    tbl.set("total_items", out.total_items)?;
+    tbl.set("scanning", out.scanning)?;
+    tbl.set("has_more", out.has_more)?;
+    tbl.set("revision", out.revision)?;
+    if let Some(err) = out.error {
+        tbl.set("error", err)?;
+    }
+    Ok(tbl)
+}
+
+fn lua_git_log_load_more(
+    lua: &Lua,
+    (session_id, add_count): (u64, Option<usize>),
+) -> LuaResult<LuaTable> {
+    let out = git_log::load_more(session_id, add_count.unwrap_or(git_log::DEFAULT_MAX_COMMITS))
+        .map_err(LuaError::external)?;
+    let tbl = lua.create_table()?;
+    tbl.set("started", out.started)?;
+    tbl.set("queued", out.queued)?;
+    tbl.set("already_complete", out.already_complete)?;
+    tbl.set("total_items", out.total_items)?;
+    tbl.set("max_commits", out.max_commits)?;
+    Ok(tbl)
+}
+
+fn lua_git_log_cancel(
+    _lua: &Lua,
+    (session_id, opts): (u64, Option<LuaTable>),
+) -> LuaResult<bool> {
+    let only_if_scanning = match opts {
+        Some(t) => t.get::<Option<bool>>("only_if_scanning")?.unwrap_or(false),
+        None => false,
+    };
+    git_log::cancel_session(session_id, only_if_scanning).map_err(LuaError::external)
+}
+
 #[mlua::lua_module]
 fn my_finder_native(lua: &Lua) -> LuaResult<LuaTable> {
     let exports = lua.create_table()?;
@@ -739,6 +872,14 @@ fn my_finder_native(lua: &Lua) -> LuaResult<LuaTable> {
         "fuzzy_match_list",
         lua.create_function(lua_fuzzy_match_list)?,
     )?;
+    exports.set("git_log_open", lua.create_function(lua_git_log_open)?)?;
+    exports.set("git_log_status", lua.create_function(lua_git_log_status)?)?;
+    exports.set("git_log_search", lua.create_function(lua_git_log_search)?)?;
+    exports.set(
+        "git_log_load_more",
+        lua.create_function(lua_git_log_load_more)?,
+    )?;
+    exports.set("git_log_cancel", lua.create_function(lua_git_log_cancel)?)?;
     Ok(exports)
 }
 
