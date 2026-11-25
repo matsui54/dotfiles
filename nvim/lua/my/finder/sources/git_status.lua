@@ -509,12 +509,9 @@ function M.new()
               }
             elseif src.section ~= 'staged' and not seen_unstaged then
               seen_unstaged = true
-              local header = build_section_header('Unstaged', unstaged_count, 'MyFinderGitUnstagedHeader')
-              if #items > 0 then
-                virt_lines_above = { { { '' } }, header }
-              else
-                virt_lines_above = { header }
-              end
+              virt_lines_above = {
+                build_section_header('Unstaged', unstaged_count, 'MyFinderGitUnstagedHeader'),
+              }
             end
 
             items[#items + 1] = vim.tbl_extend('force', src, {

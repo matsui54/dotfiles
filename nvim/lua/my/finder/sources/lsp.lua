@@ -72,6 +72,177 @@ local function make_static_source(name, title, prompt, entries, match_texts)
   }
 end
 
+---@param s string
+---@param pos integer
+---@return integer
+local function utf8_char_len(s, pos)
+  local b = s:byte(pos)
+  if not b then
+    return 1
+  elseif b < 0x80 then
+    return 1
+  elseif b < 0xE0 then
+    return 2
+  elseif b < 0xF0 then
+    return 3
+  end
+  return 4
+end
+
+---@param rel_path string
+---@param count integer
+---@param matched_bytes? table<integer, boolean>
+---@return table
+local function build_file_header(rel_path, count, matched_bytes)
+  local chunks = { { '── ', 'MyFinderSectionRule' } }
+  if matched_bytes and next(matched_bytes) ~= nil then
+    local pos = 1
+    local cur_text = {}
+    local cur_hl = nil
+    local function flush()
+      if #cur_text > 0 then
+        chunks[#chunks + 1] = { table.concat(cur_text), cur_hl }
+        cur_text = {}
+      end
+    end
+
+    while pos <= #rel_path do
+      local clen = math.min(utf8_char_len(rel_path, pos), #rel_path - pos + 1)
+      local is_match = false
+      for b = pos - 1, pos + clen - 2 do
+        if matched_bytes[b] then
+          is_match = true
+          break
+        end
+      end
+      local hl = is_match and 'MyFinderMatch' or 'MyFinderFileHeader'
+      if hl ~= cur_hl then
+        flush()
+        cur_hl = hl
+      end
+      cur_text[#cur_text + 1] = rel_path:sub(pos, pos + clen - 1)
+      pos = pos + clen
+    end
+    flush()
+  else
+    chunks[#chunks + 1] = { rel_path, 'MyFinderFileHeader' }
+  end
+
+  local count_str = string.format(' (%d) ', count)
+  local rule_len = math.max(4, 44 - #rel_path - #count_str)
+  chunks[#chunks + 1] = { count_str, 'MyFinderCounter' }
+  chunks[#chunks + 1] = { string.rep('─', rule_len), 'MyFinderSectionRule' }
+  return chunks
+end
+
+---@param name string
+---@param title string
+---@param prompt string
+---@param entries table[]
+---@param match_texts string[]
+---@return table
+local function make_location_source(name, title, prompt, entries, match_texts)
+  return {
+    name = name,
+    title = title,
+    prompt = prompt,
+    show_preview = true,
+    allow_preview = true,
+
+    prepare = function()
+      return {
+        entries = entries,
+        match_texts = match_texts,
+      }
+    end,
+
+    search = function(query, ctx)
+      local res = backend.fuzzy_match_list(query, ctx.match_texts or {}, { limit = 200 })
+      local has_query = query ~= nil and vim.trim(query) ~= ''
+      local groups = {}
+      local by_path = {}
+
+      for _, m in ipairs(res.items or {}) do
+        local src = ctx.entries[m.idx]
+        if src then
+          local key = src.path or src.rel_path or ''
+          local g = by_path[key]
+          if not g then
+            g = {
+              rel_path = src.rel_path or '',
+              header_matched = {},
+              entries = {},
+            }
+            by_path[key] = g
+            groups[#groups + 1] = g
+          end
+
+          local code_match_indices = {}
+          if has_query and m.match_indices then
+            local path_len = #src.rel_path
+            local prefix_len = src.path_prefix_len or (path_len + 1)
+            for _, b in ipairs(m.match_indices) do
+              if b < path_len then
+                g.header_matched[b] = true
+              elseif b >= prefix_len then
+                code_match_indices[#code_match_indices + 1] = b - prefix_len
+              end
+            end
+          end
+
+          g.entries[#g.entries + 1] = {
+            src = src,
+            code_match_indices = code_match_indices,
+          }
+        end
+      end
+
+      local items = {}
+      for _, group in ipairs(groups) do
+        local max_loc_w = 0
+        for _, wrap in ipairs(group.entries) do
+          local src = wrap.src
+          local loc_raw = string.format('%d:%d', src.lnum, (src.col or 0) + 1)
+          if #loc_raw > max_loc_w then
+            max_loc_w = #loc_raw
+          end
+        end
+
+        for idx, wrap in ipairs(group.entries) do
+          local src = wrap.src
+          local loc_raw = string.format('%d:%d', src.lnum, (src.col or 0) + 1)
+          local loc_str = string.format('%' .. max_loc_w .. 's  ', loc_raw)
+          local display = loc_str .. (src.trimmed or '')
+
+          local virt_lines_above = nil
+          if idx == 1 then
+            virt_lines_above = {
+              build_file_header(group.rel_path, #group.entries, group.header_matched),
+            }
+          end
+
+          items[#items + 1] = vim.tbl_extend('force', src, {
+            display = display,
+            highlights = {
+              { 0, #loc_str, 'Comment' },
+            },
+            match_offset = #loc_str,
+            match_indices = (#wrap.code_match_indices > 0) and wrap.code_match_indices or nil,
+            virt_lines_above = virt_lines_above,
+          })
+        end
+      end
+
+      return {
+        items = items,
+        total_matched = res.total_matched or #items,
+        total_items = res.total_items or #ctx.entries,
+        scanning = false,
+      }
+    end,
+  }
+end
+
 ---@param method string
 ---@param title string
 ---@param prompt string
@@ -102,7 +273,7 @@ local function open_location_picker(method, title, prompt, opts)
       actions.open_files({ entries[1] }, 'edit', { origin_win = origin_win })
       return
     end
-    local source = make_static_source('lsp_' .. title:lower():gsub('%s+', '_'), title, prompt, entries, match_texts)
+    local source = make_location_source('lsp_' .. title:lower():gsub('%s+', '_'), title, prompt, entries, match_texts)
     ui.open(source, opts)
   end
 
@@ -137,7 +308,7 @@ local function open_location_picker(method, title, prompt, opts)
               local rel_path = to_rel_path(cwd, path)
               local raw_text = (it.text or ''):gsub('[\r\n]+', ' ')
               local trimmed = raw_text:gsub('^%s+', '')
-              local loc_str = string.format('%s:%d:%d: ', rel_path, lnum, col_0 + 1)
+              local loc_str = string.format('%d:%d  ', lnum, col_0 + 1)
               local display = loc_str .. trimmed
 
               local ranges = nil
@@ -152,15 +323,16 @@ local function open_location_picker(method, title, prompt, opts)
                 lnum = lnum,
                 col = col_0,
                 text = raw_text,
+                trimmed = trimmed,
+                path_prefix_len = #rel_path + 1,
                 match_ranges = ranges,
                 display = display,
                 highlights = {
-                  { 0, #rel_path, 'Identifier' },
-                  { #rel_path, #loc_str, 'Comment' },
+                  { 0, #loc_str, 'Comment' },
                 },
-                match_offset = 0,
+                match_offset = #loc_str,
               }
-              match_texts[#match_texts + 1] = display
+              match_texts[#match_texts + 1] = rel_path .. ' ' .. trimmed
             end
           end
         end

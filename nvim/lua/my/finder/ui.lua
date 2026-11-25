@@ -26,11 +26,13 @@ local function setup_highlights()
     vim.api.nvim_set_hl(0, 'MyFinderGitUnstagedBadge', { fg = '#9a4600', bg = '#ffe2bf', bold = true, default = true })
     vim.api.nvim_set_hl(0, 'MyFinderGitStagedHeader', { fg = '#15732a', bold = true, default = true })
     vim.api.nvim_set_hl(0, 'MyFinderGitUnstagedHeader', { fg = '#b85300', bold = true, default = true })
+    vim.api.nvim_set_hl(0, 'MyFinderFileHeader', { fg = '#1b4f9c', bold = true, default = true })
   else
     vim.api.nvim_set_hl(0, 'MyFinderGitStagedBadge', { fg = '#c8ffc8', bg = '#1e4620', bold = true, default = true })
     vim.api.nvim_set_hl(0, 'MyFinderGitUnstagedBadge', { fg = '#ffd8a8', bg = '#5c330a', bold = true, default = true })
     vim.api.nvim_set_hl(0, 'MyFinderGitStagedHeader', { fg = '#8ce99a', bold = true, default = true })
     vim.api.nvim_set_hl(0, 'MyFinderGitUnstagedHeader', { fg = '#ffa94d', bold = true, default = true })
+    vim.api.nvim_set_hl(0, 'MyFinderFileHeader', { fg = '#74c0fc', bold = true, default = true })
   end
   vim.api.nvim_set_hl(0, 'MyFinderSectionRule', { link = 'Comment', default = true })
 end
@@ -171,8 +173,12 @@ local function ensure_top_virt_lines()
     local want = (view.topline == 1) and #vlines or 1
     if view.topfill < want then
       local win_h = vim.api.nvim_win_get_height(win)
-      local cursor_offset = math.max(0, view.lnum - view.topline)
-      local max_fill = math.max(0, win_h - 1 - cursor_offset)
+      local max_fill
+      if view.lnum <= view.topline then
+        max_fill = math.max(0, win_h - 1)
+      else
+        max_fill = math.max(0, win_h - vim.fn.winline() + view.topfill)
+      end
       local fill = math.min(want, max_fill)
       if fill > view.topfill then
         vim.fn.winrestview({ topfill = fill })

@@ -10,6 +10,20 @@ local function normalize_dir(dir)
   return p
 end
 
+---@param rel_path string
+---@param count integer
+---@return table
+local function build_file_header(rel_path, count)
+  local count_str = string.format(' (%d) ', count)
+  local rule_len = math.max(4, 44 - #rel_path - #count_str)
+  return {
+    { '── ', 'MyFinderSectionRule' },
+    { rel_path, 'MyFinderFileHeader' },
+    { count_str, 'MyFinderCounter' },
+    { string.rep('─', rule_len), 'MyFinderSectionRule' },
+  }
+end
+
 function M.new()
   return {
     name = 'grep',
@@ -65,40 +79,72 @@ function M.new()
         }
       end
 
-      local items = {}
+      local groups = {}
+      local by_path = {}
       for _, it in ipairs(res.items or {}) do
-        local raw_text = it.text or ''
-        local trimmed = raw_text:gsub('^%s+', '')
-        local trim_len = #raw_text - #trimmed
-        local loc_str = string.format('%s:%d:%d: ', it.rel_path, it.lnum, (it.col or 0) + 1)
-        local display = loc_str .. trimmed
+        local key = it.path or it.rel_path or ''
+        local g = by_path[key]
+        if not g then
+          g = {
+            rel_path = it.rel_path or '',
+            items = {},
+          }
+          by_path[key] = g
+          groups[#groups + 1] = g
+        end
+        g.items[#g.items + 1] = it
+      end
 
-        local hls = {
-          { 0, #it.rel_path, 'Identifier' },
-          { #it.rel_path, #loc_str, 'Comment' },
-        }
-
-        if it.match_ranges then
-          for _, r in ipairs(it.match_ranges) do
-            local s = #loc_str + math.max(0, (r[1] or 0) - trim_len)
-            local e = #loc_str + math.max(0, (r[2] or 0) - trim_len)
-            if e > s and e <= #display then
-              table.insert(hls, { s, e, 'MyFinderMatch' })
-            end
+      local items = {}
+      for _, group in ipairs(groups) do
+        local max_loc_w = 0
+        for _, it in ipairs(group.items) do
+          local loc_raw = string.format('%d:%d', it.lnum, (it.col or 0) + 1)
+          if #loc_raw > max_loc_w then
+            max_loc_w = #loc_raw
           end
         end
 
-        items[#items + 1] = {
-          id = string.format('%s:%d:%d', it.path, it.lnum, it.col or 0),
-          path = it.path,
-          rel_path = it.rel_path,
-          lnum = it.lnum,
-          col = it.col or 0,
-          text = raw_text,
-          match_ranges = it.match_ranges,
-          display = display,
-          highlights = hls,
-        }
+        for idx, it in ipairs(group.items) do
+          local raw_text = it.text or ''
+          local trimmed = raw_text:gsub('^%s+', '')
+          local trim_len = #raw_text - #trimmed
+          local loc_raw = string.format('%d:%d', it.lnum, (it.col or 0) + 1)
+          local loc_str = string.format('%' .. max_loc_w .. 's  ', loc_raw)
+          local display = loc_str .. trimmed
+
+          local hls = {
+            { 0, #loc_str, 'Comment' },
+          }
+
+          if it.match_ranges then
+            for _, r in ipairs(it.match_ranges) do
+              local s = #loc_str + math.max(0, (r[1] or 0) - trim_len)
+              local e = #loc_str + math.max(0, (r[2] or 0) - trim_len)
+              if e > s and e <= #display then
+                table.insert(hls, { s, e, 'MyFinderMatch' })
+              end
+            end
+          end
+
+          local virt_lines_above = nil
+          if idx == 1 then
+            virt_lines_above = { build_file_header(group.rel_path, #group.items) }
+          end
+
+          items[#items + 1] = {
+            id = string.format('%s:%d:%d', it.path, it.lnum, it.col or 0),
+            path = it.path,
+            rel_path = it.rel_path,
+            lnum = it.lnum,
+            col = it.col or 0,
+            text = raw_text,
+            match_ranges = it.match_ranges,
+            display = display,
+            highlights = hls,
+            virt_lines_above = virt_lines_above,
+          }
+        end
       end
 
       return {
