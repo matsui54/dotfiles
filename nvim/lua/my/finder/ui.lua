@@ -20,6 +20,19 @@ local function setup_highlights()
   vim.api.nvim_set_hl(0, 'MyFinderHint', { link = 'Comment', default = true })
   vim.api.nvim_set_hl(0, 'MyFinderGitDirty', { link = 'Changed', default = true })
   vim.api.nvim_set_hl(0, 'MyFinderGitNew', { link = 'Added', default = true })
+
+  if vim.o.background == 'light' then
+    vim.api.nvim_set_hl(0, 'MyFinderGitStagedBadge', { fg = '#0f5c1e', bg = '#c8ffc8', bold = true, default = true })
+    vim.api.nvim_set_hl(0, 'MyFinderGitUnstagedBadge', { fg = '#9a4600', bg = '#ffe2bf', bold = true, default = true })
+    vim.api.nvim_set_hl(0, 'MyFinderGitStagedHeader', { fg = '#15732a', bold = true, default = true })
+    vim.api.nvim_set_hl(0, 'MyFinderGitUnstagedHeader', { fg = '#b85300', bold = true, default = true })
+  else
+    vim.api.nvim_set_hl(0, 'MyFinderGitStagedBadge', { fg = '#c8ffc8', bg = '#1e4620', bold = true, default = true })
+    vim.api.nvim_set_hl(0, 'MyFinderGitUnstagedBadge', { fg = '#ffd8a8', bg = '#5c330a', bold = true, default = true })
+    vim.api.nvim_set_hl(0, 'MyFinderGitStagedHeader', { fg = '#8ce99a', bold = true, default = true })
+    vim.api.nvim_set_hl(0, 'MyFinderGitUnstagedHeader', { fg = '#ffa94d', bold = true, default = true })
+  end
+  vim.api.nvim_set_hl(0, 'MyFinderSectionRule', { link = 'Comment', default = true })
 end
 
 local state = {
@@ -141,6 +154,33 @@ local function update_filter_virt_text()
   })
 end
 
+local function ensure_top_virt_lines()
+  local win = state.list_win
+  if not win or not vim.api.nvim_win_is_valid(win) then
+    return
+  end
+  vim.api.nvim_win_call(win, function()
+    local view = vim.fn.winsaveview()
+    local top_item = state.items[view.topline]
+    local vlines = top_item and top_item.virt_lines_above
+    if not vlines or #vlines == 0 then
+      return
+    end
+    -- Show all virt_lines above line 1; when scrolled to a later section's first item,
+    -- show only the header line (last virtual line) so there's no leading blank line at the top edge.
+    local want = (view.topline == 1) and #vlines or 1
+    if view.topfill < want then
+      local win_h = vim.api.nvim_win_get_height(win)
+      local cursor_offset = math.max(0, view.lnum - view.topline)
+      local max_fill = math.max(0, win_h - 1 - cursor_offset)
+      local fill = math.min(want, max_fill)
+      if fill > view.topfill then
+        vim.fn.winrestview({ topfill = fill })
+      end
+    end
+  end)
+end
+
 local function render_list(preserve_cursor)
   local buf = state.list_buf
   local win = state.list_win
@@ -159,6 +199,7 @@ local function render_list(preserve_cursor)
 
   local lines = {}
   local highlights = {}
+  local virt_lines_entries = {}
 
   if #state.items == 0 then
     local hint = nil
@@ -181,6 +222,10 @@ local function render_list(preserve_cursor)
       local line_str = prefix .. text
       lines[i] = line_str
       local row = i - 1
+
+      if item.virt_lines_above and #item.virt_lines_above > 0 then
+        table.insert(virt_lines_entries, { row, item.virt_lines_above })
+      end
 
       if is_marked then
         table.insert(highlights, { row, 0, 1, 'MyFinderMark' })
@@ -221,6 +266,12 @@ local function render_list(preserve_cursor)
       priority = 150,
     })
   end
+  for _, v in ipairs(virt_lines_entries) do
+    pcall(vim.api.nvim_buf_set_extmark, buf, ns_list, v[1], 0, {
+      virt_lines = v[2],
+      virt_lines_above = true,
+    })
+  end
 
   if win and vim.api.nvim_win_is_valid(win) then
     local target_line = 1
@@ -240,6 +291,7 @@ local function render_list(preserve_cursor)
       end
     end
     pcall(vim.api.nvim_win_set_cursor, win, { target_line, 0 })
+    ensure_top_virt_lines()
   end
 
   update_filter_virt_text()
@@ -334,6 +386,7 @@ local function apply_search_results(res, opts)
     if (found or restore_line ~= nil) and state.list_win and vim.api.nvim_win_is_valid(state.list_win) and #state.items > 0 then
       target_line = math.max(1, math.min(target_line, #state.items))
       pcall(vim.api.nvim_win_set_cursor, state.list_win, { target_line, 0 })
+      ensure_top_virt_lines()
     end
   end
 
@@ -1084,6 +1137,7 @@ local function setup_autocmds()
       if not state.active or state.closing then
         return
       end
+      ensure_top_virt_lines()
       sync_preview({})
       if state.source and type(state.source.on_cursor_moved) == 'function'
         and state.list_win and vim.api.nvim_win_is_valid(state.list_win) then

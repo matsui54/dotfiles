@@ -79,22 +79,15 @@ local function parse_status(raw, root)
 
   local raw_entries = vim.list_extend(staged, unstaged)
   local entries = {}
-  local match_texts = {}
+  local status_items = {}
 
   for _, e in ipairs(raw_entries) do
-    local badge = (e.section == 'staged') and '[S]' or '[U]'
+    local badge = (e.section == 'staged') and ' S ' or ' U '
     local code_str = string.format('%-2s', e.code)
     local display_path = e.orig_path and (e.orig_path .. ' -> ' .. e.rel_path) or e.rel_path
     local display = string.format('%s %s %s', badge, code_str, display_path)
 
-    local badge_hl
-    if e.section == 'staged' then
-      badge_hl = 'Added'
-    elseif e.code == '??' then
-      badge_hl = 'Comment'
-    else
-      badge_hl = 'Changed'
-    end
+    local badge_hl = (e.section == 'staged') and 'MyFinderGitStagedBadge' or 'MyFinderGitUnstagedBadge'
 
     local hls = {
       { 0, 3, badge_hl },
@@ -114,10 +107,15 @@ local function parse_status(raw, root)
       highlights = hls,
       match_offset = 7,
     }
-    match_texts[#match_texts + 1] = display_path
+    status_items[#status_items + 1] = {
+      section = e.section,
+      code = e.code,
+      rel_path = e.rel_path,
+      match_text = display_path,
+    }
   end
 
-  return entries, match_texts
+  return entries, status_items
 end
 
 ---@param ctx table
@@ -156,9 +154,26 @@ local function fetch_status(ctx, on_done)
       return
     end
     if res.code == 0 and res.stdout then
-      ctx.entries, ctx.match_texts = parse_status(res.stdout, ctx.git_root)
+      local entries, status_items = parse_status(res.stdout, ctx.git_root)
+      if #entries > 0 then
+        local ranked = backend.search_git_status(ctx.git_root, '', status_items, {
+          limit = 0,
+          current_file = ctx.current_file,
+        })
+        if ranked and ranked.items and #ranked.items == #entries then
+          local sorted_entries = {}
+          local sorted_status_items = {}
+          for _, m in ipairs(ranked.items) do
+            sorted_entries[#sorted_entries + 1] = entries[m.idx]
+            sorted_status_items[#sorted_status_items + 1] = status_items[m.idx]
+          end
+          entries = sorted_entries
+          status_items = sorted_status_items
+        end
+      end
+      ctx.entries, ctx.status_items = entries, status_items
     else
-      ctx.entries, ctx.match_texts = {}, {}
+      ctx.entries, ctx.status_items = {}, {}
       local msg = git_util.trim_output(res)
       if msg ~= '' then
         vim.notify('git status failed: ' .. msg, vim.log.levels.ERROR)
@@ -406,6 +421,20 @@ local function run_commit_and_reopen(root, extra_args)
   end
 end
 
+---@param label string
+---@param count integer
+---@param header_hl string
+---@return table
+local function build_section_header(label, count, header_hl)
+  local title = string.format(' %s (%d) ', label, count)
+  local rule_len = math.max(4, 42 - #title)
+  return {
+    { '──', 'MyFinderSectionRule' },
+    { title, header_hl },
+    { string.rep('─', rule_len), 'MyFinderSectionRule' },
+  }
+end
+
 function M.new()
   return {
     name = 'git_status',
@@ -418,11 +447,20 @@ function M.new()
 
     prepare = function(ctx, opts)
       local root = (opts and opts.git_root) or git_util.find_git_root(ctx.origin_path)
+      local current_file = nil
+      if root and ctx.origin_path and ctx.origin_path ~= '' then
+        local norm_origin = vim.fs.normalize(ctx.origin_path)
+        local norm_root = vim.fs.normalize(root)
+        if norm_origin:sub(1, #norm_root + 1) == norm_root .. '/' then
+          current_file = norm_origin:sub(#norm_root + 2)
+        end
+      end
       return {
         git_root = root,
+        current_file = current_file,
         branch = nil,
         entries = nil,
-        match_texts = nil,
+        status_items = nil,
         loading = root ~= nil,
         fetch_gen = 0,
       }
@@ -439,13 +477,49 @@ function M.new()
       end
 
       local function build_response()
-        local res = backend.fuzzy_match_list(query, ctx.match_texts or {}, { limit = 500 })
-        local items = {}
-        for _, m in ipairs(res.items or {}) do
+        local res = backend.search_git_status(ctx.git_root, query, ctx.status_items or {}, {
+          limit = 500,
+          current_file = ctx.current_file,
+        })
+        local matched = res.items or {}
+        local staged_count = 0
+        local unstaged_count = 0
+        for _, m in ipairs(matched) do
           local src = ctx.entries[m.idx]
           if src then
+            if src.section == 'staged' then
+              staged_count = staged_count + 1
+            else
+              unstaged_count = unstaged_count + 1
+            end
+          end
+        end
+
+        local items = {}
+        local seen_staged = false
+        local seen_unstaged = false
+        for _, m in ipairs(matched) do
+          local src = ctx.entries[m.idx]
+          if src then
+            local virt_lines_above = nil
+            if src.section == 'staged' and not seen_staged then
+              seen_staged = true
+              virt_lines_above = {
+                build_section_header('Staged', staged_count, 'MyFinderGitStagedHeader'),
+              }
+            elseif src.section ~= 'staged' and not seen_unstaged then
+              seen_unstaged = true
+              local header = build_section_header('Unstaged', unstaged_count, 'MyFinderGitUnstagedHeader')
+              if #items > 0 then
+                virt_lines_above = { { { '' } }, header }
+              else
+                virt_lines_above = { header }
+              end
+            end
+
             items[#items + 1] = vim.tbl_extend('force', src, {
               match_indices = m.match_indices,
+              virt_lines_above = virt_lines_above,
             })
           end
         end

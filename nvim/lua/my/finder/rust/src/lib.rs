@@ -16,6 +16,7 @@ use frizbee::{Config as FrizbeeConfig, Matcher as FrizbeeMatcher, Pattern as Fri
 use mlua::prelude::*;
 
 mod git_log;
+mod git_status;
 
 const DEFAULT_LIMIT: usize = 200;
 const DEFAULT_MAX_MATCHES_PER_FILE: usize = 50;
@@ -858,6 +859,70 @@ fn lua_git_log_cancel(
     git_log::cancel_session(session_id, only_if_scanning).map_err(LuaError::external)
 }
 
+fn lua_search_git_status(
+    lua: &Lua,
+    (git_root, query, entries_tbl, opts): (String, String, LuaTable, Option<LuaTable>),
+) -> LuaResult<LuaTable> {
+    let mut limit = 500usize;
+    let mut current_file: Option<String> = None;
+    if let Some(t) = opts {
+        if let Some(l) = t.get::<Option<usize>>("limit")? {
+            limit = l;
+        }
+        current_file = t.get::<Option<String>>("current_file")?;
+    }
+
+    let len = entries_tbl.raw_len();
+    let mut entries = Vec::with_capacity(len);
+    for row in entries_tbl.sequence_values::<LuaTable>() {
+        let row = row?;
+        let section_str: Option<String> = row.get("section")?;
+        let section = match section_str.as_deref() {
+            Some("staged") => 0u8,
+            _ => 1u8,
+        };
+        let code: String = row.get::<Option<String>>("code")?.unwrap_or_default();
+        let rel_path: String = row.get::<Option<String>>("rel_path")?.unwrap_or_default();
+        let match_text = row
+            .get::<Option<String>>("match_text")?
+            .unwrap_or_else(|| rel_path.clone());
+        entries.push(git_status::GitStatusEntryIn {
+            section,
+            code,
+            rel_path,
+            match_text,
+        });
+    }
+
+    let out = git_status::search_git_status_impl(
+        &git_root,
+        &query,
+        &entries,
+        limit,
+        current_file.as_deref(),
+    )
+    .map_err(LuaError::external)?;
+
+    let tbl = lua.create_table()?;
+    let lua_items = lua.create_table_with_capacity(out.items.len(), 0)?;
+    for (idx, item) in out.items.into_iter().enumerate() {
+        let row = lua.create_table()?;
+        row.set("idx", item.idx)?;
+        row.set("score", item.score)?;
+        let indices_tbl = lua.create_table_with_capacity(item.match_indices.len(), 0)?;
+        for (i, pos) in item.match_indices.into_iter().enumerate() {
+            indices_tbl.set(i + 1, pos)?;
+        }
+        row.set("match_indices", indices_tbl)?;
+        lua_items.set(idx + 1, row)?;
+    }
+
+    tbl.set("items", lua_items)?;
+    tbl.set("total_matched", out.total_matched)?;
+    tbl.set("total_items", out.total_items)?;
+    Ok(tbl)
+}
+
 #[mlua::lua_module]
 fn my_finder_native(lua: &Lua) -> LuaResult<LuaTable> {
     let exports = lua.create_table()?;
@@ -871,6 +936,10 @@ fn my_finder_native(lua: &Lua) -> LuaResult<LuaTable> {
     exports.set(
         "fuzzy_match_list",
         lua.create_function(lua_fuzzy_match_list)?,
+    )?;
+    exports.set(
+        "search_git_status",
+        lua.create_function(lua_search_git_status)?,
     )?;
     exports.set("git_log_open", lua.create_function(lua_git_log_open)?)?;
     exports.set("git_log_status", lua.create_function(lua_git_log_status)?)?;

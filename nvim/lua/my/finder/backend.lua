@@ -349,6 +349,87 @@ function M.fuzzy_match_list(query, items, opts)
   return { items = out, total_matched = #matched_texts, total_items = #items }
 end
 
+---@param git_root string
+---@param query string
+---@param items { section?: string, code?: string, rel_path?: string, match_text?: string }[]
+---@param opts? { limit?: integer, current_file?: string }
+---@return { items: { idx: integer, score: integer, match_indices: integer[] }[], total_matched: integer, total_items: integer }
+function M.search_git_status(git_root, query, items, opts)
+  opts = opts or {}
+  items = items or {}
+  local limit = opts.limit
+  if limit == nil then
+    limit = 500
+  end
+
+  M.init({ quiet = true })
+  local mod = load_native()
+  if mod and type(mod.search_git_status) == 'function' then
+    local ok, res = pcall(mod.search_git_status, git_root or '', query or '', items, {
+      limit = limit,
+      current_file = opts.current_file,
+    })
+    if ok and type(res) == 'table' then
+      return res
+    end
+  end
+
+  -- Fallback when native core is not yet compiled or lacks search_git_status:
+  -- preserve staged before unstaged grouping via per-group fuzzy matching.
+  local staged_indices = {}
+  local staged_texts = {}
+  local unstaged_indices = {}
+  local unstaged_texts = {}
+
+  for i, it in ipairs(items) do
+    local text = it.match_text or it.rel_path or ''
+    if it.section == 'staged' then
+      staged_indices[#staged_indices + 1] = i
+      staged_texts[#staged_texts + 1] = text
+    else
+      unstaged_indices[#unstaged_indices + 1] = i
+      unstaged_texts[#unstaged_texts + 1] = text
+    end
+  end
+
+  local group_limit = (limit > 0) and limit or math.max(1, #items)
+  local staged_res = (#staged_texts > 0)
+    and M.fuzzy_match_list(query or '', staged_texts, { limit = group_limit })
+    or { items = {}, total_matched = 0 }
+  local unstaged_res = (#unstaged_texts > 0)
+    and M.fuzzy_match_list(query or '', unstaged_texts, { limit = group_limit })
+    or { items = {}, total_matched = 0 }
+
+  local out = {}
+  for _, m in ipairs(staged_res.items or {}) do
+    if limit > 0 and #out >= limit then
+      break
+    end
+    out[#out + 1] = {
+      idx = staged_indices[m.idx],
+      score = m.score or 0,
+      match_indices = m.match_indices or {},
+    }
+  end
+  for _, m in ipairs(unstaged_res.items or {}) do
+    if limit > 0 and #out >= limit then
+      break
+    end
+    out[#out + 1] = {
+      idx = unstaged_indices[m.idx],
+      score = m.score or 0,
+      match_indices = m.match_indices or {},
+    }
+  end
+
+  local total_matched = (staged_res.total_matched or 0) + (unstaged_res.total_matched or 0)
+  return {
+    items = out,
+    total_matched = total_matched,
+    total_items = #items,
+  }
+end
+
 ---@param opts table
 ---@return table|nil, string|nil
 function M.git_log_open(opts)
