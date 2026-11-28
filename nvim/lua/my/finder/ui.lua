@@ -1,4 +1,5 @@
 local actions = require('my.finder.actions')
+local backend = require('my.finder.backend')
 local preview = require('my.finder.preview')
 
 local uv = vim.uv or vim.loop
@@ -53,6 +54,10 @@ local state = {
 
   preview_enabled = true,
   query = '',
+  hist_items = nil,
+  hist_idx = 0,
+  hist_draft = '',
+  applying_history = false,
   items = {},
   total_matched = 0,
   total_items = 0,
@@ -149,6 +154,9 @@ local function update_filter_virt_text()
   else
     status_str = string.format('%d / %s', state.total_matched, total_str)
   end
+  if state.hist_idx > 0 and state.hist_items and #state.hist_items > 0 then
+    status_str = string.format('[hist %d/%d]  %s', state.hist_idx, #state.hist_items, status_str)
+  end
 
   pcall(vim.api.nvim_buf_set_extmark, state.filter_buf, ns_filter, 0, 0, {
     virt_text = { { status_str, 'MyFinderCounter' } },
@@ -211,8 +219,8 @@ local function render_list(preserve_cursor)
     local hint = nil
     if state.scanning then
       hint = (state.source and state.source.scanning_hint) or '  Scanning files...'
-    elseif state.query == '' and state.source and state.source.empty_hint then
-      hint = state.source.empty_hint
+    elseif state.query == '' and ((state.ctx and state.ctx.empty_hint) or (state.source and state.source.empty_hint)) then
+      hint = (state.ctx and state.ctx.empty_hint) or state.source.empty_hint
     elseif state.source and state.source.no_match_hint then
       hint = state.source.no_match_hint
     else
@@ -469,6 +477,22 @@ local function stop_timers()
   end
 end
 
+---@param source table|nil
+---@param ctx table|nil
+---@return string|nil, string|nil
+local function resolve_history_target(source, ctx)
+  if not source or source.no_resume or source.no_history then
+    return nil, nil
+  end
+  if source.track_query then
+    return 'files', (ctx and ctx.dir) or vim.fn.getcwd()
+  end
+  if source.name == 'grep' then
+    return 'grep', (ctx and ctx.dir) or vim.fn.getcwd()
+  end
+  return source.name or 'default', (ctx and (ctx.git_root or ctx.dir)) or vim.fn.getcwd()
+end
+
 function M.close(opts)
   opts = opts or {}
   if not state.active or state.closing then
@@ -492,6 +516,12 @@ function M.close(opts)
       cursor_line = cur_line,
       preview_enabled = state.preview_enabled,
     }
+    if not opts.on_cancel and not state.source.track_query and state.query and vim.trim(state.query) ~= '' then
+      local hkind, hscope = resolve_history_target(state.source, state.ctx)
+      if hkind and hscope then
+        backend.track_query_history(hkind, hscope, state.query)
+      end
+    end
   end
 
   local on_cancel = opts.on_cancel and state.ctx and state.ctx.on_cancel
@@ -533,6 +563,10 @@ function M.close(opts)
   state.list_win = nil
   state.preview_win = nil
   state.items = {}
+  state.hist_items = nil
+  state.hist_idx = 0
+  state.hist_draft = ''
+  state.applying_history = false
   state.action_candidates = {}
   state.source = nil
   state.ctx = {}
@@ -896,6 +930,9 @@ local function run_action(kind, action_opts)
     end
   elseif kind == 'qf' then
     local qf_targets = next(state.marked) ~= nil and targets or state.items
+    if source and source.track_query and state.query and vim.trim(state.query) ~= '' and qf_targets[1] and qf_targets[1].path then
+      backend.track_query(ctx.dir, state.query, qf_targets[1].path)
+    end
     M.close({ save_session = true })
     actions.send_to_qf(qf_targets, ctx)
   end
@@ -998,6 +1035,64 @@ end
 
 local on_filter_changed
 
+---@param delta integer 1 for older (<C-p>), -1 for newer (<C-n>)
+local function step_query_history(delta)
+  if not state.active or state.closing or not state.filter_buf or not vim.api.nvim_buf_is_valid(state.filter_buf) then
+    return
+  end
+  local hkind, hscope = resolve_history_target(state.source, state.ctx)
+  if not hkind or not hscope then
+    return
+  end
+
+  if state.hist_items == nil then
+    state.hist_items = backend.get_query_history(hkind, hscope, { limit = 50 })
+  end
+
+  local target_query
+  if state.hist_idx == 0 then
+    if delta < 0 or #state.hist_items == 0 then
+      return
+    end
+    state.hist_draft = state.query
+    local next_idx = 1
+    if state.hist_items[1] == state.hist_draft then
+      if #state.hist_items >= 2 then
+        next_idx = 2
+      else
+        return
+      end
+    end
+    state.hist_idx = next_idx
+    target_query = state.hist_items[next_idx]
+  else
+    local next_idx = state.hist_idx + delta
+    if next_idx > #state.hist_items then
+      return
+    end
+    if next_idx <= 0 then
+      state.hist_idx = 0
+      target_query = state.hist_draft
+    else
+      state.hist_idx = next_idx
+      target_query = state.hist_items[next_idx]
+    end
+  end
+
+  state.applying_history = true
+  vim.api.nvim_buf_set_lines(state.filter_buf, 0, -1, false, { target_query })
+  if state.filter_win and vim.api.nvim_win_is_valid(state.filter_win) then
+    pcall(vim.api.nvim_win_set_cursor, state.filter_win, { 1, #target_query })
+  end
+  if target_query == state.query then
+    update_filter_virt_text()
+  else
+    on_filter_changed()
+    update_filter_virt_text()
+  end
+  state.applying_history = false
+end
+
 local function setup_keymaps()
   local lbuf = state.list_buf
   local fbuf = state.filter_buf
@@ -1076,6 +1171,21 @@ local function setup_keymaps()
   end, 'Finder filter: clear query')
   fmap('i', '<C-w>', '<C-w>', 'Finder filter: delete word')
   fmap('i', '<C-y>', '<C-r>*', 'Finder filter: paste')
+  fmap('i', '<C-p>', function() step_query_history(1) end, 'Finder filter: previous query')
+  fmap('i', '<C-n>', function() step_query_history(-1) end, 'Finder filter: next query')
+
+  if state.source and state.source.filter_keymaps then
+    for lhs, spec in pairs(state.source.filter_keymaps) do
+      local modes = type(spec.mode) == 'table' and spec.mode or { spec.mode or 'i' }
+      local action_name = spec.action
+      for _, mode in ipairs(modes) do
+        local cb = spec.fn or function()
+          run_action(action_name)
+        end
+        fmap(mode, lhs, cb, spec.desc or ('Finder filter: ' .. tostring(action_name or lhs)))
+      end
+    end
+  end
 end
 
 on_filter_changed = function()
@@ -1092,6 +1202,14 @@ on_filter_changed = function()
 
   if new_query == state.query then
     return
+  end
+  if not state.applying_history then
+    local was_browsing = state.hist_idx > 0
+    state.hist_idx = 0
+    state.hist_draft = new_query
+    if was_browsing then
+      update_filter_virt_text()
+    end
   end
   state.query = new_query
   state.ctx.query = new_query
@@ -1234,6 +1352,10 @@ function M.open(source, opts)
   state.opts = opts
   state.preview_enabled = show_preview
   state.query = opts.query or ''
+  state.hist_items = nil
+  state.hist_idx = 0
+  state.hist_draft = state.query
+  state.applying_history = false
   state.items = {}
   state.total_matched = 0
   state.total_items = 0

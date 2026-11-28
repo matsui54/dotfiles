@@ -5,7 +5,7 @@ use std::sync::{Mutex, OnceLock};
 use fff_search::file_picker::{FFFMode, FilePicker, FilePickerOptions, FuzzySearchOptions};
 use fff_search::frecency::FrecencyTracker;
 use fff_search::git::format_git_status_opt;
-use fff_search::grep::{Casing, GrepMode, GrepSearchOptions};
+use fff_search::grep::{Casing, GrepMatch, GrepMode, GrepSearchOptions};
 use fff_search::query_tracker::QueryTracker;
 use fff_search::types::PaginationArgs;
 use fff_search::{
@@ -20,6 +20,8 @@ mod git_status;
 
 const DEFAULT_LIMIT: usize = 200;
 const DEFAULT_MAX_MATCHES_PER_FILE: usize = 50;
+const MAX_QUERY_HISTORY_SCAN: usize = 128;
+const DEFAULT_QUERY_HISTORY_LIMIT: usize = 50;
 
 struct GlobalState {
     initialized: bool,
@@ -74,7 +76,7 @@ fn ensure_picker_locked(
         base_path: canon.to_string_lossy().into_owned(),
         mode: FFFMode::Neovim,
         enable_mmap_cache: true,
-        enable_content_indexing: false,
+        enable_content_indexing: true,
         watch: true,
         ..Default::default()
     };
@@ -100,6 +102,7 @@ fn get_or_create_picker(
 struct ScanStatusOut {
     scanning: bool,
     total_files: usize,
+    warmup_complete: bool,
 }
 
 fn scan_status_impl(dir: &str) -> Result<ScanStatusOut, String> {
@@ -115,6 +118,7 @@ fn scan_status_impl(dir: &str) -> Result<ScanStatusOut, String> {
         return Ok(ScanStatusOut {
             scanning: false,
             total_files: 0,
+            warmup_complete: false,
         });
     };
 
@@ -123,6 +127,7 @@ fn scan_status_impl(dir: &str) -> Result<ScanStatusOut, String> {
         return Ok(ScanStatusOut {
             scanning: true,
             total_files: 0,
+            warmup_complete: false,
         });
     };
 
@@ -133,10 +138,12 @@ fn scan_status_impl(dir: &str) -> Result<ScanStatusOut, String> {
     } else {
         live
     };
+    let warmup_complete = !picker.has_content_indexing() || picker.bigram_index().is_some();
 
     Ok(ScanStatusOut {
         scanning: progress.is_scanning,
         total_files,
+        warmup_complete,
     })
 }
 
@@ -287,9 +294,13 @@ fn search_files_impl(
     ))
 }
 
-struct GrepMatchOut {
+struct GrepFileOut {
     path: String,
     rel_path: String,
+}
+
+struct GrepMatchOut {
+    file_idx: usize,
     lnum: u64,
     col: usize,
     end_col: usize,
@@ -298,54 +309,113 @@ struct GrepMatchOut {
 }
 
 struct LiveGrepOut {
+    files: Vec<GrepFileOut>,
     items: Vec<GrepMatchOut>,
     total_matched: usize,
     total_files: usize,
     has_more: bool,
     scanning: bool,
+    warmup_complete: bool,
+    regex_fallback_error: Option<String>,
+}
+
+fn parse_grep_mode(mode: Option<&str>) -> GrepMode {
+    match mode {
+        Some("regex") => GrepMode::Regex,
+        Some("fuzzy") => GrepMode::Fuzzy,
+        _ => GrepMode::PlainText,
+    }
 }
 
 fn live_grep_with_picker(
     picker: &FilePicker,
     query: &str,
+    mode: GrepMode,
     limit: usize,
     max_per_file: usize,
+    time_budget_ms: Option<u64>,
 ) -> LiveGrepOut {
+    let warmup_complete = !picker.has_content_indexing() || picker.bigram_index().is_some();
+
     if query.trim().is_empty() {
         return LiveGrepOut {
+            files: Vec::new(),
             items: Vec::new(),
             total_matched: 0,
             total_files: picker.live_file_count(),
             has_more: false,
             scanning: picker.is_scan_active(),
+            warmup_complete,
+            regex_fallback_error: None,
         };
     }
+
+    let effective_budget = time_budget_ms.unwrap_or_else(|| {
+        if mode == GrepMode::Fuzzy {
+            150
+        } else {
+            0
+        }
+    });
 
     let parser = QueryParser::new(GrepConfig);
     let parsed = parser.parse(query);
     let opts = GrepSearchOptions {
-        mode: GrepMode::PlainText,
+        mode,
         page_limit: limit,
         max_matches_per_file: max_per_file,
         smart_case: true,
         casing: Some(Casing::Smart),
         trim_whitespace: false,
+        time_budget_ms: effective_budget,
         ..Default::default()
     };
 
     let res = picker.grep(&parsed, &opts);
     let total_matched = res.matches.len();
-    let mut items = Vec::with_capacity(res.matches.len().min(limit));
+    let regex_fallback_error = res.regex_fallback_error;
 
-    for m in res.matches.into_iter().take(limit) {
-        let Some(file) = res.files.get(m.file_index) else {
+    let files: Vec<GrepFileOut> = res
+        .files
+        .iter()
+        .map(|file| GrepFileOut {
+            path: file
+                .absolute_path(picker, picker.base_path())
+                .to_string_lossy()
+                .into_owned(),
+            rel_path: file.relative_path(picker),
+        })
+        .collect();
+
+    let ordered_matches: Vec<GrepMatch> = if mode == GrepMode::Fuzzy && files.len() > 1 {
+        let mut buckets: Vec<(usize, u16, Vec<GrepMatch>)> = (0..files.len())
+            .map(|i| (i, 0u16, Vec::new()))
+            .collect();
+        for m in res.matches {
+            if let Some(b) = buckets.get_mut(m.file_index) {
+                let sc = m.fuzzy_score.unwrap_or(0);
+                if sc > b.1 {
+                    b.1 = sc;
+                }
+                b.2.push(m);
+            }
+        }
+        buckets.retain(|b| !b.2.is_empty());
+        buckets.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
+        let mut flat = Vec::with_capacity(total_matched);
+        for (_, _, ms) in buckets {
+            flat.extend(ms);
+        }
+        flat
+    } else {
+        res.matches
+    };
+
+    let mut items = Vec::with_capacity(ordered_matches.len().min(limit));
+    for m in ordered_matches.into_iter().take(limit) {
+        if m.file_index >= files.len() {
             continue;
-        };
-        let rel_path = file.relative_path(picker);
-        let abs_path = file
-            .absolute_path(picker, picker.base_path())
-            .to_string_lossy()
-            .into_owned();
+        }
         let end_col = m
             .match_byte_offsets
             .first()
@@ -354,8 +424,7 @@ fn live_grep_with_picker(
         let match_ranges = m.match_byte_offsets.into_vec();
 
         items.push(GrepMatchOut {
-            path: abs_path,
-            rel_path,
+            file_idx: m.file_index,
             lnum: m.line_number,
             col: m.col,
             end_col,
@@ -365,33 +434,48 @@ fn live_grep_with_picker(
     }
 
     LiveGrepOut {
+        files,
         items,
         total_matched,
         total_files: res.total_files,
         has_more: res.next_file_offset > 0,
         scanning: picker.is_scan_active(),
+        warmup_complete,
+        regex_fallback_error,
     }
 }
 
 fn live_grep_impl(
     dir: &str,
     query: &str,
+    mode: GrepMode,
     limit: usize,
     max_per_file: usize,
+    time_budget_ms: Option<u64>,
 ) -> Result<LiveGrepOut, String> {
     let (_canon, sp, _sqt) = get_or_create_picker(dir)?;
     let guard = sp.read().map_err(|e| format!("Picker lock error: {e}"))?;
     let Some(picker) = guard.as_ref() else {
         return Ok(LiveGrepOut {
+            files: Vec::new(),
             items: Vec::new(),
             total_matched: 0,
             total_files: 0,
             has_more: false,
             scanning: true,
+            warmup_complete: false,
+            regex_fallback_error: None,
         });
     };
 
-    Ok(live_grep_with_picker(picker, query, limit, max_per_file))
+    Ok(live_grep_with_picker(
+        picker,
+        query,
+        mode,
+        limit,
+        max_per_file,
+        time_budget_ms,
+    ))
 }
 
 struct FuzzyListItemOut {
@@ -525,6 +609,109 @@ fn track_query_impl(dir: &str, query: &str, path: &str) -> Result<(), String> {
     Ok(())
 }
 
+fn history_key_path(kind: &str, scope: &str) -> PathBuf {
+    if kind == "files" || kind == "grep" {
+        normalize_path(scope)
+    } else {
+        PathBuf::from(format!("__my_finder__:{kind}:{scope}"))
+    }
+}
+
+fn record_history_in_tracker(
+    tracker: &mut QueryTracker,
+    kind: &str,
+    scope: &str,
+    query: &str,
+) -> Result<(), String> {
+    if query.trim().is_empty() || kind == "files" {
+        return Ok(());
+    }
+    let key_path = history_key_path(kind, scope);
+    if matches!(
+        tracker.get_historical_grep_query(&key_path, 0),
+        Ok(Some(ref last)) if last == query
+    ) {
+        return Ok(());
+    }
+    tracker
+        .track_grep_query(query, &key_path)
+        .map_err(|e| format!("track_grep_query failed: {e}"))
+}
+
+fn read_history_from_tracker(
+    tracker: &QueryTracker,
+    kind: &str,
+    scope: &str,
+    limit: usize,
+) -> Result<Vec<String>, String> {
+    if limit == 0 {
+        return Ok(Vec::new());
+    }
+    let key_path = history_key_path(kind, scope);
+    let mut out = Vec::with_capacity(limit.min(MAX_QUERY_HISTORY_SCAN));
+    for offset in 0..MAX_QUERY_HISTORY_SCAN {
+        let entry = if kind == "files" {
+            tracker
+                .get_historical_query(&key_path, offset)
+                .map_err(|e| format!("get_historical_query failed: {e}"))?
+        } else {
+            tracker
+                .get_historical_grep_query(&key_path, offset)
+                .map_err(|e| format!("get_historical_grep_query failed: {e}"))?
+        };
+        let Some(q) = entry else {
+            break;
+        };
+        if !q.trim().is_empty() && !out.iter().any(|existing| existing == &q) {
+            out.push(q);
+            if out.len() >= limit {
+                break;
+            }
+        }
+    }
+    Ok(out)
+}
+
+fn track_query_history_impl(kind: &str, scope: &str, query: &str) -> Result<(), String> {
+    if query.trim().is_empty() || kind == "files" {
+        return Ok(());
+    }
+    let sqt = {
+        let state = global_state()
+            .lock()
+            .map_err(|_| "GlobalState mutex poisoned".to_string())?;
+        state.query_tracker.clone()
+    };
+
+    let mut guard = sqt
+        .write()
+        .map_err(|e| format!("QueryTracker lock error: {e}"))?;
+    if let Some(tracker) = guard.as_mut() {
+        record_history_in_tracker(tracker, kind, scope, query)?;
+    }
+    Ok(())
+}
+
+fn get_query_history_impl(kind: &str, scope: &str, limit: usize) -> Result<Vec<String>, String> {
+    if limit == 0 {
+        return Ok(Vec::new());
+    }
+    let sqt = {
+        let state = global_state()
+            .lock()
+            .map_err(|_| "GlobalState mutex poisoned".to_string())?;
+        state.query_tracker.clone()
+    };
+
+    let guard = sqt
+        .read()
+        .map_err(|e| format!("QueryTracker lock error: {e}"))?;
+    match guard.as_ref() {
+        Some(tracker) => read_history_from_tracker(tracker, kind, scope, limit),
+        None => Ok(Vec::new()),
+    }
+}
+
 fn init_impl(state_dir: Option<&str>, base_path: Option<&str>) -> Result<(), String> {
     let mut state = global_state()
         .lock()
@@ -587,6 +774,7 @@ fn lua_scan_status(lua: &Lua, dir: String) -> LuaResult<LuaTable> {
     let tbl = lua.create_table()?;
     tbl.set("scanning", status.scanning)?;
     tbl.set("total_files", status.total_files)?;
+    tbl.set("warmup_complete", status.warmup_complete)?;
     Ok(tbl)
 }
 
@@ -644,6 +832,8 @@ fn lua_live_grep(
 ) -> LuaResult<LuaTable> {
     let mut limit = DEFAULT_LIMIT;
     let mut max_per_file = DEFAULT_MAX_MATCHES_PER_FILE;
+    let mut mode_str: Option<String> = None;
+    let mut time_budget_ms: Option<u64> = None;
     if let Some(t) = opts {
         if let Some(l) = t.get::<Option<usize>>("limit")? {
             limit = l.max(1);
@@ -651,16 +841,26 @@ fn lua_live_grep(
         if let Some(m) = t.get::<Option<usize>>("max_matches_per_file")? {
             max_per_file = m.max(1);
         }
+        mode_str = t.get::<Option<String>>("mode")?;
+        time_budget_ms = t.get::<Option<u64>>("time_budget_ms")?;
     }
 
-    let out = live_grep_impl(&dir, &query, limit, max_per_file).map_err(LuaError::external)?;
+    let mode = parse_grep_mode(mode_str.as_deref());
+    let out = live_grep_impl(&dir, &query, mode, limit, max_per_file, time_budget_ms)
+        .map_err(LuaError::external)?;
+
+    let mut lua_files = Vec::with_capacity(out.files.len());
+    for f in &out.files {
+        lua_files.push((lua.create_string(&f.path)?, lua.create_string(&f.rel_path)?));
+    }
 
     let tbl = lua.create_table()?;
     let lua_items = lua.create_table_with_capacity(out.items.len(), 0)?;
     for (idx, item) in out.items.into_iter().enumerate() {
+        let (path_str, rel_str) = &lua_files[item.file_idx];
         let row = lua.create_table()?;
-        row.set("path", item.path)?;
-        row.set("rel_path", item.rel_path)?;
+        row.set("path", path_str.clone())?;
+        row.set("rel_path", rel_str.clone())?;
         row.set("lnum", item.lnum)?;
         row.set("col", item.col)?;
         row.set("end_col", item.end_col)?;
@@ -682,6 +882,10 @@ fn lua_live_grep(
     tbl.set("total_files", out.total_files)?;
     tbl.set("has_more", out.has_more)?;
     tbl.set("scanning", out.scanning)?;
+    tbl.set("warmup_complete", out.warmup_complete)?;
+    if let Some(err) = out.regex_fallback_error {
+        tbl.set("regex_fallback_error", err)?;
+    }
     Ok(tbl)
 }
 
@@ -693,6 +897,33 @@ fn lua_track_access(_lua: &Lua, path: String) -> LuaResult<bool> {
 fn lua_track_query(_lua: &Lua, (dir, query, path): (String, String, String)) -> LuaResult<bool> {
     track_query_impl(&dir, &query, &path).map_err(LuaError::external)?;
     Ok(true)
+}
+
+fn lua_track_query_history(
+    _lua: &Lua,
+    (kind, scope, query): (String, String, String),
+) -> LuaResult<bool> {
+    track_query_history_impl(&kind, &scope, &query).map_err(LuaError::external)?;
+    Ok(true)
+}
+
+fn lua_get_query_history(
+    lua: &Lua,
+    (kind, scope, opts): (String, String, Option<LuaTable>),
+) -> LuaResult<LuaTable> {
+    let mut limit = DEFAULT_QUERY_HISTORY_LIMIT;
+    if let Some(t) = opts {
+        if let Some(l) = t.get::<Option<usize>>("limit")? {
+            limit = l.max(1);
+        }
+    }
+
+    let items = get_query_history_impl(&kind, &scope, limit).map_err(LuaError::external)?;
+    let tbl = lua.create_table_with_capacity(items.len(), 0)?;
+    for (idx, q) in items.into_iter().enumerate() {
+        tbl.set(idx + 1, q)?;
+    }
+    Ok(tbl)
 }
 
 fn lua_fuzzy_match_list(
@@ -934,6 +1165,14 @@ fn my_finder_native(lua: &Lua) -> LuaResult<LuaTable> {
     exports.set("track_access", lua.create_function(lua_track_access)?)?;
     exports.set("track_query", lua.create_function(lua_track_query)?)?;
     exports.set(
+        "track_query_history",
+        lua.create_function(lua_track_query_history)?,
+    )?;
+    exports.set(
+        "get_query_history",
+        lua.create_function(lua_get_query_history)?,
+    )?;
+    exports.set(
         "fuzzy_match_list",
         lua.create_function(lua_fuzzy_match_list)?,
     )?;
@@ -1034,18 +1273,173 @@ mod tests {
                 .any(|item| item.rel_path.ends_with("git_status.lua"))
         );
 
-        let empty_grep = live_grep_with_picker(picker, "   ", 20, 10);
+        let empty_grep = live_grep_with_picker(picker, "   ", GrepMode::PlainText, 20, 10, None);
         assert_eq!(empty_grep.total_matched, 0);
         assert!(empty_grep.items.is_empty());
 
-        let grep_res = live_grep_with_picker(picker, "parse_status", 20, 10);
+        let grep_res = live_grep_with_picker(picker, "parse_status", GrepMode::PlainText, 20, 10, None);
         assert!(grep_res.total_matched > 0);
         let hit = grep_res
             .items
             .iter()
-            .find(|m| m.rel_path.ends_with("git_status.lua"))
+            .find(|m| grep_res.files[m.file_idx].rel_path.ends_with("git_status.lua"))
             .expect("expected match in git_status.lua");
         assert!(hit.lnum > 0);
         assert!(!hit.match_ranges.is_empty());
+    }
+
+    #[test]
+    fn live_grep_modes_and_bigram_content_indexing() {
+        let repo_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .ancestors()
+            .nth(5)
+            .expect("dotfiles root")
+            .to_path_buf();
+
+        let shared_picker = SharedFilePicker::default();
+        let shared_frecency = SharedFrecency::default();
+        let opts = FilePickerOptions {
+            base_path: repo_root.to_string_lossy().into_owned(),
+            mode: FFFMode::Neovim,
+            enable_mmap_cache: false,
+            enable_content_indexing: true,
+            watch: false,
+            ..Default::default()
+        };
+
+        FilePicker::new_with_shared_state(shared_picker.clone(), shared_frecency, opts)
+            .expect("create FilePicker");
+        assert!(
+            shared_picker.wait_for_scan(Duration::from_secs(10)),
+            "scan timed out"
+        );
+
+        let deadline = std::time::Instant::now() + Duration::from_secs(5);
+        while std::time::Instant::now() < deadline {
+            let ready = shared_picker
+                .read()
+                .expect("read lock")
+                .as_ref()
+                .is_some_and(|p| p.bigram_index().is_some());
+            if ready {
+                break;
+            }
+            std::thread::sleep(Duration::from_millis(20));
+        }
+
+        let guard = shared_picker.read().expect("read lock");
+        let picker = guard.as_ref().expect("picker initialized");
+        assert!(picker.bigram_index().is_some(), "bigram index should warm up");
+
+        let plain = live_grep_with_picker(picker, "parse_status", GrepMode::PlainText, 20, 10, None);
+        assert!(plain.warmup_complete);
+        assert!(plain.total_matched > 0);
+
+        let regex_ok = live_grep_with_picker(
+            picker,
+            "function\\s+parse_status",
+            GrepMode::Regex,
+            20,
+            10,
+            None,
+        );
+        assert!(regex_ok.regex_fallback_error.is_none());
+        assert!(
+            regex_ok
+                .items
+                .iter()
+                .any(|m| regex_ok.files[m.file_idx].rel_path.ends_with("git_status.lua")
+                    && !m.match_ranges.is_empty())
+        );
+
+        let regex_err =
+            live_grep_with_picker(picker, "parse_status(", GrepMode::Regex, 20, 10, None);
+        assert!(regex_err.regex_fallback_error.is_some());
+        assert!(regex_err.total_matched > 0);
+
+        let fuzzy = live_grep_with_picker(picker, "prsestatus", GrepMode::Fuzzy, 20, 10, Some(500));
+        assert!(
+            fuzzy
+                .items
+                .iter()
+                .any(|m| fuzzy.files[m.file_idx].rel_path.ends_with("git_status.lua")
+                    && !m.match_ranges.is_empty())
+        );
+    }
+
+    #[test]
+    fn query_history_tracks_deduplicates_and_isolates_buckets() {
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system time")
+            .as_nanos();
+        let tmp_dir = std::env::temp_dir().join(format!(
+            "my_finder_query_history_test_{}_{}",
+            std::process::id(),
+            nanos
+        ));
+        let _ = std::fs::remove_dir_all(&tmp_dir);
+
+        {
+            let mut qt = QueryTracker::open(&tmp_dir).expect("open QueryTracker");
+            let scope = tmp_dir.to_string_lossy().into_owned();
+            let file_a = tmp_dir.join("a.lua");
+            let file_b = tmp_dir.join("b.lua");
+
+            qt.track_query_completion("alpha", &tmp_dir, &file_a)
+                .expect("track files alpha 1");
+            qt.track_query_completion("beta", &tmp_dir, &file_b)
+                .expect("track files beta");
+            qt.track_query_completion("alpha", &tmp_dir, &file_a)
+                .expect("track files alpha 2");
+
+            let files_hist =
+                read_history_from_tracker(&qt, "files", &scope, 10).expect("read files history");
+            assert_eq!(files_hist, vec!["alpha".to_string(), "beta".to_string()]);
+
+            // Whitespace-only queries should be ignored
+            record_history_in_tracker(&mut qt, "grep", &scope, "   ").expect("ignore blank");
+            record_history_in_tracker(&mut qt, "grep", &scope, "first_grep")
+                .expect("track grep 1");
+            // Consecutive duplicate should not flood the ring buffer
+            record_history_in_tracker(&mut qt, "grep", &scope, "first_grep")
+                .expect("track grep dup");
+            record_history_in_tracker(&mut qt, "grep", &scope, "second_grep")
+                .expect("track grep 2");
+            // Repeating an older query moves it back to the front on read
+            record_history_in_tracker(&mut qt, "grep", &scope, "first_grep")
+                .expect("track grep 1 again");
+
+            let grep_hist =
+                read_history_from_tracker(&qt, "grep", &scope, 10).expect("read grep history");
+            assert_eq!(
+                grep_hist,
+                vec!["first_grep".to_string(), "second_grep".to_string()]
+            );
+
+            // Files history remains isolated from grep history on the same scope
+            let files_hist_after =
+                read_history_from_tracker(&qt, "files", &scope, 10).expect("read files after");
+            assert_eq!(
+                files_hist_after,
+                vec!["alpha".to_string(), "beta".to_string()]
+            );
+
+            // Custom source bucket isolation
+            record_history_in_tracker(&mut qt, "git_status", &scope, "modified")
+                .expect("track git_status");
+            let gs_hist = read_history_from_tracker(&qt, "git_status", &scope, 10)
+                .expect("read git_status history");
+            assert_eq!(gs_hist, vec!["modified".to_string()]);
+
+            let grep_after_gs =
+                read_history_from_tracker(&qt, "grep", &scope, 10).expect("read grep after gs");
+            assert_eq!(
+                grep_after_gs,
+                vec!["first_grep".to_string(), "second_grep".to_string()]
+            );
+        }
+
+        let _ = std::fs::remove_dir_all(&tmp_dir);
     }
 }

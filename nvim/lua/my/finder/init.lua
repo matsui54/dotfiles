@@ -90,7 +90,7 @@ end
 ---@param opts? table
 function M.live_grep(opts)
   register_command()
-  local source = require('my.finder.sources.grep').new()
+  local source = require('my.finder.sources.grep').new(opts)
   ui.open(source, opts)
 end
 

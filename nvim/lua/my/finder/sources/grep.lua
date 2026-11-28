@@ -24,29 +24,97 @@ local function build_file_header(rel_path, count)
   }
 end
 
-function M.new()
+local MODE_ORDER = { 'plain', 'regex', 'fuzzy' }
+local NEXT_MODE = {
+  plain = 'regex',
+  regex = 'fuzzy',
+  fuzzy = 'plain',
+}
+
+---@param m string|nil
+---@return 'plain'|'regex'|'fuzzy'
+local function normalize_mode(m)
+  if m == 'regex' or m == 'fuzzy' then
+    return m
+  end
+  return 'plain'
+end
+
+---@param mode 'plain'|'regex'|'fuzzy'
+---@param has_regex_err boolean
+---@return string
+local function prompt_for_mode(mode, has_regex_err)
+  if mode == 'regex' and has_regex_err then
+    return 'grep [regex!]> '
+  end
+  return string.format('grep [%s]> ', mode)
+end
+
+---@param mode 'plain'|'regex'|'fuzzy'
+---@return string
+local function hint_for_mode(mode)
+  return string.format('  Press `i` to start %s grep (<C-g> / m: switch mode)...', mode)
+end
+
+---@param ctx table
+---@param mode string|nil
+local function apply_mode(ctx, mode)
+  local m = normalize_mode(mode)
+  ctx.grep_mode = m
+  ctx.prompt = prompt_for_mode(m, false)
+  ctx.empty_hint = hint_for_mode(m)
+  if type(ctx.opts) == 'table' then
+    ctx.opts.mode = m
+  end
+end
+
+---@param source_opts? table
+---@return table
+function M.new(source_opts)
+  local initial_mode = normalize_mode(source_opts and source_opts.mode)
+
+  local function switch_mode_action(target_mode)
+    return {
+      allow_empty = true,
+      desc = 'Switch grep mode to ' .. target_mode,
+      fn = function(_, ctx)
+        apply_mode(ctx, target_mode)
+        ctx.refresh({ preserve_cursor = false, force_preview = true })
+        return 'keep_open'
+      end,
+    }
+  end
+
   return {
     name = 'grep',
-    title = 'Live Grep (plain)',
-    prompt = 'grep> ',
+    title = 'Live Grep',
+    prompt = prompt_for_mode(initial_mode, false),
     show_preview = true,
     allow_preview = true,
     poll_scan = true,
     debounce_ms = 25,
     track_query = false,
-    empty_hint = '  Press `i` to start plain grep...',
+    empty_hint = hint_for_mode(initial_mode),
 
-    prepare = function(_, opts)
-      local raw_dir = (opts and opts.dir) or vim.fn.getcwd()
+    prepare = function(base_ctx, opts)
+      local raw_dir = (opts and opts.dir) or (source_opts and source_opts.dir) or vim.fn.getcwd()
       local target_dir = normalize_dir(raw_dir)
       local canon, err = backend.ensure_dir(target_dir)
+      local mode = normalize_mode((opts and opts.mode) or initial_mode)
+      if type(base_ctx.opts) == 'table' then
+        base_ctx.opts.mode = mode
+      end
       return {
         dir = canon or target_dir,
         dir_error = err,
+        grep_mode = mode,
+        prompt = prompt_for_mode(mode, false),
+        empty_hint = hint_for_mode(mode),
       }
     end,
 
     search = function(query, ctx)
+      local mode = normalize_mode(ctx.grep_mode)
       if ctx.dir_error then
         return {
           items = {},
@@ -57,6 +125,7 @@ function M.new()
       end
 
       if not query or vim.trim(query) == '' then
+        ctx.prompt = prompt_for_mode(mode, false)
         local st = backend.scan_status(ctx.dir)
         return {
           items = {},
@@ -67,6 +136,7 @@ function M.new()
       end
 
       local res = backend.live_grep(ctx.dir, query, {
+        mode = mode,
         limit = 200,
         max_matches_per_file = 30,
       })
@@ -78,6 +148,7 @@ function M.new()
           scanning = false,
         }
       end
+      ctx.prompt = prompt_for_mode(mode, res.regex_fallback_error ~= nil)
 
       local groups = {}
       local by_path = {}
@@ -154,6 +225,41 @@ function M.new()
         scanning = res.scanning == true,
       }
     end,
+
+    keymaps = {
+      ['<C-g>'] = {
+        action = 'cycle_mode',
+        desc = 'Finder grep: cycle mode (plain/regex/fuzzy)',
+      },
+      m = {
+        action = 'cycle_mode',
+        desc = 'Finder grep: cycle mode (plain/regex/fuzzy)',
+      },
+    },
+
+    filter_keymaps = {
+      ['<C-g>'] = {
+        mode = { 'i', 'n' },
+        action = 'cycle_mode',
+        desc = 'Finder grep: cycle mode (plain/regex/fuzzy)',
+      },
+    },
+
+    actions = {
+      cycle_mode = {
+        allow_empty = true,
+        desc = 'Cycle grep mode (' .. table.concat(MODE_ORDER, ' -> ') .. ')',
+        fn = function(_, ctx)
+          local next_mode = NEXT_MODE[normalize_mode(ctx.grep_mode)] or 'plain'
+          apply_mode(ctx, next_mode)
+          ctx.refresh({ preserve_cursor = false, force_preview = true })
+          return 'keep_open'
+        end,
+      },
+      mode_plain = switch_mode_action('plain'),
+      mode_regex = switch_mode_action('regex'),
+      mode_fuzzy = switch_mode_action('fuzzy'),
+    },
   }
 end
 

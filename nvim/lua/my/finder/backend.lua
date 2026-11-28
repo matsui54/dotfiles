@@ -32,7 +32,9 @@ local load_attempted = false
 local load_error = nil
 local initialized = false
 local TRACK_COOLDOWN_SEC = 30
+local MAX_FALLBACK_HISTORY = 50
 local last_tracked_at = {}
+local fallback_history = {}
 
 ---@return table|nil, string|nil
 local function load_native()
@@ -244,7 +246,7 @@ end
 
 ---@param dir string
 ---@param query string
----@param opts? { limit?: integer, max_matches_per_file?: integer }
+---@param opts? { limit?: integer, max_matches_per_file?: integer, mode?: 'plain'|'regex'|'fuzzy', time_budget_ms?: integer }
 ---@return table|nil, string|nil
 function M.live_grep(dir, query, opts)
   if not M.init({ quiet = true }) then
@@ -280,17 +282,109 @@ function M.track_access(path, opts)
   pcall(mod.track_access, path)
 end
 
+---@param kind string
+---@param scope string|nil
+---@return string
+local function normalize_history_scope(kind, scope)
+  local s = scope or ''
+  if (kind == 'files' or kind == 'grep') and s ~= '' then
+    return vim.fs.normalize(s)
+  end
+  return s
+end
+
+---@param kind string
+---@param scope string
+---@param query string
+local function push_fallback_history(kind, scope, query)
+  if not kind or kind == '' or not scope or scope == '' or not query or vim.trim(query) == '' then
+    return
+  end
+  local key = kind .. '\0' .. scope
+  local list = fallback_history[key]
+  if not list then
+    list = {}
+    fallback_history[key] = list
+  end
+  for i = #list, 1, -1 do
+    if list[i] == query then
+      table.remove(list, i)
+    end
+  end
+  table.insert(list, 1, query)
+  while #list > MAX_FALLBACK_HISTORY do
+    table.remove(list)
+  end
+end
+
 ---@param dir string
 ---@param query string
 ---@param path string
 function M.track_query(dir, query, path)
-  if not dir or dir == '' or not query or query == '' or not path or path == '' then
+  if not dir or dir == '' or not query or vim.trim(query) == '' or not path or path == '' then
+    return
+  end
+  local norm_dir = normalize_history_scope('files', dir)
+  push_fallback_history('files', norm_dir, query)
+  if not M.init({ quiet = true }) then
     return
   end
   local mod = load_native()
-  if mod and initialized then
+  if mod then
     pcall(mod.track_query, dir, query, path)
   end
+end
+
+---@param kind string
+---@param scope string
+---@param query string
+function M.track_query_history(kind, scope, query)
+  if not kind or kind == '' or not scope or scope == '' or not query or vim.trim(query) == '' then
+    return
+  end
+  local norm_scope = normalize_history_scope(kind, scope)
+  push_fallback_history(kind, norm_scope, query)
+  if not M.init({ quiet = true }) then
+    return
+  end
+  local mod = load_native()
+  if mod and type(mod.track_query_history) == 'function' then
+    pcall(mod.track_query_history, kind, norm_scope, query)
+  end
+end
+
+---@param kind string
+---@param scope string
+---@param opts? { limit?: integer }
+---@return string[]
+function M.get_query_history(kind, scope, opts)
+  opts = opts or {}
+  local limit = math.max(1, opts.limit or MAX_FALLBACK_HISTORY)
+  if not kind or kind == '' or not scope or scope == '' then
+    return {}
+  end
+  local norm_scope = normalize_history_scope(kind, scope)
+  local fb = fallback_history[kind .. '\0' .. norm_scope]
+
+  if M.init({ quiet = true }) then
+    local mod = load_native()
+    if mod and type(mod.get_query_history) == 'function' then
+      local ok, res = pcall(mod.get_query_history, kind, norm_scope, { limit = limit })
+      if ok and type(res) == 'table' and (#res > 0 or not fb or #fb == 0) then
+        return res
+      end
+    end
+  end
+
+  if not fb or #fb == 0 then
+    return {}
+  end
+  local out = {}
+  local n = math.min(limit, #fb)
+  for i = 1, n do
+    out[i] = fb[i]
+  end
+  return out
 end
 
 ---@param query string
